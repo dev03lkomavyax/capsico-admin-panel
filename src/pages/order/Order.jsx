@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Checkbox } from '@/components/ui/checkbox'
+import { BsSearch } from "react-icons/bs";
 const data = [
   {
     orderID: "1264903",
@@ -68,7 +69,7 @@ const Order = () => {
 
 
   return (
-    <div className='flex flex-col gap-6 border-[red] border-2 w-full h-full p-6 bg-[#f9f9f9]'>
+    <div className='flex flex-col gap-6 border-[red] border-2 w-full h-full py-8 px-12 bg-[#f9f9f9]'>
       <section className='flex justify-start items-center'>
         <button onClick={() => setSelectTab('capsico')} className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${selectTab === 'capsico' ? 'border-[#003CFF]' : 'border-transparent'}`}>
           <h6 className='text-[#1D1929] text-sm font-semibold font-roboto'>Capsico</h6>
@@ -89,7 +90,10 @@ const Order = () => {
             <button onClick={() => setSelectOrderTab('cancelled')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'cancelled' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Cancelled (3)</button>
           </section>
           <section className='flex justify-between items-center w-full'>
-            <Input type="email" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='max-w-[425px] w-full bg-[#FFFFFF]' />
+            <div className='flex justify-start items-center'>
+              <BsSearch className='relative left-8 text-[#1D1929]' />
+              <Input type="email" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto' />
+            </div>
             <div className='flex justify-between items-center w-[230px]'>
               <Select>
                 <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">

@@ -58,6 +58,7 @@ export default {
 			roboto:"Roboto",
 			sans:"Open Sans",
 			inter:"Inter",
+			nunito:"Nunito Sans",
 		}
   	}
   },
