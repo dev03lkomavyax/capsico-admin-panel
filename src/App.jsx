@@ -6,6 +6,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
 const OrderDetails = lazy(() => import('./pages/Order/OrderDetails'));
 const Login = lazy(() => import('./pages/Login'))
+const Reviews = lazy(() => import('./pages/Reviews'))
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/admin/order' element={<Order />} />
             <Route path='/admin/order/123' element={<OrderDetails />} />
+            <Route path='/admin/reviews' element={<Reviews />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
