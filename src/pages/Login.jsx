@@ -1,31 +1,59 @@
+import React, { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import React from 'react'
+import { Form } from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { loginSchema } from '@/schema/loginSchema'
+import Field from '@/components/shadcnCom/Field'
+import { IoEye } from "react-icons/io5";
+import { BiSolidHide } from "react-icons/bi";
 
 const Login = () => {
+    const [showPassword, setShowPassword] = useState(true)
+
+    const form = useForm({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            adminId: '',
+            password: ''
+        }
+    })
+
+    const { control, reset, handleSubmit } = form
+
+    const onSubmit = (data) => {
+        console.log('data', data)
+        reset({
+            adminId: '',
+            password: ''
+        })
+    }
+
     return (
-        <section className='flex justify-center items-center w-full h-screen bg-slate-400'>
-            <div className='max-w-[630px] w-full border-[1px] border-[#B9B9B9] rounded-3xl bg-[#FFFFFF] px-16 py-20'>
-                <h2 className='text-[#202224] text-[32px] text-center font-bold font-nunito mb-4'>Login</h2>
-                <p className='text-[#202224] text-lg text-center font-semibold font-nunito opacity-80'>Please enter your admin and password to continue</p>
-                <div className='my-7'>
-                    <Label className={`text-[#202224] text-lg font-semibold font-nunito opacity-80`}>Admin ID</Label>
-                    <Input type='email' placeholder='Admin Id' className={`h-[56px] placeholder:text-[#A6A6A6] text-lg font-semibold font-nunito border-[1px] border-[#D8D8D8] bg-[#F1F4F9] rounded-lg mt-4`} />
-                </div>
-                <div className='mb-12'>
-                    <Label className={`text-[#202224] text-lg font-semibold font-nunito opacity-80`}>Password</Label>
-                    <Input type='email' placeholder='*************' className={`h-[56px] placeholder:text-[#A6A6A6] text-lg font-semibold font-nunito border-[1px] border-[#D8D8D8] bg-[#F1F4F9] rounded-lg mt-4`} />
-                    <div className='flex justify-between items-center'>
-                        <div className='flex justify-start items-center gap-2 mt-[6px]'>
-                            <Checkbox/>
-                            <p className='text-[#202224] text-lg font-normal font-nunito opacity-80'>Remember Password</p>
-                        </div>
-                        <p className='text-[#202224] text-lg font-normal font-nunito opacity-60'>Forget Password?</p>
+        <section className='flex justify-center items-center w-full h-screen bg-[#4880FF]'>
+            <Form {...form}>
+                <form onSubmit={handleSubmit(onSubmit)} className="max-w-[630px] w-full border-[1px] border-[#B9B9B9] rounded-3xl bg-[#FFFFFF] px-16 py-20">
+                    <h2 className='text-[#202224] text-[32px] text-center font-bold font-nunito mb-4'>Login</h2>
+                    <p className='text-[#202224] text-lg text-center font-semibold font-nunito opacity-80'>Please enter your admin and password to continue</p>
+                    <div className='my-7'>
+                        <Field name='adminId' title='Admin ID' control={control} placeholder='Admin ID' type='email' />
                     </div>
-                </div>
-                <button className='h-[56px] w-full text-[#FFFFFF] text-xl font-bold font-nunito rounded-lg bg-[#1064FD] opacity-90'>Login</button>
-            </div>
+                    <div className='mb-12 w-full'>
+                        <Field name='password' title='Password' control={control} placeholder='*************' type={`${showPassword?'password':'text'}`} />
+                        {showPassword?<IoEye onClick={()=>setShowPassword(!showPassword)} className='w-full relative -top-9 left-56 cursor-pointer' />:
+                        <BiSolidHide onClick={()=>setShowPassword(!showPassword)} className='w-full relative -top-9 left-56 cursor-pointer' />}
+                        <div className='flex justify-between items-center mt-[6px]'>
+                            <div className='flex justify-start items-center gap-2'>
+                                <Checkbox className='border-[0.6] border-[#A3A3A3] data-[state=checked]:bg-[#FFFFFF] data-[state=checked]:text-[#656565]' />
+                                <p className='text-[#202224] text-lg font-normal font-nunito opacity-80'>Remember Password</p>
+                            </div>
+                            <p className='text-[#202224] text-lg font-normal font-nunito opacity-60'>Forget Password?</p>
+                        </div>
+                    </div>
+                    <Button type="submit" variant="login" className='h-[56px]'>Login</Button>
+                </form>
+            </Form>
         </section>
     )
 }

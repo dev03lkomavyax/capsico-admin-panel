@@ -66,6 +66,7 @@ const Order = () => {
   const [capsicoOrderData, setCapsicoOrderData] = useState(data)
   const [quicklyOrderData, setQuicklyOrderData] = useState(data)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectValue, setselectValue] = useState('All')
 
 
   return (
@@ -102,11 +103,11 @@ const Order = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectItem value="apple">All</SelectItem>
+                    <SelectItem value="newOrder">New Order</SelectItem>
+                    <SelectItem value="preparedry">Prepared</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
