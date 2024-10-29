@@ -15,7 +15,7 @@ function App() {
       <Router>
         <Suspense fallback={<div className='w-full h-screen bg-white text-black flex justify-center items-center text-xl font-semibold'>Loading...</div>}>
           <Routes>
-            <Route path='/login' element={<Login />} />
+            <Route path='/admin/login' element={<Login />} />
             <Route path='/admin/order' element={<Order />} />
             <Route path='/admin/order/123' element={<OrderDetails />} />
             <Route path='/admin/reviews' element={<Reviews />} />
