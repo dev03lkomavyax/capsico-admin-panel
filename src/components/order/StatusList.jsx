@@ -1,23 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Checkbox } from '../ui/checkbox'
-import { useNavigate } from 'react-router-dom'
+import { IoIosArrowBack } from 'react-icons/io'
 
-const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, capsicoOrderData }) => {
+const data = [
+    {
+        orderID: "1264903",
+        order: "TV 14 Inch Gede",
+        customer: "Vivek",
+        status: "Complete",
+        createdDate: `March ${21, 2020}`,
+        restaurantName: "Adiyaman Hotel",
+        price: "$19.09",
+    },
+    {
+        orderID: "1264903",
+        order: "TV 14 Inch Gede",
+        customer: "Piyush",
+        status: "Cancelled",
+        createdDate: `March ${21, 2020}`,
+        restaurantName: "Adiyaman Hotel",
+        price: "$19.09",
+    },
+    {
+        orderID: "1264903",
+        order: "TV 14 Inch Gede",
+        customer: "Aditya",
+        status: "Preparing",
+        createdDate: `March ${21, 2020}`,
+        restaurantName: "Adiyaman Hotel",
+        price: "$19.09",
+    },
+    {
+        orderID: "1264903",
+        order: "TV 14 Inch Gede",
+        customer: "Nakoyame Japan",
+        status: "New",
+        createdDate: `March ${21, 2020}`,
+        restaurantName: "Adiyaman Hotel",
+        price: "$19.09",
+    },
+]
 
-    const navigate = useNavigate()
+const StatusList = () => {
 
+    const [capsicoOrderData, setCapsicoOrderData] = useState(data)
+    const [selectTab, setSelectTab] = useState('capsico')
+    const [searchQuery, setSearchQuery] = useState('')
     return (
-        <>
-            <section className='flex justify-start items-center gap-5'>
-                <button onClick={() => setSelectOrderTab('allOrder')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'allOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>All Order ({capsicoOrderData.length})</button>
-                <button onClick={() => {setSelectOrderTab('newOrder'), navigate(selectOrderTab)}} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'newOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>New Order (20)</button>
-                <button onClick={() => setSelectOrderTab('prepared')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'prepared' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Prepared (10)</button>
-                <button onClick={() => setSelectOrderTab('completed')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'completed' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Completed (20)</button>
-                <button onClick={() => setSelectOrderTab('cancelled')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'cancelled' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Cancelled (3)</button>
+        <div className='flex flex-col gap-6 w-full h-full py-8 px-12 bg-[#f9f9f9]'>
+            <div className='-mb-4'>
+                <div className="flex items-center gap-1">
+                    <IoIosArrowBack className='text-2xl' />
+                    <span className='text-[#000000] font-roboto text-xl font-medium'>Completed order </span>
+                </div>
+                <span className='text-sm text-[#5F5F5F] font-roboto'>Orders/orders details</span>
+            </div>
+            <section className='flex justify-start items-center'>
+                <button onClick={() => setSelectTab('capsico')} className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${selectTab === 'capsico' ? 'border-[#003CFF]' : 'border-transparent'}`}>
+                    <h6 className='text-[#1D1929] text-sm font-semibold font-roboto'>Capsico</h6>
+                    <p className='text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto bg-[#FF6F03] w-[22px] h-[22px] rounded-[7px]'>20</p>
+                </button>
+                <button onClick={() => setSelectTab('quickly')} className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${selectTab === 'quickly' ? 'border-[#003CFF]' : 'border-transparent'}`}>
+                    <h6 className='text-[#1D1929] text-sm font-semibold font-roboto'>Quickly</h6>
+                    <p className='text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto bg-[#ABABAB] w-[22px] h-[22px] rounded-[7px]'>48</p>
+                </button>
             </section>
             <section className='flex justify-between items-center w-full'>
                 <div className='flex justify-start items-center -ml-4'>
@@ -104,8 +154,8 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                     </TableBody>
                 </Table>
             </div>
-        </>
+        </div>
     )
 }
 
-export default Capsico
+export default StatusList
