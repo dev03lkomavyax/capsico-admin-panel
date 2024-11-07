@@ -67,7 +67,7 @@ const OrderDetails = () => {
 
             {/* h-[calc(100vh-56px)] */}
             <div className="grid grid-cols-[26%_71%] gap-[3%] mt-5 h-screen">
-                <div className='rounded-lg bg-white p-4'>
+                <div className='rounded-lg bg-white px-4 py-10'>
                     <div className="flex justify-center flex-col items-center">
                         <img className="w-32 h-32 rounded-full" src={avatar} alt="avatar" />
                         <h2 className='font-medium font-roboto mt-3 text-xl'>Leon Barrows</h2>
@@ -90,23 +90,23 @@ const OrderDetails = () => {
                             </div>
                         }
                     </div>
-                    <div className="flex flex-col mt-5">
+                    <div className="flex flex-col mt-12">
                         <h2 className="font-roboto text-sm mb-2">History</h2>
                         <History status={status} />
                     </div>
                 </div>
                 <div className=''>
-                    <div className='rounded-lg bg-white p-4 flex justify-between items-center'>
+                    <div className='rounded-lg bg-white p-4 px-6 flex justify-between items-center'>
                         <div>
                             <span className="text-sm font-roboto">{capsico?"Restaurant Details":"Vendor Details"}</span>
                             <h2 className="font-inter text-xl font-medium mt-3">Adiyaman Hotel</h2>
                             <span className="font-inter text-[#565656]">462 Cortney Glens, Berkshire</span>
                         </div>
                         <div>
-                            <Button variant="ghost" className="text-xl font-inter font-semibold text-[#003CFF] hover:text-[#003CFF]">View</Button>
+                            <Button variant="ghost" className="text-xl font-inter font-semibold hover:bg-transparent text-[#003CFF] hover:text-[#003CFF]">View</Button>
                         </div>
                     </div>
-                    <div className='rounded-lg bg-white mt-5 p-4'>
+                    <div className='rounded-lg bg-white mt-5 p-4 px-6'>
                         <div className="grid grid-cols-3 gap-3">
                             <h2 className="font-inter text-sm font-medium">Items</h2>
                             <h2 className="font-inter text-sm font-medium">Oty</h2>
@@ -130,7 +130,7 @@ const OrderDetails = () => {
                             <h3 className="font-roboto text-[#515151] font-medium">₹390</h3>
                         </div>
                     </div>
-                    <div className='rounded-lg bg-white mt-5 p-4'>
+                    <div className='rounded-lg bg-white mt-5 p-4 px-6'>
                         {status !== "Cancelled" &&
                             <>
                                 <h2 className="font-roboto font-semibold">Track Order</h2>

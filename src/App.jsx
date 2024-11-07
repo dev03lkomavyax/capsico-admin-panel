@@ -14,6 +14,7 @@ const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
 const AddMenu = lazy(() => import('./pages/restaurant/AddMenu'));
 const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
+const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
             <Route path='/admin/restaurant/addmenu' element={<AddMenu />} />
             <Route path='/admin/restaurant/reviews' element={<Review />} />
             <Route path='/admin/revenue' element={<Revenue />} />
+            <Route path='/admin/customer/123' element={<CustomerDetails />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
