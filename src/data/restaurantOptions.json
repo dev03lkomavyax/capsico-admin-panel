@@ -1,0 +1,34 @@
+[
+    {
+        "id": "desserts",
+        "label": "Desserts"
+    },
+    {
+        "id": "beverages",
+        "label": "Beverages"
+    },
+    {
+        "id": "chinese",
+        "label": "Chinese"
+    },
+    {
+        "id": "northIndian",
+        "label": "North Indian"
+    },
+    {
+        "id": "southIndian",
+        "label": "South Indian"
+    },
+    {
+        "id": "biryani",
+        "label": "Biryani"
+    },
+    {
+        "id": "pizza",
+        "label": "Pizza"
+    },
+    {
+        "id": "fastFood",
+        "label": "Fast Food"
+    }
+]
