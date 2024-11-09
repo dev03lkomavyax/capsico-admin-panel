@@ -2,7 +2,6 @@
 
 import { TrendingUp } from "lucide-react"
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
-
 import {
   Card,
   CardContent,
@@ -16,6 +15,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { IoArrowUpOutline } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export const description = "A radial chart with stacked sections"
 
@@ -36,10 +37,15 @@ export function SalesChart() {
   const totalVisitors = chartData[0].desktop + chartData[0].mobile
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle className='text-[#333843] text-lg font-medium font-inter'>Sales Progress</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+    <Card className="flex flex-col max-w-[360px] w-full">
+      <CardHeader className="w-full">
+        <div className="flex justify-between w-full">
+          <div>
+            <h2 className="text-[#333843] font-lg font-medium font-inter">Sales Progress</h2>
+            <p className="text-[#667085] font-sm font-medium font-inter">Today</p>
+          </div>
+          <BsThreeDotsVertical className="text-[#858D9D] text-xl" />
+        </div>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
@@ -85,26 +91,21 @@ export function SalesChart() {
             <RadialBar
               dataKey="desktop"
               stackId="a"
-              cornerRadius={5}
+              cornerRadius={10}
               fill="var(--color-desktop)"
-              className="stroke-transparent stroke-2"
-            />
-            <RadialBar
-              dataKey="mobile"
-              fill="var(--color-mobile)"
-              stackId="a"
-              cornerRadius={5}
               className="stroke-transparent stroke-2"
             />
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+      <CardFooter className="flex flex-col">
+        <p className="text-[#667085] font-sm text-center font-normal font-inter">
+          You succeed earn <span className="font-semibold text-[#000000]">$240</span> today, it's higher than yesterday
+        </p>
+        <p className="text-[#667085] font-xs text-center font-medium font-inter my-[6px]">Today</p>
+        <div className="flex justify-center items-center gap-2">
+          <span className="text-2xl text-[#333843] font-medium font-inter">$1.5k</span>
+          <IoArrowUpOutline className="text-[#3DA172] text-2xl" />
         </div>
       </CardFooter>
     </Card>
