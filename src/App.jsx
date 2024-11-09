@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import './App.css';
+import NewOrder from './pages/order/NewOrder';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
@@ -28,6 +29,7 @@ function App() {
             <Route path='/admin/login' element={<Login />} />
             <Route path='/admin/order' element={<Order />} />
             <Route path='/admin/order/status' element={<StatusList />} />
+            <Route path='/admin/order/new-order' element={<NewOrder />} />
             <Route path='/admin/order/:orderId' element={<OrderDetails />} />
             <Route path='/admin/customer' element={<Customer />} />
             <Route path='/admin/reviews' element={<Reviews />} />

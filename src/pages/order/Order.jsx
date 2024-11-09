@@ -95,20 +95,20 @@ const Order = () => {
         <Quickly selectOrderTab={selectOrderTab} setSelectOrderTab={setSelectOrderTab} searchQuery={searchQuery} setSearchQuery={setSearchQuery} quicklyOrderData={quicklyOrderData} />
       }
       <ReactPaginate
-      pageCount={pageCount}
-      onPageChange={()=> setTotalPage(totalPage)}
-      containerClassName="flex justify-center items-center space-x-4 mx-auto"
-      pageClassName="px-2 py-1 cursor-pointer"
-      pageLinkClassName="text-[#ABABAB] font-normal font-sans"
-      activeClassName="text-[#003CFF] font-semibold font-sans"
-      previousClassName="text-[#1D1929] text-2xl cursor-pointer"
-      nextClassName="text-[#1D1929] text-2xl cursor-pointer"
-      previousLabel="&#8249;"  
-      nextLabel="&#8250;" 
-      breakLabel="..."
-      breakClassName="text-gray-400 px-2"
-      disabledClassName="text-gray-300 cursor-not-allowed"
-    />
+        pageCount={pageCount}
+        onPageChange={() => setTotalPage(totalPage)}
+        containerClassName="flex justify-center items-center space-x-4 mx-auto"
+        pageClassName="px-2 py-1 cursor-pointer"
+        pageLinkClassName="text-[#ABABAB] font-normal font-sans"
+        activeClassName="text-[#003CFF] font-semibold font-sans"
+        previousClassName="text-[#1D1929] text-2xl cursor-pointer"
+        nextClassName="text-[#1D1929] text-2xl cursor-pointer"
+        previousLabel="&#8249;"
+        nextLabel="&#8250;"
+        breakLabel="..."
+        breakClassName="text-gray-400 px-2"
+        disabledClassName="text-gray-300 cursor-not-allowed"
+      />
     </div>
   )
 }

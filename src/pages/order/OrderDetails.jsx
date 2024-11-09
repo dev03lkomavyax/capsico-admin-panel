@@ -18,8 +18,8 @@ import { OrderSchema } from "@/schema/OrderSchema";
 
 const libraries = ["places", "marker"];
 
-const status = "Delivered";
-// const status = "Preparing";
+// const status = "Delivered";
+const status = "Preparing";
 // const status = "New order";
 // const status = "Cancelled";
 

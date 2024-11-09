@@ -25,11 +25,9 @@ const EditProfile3 = () => {
     const form = useForm({
         resolver: zodResolver(EditProfileSchema2),
         defaultValues: {
-            restaurantOptions: [],
-            cuisines: [],
-            openingTime: "",
-            closingTime: "",
-            days: [],
+            menuImages: "",
+            foodImages: "",
+            restaurant: "",
         }
     })
 
@@ -100,7 +98,7 @@ const EditProfile3 = () => {
                                         </div>}
                                 </div>
                             </div>
-                        </div> 
+                        </div>
 
                         <div className='w-full mt-4'>
                             <div>

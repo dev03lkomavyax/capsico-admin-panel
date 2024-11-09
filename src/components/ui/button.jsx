@@ -21,7 +21,7 @@ const buttonVariants = cva(
         login:"text-[#FFFFFF] text-xl font-bold font-nunito rounded-lg bg-[#1064FD] hover:bg-[#2873ff] opacity-90",
       },
       size: {
-        default: "w-full rounded-lg",
+        default: "h-10 w-full rounded-lg",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",

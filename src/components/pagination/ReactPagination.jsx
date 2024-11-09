@@ -14,8 +14,8 @@ const ReactPagination = ({ totalPage, setPage }) => {
                     pageClassName={'flex justify-center items-center w-11 h-11 text-[#ABABAB] font-inter'}
                     pageLinkClassName={'flex justify-center items-center w-full h-full'}
                     activeClassName={'text-[blue]'}
-                    previousClassName={'w-8 h-10 flex justify-center items-center text-5xl text-[#95C22B] -mt-2'}
-                    nextClassName={'w-8 h-10 flex justify-center items-center text-5xl text-[#95C22B] -mt-2'}
+                    previousClassName={'w-8 h-10 flex justify-center items-center text-5xl text-[#1D1929] -mt-2'}
+                    nextClassName={'w-8 h-10 flex justify-center items-center text-5xl text-[#1D1929] -mt-2'}
                     breakLabel={'...'}
                     disabledClassName={' cursor-not-allowed'}
                 />
