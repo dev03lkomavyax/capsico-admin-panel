@@ -1,0 +1,30 @@
+[
+    {
+        "id": "bakery",
+        "label": "Bakery"
+    },
+    {
+        "id": "foodCourt",
+        "label": "Food Court"
+    },
+    {
+        "id": "dessertShop",
+        "label": "Dessert Shop"
+    },
+    {
+        "id": "beverageShop",
+        "label": "Beverage Shop"
+    },
+    {
+        "id": "fastFood",
+        "label": "Fast Food"
+    },
+    {
+        "id": "pureVeg",
+        "label": "Pure Veg"
+    },
+    {
+        "id": "casualFoodStall",
+        "label": "Casual Food Stall"
+    }
+]
