@@ -10,6 +10,7 @@ const Reviews = lazy(() => import('./pages/Reviews'))
 const StatusList = lazy(() => import('./components/order/StatusList'))
 const Customer = lazy(()=> import('./pages/customer/Customer'))
 // const Restaurant = lazy(()=> import('./pages/restaurant/Restaurant'))
+const RestaurantList = lazy(()=> import('./pages/restaurant/RestaurantList'))
 const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
 const AddMenu = lazy(() => import('./pages/restaurant/AddMenu'));
 const Review = lazy(() => import('./pages/restaurant/Reviews'));
@@ -29,7 +30,8 @@ function App() {
             <Route path='/admin/order/123' element={<OrderDetails />} />
             <Route path='/admin/customer' element={<Customer />} />
             <Route path='/admin/reviews' element={<Reviews />} />
-            <Route path='/admin/restaurant' element={<Dashborad />} />
+            <Route path='/admin/restaurant/dashboard' element={<Dashborad />} />
+            <Route path='/admin/restaurant-list' element={<RestaurantList />} />
             <Route path='/admin/restaurant/addmenu' element={<AddMenu />} />
             <Route path='/admin/restaurant/reviews' element={<Review />} />
             <Route path='/admin/revenue' element={<Revenue />} />

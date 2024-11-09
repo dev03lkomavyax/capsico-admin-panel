@@ -234,43 +234,43 @@ const Dashborad = () => {
                 </div>
             </div>
             <div className='flex'>
-            <div className="bg-white rounded-lg shadow-md p-6 w-80">
-      <div className="text-gray-500 font-medium mb-2">Sales Progress</div>
-      <div className="text-sm text-gray-400 mb-4">Today</div>
-      <div className="flex items-center justify-center">
-        <div className="relative">
-          <svg className="w-32 h-16">
-            {/* Background half-circle */}
-            <path
-              d="M 8 64 A 56 56 0 0 1 120 64"
-              stroke="#E5E7EB"
-              strokeWidth="8"
-              fill="none"
-            />
-            {/* Progress half-circle */}
-            <path
-              d="M 8 64 A 56 56 0 0 1 120 64"
-              stroke="#3B82F6"
-              strokeWidth="8"
-              strokeDasharray={`${(progress / 100) * 176}, 176`}
-              strokeLinecap="round"
-              fill="none"
-            />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-semibold">{progress}%</span>
-          </div>
-        </div>
-      </div>
-      <div className="text-sm text-green-500 mt-2">+{increasePercentage}%</div>
-      <p className="mt-4 text-center">
-        You succeeded in earning <span className="font-semibold">${salesToday}</span> today,
-        it's higher than yesterday
-      </p>
-      <div className="mt-6 text-center text-xl font-bold">
-        ${totalSales} <span className="text-green-500">↑</span>
-      </div>
-    </div>
+                <div className="bg-white rounded-lg shadow-md p-6 w-80">
+                    <div className="text-gray-500 font-medium mb-2">Sales Progress</div>
+                    <div className="text-sm text-gray-400 mb-4">Today</div>
+                    <div className="flex items-center justify-center">
+                        <div className="relative">
+                            <svg className="w-32 h-16">
+                                {/* Background half-circle */}
+                                <path
+                                    d="M 8 64 A 56 56 0 0 1 120 64"
+                                    stroke="#E5E7EB"
+                                    strokeWidth="8"
+                                    fill="none"
+                                />
+                                {/* Progress half-circle */}
+                                <path
+                                    d="M 8 64 A 56 56 0 0 1 120 64"
+                                    stroke="#3B82F6"
+                                    strokeWidth="8"
+                                    strokeDasharray={`${(progress / 100) * 176}, 176`}
+                                    strokeLinecap="round"
+                                    fill="none"
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-2xl font-semibold">{progress}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="text-sm text-green-500 mt-2">+{increasePercentage}%</div>
+                    <p className="mt-4 text-center">
+                        You succeeded in earning <span className="font-semibold">${salesToday}</span> today,
+                        it's higher than yesterday
+                    </p>
+                    <div className="mt-6 text-center text-xl font-bold">
+                        ${totalSales} <span className="text-green-500">↑</span>
+                    </div>
+                </div>
 
 
                 <SalesChart />
