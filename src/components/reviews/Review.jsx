@@ -1,9 +1,12 @@
 import img from '@/assets/Image-120.png'
+import { useNavigate } from 'react-router-dom'
 import ReactStars from 'react-stars'
 
 const Review = () => {
+    const navigate = useNavigate();
+
     return (
-        <div className='grid grid-cols-[48px_1fr] gap-4 border-b pb-6'>
+        <div onClick={() => navigate("/admin/reviews/123")} className='grid grid-cols-[48px_1fr] gap-4 border-b pb-6 cursor-pointer'>
             <img src={img} className='w-12 h-12 rounded-full' />
             <div>
                 <div className='w-full grid grid-cols-[1fr_200px] gap-5'>
