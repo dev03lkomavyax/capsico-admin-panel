@@ -59,6 +59,7 @@ export default {
 			sans:"Open Sans",
 			inter:"Inter",
 			nunito:"Nunito Sans",
+			dm:"DM Sans",
 		},
 		boxShadow:{
 			custom1:'0px 1.5px 2px rgba(16, 24, 40, 0.1)'

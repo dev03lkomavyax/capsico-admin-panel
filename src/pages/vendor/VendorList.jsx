@@ -10,64 +10,56 @@ import { useNavigate } from 'react-router-dom'
 
 const data = [
     {
-        restaurantID: "1264903",
-        restaurantName: "PIYUsh",
+        vendorID: "1264903",
+        vendorName: "Piyush",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "Vivek",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "Aditya",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "HariOm",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "Anshu",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "Navneet",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
         lastSale: "$19.09"
     },
     {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
+        vendorID: "1264903",
+        vendorName: "Rishabh",
         registerdDate: `March ${21, 2020}`,
         location: "Naimish Sharay Dham",
         totalSale: "$19.09",
@@ -75,9 +67,9 @@ const data = [
     },
 ]
 
-const RestaurantList = () => {
+function VendorList() {
 
-    const [restaurantList, setRestaurantList] = useState(data)
+    const [vendorList, setVendorList] = useState(data)
     const [searchQuery, setSearchQuery] = useState('')
 
     const navigate = useNavigate()
@@ -86,18 +78,18 @@ const RestaurantList = () => {
         if (value === 'remove') {
             
         } else if (value === 'detail') {
-            navigate('/admin/restaurant/dashboard')
+            navigate('/admin/vendor/dashboard')
         }
     }
 
     const[totalPage, setTotalPage] = useState(16)
     const [page, setPage] = useState(1)
 
-    return (
-        <section className='border-[1px] bg-[#E0E2E7] px-16 py-10 w-full min-h-screen'>
+  return (
+    <section className='border-[1px] bg-[#E0E2E7] px-16 py-10 w-full min-h-screen'>
             <div className='flex justify-start items-center mb-8'>
                 <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-                <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant List</h2>
+                <h2 className='text-[#000000] text-xl font-medium font-roboto'>Vendor List</h2>
             </div>
             <div className='flex justify-between items-center w-full mb-4'>
                 <div className='flex justify-start items-center -ml-4'>
@@ -151,11 +143,11 @@ const RestaurantList = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {restaurantList.length > 0 && restaurantList.filter(data => data.restaurantName.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
+                    {vendorList.length > 0 && vendorList.filter(data => data.vendorName.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
                         <TableRow key={data.data}>
                             <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.restaurantID}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.restaurantName}</TableCell>
+                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.vendorID}</TableCell>
+                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.vendorName}</TableCell>
                             <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.registerdDate}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">{data.location}</TableCell>
                             <TableCell className="text-[#000000] text-[10px] font-semibold font-inter">{data.totalSale}</TableCell>
@@ -180,7 +172,7 @@ const RestaurantList = () => {
             </Table>
             <ReactPagination totalPage={totalPage} setPage={setPage} />
         </section>
-    )
+  )
 }
 
-export default RestaurantList
+export default VendorList

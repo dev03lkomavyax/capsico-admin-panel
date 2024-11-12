@@ -18,6 +18,11 @@ const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
 const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
 const EditProfile = lazy(() => import('./pages/restaurant/EditProfile'))
+const VendorList = lazy(()=> import('./pages/vendor/VendorList'))
+const VendorDashboard = lazy(()=> import('./pages/vendor/VendorDashboard'))
+const VendorReviews = lazy(()=> import('./pages/vendor/VendorReviews'))
+const VendorRevenue = lazy(()=> import('./pages/vendor/VendorRevenue'))
+const VendorEditProfile =  lazy(()=> import('./pages/vendor/VendorEditProfile'))
 
 function App() {
 
@@ -40,6 +45,11 @@ function App() {
             <Route path='/admin/restaurant/reviews' element={<Review />} />
             <Route path='/admin/revenue' element={<Revenue />} />
             <Route path='/admin/customer/123' element={<CustomerDetails />} />
+            <Route path='/admin/vendor-list' element={<VendorList />} />
+            <Route path='/admin/vendor/dashboard' element={<VendorDashboard />} />
+            <Route path='/admin/vendor/reviews' element={<VendorReviews />} />
+            <Route path='/admin/vendor/revenue' element={<VendorRevenue />} />
+            <Route path='/admin/vendor/edit-profile' element={<VendorEditProfile />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
