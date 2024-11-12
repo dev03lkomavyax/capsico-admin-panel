@@ -18,16 +18,18 @@ const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
 const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
 const EditProfile = lazy(() => import('./pages/restaurant/EditProfile'))
-const VendorList = lazy(()=> import('./pages/vendor/VendorList'))
-const VendorDashboard = lazy(()=> import('./pages/vendor/VendorDashboard'))
-const VendorReviews = lazy(()=> import('./pages/vendor/VendorReviews'))
-const VendorRevenue = lazy(()=> import('./pages/vendor/VendorRevenue'))
-const VendorEditProfile =  lazy(()=> import('./pages/vendor/VendorEditProfile'))
+const VendorList = lazy(() => import('./pages/vendor/VendorList'))
+const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard'))
+const VendorReviews = lazy(() => import('./pages/vendor/VendorReviews'))
+const VendorRevenue = lazy(() => import('./pages/vendor/VendorRevenue'))
+const VendorEditProfile = lazy(() => import('./pages/vendor/VendorEditProfile'))
 const DeliveryAgent = lazy(() => import('./pages/delivery-agent/DeliveryAgent'))
 const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryAgentDetails'))
 const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
 const AvailableBalanceDetails = lazy(() => import('./pages/delivery-agent/AvailableBalanceDetails'))
 const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
+const AddSubAdmin = lazy(() => import('./pages/admin/AddSubAdmin'))
+const AdminDashBoard = lazy(() => import('./pages/admin/AdminDashBoard'))
 
 function App() {
 
@@ -60,6 +62,8 @@ function App() {
             <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/available-balance' element={<AvailableBalanceDetails />} />
+            <Route path='/admin/add-subadmin' element={<AddSubAdmin />} />
+            <Route path='/admin/admin-dashboard' element={<AdminDashBoard />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
