@@ -5,25 +5,25 @@ import {
 } from "@/components/ui/chart"
 import { Pie, PieChart } from "recharts"
 const chartData = [
-    { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "firefox", visitors: 107, fill: "var(--color-firefox)" },
+    { orderStatus: "onDelivery", visitors: 275, fill: "#fe6d4c" },
+    { orderStatus: "delivered", visitors: 200, fill: "#2bc154" },
+    { orderStatus: "canceled", visitors: 107, fill: "#3f4953" },
 ]
 const chartConfig = {
     visitors: {
         label: "Visitors",
     },
-    chrome: {
-        label: "Chrome",
-        color: "hsl(var(--chart-1))",
+    onDelivery: {
+        label: "On Delivery",
+        color: "#fe6d4c",
     },
-    safari: {
-        label: "Safari",
-        color: "hsl(var(--chart-2))",
+    delivered: {
+        label: "Delivered",
+        color: "#2bc154",
     },
-    firefox: {
-        label: "Firefox",
-        color: "hsl(var(--chart-3))",
+    canceled: {
+        label: "Canceled",
+        color: "#3f4953",
     },
 }
 
@@ -31,7 +31,7 @@ const RightChart = () => {
     return (
         <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-[250px] mt-10"
+            className="aspect-square w-full h-full"
         >
             <PieChart>
                 <ChartTooltip
@@ -41,7 +41,7 @@ const RightChart = () => {
                 <Pie
                     data={chartData}
                     dataKey="visitors"
-                    nameKey="browser"
+                    nameKey="orderStatus"
                     innerRadius={60}
                 />
             </PieChart>

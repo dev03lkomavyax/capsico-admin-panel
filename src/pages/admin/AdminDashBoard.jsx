@@ -14,6 +14,7 @@ import LeftChart from '@/components/admin/LeftChart'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MdArrowForwardIos } from 'react-icons/md'
 import RightChart from '@/components/admin/RightChart'
+import { Progress } from '@/components/ui/progress'
 
 const AdminDashBoard = () => {
     const [dayFilter, setDayFilter] = useState("Today");
@@ -145,10 +146,24 @@ const AdminDashBoard = () => {
                             <p className='font-inter text-lg text-[#B5B9BC]'>Canceled</p>
                         </div>
                     </div>
-                    <div className='flex justify-center gap-4'>
+                    <div className='grid grid-cols-[40%_58%] items-center gap-[2%] mt-10'>
                         <RightChart />
-                        <div>
-                            
+                        <div className='flex flex-col gap-6'>
+                            <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
+                                <p className='font-inter text-sm text-[#8A9097]'>On Delivery (15%)</p>
+                                <Progress className="w-full h-3" indicatorClassName="bg-[#fe6d4c]" value={25} />
+                                <p className='font-inter font-semibold text-xs text-[#B1B5B8]'>25</p>
+                            </div>
+                            <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
+                                <p className='font-inter text-sm text-[#8A9097]'>Delivered (15%)</p>
+                                <Progress className="w-full h-3" indicatorClassName="bg-[#2bc154]" value={60} />
+                                <p className='font-inter font-semibold text-xs text-[#B1B5B8]'>60</p>
+                            </div>
+                            <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
+                                <p className='font-inter text-sm text-[#8A9097]'>Canceled (15%)</p>
+                                <Progress className="w-full h-3" indicatorClassName="bg-[#3f4953]" value={7} />
+                                <p className='font-inter font-semibold text-xs text-[#B1B5B8]'>7</p>
+                            </div>
                         </div>
                     </div>
                 </div>
