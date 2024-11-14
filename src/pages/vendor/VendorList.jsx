@@ -76,19 +76,19 @@ function VendorList() {
 
     const handleValueChange = (value) => {
         if (value === 'remove') {
-            
+
         } else if (value === 'detail') {
             navigate('/admin/vendor/dashboard')
         }
     }
 
-    const[totalPage, setTotalPage] = useState(16)
+    const [totalPage, setTotalPage] = useState(16)
     const [page, setPage] = useState(1)
 
-  return (
-    <section className='border-[1px] bg-[#E0E2E7] px-16 py-10 w-full min-h-screen'>
+    return (
+        <section className='border-[1px] bg-[#F5F7FA] px-16 py-10 w-full min-h-screen'>
             <div className='flex justify-start items-center mb-8'>
-                <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
                 <h2 className='text-[#000000] text-xl font-medium font-roboto'>Vendor List</h2>
             </div>
             <div className='flex justify-between items-center w-full mb-4'>
@@ -159,7 +159,6 @@ function VendorList() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            {/* <SelectLabel>Fruits</SelectLabel> */}
                                             <SelectItem className='text-[#003CFF] text-sm font-semibold font-sans' value="remove">Remove</SelectItem>
                                             <SelectItem className='text-[#003CFF] text-sm font-semibold font-sans' value="detail">View detail</SelectItem>
                                         </SelectGroup>
@@ -172,7 +171,7 @@ function VendorList() {
             </Table>
             <ReactPagination totalPage={totalPage} setPage={setPage} />
         </section>
-  )
+    )
 }
 
 export default VendorList

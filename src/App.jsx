@@ -12,17 +12,20 @@ const NewOrder = lazy(() => import('./pages/order/NewOrder'))
 const Customer = lazy(() => import('./pages/customer/Customer'))
 // const Restaurant = lazy(()=> import('./pages/restaurant/Restaurant'))
 const RestaurantList = lazy(() => import('./pages/restaurant/RestaurantList'))
-const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
+const RestaurantDashborad = lazy(()=> import('./pages/restaurant/RestaurantDashboard'))
+// const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
 const AddMenu = lazy(() => import('./pages/restaurant/AddMenu'));
 const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
 const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
-const EditProfile = lazy(() => import('./pages/restaurant/EditProfile'))
+const RestaurantEditProfile = lazy(() => import('./pages/restaurant/RestaurantEditProfile'))
+const RestaurantMenu = lazy(()=> import('./pages/restaurant/RestaurantMenu'))
 const VendorList = lazy(() => import('./pages/vendor/VendorList'))
 const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard'))
 const VendorReviews = lazy(() => import('./pages/vendor/VendorReviews'))
 const VendorRevenue = lazy(() => import('./pages/vendor/VendorRevenue'))
 const VendorEditProfile = lazy(() => import('./pages/vendor/VendorEditProfile'))
+const VendorProducts = lazy(()=> import('./pages/vendor/VendorProducts'))
 const DeliveryAgent = lazy(() => import('./pages/delivery-agent/DeliveryAgent'))
 const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryAgentDetails'))
 const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
@@ -46,12 +49,13 @@ function App() {
             <Route path='/admin/order/:orderId' element={<OrderDetails />} />
             <Route path='/admin/reviews' element={<Reviews />} />
             <Route path='/admin/reviews/:reviewId' element={<ReviewsDetails />} />
-            <Route path='/admin/restaurant/dashboard' element={<Dashborad />} />
             <Route path='/admin/restaurant-list' element={<RestaurantList />} />
-            <Route path='/admin/restaurant/edit-profile' element={<EditProfile />} />
+            <Route path='/admin/restaurant/dashboard' element={<RestaurantDashborad />} />
+            <Route path='/admin/restaurant/edit-profile' element={<RestaurantEditProfile />} />
             <Route path='/admin/restaurant/addmenu' element={<AddMenu />} />
             <Route path='/admin/restaurant/reviews' element={<Review />} />
-            <Route path='/admin/revenue' element={<Revenue />} />
+            <Route path='/admin/restaurant/revenue' element={<Revenue />} />
+            <Route path='/admin/restaurant/menu' element={<RestaurantMenu />} />
             <Route path='/admin/customer' element={<Customer />} />
             <Route path='/admin/customer/123' element={<CustomerDetails />} />
             <Route path='/admin/vendor-list' element={<VendorList />} />
@@ -59,6 +63,7 @@ function App() {
             <Route path='/admin/vendor/reviews' element={<VendorReviews />} />
             <Route path='/admin/vendor/revenue' element={<VendorRevenue />} />
             <Route path='/admin/vendor/edit-profile' element={<VendorEditProfile />} />
+            <Route path='/admin/vendor/products' element={<VendorProducts />} />
             <Route path='/admin/delivery-agent' element={<DeliveryAgent />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />

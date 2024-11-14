@@ -4,8 +4,8 @@ import { Input } from '../ui/input'
 
 function ContactInfo({form}) {
   return (
-    <div>
-        <div className='bg-[#FFFFFF] rounded-lg p-4 w-full space-y-5'>
+    <div className='space-y-6'>
+        <div className='bg-[#FFFFFF] rounded-lg px-5 pt-5 pb-12 w-full space-y-5'>
             <h3 className='text-[#000000] text-sm font-medium font-dm'>Contact Information</h3>
             <FormField
                 control={form.control}
@@ -33,7 +33,7 @@ function ContactInfo({form}) {
             />
             
         </div>
-        <div className='bg-[#FFFFFF] rounded-lg p-4 w-full space-y-5'>
+        <div className='bg-[#FFFFFF] rounded-lg px-5 pt-5 pb-12 w-full space-y-5'>
             <h3 className='text-[#000000] text-sm font-medium font-dm'>Store Details</h3>
             <FormField
                 control={form.control}

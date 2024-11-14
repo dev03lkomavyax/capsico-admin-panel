@@ -37,7 +37,7 @@ export function SalesChart() {
   const totalVisitors = chartData[0].desktop + chartData[0].mobile
 
   return (
-    <Card className="flex flex-col max-w-[360px] w-full">
+    <Card className="flex flex-col w-1/3">
       <CardHeader className="w-full">
         <div className="flex justify-between w-full">
           <div>

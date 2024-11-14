@@ -8,7 +8,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
-
+import { SalesChart } from '@/components/restaurant/SalesChart';
+import ReactStars from 'react-stars';
+import SalesChart2 from '@/components/restaurant/SalesChart2';
 
 const data = [
     {
@@ -129,47 +131,6 @@ const reviews = [
     }
 ]
 
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import {
-    // ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart"
-import { SalesChart } from '@/components/restaurant/SalesChart';
-
-export const description = "An area chart with gradient fill"
-
-const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
-]
-
-const chartConfig = {
-    desktop: {
-        label: "Desktop",
-        color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-2))",
-    },
-}
-
 function VendorDashboard() {
     const [selectTab, setselectTab] = useState('All Time')
     const [menuData, setMenuData] = useState(data2)
@@ -177,16 +138,11 @@ function VendorDashboard() {
     const [capsicoOrderData, setCapsicoOrderData] = useState(data)
 
     const navigate = useNavigate()
-
-    const progress = 75.55; // Example progress percentage
-    const salesToday = 240; // Example sales amount today
-    const totalSales = 1500; // Example total sales today
-    const increasePercentage = 10
     return (
-        <section className='border-[1px] bg-[#E0E2E7] px-16 py-10 w-full'>
+        <section className='border-[1px] bg-[#F5F7FA] px-16 py-10 w-full space-y-8'>
             <div className='flex justify-between items-center mb-8'>
                 <div className='flex justify-start items-center'>
-                    <MdKeyboardArrowLeft className='text-[#000000] text-4xl' />
+                    <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
                     <h2 className='text-[#000000] text-xl font-medium font-roboto'>Vendor</h2>
                 </div>
                 <button onClick={() => navigate('/admin/vendor/edit-profile')} className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2'>Edit Profile</button>
@@ -210,7 +166,7 @@ function VendorDashboard() {
                         <p className='text-[#333843] text-2xl font-medium font-inter flex items-center gap-2'>31,500<span className='text-[#0D894F] text-xs font-semibold font-inter bg-[#E7F4EE] py-[2px] px-[6px] rounded-full'>+15%</span></p>
                     </div>
                 </button>
-                <button onClick={() => navigate('/admin/vendor/revenue')} className='bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1'>
+                <button onClick={() => navigate('/admin/vendor/products')} className='bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1'>
                     <div className='flex justify-center items-center h-10 w-10 rounded-full border-4 border-[#FEEDEC] bg-[#FCDAD7]'>
                         <RiQrScan2Line className='text-[#F04438] text-2xl' />
                     </div>
@@ -229,133 +185,11 @@ function VendorDashboard() {
                     </div>
                 </button>
             </div>
-            <div className='flex'>
-                <div className="bg-white rounded-lg shadow-md p-6 w-80">
-                    <div className="text-gray-500 font-medium mb-2">Sales Progress</div>
-                    <div className="text-sm text-gray-400 mb-4">Today</div>
-                    <div className="flex items-center justify-center">
-                        <div className="relative">
-                            <svg className="w-32 h-16">
-                                {/* Background half-circle */}
-                                <path
-                                    d="M 8 64 A 56 56 0 0 1 120 64"
-                                    stroke="#E5E7EB"
-                                    strokeWidth="8"
-                                    fill="none"
-                                />
-                                {/* Progress half-circle */}
-                                <path
-                                    d="M 8 64 A 56 56 0 0 1 120 64"
-                                    stroke="#3B82F6"
-                                    strokeWidth="8"
-                                    strokeDasharray={`${(progress / 100) * 176}, 176`}
-                                    strokeLinecap="round"
-                                    fill="none"
-                                />
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-2xl font-semibold">{progress}%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="text-sm text-green-500 mt-2">+{increasePercentage}%</div>
-                    <p className="mt-4 text-center">
-                        You succeeded in earning <span className="font-semibold">${salesToday}</span> today,
-                        it's higher than yesterday
-                    </p>
-                    <div className="mt-6 text-center text-xl font-bold">
-                        ${totalSales} <span className="text-green-500">↑</span>
-                    </div>
-                </div>
-
-
+            <div className='flex w-full gap-8'>
                 <SalesChart />
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Area Chart - Gradient</CardTitle>
-                        <CardDescription>
-                            Showing total visitors for the last 6 months
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ChartContainer config={chartConfig}>
-                            <AreaChart
-                                accessibilityLayer
-                                data={chartData}
-                                margin={{
-                                    left: 12,
-                                    right: 12,
-                                }}
-                            >
-                                <CartesianGrid vertical={false} />
-                                <XAxis
-                                    dataKey="month"
-                                    tickLine={false}
-                                    axisLine={false}
-                                    tickMargin={8}
-                                    tickFormatter={(value) => value.slice(0, 3)}
-                                />
-                                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                                <defs>
-                                    <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                                        <stop
-                                            offset="5%"
-                                            stopColor="var(--color-desktop)"
-                                            stopOpacity={0.8}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor="var(--color-desktop)"
-                                            stopOpacity={0.1}
-                                        />
-                                    </linearGradient>
-                                    <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                                        <stop
-                                            offset="5%"
-                                            stopColor="var(--color-mobile)"
-                                            stopOpacity={0.8}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor="var(--color-mobile)"
-                                            stopOpacity={0.1}
-                                        />
-                                    </linearGradient>
-                                </defs>
-                                <Area
-                                    dataKey="mobile"
-                                    type="natural"
-                                    fill="url(#fillMobile)"
-                                    fillOpacity={0.4}
-                                    stroke="var(--color-mobile)"
-                                    stackId="a"
-                                />
-                                <Area
-                                    dataKey="desktop"
-                                    type="natural"
-                                    fill="url(#fillDesktop)"
-                                    fillOpacity={0.4}
-                                    stroke="var(--color-desktop)"
-                                    stackId="a"
-                                />
-                            </AreaChart>
-                        </ChartContainer>
-                    </CardContent>
-                    <CardFooter>
-                        <div className="flex w-full items-start gap-2 text-sm">
-                            <div className="grid gap-2">
-                                <div className="flex items-center gap-2 font-medium leading-none">
-                                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                                </div>
-                                <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                                    January - June 2024
-                                </div>
-                            </div>
-                        </div>
-                    </CardFooter>
-                </Card>
+                <SalesChart2 />
             </div>
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-3'>
                 <div className='border-[1px] border-[#E0E2E7] rounded-lg p-1 w-fit bg-[#FFFFFF]'>
                     <button onClick={() => setselectTab('All Time')} className={`text-sm font-inter rounded-lg px-3 py-[6px] w-fit ${selectTab === 'All Time' ? 'text-[#4543AE] bg-[#DEDEFA] font-semibold' : 'text-[#667085] font-medium bg-transparent'}`}>All Time</button>
                     <button onClick={() => setselectTab('12 Months')} className={`text-sm font-inter rounded-lg px-3 py-[6px] w-fit ${selectTab === '12 Months' ? 'text-[#4543AE] bg-[#DEDEFA] font-semibold' : 'text-[#667085] font-medium bg-transparent'}`}>12 Months</button>
@@ -366,9 +200,8 @@ function VendorDashboard() {
                 <div className='flex w-full gap-6'>
                     <div className='w-[70%] rounded-lg border-[1px] border-[#E0E2E7] bg-[#FFFFFF]'>
                         <div className='flex justify-between items-center px-5 h-[76px]'>
-                            <p className='text-[#333843] text-lg font-medium font-inter'>Top Selling Menu</p>
+                            <p className='text-[#333843] text-lg font-medium font-inter'>Top Selling Product</p>
                             <button className="h-10 border-[1px] border-[#E0E2E7] rounded-lg flex justify-center items-center gap-2 text-[#667085] text-sm font-medium font-inter bg-[#FFFFFF] px-4"><HiOutlineAdjustmentsHorizontal className='text-[20px]' /><span>Filters</span></button>
-                            {/* <button className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]'>See More</button> */}
                         </div>
                         <Table className='bg-[#FFFFFF]'>
                             <TableHeader className='bg-[#F9F9FC] h-[56px]'>
@@ -394,8 +227,8 @@ function VendorDashboard() {
                             </TableBody>
                         </Table>
                     </div>
-                    <div className='w-[30%] border-[1px] border-[#E0E2E7] rounded-lg p-6 bg-[#FFFFFF]'>
-                        <div className='flex justify-between items-center px-5 h-[76px] w-full'>
+                    <div className='w-[30%] border-[1px] border-[#E0E2E7] rounded-lg p-6 bg-[#FFFFFF] space-y-4'>
+                        <div className='flex justify-between items-center w-full'>
                             <p className='text-[#333843] text-lg font-medium font-inter'>Recent Reviews</p>
                             <button onClick={() => navigate('/admin/vendor/reviews')} className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]'>See More</button>
                         </div>
@@ -404,10 +237,10 @@ function VendorDashboard() {
                                 return (
                                     <div key={i} className='border-[1px] border-[#CFCFCF] rounded-lg p-6 flex flex-col justify-between gap-4'>
                                         <div className='flex gap-2'>
-                                            <img src={e.image} alt="" className='w-10 h-10 rounded-[20px]' />
+                                            <img src={e.image} alt={e.image} className='w-10 h-10 rounded-[20px]' />
                                             <div>
                                                 <h4 className='text-[#000000] text-base font-medium font-inter'>{e.name}</h4>
-                                                <p className='text-[#535353] text-sm font-normal font-inter'>{e.rating}</p>
+                                                <ReactStars className='text-[#535353] text-sm font-normal font-inter' edit={false} value={e.rating} />
                                             </div>
                                         </div>
                                         <p className='text-[#535353] text-sm font-normal font-inter leading-[24px]'>{e.description}</p>
@@ -426,7 +259,7 @@ function VendorDashboard() {
                         <p className='text-[#333843] text-lg font-medium font-inter flex items-center gap-2'>Recent Orders<span className='text-[#0D894F] text-sm font-semibold font-inter bg-[#E7F4EE] py-1 px-3 rounded-full'>+2 Orders</span></p>
                     </div>
                     <div className='flex justify-start items-center gap-4'>
-                        <button className='h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]'>Edit Profile</button>
+                        <button className="h-10 border-[1px] border-[#E0E2E7] rounded-lg flex justify-center items-center gap-2 text-[#667085] text-sm font-medium font-inter bg-[#FFFFFF] px-4"><HiOutlineAdjustmentsHorizontal className='text-[20px]' /><span>Filters</span></button>
                         <button className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]'>See More</button>
                     </div>
                 </div>
