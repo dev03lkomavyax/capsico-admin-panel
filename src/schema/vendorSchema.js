@@ -51,7 +51,7 @@ const bankDetailsSchema = z.object({
 });
 
 const productInformationSchema = z.object({
-    productCategories: z.array(z.string()).nonempty("Select at least one product category."),
+    // productCategories: z.array(z.string()).nonempty("Select at least one product category."),
     productTitle: z.string().nonempty("Product title is required."),
     productRangeDescription: z.string().nonempty("Product range description is required."),
 });
@@ -60,7 +60,7 @@ const additionalInformationSchema = z.object({
     deliveryRadius: z
         .number("Delivery radius must be an integer.")
         .min(0, "Delivery radius cannot be negative."),
-    stockAvailability: z.array(z.string()).nonempty("Select at least one stock availability day."),
+    // stockAvailability: z.array(z.string()).nonempty("Select at least one stock availability day."),
     specialRequests: z.string().optional(),
 });
 

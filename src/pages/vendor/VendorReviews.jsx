@@ -4,6 +4,7 @@ import { Star } from 'lucide-react'
 import React, { useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 import ReactStars from 'react-stars'
 
 const reviews = [
@@ -45,11 +46,12 @@ const reviews = [
 function VendorReviews() {
     const [searchQuery, setSearchQuery] = useState('')
     const [reviewData, setReviewData] = useState(reviews)
-    
+    const navigate = useNavigate()
+
     return (
-        <section className='border-[1px] bg-[#E0E2E7] px-10 py-10 w-full h-full min-h-screen'>
+        <section className='border-[1px] bg-[#F5F7FA] px-10 py-10 w-full h-full min-h-screen'>
             <div className='flex justify-start items-center'>
-                <MdKeyboardArrowLeft className='text-[#000000] text-4xl' />
+                <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
                 <h2 className='text-[#000000] text-xl font-medium font-roboto'>Review </h2>
             </div>
             <div className='flex justify-between items-center w-full my-5'>

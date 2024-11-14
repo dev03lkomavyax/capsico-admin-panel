@@ -4,7 +4,7 @@ import { Input } from '../ui/input'
 
 function BankDetails({form}) {
     return (
-        <div className='bg-[#FFFFFF] rounded-lg pt-6 pb-16 px-4 w-full space-y-5'>
+        <div className='bg-[#FFFFFF] rounded-lg pt-5 pb-16 px-5 w-full space-y-5'>
             <h3 className='text-[#000000] text-sm font-medium font-dm'>Bank Details (For Payments)</h3>
             <FormField
                 control={form.control}
@@ -12,7 +12,7 @@ function BankDetails({form}) {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder="Bank Name" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
+                            <Input type="text" placeholder="Bank Name" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -24,7 +24,7 @@ function BankDetails({form}) {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder="Branch Address" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
+                            <Input type="text" placeholder="Branch Address" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -36,7 +36,7 @@ function BankDetails({form}) {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder="Account Number" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
+                            <Input type="text" placeholder="Account Number" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -48,7 +48,7 @@ function BankDetails({form}) {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder="ifscCode" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
+                            <Input type="text" placeholder="ifscCode" className='border-[1px] border-[#B9B9B9] rounded-lg h-12 bg-[#FCFCFC] placeholder:text-[#000000] text-sm font-medium font-dm' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
