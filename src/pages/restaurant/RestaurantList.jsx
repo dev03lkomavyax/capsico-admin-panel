@@ -94,7 +94,7 @@ const RestaurantList = () => {
     const [page, setPage] = useState(1)
 
     return (
-        <section className='border-[1px] bg-[#E0E2E7] px-16 py-10 w-full min-h-screen'>
+        <section className='border-[1px] bg-[#F5F7FA] px-16 py-10 w-full min-h-screen'>
             <div className='flex justify-start items-center mb-8'>
                 <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
                 <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant</h2>

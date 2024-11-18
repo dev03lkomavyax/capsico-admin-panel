@@ -34,6 +34,8 @@ const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
 const AddSubAdmin = lazy(() => import('./pages/admin/AddSubAdmin'))
 const AdminDashBoard = lazy(() => import('./pages/admin/AdminDashBoard'))
 const UpdateAdminProfile = lazy(() => import('./pages/admin/UpdateAdminProfile'))
+const Offers = lazy(()=> import('./pages/offers/Offers'))
+const CreateOfferPage = lazy(()=> import('./pages/offers/CreateOfferPage'))
 
 function App() {
 
@@ -71,6 +73,8 @@ function App() {
             <Route path='/admin/add-subadmin' element={<AddSubAdmin />} />
             <Route path='/admin/admin-dashboard' element={<AdminDashBoard />} />
             <Route path='/admin/update-admin-profile' element={<UpdateAdminProfile />} />
+            <Route path='/admin/offers' element={<Offers />} />
+            <Route path='/admin/offers/create-offer' element={<CreateOfferPage />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
