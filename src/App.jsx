@@ -9,7 +9,6 @@ const Login = lazy(() => import('./pages/Login'))
 const Reviews = lazy(() => import('./pages/reviews/Reviews'))
 const StatusList = lazy(() => import('./components/order/StatusList'))
 const NewOrder = lazy(() => import('./pages/order/NewOrder'))
-const Customer = lazy(() => import('./pages/customer/Customer'))
 // const Restaurant = lazy(()=> import('./pages/restaurant/Restaurant'))
 const RestaurantList = lazy(() => import('./pages/restaurant/RestaurantList'))
 const RestaurantDashborad = lazy(()=> import('./pages/restaurant/RestaurantDashboard'))
@@ -17,6 +16,7 @@ const RestaurantDashborad = lazy(()=> import('./pages/restaurant/RestaurantDashb
 const AddMenu = lazy(() => import('./pages/restaurant/AddMenu'));
 const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
+const CustomerList = lazy(() => import('./pages/customer/CustomerList'));
 const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
 const RestaurantEditProfile = lazy(() => import('./pages/restaurant/RestaurantEditProfile'))
 const RestaurantMenu = lazy(()=> import('./pages/restaurant/RestaurantMenu'))
@@ -31,9 +31,16 @@ const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryA
 const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
 const AvailableBalanceDetails = lazy(() => import('./pages/delivery-agent/AvailableBalanceDetails'))
 const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
+const SubAdminList = lazy(()=>import('./pages/admin/SubAdminList'))
 const AddSubAdmin = lazy(() => import('./pages/admin/AddSubAdmin'))
+const EditSubAdmin = lazy(()=> import('./pages/admin/EditSubAdmin'))
 const AdminDashBoard = lazy(() => import('./pages/admin/AdminDashBoard'))
+const SalesReport = lazy(()=> import('./pages/admin/SalesReport'))
 const UpdateAdminProfile = lazy(() => import('./pages/admin/UpdateAdminProfile'))
+const Offers = lazy(()=> import('./pages/offers/Offers'))
+const CreateOfferPage = lazy(()=> import('./pages/offers/CreateOfferPage'))
+const ApplicationRequest = lazy(()=>import('./pages/application-request/ApplicationRequest'))
+const AddRestaurant = lazy(()=> import('./pages/application-request/AddRestaurant'))
 
 function App() {
 
@@ -56,7 +63,7 @@ function App() {
             <Route path='/admin/restaurant/reviews' element={<Review />} />
             <Route path='/admin/restaurant/revenue' element={<Revenue />} />
             <Route path='/admin/restaurant/menu' element={<RestaurantMenu />} />
-            <Route path='/admin/customer' element={<Customer />} />
+            <Route path='/admin/customer-list' element={<CustomerList />} />
             <Route path='/admin/customer/123' element={<CustomerDetails />} />
             <Route path='/admin/vendor-list' element={<VendorList />} />
             <Route path='/admin/vendor/dashboard' element={<VendorDashboard />} />
@@ -68,9 +75,16 @@ function App() {
             <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/available-balance' element={<AvailableBalanceDetails />} />
+            <Route path='/admin/sub-admin-list' element={<SubAdminList />} />
             <Route path='/admin/add-subadmin' element={<AddSubAdmin />} />
+            <Route path='/admin/edit-subadmin' element={<EditSubAdmin />} />
             <Route path='/admin/admin-dashboard' element={<AdminDashBoard />} />
+            <Route path='/admin/sales' element={<SalesReport />} />
             <Route path='/admin/update-admin-profile' element={<UpdateAdminProfile />} />
+            <Route path='/admin/offers' element={<Offers />} />
+            <Route path='/admin/offers/create-offer' element={<CreateOfferPage />} />
+            <Route path='/admin/application-request-list' element={<ApplicationRequest />} />
+            <Route path='/admin/application-request/add-restaurant' element={<AddRestaurant />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>

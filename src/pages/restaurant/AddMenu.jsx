@@ -168,8 +168,8 @@ const AddMenu = () => {
                   </div>
                 </div>
                 <Variants />
-                <AdditionalDetails />
                 <MapAddOn />
+                <AdditionalDetails />
                 <ServingInfo form={form} />
               </form>
             </Form>

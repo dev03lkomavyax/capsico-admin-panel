@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
-import ReactPaginate from 'react-paginate'
-import EditProfile1 from './EditProfile1';
-import EditProfile2 from './EditProfile2';
 import { useNavigate } from 'react-router-dom';
-import EditProfile3 from './EditProfile3';
-import EditProfile4 from './EditProfile4';
-import EditProfile5 from './EditProfile5';
-import EditProfile6 from './EditProfile6';
 import ReactPagination from '@/components/pagination/ReactPagination';
+import AddRestaurant1 from './AddRestaurant1';
+import AddRestaurant2 from './AddRestaurant2';
+import AddRestaurant3 from './AddRestaurant3';
+import AddRestaurant4 from './AddRestaurant4';
+import AddRestaurant5 from './AddRestaurant5';
+import AddRestaurant6 from './AddRestaurant6';
 
-const EditProfile = () => {
+const AddRestaurant = () => {
     const [pageCount, setPageCount] = useState(6);
     const [page, setPage] = useState(1);
     const navigate = useNavigate();
@@ -23,12 +22,12 @@ const EditProfile = () => {
             </button>
 
             <div className='mb-10'>
-                {page === 1 && <EditProfile1 />}
-                {page === 2 && <EditProfile2 />}
-                {page === 3 && <EditProfile3 />}
-                {page === 4 && <EditProfile4 />}
-                {page === 5 && <EditProfile5 />}
-                {page === 6 && <EditProfile6 />}
+                {page === 1 && <AddRestaurant1 />}
+                {page === 2 && <AddRestaurant2 />}
+                {page === 3 && <AddRestaurant3 />}
+                {page === 4 && <AddRestaurant4 />}
+                {page === 5 && <AddRestaurant5 />}
+                {page === 6 && <AddRestaurant6 />}
             </div>
 
             <ReactPagination
@@ -40,4 +39,4 @@ const EditProfile = () => {
     )
 }
 
-export default EditProfile
+export default AddRestaurant
