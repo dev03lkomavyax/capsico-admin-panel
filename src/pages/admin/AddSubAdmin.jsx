@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { FaEye, FaEyeSlash } from "react-icons/fa6"
+import { MdKeyboardArrowLeft } from "react-icons/md"
+import { useNavigate } from "react-router-dom"
 
 const AddSubAdmin = () => {
     const form = useForm({
@@ -31,14 +33,21 @@ const AddSubAdmin = () => {
         //     password: ''
         // })
     }
+    const navigate = useNavigate()
 
     return (
-        <section className=' bg-[#F5F7FA] p-5 flex justify-center'>
+        <section className=' bg-[#F5F7FA] px-16 py-10 w-full min-h-screen space-y-10'>
+            <div className='flex justify-between items-center mb-8'>
+                <div className='flex justify-start items-center'>
+                    <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
+                    <h2 className='text-[#000000] text-xl font-medium font-roboto'>Add Sub Admin</h2>
+                </div>
+            </div>
             <Form {...form}>
-                <form onSubmit={handleSubmit(onSubmit)} className="max-w-[730px] w-full border-[1px] border-[#B9B9B9] rounded-xl bg-[#FFFFFF] px-5 py-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="max-w-[730px] mx-auto w-full border-[1px] border-[#B9B9B9] rounded-xl bg-[#FFFFFF] px-5 py-4">
                     <h2 className='text-[#1064FD] text-2xl text-left font-bold font-nunito mb-4'>Add sub admin</h2>
 
-                    <div className="grid grid-cols-2 gap-10">
+                    <div className="grid grid-cols-2 gap-6">
                         <FormField
                             control={control}
                             name="position"
