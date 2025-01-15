@@ -1,27 +1,14 @@
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import cuisines from '@/data/cuisines.json';
-import days from '@/data/days.json';
-import restaurantOptions from '@/data/restaurantOptions.json';
 import { EditProfileSchema2 } from '@/schema/restaurantSchema';
-import { generateTimeOptions } from '@/utils/generateTimeOptions';
 import { updateMultiplePreview } from '@/utils/updatePreview';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { PiCameraPlus } from 'react-icons/pi';
 
-const EditProfile3 = () => {
+const EditProfile3 = ({ setPage }) => {
     const form = useForm({
         resolver: zodResolver(EditProfileSchema2),
         defaultValues: {
@@ -49,6 +36,7 @@ const EditProfile3 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage((prev) => prev + 1);
     }
     return (
         <Form {...form}>

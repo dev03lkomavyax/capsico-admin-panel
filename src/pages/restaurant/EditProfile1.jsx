@@ -19,7 +19,7 @@ import { CiLocationOn } from "react-icons/ci"
 
 const libraries = ["places", "marker"];
 
-const EditProfile1 = () => {
+const EditProfile1 = ({ setPage }) => {
 
     const form = useForm({
         resolver: zodResolver(EditProfileSchema1),
@@ -132,8 +132,9 @@ const EditProfile1 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage((prev) => prev + 1);
     }
-    
+
     return (
         <div>
             <Form {...form}>

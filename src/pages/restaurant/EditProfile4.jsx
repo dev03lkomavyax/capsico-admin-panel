@@ -10,7 +10,7 @@ import { updateMultiplePreview } from '@/utils/updatePreview'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { PiCameraPlus } from 'react-icons/pi'
 
-const EditProfile4 = () => {
+const EditProfile4 = ({ setPage }) => {
     const form = useForm({
         resolver: zodResolver(EditProfileSchema4),
         defaultValues: {
@@ -38,6 +38,7 @@ const EditProfile4 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage((prev) => prev + 1);
     }
 
     return (

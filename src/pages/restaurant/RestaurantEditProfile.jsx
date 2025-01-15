@@ -24,18 +24,18 @@ const RestaurantEditProfile = () => {
                 </button>
 
                 <div className='mb-10'>
-                    {page === 1 && <EditProfile1 />}
-                    {page === 2 && <EditProfile2 />}
-                    {page === 3 && <EditProfile3 />}
-                    {page === 4 && <EditProfile4 />}
-                    {page === 5 && <EditProfile5 />}
+                    {page === 1 && <EditProfile1 setPage={setPage} />}
+                    {page === 2 && <EditProfile2 setPage={setPage} />}
+                    {page === 3 && <EditProfile3 setPage={setPage} />}
+                    {page === 4 && <EditProfile4 setPage={setPage} />}
+                    {page === 5 && <EditProfile5 setPage={setPage} />}
                     {page === 6 && <EditProfile6 />}
                 </div>
 
-                <ReactPagination
+                {/* <ReactPagination
                     setPage={setPage}
                     totalPage={pageCount}
-                />
+                /> */}
 
             </section>
         </AdminWrapper>

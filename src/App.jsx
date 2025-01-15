@@ -3,6 +3,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import './App.css';
 import Dashboard from './pages/Dashboard';
 import Fallback from './components/Fallback';
+import { useSelector } from 'react-redux';
+import BackdropLoader from './components/loader/BackdropLoader';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
@@ -45,15 +47,18 @@ const ApplicationRequest = lazy(() => import('./pages/application-request/Applic
 const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaurant'))
 
 function App() {
+  const { isLoading } = useSelector((state) => state.loading);
 
   return (
     <>
+      {isLoading && <BackdropLoader />}
+
       <Router>
         <Suspense fallback={<Fallback />}>
           <Routes>
             <Route path='/' element={<Login />} />
 
-            <Route path='/admin/dashboard' element={<Dashboard />} />
+            <Route path='/admin/dashboard' element={<AdminDashBoard />} />
 
             <Route path='/admin/order' element={<Order />} />
             <Route path='/admin/order/status' element={<StatusList />} />
@@ -66,6 +71,7 @@ function App() {
             <Route path='/admin/restaurant' element={<RestaurantList />} />
             <Route path='/admin/restaurant/dashboard' element={<RestaurantDashborad />} />
             <Route path='/admin/restaurant/edit-profile' element={<RestaurantEditProfile />} />
+            <Route path='/admin/restaurant/add-restaurant' element={<RestaurantEditProfile />} />
             <Route path='/admin/restaurant/addmenu' element={<AddMenu />} />
             <Route path='/admin/restaurant/reviews' element={<Review />} />
             <Route path='/admin/restaurant/revenue' element={<Revenue />} />
@@ -79,6 +85,7 @@ function App() {
             <Route path='/admin/vendor/reviews' element={<VendorReviews />} />
             <Route path='/admin/vendor/revenue' element={<VendorRevenue />} />
             <Route path='/admin/vendor/edit-profile' element={<VendorEditProfile />} />
+            <Route path='/admin/vendor/add-vendor' element={<VendorEditProfile />} />
             <Route path='/admin/vendor/products' element={<VendorProducts />} />
 
             <Route path='/admin/delivery-agent' element={<DeliveryAgent />} />
@@ -89,7 +96,7 @@ function App() {
             <Route path='/admin/sub-admin' element={<SubAdminList />} />
             <Route path='/admin/sub-admin/add-subadmin' element={<AddSubAdmin />} />
             <Route path='/admin/sub-admin/edit-subadmin' element={<EditSubAdmin />} />
-            <Route path='/admin/sub-admin/admin-dashboard' element={<AdminDashBoard />} />
+            {/* <Route path='/admin/sub-admin/admin-dashboard' element={<AdminDashBoard />} /> */}
             <Route path='/admin/sub-admin/sales' element={<SalesReport />} />
             <Route path='/admin/sub-admin/update-admin-profile' element={<UpdateAdminProfile />} />
 

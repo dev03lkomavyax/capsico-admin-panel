@@ -21,7 +21,7 @@ const ChangePassword = () => {
         }
     })
 
-    const onSubmit = (data) =>{
+    const onSubmit = (data) => {
         console.log("data :", data)
         form.reset({
             currentPassword: '',
@@ -32,7 +32,7 @@ const ChangePassword = () => {
         <div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <p className='text-[#397FFE] text-base font-semibold font-inter px-6 mt-3 cursor-pointer'>Change password</p>
+                    <button className='text-[#397FFE] text-base font-semibold font-inter mt-3 cursor-pointer'>Change password</button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <Form {...form}>

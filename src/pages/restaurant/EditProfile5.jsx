@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { updatePreview } from '@/utils/updatePreview'
 import { useEffect } from 'react'
 
-const EditProfile5 = () => {
+const EditProfile5 = ({ setPage }) => {
     const form = useForm({
         resolver: zodResolver(EditProfileSchema5),
         defaultValues: {
@@ -49,6 +49,7 @@ const EditProfile5 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage((prev) => prev + 1);
     }
 
     return (

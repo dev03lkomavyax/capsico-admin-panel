@@ -1,9 +1,11 @@
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import ReactPagination from '@/components/pagination/ReactPagination'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Plus } from 'lucide-react'
 import React, { useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
@@ -97,10 +99,20 @@ const RestaurantList = () => {
     return (
         <AdminWrapper>
             <section className='bg-[#F5F7FA] px-0 py-0 w-full min-h-screen'>
-                <div className='flex justify-start items-center mb-8'>
-                    <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
-                    <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant</h2>
+                <div className="flex justify-between items-center mb-8">
+                    <div className='flex justify-start items-center'>
+                        <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
+                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant</h2>
+                    </div>
+                    <Button
+                        className="bg-blue-600 w-40 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
+                        onClick={() => navigate("/admin/restaurant/add-restaurant")}
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add Restaurant
+                    </Button>
                 </div>
+
                 <div className='flex justify-between items-center w-full mb-4'>
                     <div className='flex justify-start items-center -ml-4'>
                         <BsSearch className='relative left-8 text-[#1D1929]' />

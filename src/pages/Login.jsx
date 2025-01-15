@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Form } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
@@ -8,9 +8,14 @@ import { loginSchema } from '@/schema/loginSchema'
 import Field from '@/components/shadcnCom/Field'
 import { IoEye } from "react-icons/io5";
 import { BiSolidHide } from "react-icons/bi";
+import usePostApiReq from '@/hooks/usePostApiReq'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(true)
+    const navigate = useNavigate();
+
+    const { res, fetchData, isLoading } = usePostApiReq();
 
     const form = useForm({
         resolver: zodResolver(loginSchema),
@@ -22,13 +27,17 @@ const Login = () => {
 
     const { control, reset, handleSubmit } = form
 
+
     const onSubmit = (data) => {
-        console.log('data', data)
-        reset({
-            adminId: '',
-            password: ''
-        })
+        console.log("data", data);
+        fetchData("/admin/admin-login", data);
     }
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            navigate("/admin/dashboard");
+        }
+    }, [res])
 
     return (
         <section className='flex justify-center items-center w-full h-screen bg-[#4880FF]'>

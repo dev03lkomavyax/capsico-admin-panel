@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-const EditProfile2 = () => {
+const EditProfile2 = ({ setPage }) => {
   const form = useForm({
     resolver: zodResolver(EditProfileSchema2),
     defaultValues: {
@@ -56,6 +56,7 @@ const EditProfile2 = () => {
 
   const onSubmit = (data) => {
     console.log("data", data);
+    setPage((prev) => prev + 1);
   }
 
   return (

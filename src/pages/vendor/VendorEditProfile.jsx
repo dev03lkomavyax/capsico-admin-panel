@@ -85,7 +85,7 @@ function VendorEditProfile() {
                 </div>
                 <div className='w-full'>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7 w-full min-h-screen">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7 w-full">
                             {pageNumber === 1 && <BusinessInfo form={form} />}
                             {pageNumber === 2 && <ContactInfo form={form} />}
                             {pageNumber === 3 && <BankDetails form={form} />}
