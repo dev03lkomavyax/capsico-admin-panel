@@ -17,8 +17,12 @@ import { generateTimeOptions } from '@/utils/generateTimeOptions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
-const AddRestaurant2 = () => {
+const AddRestaurant2 = ({ page, setPage }) => {
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(addRestaurantSchema2),
     defaultValues: {
@@ -56,12 +60,20 @@ const AddRestaurant2 = () => {
 
   const onSubmit = (data) => {
     console.log("data", data);
+    setPage(page + 1)
   }
 
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
+          <div className='flex justify-between'>
+            <button onClick={() => navigate(-1)} className='flex justify-start items-center mb-8'>
+              <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+              <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+            </button>
+            <Button size="lg" className="w-24 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" type="submit">Save</Button>
+          </div>
           <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
             <h3 className='text-xl font-bold text-[#4A5E6D]'>Choose options for your restaurant</h3>
             {/* <p className='text-[25px] font-normal text-[#92A5B5]'>Restaurant name. address. contact no., owner details</p> */}
@@ -302,9 +314,6 @@ const AddRestaurant2 = () => {
                 )}
               />
             </div>
-          </div>
-          <div className="flex justify-end gap-2 mt-10">
-            <Button size="lg" className="w-20" type="submit">Done</Button>
           </div>
         </form>
       </Form>
