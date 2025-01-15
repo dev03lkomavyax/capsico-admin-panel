@@ -1,0 +1,7 @@
+.admin .home-container {
+    @apply flex items-start h-[calc(100vh-80px)];
+}
+
+.main:-webkit-scrollbar {
+    display: none;
+}

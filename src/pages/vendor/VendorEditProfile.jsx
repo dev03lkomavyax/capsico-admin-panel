@@ -9,6 +9,7 @@ import ContactInfo from '@/components/vendor/ContactInfo'
 import ProductInfo from '@/components/vendor/ProductInfo'
 import BusinessInfo from '@/components/vendor/BusinessInfo'
 import { useNavigate } from 'react-router-dom'
+import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 
 function VendorEditProfile() {
 
@@ -74,30 +75,32 @@ function VendorEditProfile() {
     }
 
     return (
-        <section className='border-[1px] bg-[#F5F7FA] px-16 py-10 w-full'>
-            <div className='flex justify-between items-center mb-8'>
-                <div className='flex justify-start items-center'>
-                    <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
-                    <h2 className='text-[#000000] text-xl font-medium font-roboto'>Vendor</h2>
+        <AdminWrapper>
+            <section className='w-full'>
+                <div className='flex justify-between items-center mb-8'>
+                    <div className='flex justify-start items-center'>
+                        <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
+                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>Vendor</h2>
+                    </div>
                 </div>
-            </div>
-            <div className='w-full'>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7 w-full min-h-screen">
-                        {pageNumber === 1 && <BusinessInfo form={form} />}
-                        {pageNumber === 2 && <ContactInfo form={form} />}
-                        {pageNumber === 3 && <BankDetails form={form} />}
-                        {pageNumber === 4 && <ProductInfo form={form} />}
-                        <div className='flex justify-end gap-6'>
-                            {pageNumber > 1 && <button onClick={() => setpageNumber(pageNumber - 1)} className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#1064FD] text-base font-medium font-dm bg-[#FFFFFF] hover:bg-[#f7f7f7]'>Previous</button>}
-                            {pageNumber < 4 && <button onClick={() => setpageNumber(pageNumber + 1)} className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#FFFFFF] text-base font-medium font-dm bg-[#1064FD] hover:bg-[#1063fde5]'>Next</button>}
-                            {pageNumber === 4 && <button className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#FFFFFF] text-base font-medium font-dm bg-[#1064FD] hover:bg-[#1063fde5]' type="submit">Save</button>}
-                        </div>
-                        {/* <Button >Submit</Button> */}
-                    </form>
-                </Form>
-            </div>
-        </section>
+                <div className='w-full'>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7 w-full min-h-screen">
+                            {pageNumber === 1 && <BusinessInfo form={form} />}
+                            {pageNumber === 2 && <ContactInfo form={form} />}
+                            {pageNumber === 3 && <BankDetails form={form} />}
+                            {pageNumber === 4 && <ProductInfo form={form} />}
+                            <div className='flex justify-end gap-6'>
+                                {pageNumber > 1 && <button onClick={() => setpageNumber(pageNumber - 1)} className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#1064FD] text-base font-medium font-dm bg-[#FFFFFF] hover:bg-[#f7f7f7]'>Previous</button>}
+                                {pageNumber < 4 && <button onClick={() => setpageNumber(pageNumber + 1)} className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#FFFFFF] text-base font-medium font-dm bg-[#1064FD] hover:bg-[#1063fde5]'>Next</button>}
+                                {pageNumber === 4 && <button className='border-[1px] border-[#1064FD] rounded-lg h-12 w-28 text-[#FFFFFF] text-base font-medium font-dm bg-[#1064FD] hover:bg-[#1063fde5]' type="submit">Save</button>}
+                            </div>
+                            {/* <Button >Submit</Button> */}
+                        </form>
+                    </Form>
+                </div>
+            </section>
+        </AdminWrapper>
     )
 }
 

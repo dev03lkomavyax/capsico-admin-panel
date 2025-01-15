@@ -39,10 +39,10 @@ const Login = () => {
                     <div className='my-7'>
                         <Field name='adminId' title='Admin ID' control={control} placeholder='Admin ID' type='email' />
                     </div>
-                    <div className='mb-12 w-full'>
-                        <Field name='password' title='Password' control={control} placeholder='*************' type={`${showPassword?'password':'text'}`} />
-                        {showPassword?<IoEye onClick={()=>setShowPassword(!showPassword)} className='w-full relative -top-9 left-56 cursor-pointer' />:
-                        <BiSolidHide onClick={()=>setShowPassword(!showPassword)} className='w-full relative -top-9 left-56 cursor-pointer' />}
+                    <div className='mb-12 w-full relative'>
+                        <Field name='password' title='Password' control={control} placeholder='*************' type={`${showPassword ? 'password' : 'text'}`} />
+                        {showPassword ? <IoEye onClick={() => setShowPassword(!showPassword)} className='absolute top-[52px] right-3 text-gray-500 text-2xl cursor-pointer' /> :
+                            <BiSolidHide onClick={() => setShowPassword(!showPassword)} className='absolute top-[52px] right-3 text-gray-500 text-2xl cursor-pointer' />}
                         <div className='flex justify-between items-center mt-[6px]'>
                             <div className='flex justify-start items-center gap-2'>
                                 <Checkbox className='border-[0.6] border-[#A3A3A3] data-[state=checked]:bg-[#FFFFFF] data-[state=checked]:text-[#656565]' />

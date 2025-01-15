@@ -2,7 +2,7 @@ import React from 'react'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 
-const Field = ({ name, placeholder, control, title, type }) => {
+const Field = ({ name, placeholder, control, title, type, }) => {
     return (
         <FormField
             control={control}
