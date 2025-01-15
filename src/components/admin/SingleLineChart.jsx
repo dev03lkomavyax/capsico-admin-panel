@@ -30,11 +30,11 @@ const chartConfig = {
     },
 }
 
-const SingleLineChart = () => {
+const SingleLineChart = ({title}) => {
     return (
         <Card className='w-[500px] rounded-2xl bg-[#FFFFFF] border-none'>
             <CardHeader>
-                <CardTitle className='text-[#000000] text-base font-medium font-inter'>Market Share</CardTitle>
+                <CardTitle className='text-[#000000] text-base font-medium font-inter'>{title}</CardTitle>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>

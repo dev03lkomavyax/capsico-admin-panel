@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { MdOutlineFileUpload } from 'react-icons/md'
+import { MdKeyboardArrowLeft, MdOutlineFileUpload } from 'react-icons/md'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
@@ -14,8 +14,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { updatePreview } from '@/utils/updatePreview'
 import { useEffect } from 'react'
 import { addRestaurantSchema5 } from '@/schema/ApplicationRequest'
+import { useNavigate } from 'react-router-dom'
 
-const AddRestaurant5 = () => {
+const AddRestaurant5 = ({page, setPage}) => {
+        const navigate = useNavigate();
+    
     const form = useForm({
         resolver: zodResolver(addRestaurantSchema5),
         defaultValues: {
@@ -49,11 +52,19 @@ const AddRestaurant5 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage(page+1)
     }
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
+                <div className='flex justify-between'>
+                                        <button onClick={() => navigate(-1)} className='flex justify-start items-center mb-8'>
+                                            <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                                        </button>
+                                        <Button size="lg" className="w-24 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" type="submit">Save</Button>
+                                    </div>
                 <div>
                     <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
                         <h3 className='text-lg font-bold text-[#4A5E6D]'>Upload Legal Documents</h3>
@@ -320,9 +331,6 @@ const AddRestaurant5 = () => {
                         </div>
                         <p className='text-[#858585] mt-1 text-xs'>We will credit 1 in your account to validate your bank account details</p>
                     </div>
-                </div>
-                <div className="flex justify-end gap-2 mt-10">
-                    <Button size="lg" className="w-20" type="submit">Done</Button>
                 </div>
             </form>
         </Form>

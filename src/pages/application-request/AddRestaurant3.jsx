@@ -20,9 +20,13 @@ import { updateMultiplePreview } from '@/utils/updatePreview';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { PiCameraPlus } from 'react-icons/pi';
+import { useNavigate } from 'react-router-dom';
 
-const AddRestaurant3 = () => {
+const AddRestaurant3 = ({page, setPage}) => {
+        const navigate = useNavigate();
+    
     const form = useForm({
         resolver: zodResolver(addRestaurantSchema3),
         defaultValues: {
@@ -50,10 +54,18 @@ const AddRestaurant3 = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
+        setPage(page+1)
     }
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
+                <div className='flex justify-between'>
+                                        <button onClick={() => navigate(-1)} className='flex justify-start items-center mb-8'>
+                                            <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                                        </button>
+                                        <Button size="lg" className="w-24 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" type="submit">Save</Button>
+                                    </div>
                 <div>
                     <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
                         <div className='w-full mt-4'>
@@ -189,9 +201,6 @@ const AddRestaurant3 = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="flex justify-end gap-2 mt-10">
-                    <Button size="lg" className="w-20" type="submit">Done</Button>
                 </div>
             </form>
         </Form>
