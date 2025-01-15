@@ -12,31 +12,19 @@ import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
 
 const AddRestaurant = () => {
     const [pageCount, setPageCount] = useState(6);
-    const [page, setPage] = useState(1);
-    const navigate = useNavigate();
+    const [page, setPage] = useState(5);
 
     return (
         <AdminWrapper>
             <section>
-                <button onClick={() => navigate(-1)} className='flex justify-start items-center mb-8'>
-                    <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-                    <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
-                </button>
-
-                <div className='mb-10'>
-                    {page === 1 && <AddRestaurant1 />}
-                    {page === 2 && <AddRestaurant2 />}
-                    {page === 3 && <AddRestaurant3 />}
-                    {page === 4 && <AddRestaurant4 />}
-                    {page === 5 && <AddRestaurant5 />}
+                <div className=''>
+                    {page === 1 && <AddRestaurant1 page={page} setPage={setPage} />}
+                    {page === 2 && <AddRestaurant2 page={page} setPage={setPage} />}
+                    {page === 3 && <AddRestaurant3 page={page} setPage={setPage} />}
+                    {page === 4 && <AddRestaurant4 page={page} setPage={setPage} />}
+                    {page === 5 && <AddRestaurant5 page={page} setPage={setPage} />}
                     {page === 6 && <AddRestaurant6 />}
                 </div>
-
-                <ReactPagination
-                    setPage={setPage}
-                    totalPage={pageCount}
-                />
-
             </section>
         </AdminWrapper>
     )
