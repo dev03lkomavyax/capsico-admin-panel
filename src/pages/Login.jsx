@@ -27,7 +27,6 @@ const Login = () => {
 
     const { control, reset, handleSubmit } = form
 
-
     const onSubmit = (data) => {
         console.log("data", data);
         fetchData("/admin/admin-login", data);
