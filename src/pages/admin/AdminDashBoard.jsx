@@ -16,10 +16,12 @@ import { MdArrowForwardIos } from 'react-icons/md'
 import RightChart from '@/components/admin/RightChart'
 import { Progress } from '@/components/ui/progress'
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
+import { useNavigate } from 'react-router-dom'
 
 const AdminDashBoard = () => {
     const [dayFilter, setDayFilter] = useState("Today");
     const [dayFilter2, setDayFilter2] = useState("Today");
+    const navigate = useNavigate();
 
     return (
         <AdminWrapper>
@@ -33,6 +35,7 @@ const AdminDashBoard = () => {
                         label="Total Revenue"
                         trendIcon={graphRed}
                         percentage="26% (30 days)"
+                        navigate={() => navigate("/admin/dashboard/reporting")}
                     />
 
                     <Infocard

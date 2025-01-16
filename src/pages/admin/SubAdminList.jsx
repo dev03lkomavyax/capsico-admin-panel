@@ -59,14 +59,12 @@ const SubAdminList = () => {
 
     const handleValueChange = (value) => {
         if (value === 'remove') {
-
-        } else if (value === 'detail') {
-            navigate('/admin/sub-admin/admin-dashboard')
         }
         else {
             navigate('/admin/sub-admin/edit-subadmin')
         }
     }
+
     return (
         <AdminWrapper>
             <section className='px-0 py-0 w-full min-h-screen'>
@@ -108,7 +106,6 @@ const SubAdminList = () => {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectItem className='text-[#252525] text-sm font-medium font-roboto' value="remove">Remove</SelectItem>
-                                                <SelectItem className='text-[#252525] text-sm font-medium font-roboto' value="detail">View detail</SelectItem>
                                                 <SelectItem className='text-[#252525] text-sm font-medium font-roboto' value="edit">Edit</SelectItem>
                                             </SelectGroup>
                                         </SelectContent>

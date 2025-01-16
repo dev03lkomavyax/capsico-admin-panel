@@ -6,7 +6,9 @@ import { updateMultiplePreview } from '@/utils/updatePreview';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { PiCameraPlus } from 'react-icons/pi';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfile3 = ({ setPage }) => {
     const form = useForm({
@@ -17,6 +19,8 @@ const EditProfile3 = ({ setPage }) => {
             restaurant: "",
         }
     })
+
+    const navigate = useNavigate();
 
     const { register, control, watch, setValue, getValues } = form;
 
@@ -42,6 +46,13 @@ const EditProfile3 = ({ setPage }) => {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
                 <div>
+                    <div className="flex justify-between gap-2 mb-8">
+                        <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+                            <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                        </button>
+                        <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+                    </div>
                     <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
                         <div className='w-full mt-4'>
                             <div>

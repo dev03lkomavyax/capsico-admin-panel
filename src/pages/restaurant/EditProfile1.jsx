@@ -16,10 +16,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { CiLocationOn } from "react-icons/ci"
+import { MdKeyboardArrowLeft } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 const libraries = ["places", "marker"];
 
 const EditProfile1 = ({ setPage }) => {
+    const navigate = useNavigate();
 
     const form = useForm({
         resolver: zodResolver(EditProfileSchema1),
@@ -140,6 +143,13 @@ const EditProfile1 = ({ setPage }) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
                     <div>
+                        <div className="flex justify-between gap-2 mb-8">
+                            <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+                                <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                                <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                            </button>
+                            <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+                        </div>
                         <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
                             <h3 className='text-xl font-bold text-[#4A5E6D]'>Restaurant Information</h3>
                             <p className='text-lg font-normal text-[#92A5B5]'>Restaurant name. address. contact no., owner details</p>
@@ -449,9 +459,6 @@ const EditProfile1 = ({ setPage }) => {
                         } */}
                     </div>
 
-                    <div className="flex justify-end gap-2 mt-10">
-                        <Button size="lg" className="w-20" type="submit">Done</Button>
-                    </div>
                 </form>
             </Form>
         </div>

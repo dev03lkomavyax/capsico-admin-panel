@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { updateMultiplePreview } from '@/utils/updatePreview'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { PiCameraPlus } from 'react-icons/pi'
+import { useNavigate } from 'react-router-dom'
+import { MdKeyboardArrowLeft } from 'react-icons/md'
 
 const EditProfile4 = ({ setPage }) => {
     const form = useForm({
@@ -27,6 +29,8 @@ const EditProfile4 = ({ setPage }) => {
         }
     })
 
+    const navigate = useNavigate();
+
     const { register, control, watch, setValue, getValues } = form;
     const menuImagesRef = register("menuImages");
 
@@ -44,6 +48,13 @@ const EditProfile4 = ({ setPage }) => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
+                <div className="flex justify-between gap-2 mb-8">
+                    <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+                        <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                    </button>
+                    <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+                </div>
                 <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
                     <h3 className='text-lg font-bold text-[#4A5E6D]'>General restaurant information</h3>
                     <p className='text-xs font-semibold text-[#ABABAB]'>Update delivery timings and menu for online ordering</p>

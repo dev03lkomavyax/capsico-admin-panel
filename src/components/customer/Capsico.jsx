@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Checkbox } from '../ui/checkbox'
 import ReactPagination from '../pagination/ReactPagination'
+import { useNavigate } from 'react-router-dom'
 
 const data = [
     {
@@ -46,6 +47,16 @@ const Capsico = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [totalPage, setTotalPage] = useState(16)
     const [page, setPage] = useState(1)
+    const navigate = useNavigate();
+
+    const handleOnChange = (value, id) => {
+        if (value === 'remove') {
+
+        }
+        else {
+            navigate(`/admin/customer/${id}`)
+        }
+    }
 
     return (
         <div>
@@ -108,7 +119,7 @@ const Capsico = () => {
                             <TableCell className="text-[#667085] text-[10px] font-semibold font-inter">{data.totalSpent}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.lastOrder}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                                <Select>
+                                <Select onValueChange={(value) => handleOnChange(value, "123")}>
                                     <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
                                         <SelectValue placeholder="Action" />
                                     </SelectTrigger>

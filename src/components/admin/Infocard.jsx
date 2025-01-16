@@ -1,7 +1,7 @@
 
-const Infocard = ({ img, value, label, percentage, trendIcon }) => {
+const Infocard = ({ img, value, label, percentage, trendIcon,navigate=()=>{} }) => {
     return (
-        <div className="bg-[#FEFEFE] p-4 rounded-md flex gap-4 items-center">
+        <div onClick={navigate} className="bg-[#FEFEFE] p-4 rounded-md flex gap-4 items-center">
             <img className="w-20" src={img} alt="info-icon" />
             <div>
                 <h2 className="font-inter text-[#232323] font-semibold text-4xl">{value}</h2>

@@ -10,6 +10,8 @@ const DeliveryAgentComp = () => {
     const navigate = useNavigate();
 
     const handleValueChange = (value) => {
+        console.log("value: ", value);
+
         if (value === 'remove') {
             return;
         } else if (value === 'detail') {

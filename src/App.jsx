@@ -59,9 +59,11 @@ function App() {
             <Route path='/' element={<Login />} />
 
             <Route path='/admin/dashboard' element={<AdminDashBoard />} />
+            <Route path='/admin/dashboard/reporting' element={<SalesReport />} />
 
             <Route path='/admin/order' element={<Order />} />
-            <Route path='/admin/order/status' element={<StatusList />} />
+            <Route path='/admin/order/capsico/:status' element={<StatusList />} />
+            <Route path='/admin/order/quickly/:status' element={<StatusList />} />
             <Route path='/admin/order/new-order' element={<NewOrder />} />
             <Route path='/admin/order/:orderId' element={<OrderDetails />} />
 
@@ -97,7 +99,7 @@ function App() {
             <Route path='/admin/sub-admin/add-subadmin' element={<AddSubAdmin />} />
             <Route path='/admin/sub-admin/edit-subadmin' element={<EditSubAdmin />} />
             {/* <Route path='/admin/sub-admin/admin-dashboard' element={<AdminDashBoard />} /> */}
-            <Route path='/admin/sub-admin/sales' element={<SalesReport />} />
+            {/* <Route path='/admin/sub-admin/sales' element={<SalesReport />} /> */}
             <Route path='/admin/sub-admin/update-admin-profile' element={<UpdateAdminProfile />} />
 
             <Route path='/admin/offers' element={<Offers />} />

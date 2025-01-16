@@ -9,14 +9,29 @@ import { useNavigate } from 'react-router-dom'
 const Quickly = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, quicklyOrderData }) => {
 
   const navigate = useNavigate()
+
+  const handleOnClick = (tab) => {
+    setSelectOrderTab(tab);
+    navigate(`/admin/order/quickly/${tab}`);
+  }
+
+  const handleOnChange = (value, id) => {
+    if (value === 'remove') {
+
+    }
+    else {
+      navigate(`/admin/order/${id}`)
+    }
+  }
+
   return (
     <>
       <section className='flex justify-start items-center gap-5'>
-        <button onClick={() => setSelectOrderTab('allOrder')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'allOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>All Order ({quicklyOrderData.length})</button>
-        <button onClick={() => setSelectOrderTab('newOrder')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'newOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>New Order (20)</button>
-        <button onClick={() => setSelectOrderTab('packed')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'packed' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Packed (10)</button>
-        <button onClick={() => {setSelectOrderTab('completed'), navigate('status')}} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'completed' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Completed (20)</button>
-        <button onClick={() => setSelectOrderTab('cancelled')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'cancelled' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Cancelled (3)</button>
+        <button onClick={() => handleOnClick('all')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'allOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>All Order ({quicklyOrderData.length})</button>
+        <button onClick={() => handleOnClick('new')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'newOrder' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>New Order (20)</button>
+        <button onClick={() => handleOnClick('packed')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'packed' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Packed (10)</button>
+        <button onClick={() => handleOnClick('completed')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'completed' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Completed (20)</button>
+        <button onClick={() => handleOnClick('cancelled')} className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${selectOrderTab === 'cancelled' ? 'bg-[#cfe0ff]' : 'bg-[#E3EDFF]'}`}>Cancelled (3)</button>
       </section>
       <section className='flex justify-between items-center w-full'>
         <div className='flex justify-start items-center -ml-4'>
@@ -85,7 +100,7 @@ const Quickly = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                 <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{data.restaurantName}</TableCell>
                 <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.price}</TableCell>
                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                  <Select>
+                  <Select onValueChange={(value) => handleOnChange(value, "123")}>
                     <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
                       <SelectValue placeholder="Action" />
                     </SelectTrigger>

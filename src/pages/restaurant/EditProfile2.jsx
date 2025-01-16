@@ -17,6 +17,8 @@ import { generateTimeOptions } from '@/utils/generateTimeOptions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfile2 = ({ setPage }) => {
   const form = useForm({
@@ -33,6 +35,7 @@ const EditProfile2 = ({ setPage }) => {
   const { register, control, watch, setValue } = form;
   const [showMoreRestaurantOptions, setShowMoreRestaurantOptions] = useState(false)
   const [showMoreCuisines, setShowMoreCuisines] = useState(false)
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setShowMoreRestaurantOptions(!showMoreRestaurantOptions);
@@ -63,6 +66,13 @@ const EditProfile2 = ({ setPage }) => {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
+          <div className="flex justify-between gap-2 mb-8">
+            <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+              <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+              <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+            </button>
+            <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+          </div>
           <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
             <h3 className='text-xl font-bold text-[#4A5E6D]'>Choose options for your restaurant</h3>
             {/* <p className='text-[25px] font-normal text-[#92A5B5]'>Restaurant name. address. contact no., owner details</p> */}

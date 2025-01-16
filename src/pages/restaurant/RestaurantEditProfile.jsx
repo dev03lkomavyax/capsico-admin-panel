@@ -18,11 +18,6 @@ const RestaurantEditProfile = () => {
     return (
         <AdminWrapper>
             <section className='py-0 px-0'>
-                <button onClick={() => navigate(-1)} className='flex justify-start items-center mb-8'>
-                    <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-                    <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
-                </button>
-
                 <div className='mb-10'>
                     {page === 1 && <EditProfile1 setPage={setPage} />}
                     {page === 2 && <EditProfile2 setPage={setPage} />}

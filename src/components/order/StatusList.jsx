@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Checkbox } from '../ui/checkbox'
 import { IoIosArrowBack } from 'react-icons/io'
 import AdminWrapper from '../admin-wrapper/AdminWrapper'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const data = [
     {
@@ -51,13 +52,25 @@ const StatusList = () => {
     const [capsicoOrderData, setCapsicoOrderData] = useState(data)
     const [selectTab, setSelectTab] = useState('capsico')
     const [searchQuery, setSearchQuery] = useState('')
+    const params = useParams();
+    const navigate = useNavigate();
+
+    const handleOnChange = (value, id) => {
+        if (value === 'remove') {
+
+        }
+        else {
+            navigate(`/admin/order/${id}`)
+        }
+    }
+
     return (
         <AdminWrapper>
             <section className='flex flex-col gap-6 w-full h-full'>
                 <div className='-mb-4'>
                     <div className="flex items-center gap-1">
                         <IoIosArrowBack className='text-2xl' />
-                        <span className='text-[#000000] font-roboto text-xl font-medium'>Completed order </span>
+                        <span className='text-[#000000] font-roboto text-xl font-medium capitalize'>{params?.status} order </span>
                     </div>
                     <span className='text-sm text-[#5F5F5F] font-roboto'>Orders/orders details</span>
                 </div>
@@ -117,7 +130,7 @@ const StatusList = () => {
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">ID Order</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Order</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Customer</TableHead>
-                                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Status</TableHead>
+                                {/* <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Status</TableHead> */}
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Created Date</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant name</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Price</TableHead>
@@ -131,14 +144,14 @@ const StatusList = () => {
                                     <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.orderID}</TableCell>
                                     <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{data.order}</TableCell>
                                     <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.customer}</TableCell>
-                                    <TableCell>
+                                    {/* <TableCell>
                                         <div className={`${data.status === 'New' && 'text-[#1619ac] bg-[#b9cbed]' || data.status === 'Preparing' && 'text-[#AC9D16] bg-[#FAFDD4]' || data.status === 'Complete' && 'text-[#4FAC16] bg-[#DCFDD4]' || data.status === 'Cancelled' && 'text-[#AC1616] bg-[#FDD4D4]'} w-[76px] flex justify-center items-center h-[24px] text-[10px] font-normal font-sans rounded-[10px]`}>{data.status}</div>
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.createdDate}</TableCell>
                                     <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{data.restaurantName}</TableCell>
                                     <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.price}</TableCell>
                                     <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                                        <Select>
+                                        <Select onValueChange={(value) => handleOnChange(value, "123")}>
                                             <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
                                                 <SelectValue placeholder="Action" />
                                             </SelectTrigger>

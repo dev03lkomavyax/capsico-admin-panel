@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { MdOutlineFileUpload } from 'react-icons/md'
+import { MdKeyboardArrowLeft, MdOutlineFileUpload } from 'react-icons/md'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
@@ -14,6 +14,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { updatePreview } from '@/utils/updatePreview'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const EditProfile5 = ({ setPage }) => {
     const form = useForm({
@@ -32,6 +33,8 @@ const EditProfile5 = ({ setPage }) => {
             IFSCCode: "",
         }
     })
+
+    const navigate = useNavigate();
 
     const { register, control, watch, setValue, getValues } = form;
 
@@ -56,6 +59,13 @@ const EditProfile5 = ({ setPage }) => {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
                 <div>
+                    <div className="flex justify-between gap-2 mb-8">
+                        <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+                            <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
+                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                        </button>
+                        <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+                    </div>
                     <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
                         <h3 className='text-lg font-bold text-[#4A5E6D]'>Upload Legal Documents</h3>
                         {/* <p className='text-xs font-semibold text-[#ABABAB]'>Update delivery timings and menu for online ordering</p> */}
