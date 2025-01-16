@@ -16,11 +16,11 @@ const SubAdminList = () => {
 
     const navigate = useNavigate()
 
-    const handleValueChange = (value) => {
+    const handleValueChange = (value, subadminId) => {
         if (value === 'remove') {
         }
         else {
-            navigate('/admin/sub-admin/edit-subadmin')
+            navigate('/admin/sub-admin/edit-subadmin', { state: { subadminId } })
         }
     }
 
@@ -65,16 +65,16 @@ const SubAdminList = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {subAdminList.length > 0 && subAdminList.map((e, i) => (
+                            {subAdminList.length > 0 && subAdminList.map((subadmin, i) => (
                                 <TableRow key={i}>
                                     <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{e.id}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{e.fullName}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{e.position}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{e.emailAddress}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{e.mobileNumber}</TableCell>
+                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin._id}</TableCell>
+                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.name}</TableCell>
+                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.position}</TableCell>
+                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.email}</TableCell>
+                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.phone}</TableCell>
                                     <TableCell>
-                                        <Select onValueChange={handleValueChange}>
+                                        <Select onValueChange={(value) => handleValueChange(value, subadmin?._id)}>
                                             <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#252525] text-sm font-medium font-roboto border-[#E9E9EA] border-[1px] rounded-[10px]">
                                                 <SelectValue placeholder="Action" />
                                             </SelectTrigger>

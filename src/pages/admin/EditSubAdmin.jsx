@@ -1,59 +1,89 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AddSubAdminSchema } from "@/schema/AddSubAdminSchema"
+import { AddSubAdminSchema, EditSubAdminSchema } from "@/schema/AddSubAdminSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { FaEye, FaEyeSlash } from "react-icons/fa6"
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
 import ChangePassword from '@/components/admin/ChangePassword'
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import { Label } from '@/components/ui/label'
 import { permissions } from '@/constants/permissions'
+import useGetApiReq from '@/hooks/useGetApiReq'
+import usePatchApiReq from '@/hooks/usePatchApiReq'
 
 const EditSubAdmin = () => {
     const form = useForm({
-        resolver: zodResolver(AddSubAdminSchema),
+        resolver: zodResolver(EditSubAdminSchema),
         defaultValues: {
             position: '',
             name: '',
             phoneNumber: '',
             email: '',
-            password: '',
             permissions: {
                 dashboard: "none",
-                addSubAdmin: "none",
+                subAdmin: "none",
                 customer: "none",
-                restaurants: "none",
+                restaurant: "none",
                 vendor: "none",
                 deliveryAgent: "none",
                 order: "none",
-                reviews: "none",
-                offers: "none",
+                review: "none",
+                offer: "none",
                 applicationRequest: "none"
             },
         }
     })
 
-    const { control, reset, handleSubmit } = form
+    const { control, reset, handleSubmit, setValue } = form
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const { state } = useLocation();
+    const navigate = useNavigate()
+    const { res, fetchData, isLoading } = useGetApiReq();
+    const { res: updateAdminRes, fetchData: uploadAdminData, isLoading: isAdminLoading } = usePatchApiReq();
+
+    const getSubadminDetails = () => {
+        fetchData(`/admin/get-subadmin-details/${state?.subadminId}`);
+    }
+
+    useEffect(() => {
+        getSubadminDetails();
+    }, [state?.subadminId])
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("subadmin details res", res);
+            const { subAdmin } = res?.data?.data || {};
+            subAdmin?.email && setValue("email", subAdmin.email);
+            subAdmin?.position && setValue("position", subAdmin.position);
+            subAdmin?.name && setValue("name", subAdmin.name);
+            subAdmin?.phone && setValue("phoneNumber", subAdmin.phone);
+            subAdmin?.permissions && setValue("permissions", subAdmin.permissions);
+        }
+    }, [res])
 
     const onSubmit = (data) => {
         console.log('data', data)
-        reset({
-            position: '',
-            access: '',
-            name: '',
-            phoneNumber: '',
-            email: '',
-            password: ''
-        })
+
+        uploadAdminData(`/admin/update-subadmin/${state?.subadminId}`, {
+            name: data.name,
+            email: data.email,
+            position: data.position,
+            phone: data.phoneNumber,
+            permissions: data.permissions,
+        });
     }
 
-    const navigate = useNavigate()
+    useEffect(() => {
+        if (updateAdminRes?.status === 200 || updateAdminRes?.status === 201) {
+            console.log("subadmin update res", updateAdminRes);
+            getSubadminDetails();
+        }
+    }, [updateAdminRes])
 
     return (
         <AdminWrapper>
@@ -82,10 +112,12 @@ const EditSubAdmin = () => {
                                             <FormControl>
                                                 <Select value={field.value} onValueChange={field.onChange}>
                                                     <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                                        <SelectValue placeholder="Manager" />
+                                                        <SelectValue placeholder="Select Position" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="Manager">Manager</SelectItem>
+                                                        <SelectItem value="manager">Manager</SelectItem>
+                                                        <SelectItem value="support">Support</SelectItem>
+                                                        <SelectItem value="analyst">Analyst</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>
@@ -136,7 +168,7 @@ const EditSubAdmin = () => {
                                     )}
                                 />
 
-                                <FormField
+                                {/* <FormField
                                     control={control}
                                     name="password"
                                     render={({ field }) => (
@@ -154,7 +186,7 @@ const EditSubAdmin = () => {
                                             <FormMessage />
                                         </FormItem>
                                     )}
-                                />
+                                /> */}
                             </div>
 
                             <Label className="text-sm font-medium inline-block mt-5">Permissions</Label>
@@ -179,7 +211,7 @@ const EditSubAdmin = () => {
                                                             <SelectGroup>
                                                                 <SelectItem value="none">None</SelectItem>
                                                                 <SelectItem value="read">Read</SelectItem>
-                                                                <SelectItem value="write">Write</SelectItem>
+                                                                <SelectItem value="read&write">Read and Write</SelectItem>
                                                             </SelectGroup>
                                                         </SelectContent>
                                                     </Select>

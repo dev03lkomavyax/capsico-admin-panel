@@ -29,7 +29,7 @@ const Login = () => {
 
     const onSubmit = (data) => {
         console.log("data", data);
-        fetchData("/admin/admin-login", data);
+        fetchData("/admin/admin-login", { email: data.adminId, password: data.password });
     }
 
     useEffect(() => {

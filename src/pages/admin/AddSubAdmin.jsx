@@ -18,21 +18,21 @@ const AddSubAdmin = () => {
     const form = useForm({
         resolver: zodResolver(AddSubAdminSchema),
         defaultValues: {
-            position: '',
+            position: 'manager',
             name: '',
             phoneNumber: '',
             email: '',
             password: '',
             permissions: {
                 dashboard: "none",
-                addSubAdmin: "none",
+                subAdmin: "none",
                 customer: "none",
-                restaurants: "none",
+                restaurant: "none",
                 vendor: "none",
                 deliveryAgent: "none",
                 order: "none",
-                reviews: "none",
-                offers: "none",
+                review: "none",
+                offer: "none",
                 applicationRequest: "none"
             },
         }
@@ -95,7 +95,7 @@ const AddSubAdmin = () => {
                                         <FormControl>
                                             <Select value={field.value} onValueChange={field.onChange}>
                                                 <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                                    <SelectValue placeholder="Manager" />
+                                                    <SelectValue placeholder="Select Position" />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="manager">Manager</SelectItem>
@@ -194,7 +194,7 @@ const AddSubAdmin = () => {
                                                         <SelectGroup>
                                                             <SelectItem value="none">None</SelectItem>
                                                             <SelectItem value="read">Read</SelectItem>
-                                                            <SelectItem value="write">Write</SelectItem>
+                                                            <SelectItem value="read&write">Read and Write</SelectItem>
                                                         </SelectGroup>
                                                     </SelectContent>
                                                 </Select>

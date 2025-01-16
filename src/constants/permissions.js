@@ -1,12 +1,12 @@
 export const permissions = [
     { label: "Dashboard", value: "dashboard" },
-    { label: "Add Sub Admin", value: "addSubAdmin" },
+    { label: "Add Sub Admin", value: "subAdmin" },
     { label: "Customer", value: "customer" },
-    { label: "Restaurants", value: "restaurants" },
+    { label: "Restaurants", value: "restaurant" },
     { label: "Vendor", value: "vendor" },
     { label: "Delivery Agent", value: "deliveryAgent" },
     { label: "Order", value: "order" },
-    { label: "Reviews", value: "reviews" },
-    { label: "Offers", value: "offers" },
+    { label: "Reviews", value: "review" },
+    { label: "Offers", value: "offer" },
     { label: "Application Request", value: "applicationRequest" },
 ];

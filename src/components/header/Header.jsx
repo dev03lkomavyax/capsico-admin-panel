@@ -1,4 +1,5 @@
 import { readCookie } from "@/utils/readCookie";
+import { FaUser } from "react-icons/fa6";
 import { FiBell, FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,12 @@ const Header = () => {
                 <FiBell className='text-lg text-[#397FFE]' />
                 <FiSettings className='text-lg text-[#397FFE]' />
 
-                <img onClick={() => navigate("/admin/sub-admin/update-admin-profile")} src={userInfo?.userImage} className="object-cover border p-[1px] w-14 h-14 rounded-full cursor-pointer" alt="profile-img" />
+                {!userInfo?.userImage ?
+                    <button onClick={() => navigate("/admin/sub-admin/update-admin-profile")} className="w-14 cursor-pointer h-14 rounded-full bg-gray-100 flex justify-center items-center">
+                        <FaUser className="text-3xl text-gray-500" />
+                    </button>
+                    : <img onClick={() => navigate("/admin/sub-admin/update-admin-profile")} src={userInfo?.userImage} className="object-cover border p-[1px] w-14 h-14 rounded-full cursor-pointer" alt="profile-img" />
+                }
             </div>
         </header>
     )

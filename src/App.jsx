@@ -1,10 +1,13 @@
-import { lazy, Suspense } from 'react';
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { lazy, Suspense, useEffect } from 'react';
+import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
 import './App.css';
 import Dashboard from './pages/Dashboard';
 import Fallback from './components/Fallback';
 import { useSelector } from 'react-redux';
 import BackdropLoader from './components/loader/BackdropLoader';
+import useGetApiReq from './hooks/useGetApiReq';
+import usePostApiReq from './hooks/usePostApiReq';
+import { readCookie } from './utils/readCookie';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
@@ -48,12 +51,58 @@ const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaura
 
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
+  const { res, fetchData } = useGetApiReq();
+  const { res: refreshRes, fetchData: fetchRefreshData, } = usePostApiReq();
+  const { res: logoutRes, fetchData: fetchLogoutData, } = usePostApiReq();
+  const navigate = useNavigate();
+
+  const getStatus = () => {
+    fetchData("/admin/status");
+  }
+
+  const token = readCookie("userInfo");
+  console.log("token", token);
+
+
+  const refreshToken = () => {
+    fetchRefreshData("/admin/refresh-token");
+  }
+
+  const logout = () => {
+    fetchLogoutData("/admin/logout-all", { phone: token?.phone, role: "admin" });
+  }
+
+  useEffect(() => {
+    getStatus();
+  }, [])
+
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      localStorage.setItem("admin-status", `${res?.data?.isAuthenticated}`);
+      console.log("status response", res);
+      res?.data?.shouldLoggOut && logout();
+      !res?.data?.isAuthenticated && refreshToken();
+    }
+  }, [res])
+
+
+  useEffect(() => {
+    if (refreshRes?.status === 200 || refreshRes?.status === 201) {
+      localStorage.setItem("admin-status", true);
+    }
+  }, [refreshRes])
+
+  useEffect(() => {
+    if (logoutRes?.status === 200 || logoutRes?.status === 201) {
+      localStorage.setItem("admin-status", "false");
+      navigate("/")
+    }
+  }, [logoutRes])
 
   return (
     <>
       {isLoading && <BackdropLoader />}
 
-      <Router>
         <Suspense fallback={<Fallback />}>
           <Routes>
             <Route path='/' element={<Login />} />
@@ -111,7 +160,6 @@ function App() {
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Suspense>
-      </Router>
     </>
   )
 }
