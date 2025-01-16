@@ -27,7 +27,7 @@ const OfferComp = ({ offerIcon, offerVale, offerPercent, tagTitle, isTagRed = fa
                     <h3 className='text-xl font-bold font-numans'>{offerPercent}% Off</h3>
                     <p className='font-numans font-medium text-xs'>Max ₹{offerVale}</p>
                     {tagTitle && <div style={{ backgroundImage: `url(${isTagRed ? redBadge : greenBadge})` }} className="text-white w-24 h-20 absolute -bottom-4 bg-no-repeat bg-center py-1 px-5 text-center flex flex-col items-center justify-center">
-                        <div className="text-[11px] font-medium leading-3 break-words">{tagTitle}</div>
+                        <div className="text-[11px] font-medium leading-3 bg-red-500 py-1 px-4">{tagTitle}</div>
                         {/* <span className="block text-[11px] font-medium -mt-1">only</span> */}
                     </div>}
                 </div>

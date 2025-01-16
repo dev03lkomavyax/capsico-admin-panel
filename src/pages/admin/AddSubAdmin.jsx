@@ -5,9 +5,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { permissions } from "@/constants/permissions"
+import usePostApiReq from "@/hooks/usePostApiReq"
 import { AddSubAdminSchema } from "@/schema/AddSubAdminSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FaEye, FaEyeSlash } from "react-icons/fa6"
 import { MdKeyboardArrowLeft } from "react-icons/md"
@@ -40,14 +41,33 @@ const AddSubAdmin = () => {
     const { control, reset, handleSubmit } = form
     const [isShowPassword, setIsShowPassword] = useState(false);
 
+    const { res, fetchData, isLoading } = usePostApiReq()
+
     const onSubmit = (data) => {
         console.log('data', data)
         // reset({
         //     position: '',
         //     password: ''
         // })
+        const apiData = {
+            position: data.position,
+            name: data.name,
+            phone: Number(data.phoneNumber),
+            email: data.email,
+            password: data.password,
+            permissions: data.permissions,
+        }
+        fetchData(`/admin/create-subAdmin`, apiData);
     }
+
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("create sunAdmin", res.data)
+            navigate('/admin/sub-admin')
+        }
+    }, [res])
 
     return (
         <AdminWrapper>
@@ -78,7 +98,9 @@ const AddSubAdmin = () => {
                                                     <SelectValue placeholder="Manager" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="Manager">Manager</SelectItem>
+                                                    <SelectItem value="manager">Manager</SelectItem>
+                                                    <SelectItem value="support">Support</SelectItem>
+                                                    <SelectItem value="analyst">Analyst</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
