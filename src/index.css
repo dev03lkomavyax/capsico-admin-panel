@@ -110,3 +110,193 @@
   color: #95C22B;
   background: #FFFFFF;
 } */
+
+.class-xs1 {
+  @apply text-xs font-normal font-numans
+}
+
+.class-xs2 {
+  @apply text-xs font-normal font-inter
+}
+
+.class-xs3 {
+  @apply text-xs font-medium font-inter
+}
+
+.class-xs4 {
+  @apply text-xs font-medium font-inter
+}
+
+.class-sm1 {
+  @apply text-sm font-normal font-numans
+}
+
+.class-sm2 {
+  @apply text-sm font-normal font-inter
+}
+
+.class-sm3 {
+  @apply text-sm font-medium font-numans
+}
+
+.class-sm4 {
+  @apply text-sm font-medium font-inter
+}
+
+.class-sm5 {
+  @apply text-sm font-semibold font-numans
+}
+
+.class-sm6 {
+  @apply text-sm font-semibold font-inter
+}
+
+.class-sm7 {
+  @apply text-sm font-normal font-dmSans
+}
+
+.class-sm8 {
+  @apply text-sm font-medium font-dmSans
+}
+
+.class-sm9 {
+  @apply text-sm font-semibold font-dmSans
+}
+
+.class-base1 {
+  @apply text-base font-normal font-numans
+}
+
+.class-base2 {
+  @apply text-base font-normal font-inter
+}
+
+.class-base3 {
+  @apply text-base font-medium font-numans
+}
+
+.class-base4 {
+  @apply text-base font-medium font-inter
+}
+
+.class-base5 {
+  @apply text-base font-semibold font-numans
+}
+
+.class-base6 {
+  @apply text-base font-semibold font-inter
+}
+
+.class-base7 {
+  @apply text-base font-normal font-dmSans
+}
+
+.class-base8 {
+  @apply text-base font-medium font-dmSans
+}
+
+.class-base9 {
+  @apply text-base font-semibold font-dmSans
+}
+
+
+.class-lg1 {
+  @apply text-lg font-normal font-numans
+}
+
+.class-lg2 {
+  @apply text-lg font-normal font-inter
+}
+
+.class-lg3 {
+  @apply text-lg font-medium font-numans
+}
+
+.class-lg4 {
+  @apply text-lg font-medium font-inter
+}
+
+.class-lg5 {
+  @apply text-lg font-semibold font-numans
+}
+
+.class-lg6 {
+  @apply text-lg font-semibold font-inter
+}
+
+.class-lg7 {
+  @apply text-lg font-normal font-dmSans
+}
+
+.class-lg8 {
+  @apply text-lg font-medium font-dmSans
+}
+
+.class-lg9 {
+  @apply text-lg font-semibold font-dmSans
+}
+
+
+.class-xl1 {
+  @apply text-xl font-normal font-numans
+}
+
+.class-xl2 {
+  @apply text-xl font-normal font-inter
+}
+
+.class-xl3 {
+  @apply text-xl font-medium font-numans
+}
+
+.class-xl4 {
+  @apply text-xl font-medium font-inter
+}
+
+.class-xl5 {
+  @apply text-xl font-semibold font-numans
+}
+
+.class-xl6 {
+  @apply text-xl font-semibold font-inter
+}
+
+.class-xl7 {
+  @apply text-xl font-normal font-dmSans
+}
+
+.class-xl8 {
+  @apply text-xl font-medium font-dmSans
+}
+
+.class-xl9 {
+  @apply text-xl font-semibold font-dmSans
+}
+
+.class-2xl1 {
+  @apply text-2xl font-normal font-numans
+}
+
+.class-2xl2 {
+  @apply text-2xl font-normal font-inter
+}
+
+.class-2xl3 {
+  @apply text-2xl font-semibold font-numans
+}
+
+.class-2xl4 {
+  @apply text-2xl font-semibold font-inter
+}
+
+.class-2xl5 {
+  @apply text-2xl font-normal font-dmSans
+}
+
+.class-2xl6 {
+  @apply text-2xl font-semibold font-dmSans
+}
+
+.primary-color{
+  @apply text-[#1A56DB]
+}

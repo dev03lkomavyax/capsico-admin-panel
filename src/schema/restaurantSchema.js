@@ -21,36 +21,40 @@ export const uploadDocumentSchema = z.object({
         }),
 })
 
-export const addMenuSchema = z.object({
-    itemName: z.string().min(2, "Item name is required"),
-    itemDescription: z.string().optional(),
-    foodType: z.enum(["Veg", "Non-Veg", "Egg"], {
-        required_error: "Please select a food type",
-    }),
-    serviceType: z.enum(["Delivery", "Pickup"], {
-        required_error: "Please select a service type",
-    }),
-    menuCategory: z.string().min(1, "Please select a menu category"),
-    itemImage: z.any().optional(), // Optional file input validation
-    basePrice: z.number({ invalid_type_error: "Please enter a valid price" })
-        .positive("Price must be greater than zero"),
-    packagingCharges: z.string().optional(),
-    variants: z.array(
-        z.object({
-            variantName: z.string(),
-            variantPrice: z.number().positive(),
-        })
-    ).optional(),
-    addOns: z.array(
-        z.object({
-            addOnName: z.string(),
-            addOnPrice: z.number().positive(),
-        })
-    ).optional(),
-    additionalDetails: z.string().optional(),
-    servingInfo: z.string().optional(),
-
-})
+export const addItemSchema = z.object({
+    itemName: z.string().min(1, "Item Name is required"),
+    itemImage: z
+        .any()
+        .refine(file => file && file.length > 0, "Item Image is required"),
+    itemDescription: z.string().min(1, "Item Description is required"),
+    cuisine: z.string().min(1, "Cuisine is required"),
+    foodType: z.string().min(1, "Food Type is required"),
+    menuCategory: z.string().min(1, "Menu Category is required"),
+    basePrice: z.string().min(1, "Price cannot be 0"),
+    preparationTime: z.string().min(1, "Preparation Time is required"),
+    packagingCharges: z.string().min(1, "Packaging Charges is required"),
+    numberOfPeople: z.string().min(1, "Number of People is required"),
+    dishSize: z.string().min(1, "Dish Size is required"),
+    timingType: z.string().min(1, "Timing Type is required"),
+    openingTime: z.string().optional(),
+    closingTime: z.string().optional(),
+    days: z.array(z.string()).optional(),
+    restaurant: z.string().optional(),
+}).refine(data => {
+    if (data.timingType === "custom") {
+        // Validate only when timingType is 'custom'
+        return (
+            !!data.openingTime && // Ensure openingTime exists
+            !!data.closingTime && // Ensure closingTime exists
+            Array.isArray(data.days) && // Ensure days is an array
+            data.days.length > 0 // Ensure days has at least one element
+        );
+    }
+    return true;
+}, {
+    message: "For custom timing, openingTime, closingTime, and at least one day are required.",
+    path: ["timingType"],
+});
 
 export const EditProfileSchema1 = z.object({
     restaurantName: z.string().min(1, {
@@ -151,3 +155,13 @@ export const EditProfileSchema5 =
         accountType: z.enum(["Savings", "Current"]).optional(), // Restrict to specific account types if applicable
         IFSCCode: z.string().min(1, "IFSC Code is required"),
     });
+
+export const categorySchema = z.object({
+    category: z.string().min(3, 'Mininum 3 char is required').max(50, 'Category should be less than 50 characters'),
+    description: z.string().min(3, 'Mininum 3 char is required').max(50, 'Description should be less than 50 characters'),
+});
+
+export const subCategorySchema = z.object({
+    subCategory: z.string().min(3, 'Mininum 3 char is required').max(50, 'SubCategory should be less than 50 characters'),
+    description: z.string().min(3, 'Mininum 3 char is required').max(50, 'Description should be less than 50 characters'),
+});

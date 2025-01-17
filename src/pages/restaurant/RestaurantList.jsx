@@ -1,100 +1,65 @@
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
+import DataNotFound from '@/components/DataNotFound'
 import ReactPagination from '@/components/pagination/ReactPagination'
+import SingleRestaurantComp from '@/components/restaurant/SingleRestaurantComp'
+import Spinner from '@/components/Spinner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { DEBOUNCE_DELAY } from '@/constants/constants'
+import useGetApiReq from '@/hooks/useGetApiReq'
+import { format } from 'date-fns'
 import { Plus } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
-const data = [
-    {
-        restaurantID: "1264903",
-        restaurantName: "PIYUsh",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham",
-        totalSale: "$19.09",
-        lastSale: "$19.09"
-    },
-]
-
 const RestaurantList = () => {
+    const { res, fetchData, isLoading } = useGetApiReq();
 
-    const [restaurantList, setRestaurantList] = useState(data)
+    const [restaurantList, setRestaurantList] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [totalPage, setTotalPage] = useState(1)
+    const [page, setPage] = useState(1)
+    const [status, setStatus] = useState("all")
 
     const navigate = useNavigate()
 
-    const handleValueChange = (value) => {
-        if (value === 'remove') {
+    const getAllRestaurant = useCallback(() => {
+        fetchData(`/admin/get-restaurants?page=${page}&search=${searchQuery}&status=${status === "all" ? "" : status}`);
+    }, [page, searchQuery, status]);
 
-        } else if (value === 'detail') {
-            navigate('/admin/restaurant/dashboard')
+    useEffect(() => {
+        let handler;
+        if (searchQuery) {
+            handler = setTimeout(() => {
+                getAllRestaurant();
+            }, DEBOUNCE_DELAY);
         }
-    }
 
-    const [totalPage, setTotalPage] = useState(16)
-    const [page, setPage] = useState(1)
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [searchQuery]);
+
+    useEffect(() => {
+        if (!searchQuery) {
+            getAllRestaurant();
+        }
+    }, [page, status, searchQuery]);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("restaurant res", res);
+            const { restaurants, pagination } = res?.data?.data;
+            setRestaurantList(restaurants);
+            setTotalPage(pagination?.totalPages);
+            setPage(pagination?.page);
+        }
+    }, [res])
 
     return (
         <AdminWrapper>
@@ -118,19 +83,18 @@ const RestaurantList = () => {
                         <BsSearch className='relative left-8 text-[#1D1929]' />
                         <Input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto' />
                     </div>
-                    <div className='flex justify-between items-center w-[230px]'>
-                        <Select>
-                            <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                <SelectValue placeholder="All" />
+                    <div className='flex justify-between items-center gap-4'>
+                        <Select onValueChange={setStatus} value={status}>
+                            <SelectTrigger className="flex justify-between items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                <SelectValue placeholder="Select Status" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Fruits</SelectLabel>
-                                    <SelectItem value="apple">All</SelectItem>
-                                    <SelectItem value="newOrder">New Order</SelectItem>
-                                    <SelectItem value="preparedry">Prepared</SelectItem>
-                                    <SelectItem value="completed">Completed</SelectItem>
-                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    <SelectItem value="all">All</SelectItem>
+                                    <SelectItem value="PENDING">Pending</SelectItem>
+                                    <SelectItem value="APPROVED">Approved</SelectItem>
+                                    <SelectItem value="REJECTED">Rejected</SelectItem>
+                                    <SelectItem value="SUSPENDED">Suspended</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -151,47 +115,41 @@ const RestaurantList = () => {
                         </Select>
                     </div>
                 </div>
-                <Table className='bg-[#FFFFFF] rounded-lg mb-6'>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableHead>
-                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant ID</TableHead>
-                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant Name</TableHead>
-                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Registered Date</TableHead>
-                            <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
-                            <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Total Sale</TableHead>
-                            <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Last sale</TableHead>
-                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {restaurantList.length > 0 && restaurantList.filter(data => data.restaurantName.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
-                            <TableRow key={data.data}>
-                                <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.restaurantID}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.restaurantName}</TableCell>
-                                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.registerdDate}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">{data.location}</TableCell>
-                                <TableCell className="text-[#000000] text-[10px] font-semibold font-inter">{data.totalSale}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.lastSale}</TableCell>
-                                <TableCell className="text-[#003CFF] text-xs font-semibold font-sans">
-                                    <Select onValueChange={handleValueChange}>
-                                        <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
-                                            <SelectValue placeholder="Action" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {/* <SelectLabel>Fruits</SelectLabel> */}
-                                                <SelectItem className='text-[#003CFF] text-sm font-semibold font-sans' value="remove">Remove</SelectItem>
-                                                <SelectItem className='text-[#003CFF] text-sm font-semibold font-sans' value="detail">View detail</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </TableCell>
+
+                <div className='bg-[#FFFFFF] rounded-lg mb-6'>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableHead>
+                                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant ID</TableHead>
+                                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant Name</TableHead>
+                                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Registered Date</TableHead>
+                                <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
+                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Total Sale</TableHead>
+                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Last sale</TableHead>
+                                <TableHead className="w-20 text-[#ABABAB] text-xs font-normal font-roboto">Status</TableHead>
+                                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {restaurantList.length > 0 && restaurantList.map((data) => (
+                                <SingleRestaurantComp
+                                    key={data.id}
+                                    data={data}
+                                />
+                            ))}
+                        </TableBody>
+                    </Table>
+
+                    {restaurantList.length === 0 && isLoading &&
+                        <Spinner />
+                    }
+
+                    {restaurantList.length === 0 && !isLoading &&
+                        <DataNotFound name="Restaurant" />
+                    }
+                </div>
+
                 <ReactPagination totalPage={totalPage} setPage={setPage} />
             </section>
         </AdminWrapper>

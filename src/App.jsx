@@ -8,6 +8,7 @@ import BackdropLoader from './components/loader/BackdropLoader';
 import useGetApiReq from './hooks/useGetApiReq';
 import usePostApiReq from './hooks/usePostApiReq';
 import { readCookie } from './utils/readCookie';
+import { Toaster } from 'react-hot-toast';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
@@ -20,13 +21,13 @@ const NewOrder = lazy(() => import('./pages/order/NewOrder'))
 const RestaurantList = lazy(() => import('./pages/restaurant/RestaurantList'))
 const RestaurantDashborad = lazy(() => import('./pages/restaurant/RestaurantDashboard'))
 // const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
-const AddMenu = lazy(() => import('./pages/restaurant/AddMenu'));
+const AddMenu = lazy(() => import('./pages/restaurant/menu/AddMenu'));
 const Review = lazy(() => import('./pages/restaurant/Reviews'));
 const Revenue = lazy(() => import('./pages/revenue/Revenue'));
 const CustomerList = lazy(() => import('./pages/customer/CustomerList'));
 const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
 const RestaurantEditProfile = lazy(() => import('./pages/restaurant/RestaurantEditProfile'))
-const RestaurantMenu = lazy(() => import('./pages/restaurant/RestaurantMenu'))
+const RestaurantMenu = lazy(() => import('./pages/restaurant/menu/RestaurantMenu'))
 const VendorList = lazy(() => import('./pages/vendor/VendorList'))
 const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard'))
 const VendorReviews = lazy(() => import('./pages/vendor/VendorReviews'))
@@ -103,63 +104,68 @@ function App() {
     <>
       {isLoading && <BackdropLoader />}
 
-        <Suspense fallback={<Fallback />}>
-          <Routes>
-            <Route path='/' element={<Login />} />
+      <Suspense fallback={<Fallback />}>
+        <Routes>
+          <Route path='/' element={<Login />} />
 
-            <Route path='/admin/dashboard' element={<AdminDashBoard />} />
-            <Route path='/admin/dashboard/reporting' element={<SalesReport />} />
+          <Route path='/admin/dashboard' element={<AdminDashBoard />} />
+          <Route path='/admin/dashboard/reporting' element={<SalesReport />} />
 
-            <Route path='/admin/order' element={<Order />} />
-            <Route path='/admin/order/capsico/:status' element={<StatusList />} />
-            <Route path='/admin/order/quickly/:status' element={<StatusList />} />
-            <Route path='/admin/order/new-order' element={<NewOrder />} />
-            <Route path='/admin/order/:orderId' element={<OrderDetails />} />
+          <Route path='/admin/order' element={<Order />} />
+          <Route path='/admin/order/capsico/:status' element={<StatusList />} />
+          <Route path='/admin/order/quickly/:status' element={<StatusList />} />
+          <Route path='/admin/order/new-order' element={<NewOrder />} />
+          <Route path='/admin/order/:orderId' element={<OrderDetails />} />
 
-            <Route path='/admin/reviews' element={<Reviews />} />
-            <Route path='/admin/reviews/:reviewId' element={<ReviewsDetails />} />
+          <Route path='/admin/reviews' element={<Reviews />} />
+          <Route path='/admin/reviews/:reviewId' element={<ReviewsDetails />} />
 
-            <Route path='/admin/restaurant' element={<RestaurantList />} />
-            <Route path='/admin/restaurant/dashboard' element={<RestaurantDashborad />} />
-            <Route path='/admin/restaurant/edit-profile' element={<RestaurantEditProfile />} />
-            <Route path='/admin/restaurant/add-restaurant' element={<RestaurantEditProfile />} />
-            <Route path='/admin/restaurant/addmenu' element={<AddMenu />} />
-            <Route path='/admin/restaurant/reviews' element={<Review />} />
-            <Route path='/admin/restaurant/revenue' element={<Revenue />} />
-            <Route path='/admin/restaurant/menu' element={<RestaurantMenu />} />
+          <Route path='/admin/restaurant' element={<RestaurantList />} />
+          <Route path='/admin/restaurant/:restaurantId/dashboard' element={<RestaurantDashborad />} />
+          <Route path='/admin/restaurant/edit-profile' element={<RestaurantEditProfile />} />
+          <Route path='/admin/restaurant/add-restaurant' element={<RestaurantEditProfile />} />
+          <Route path='/admin/restaurant/:categoryId/addmenu' element={<AddMenu />} />
+          <Route path='/admin/restaurant/reviews' element={<Review />} />
+          <Route path='/admin/restaurant/revenue' element={<Revenue />} />
+          <Route path='/admin/restaurant/:restaurantId/menu' element={<RestaurantMenu />} />
 
-            <Route path='/admin/customer' element={<CustomerList />} />
-            <Route path='/admin/customer/:customerId' element={<CustomerDetails />} />
+          <Route path='/admin/customer' element={<CustomerList />} />
+          <Route path='/admin/customer/:customerId' element={<CustomerDetails />} />
 
-            <Route path='/admin/vendor' element={<VendorList />} />
-            <Route path='/admin/vendor/dashboard' element={<VendorDashboard />} />
-            <Route path='/admin/vendor/reviews' element={<VendorReviews />} />
-            <Route path='/admin/vendor/revenue' element={<VendorRevenue />} />
-            <Route path='/admin/vendor/edit-profile' element={<VendorEditProfile />} />
-            <Route path='/admin/vendor/add-vendor' element={<VendorEditProfile />} />
-            <Route path='/admin/vendor/products' element={<VendorProducts />} />
+          <Route path='/admin/vendor' element={<VendorList />} />
+          <Route path='/admin/vendor/dashboard' element={<VendorDashboard />} />
+          <Route path='/admin/vendor/reviews' element={<VendorReviews />} />
+          <Route path='/admin/vendor/revenue' element={<VendorRevenue />} />
+          <Route path='/admin/vendor/edit-profile' element={<VendorEditProfile />} />
+          <Route path='/admin/vendor/add-vendor' element={<VendorEditProfile />} />
+          <Route path='/admin/vendor/products' element={<VendorProducts />} />
 
-            <Route path='/admin/delivery-agent' element={<DeliveryAgent />} />
-            <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
-            <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />
-            <Route path='/admin/delivery-agent/:deliveryAgentId/available-balance' element={<AvailableBalanceDetails />} />
+          <Route path='/admin/delivery-agent' element={<DeliveryAgent />} />
+          <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
+          <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />
+          <Route path='/admin/delivery-agent/:deliveryAgentId/available-balance' element={<AvailableBalanceDetails />} />
 
-            <Route path='/admin/sub-admin' element={<SubAdminList />} />
-            <Route path='/admin/sub-admin/add-subadmin' element={<AddSubAdmin />} />
-            <Route path='/admin/sub-admin/edit-subadmin' element={<EditSubAdmin />} />
-            {/* <Route path='/admin/sub-admin/admin-dashboard' element={<AdminDashBoard />} /> */}
-            {/* <Route path='/admin/sub-admin/sales' element={<SalesReport />} /> */}
-            <Route path='/admin/sub-admin/update-admin-profile' element={<UpdateAdminProfile />} />
+          <Route path='/admin/sub-admin' element={<SubAdminList />} />
+          <Route path='/admin/sub-admin/add-subadmin' element={<AddSubAdmin />} />
+          <Route path='/admin/sub-admin/edit-subadmin' element={<EditSubAdmin />} />
+          {/* <Route path='/admin/sub-admin/admin-dashboard' element={<AdminDashBoard />} /> */}
+          {/* <Route path='/admin/sub-admin/sales' element={<SalesReport />} /> */}
+          <Route path='/admin/sub-admin/update-admin-profile' element={<UpdateAdminProfile />} />
 
-            <Route path='/admin/offers' element={<Offers />} />
-            <Route path='/admin/offers/create-offer' element={<CreateOfferPage />} />
+          <Route path='/admin/offers' element={<Offers />} />
+          <Route path='/admin/offers/create-offer' element={<CreateOfferPage />} />
 
-            <Route path='/admin/application-request' element={<ApplicationRequest />} />
-            <Route path='/admin/application-request/add-restaurant' element={<AddRestaurant />} />
+          <Route path='/admin/application-request' element={<ApplicationRequest />} />
+          <Route path='/admin/application-request/add-restaurant' element={<AddRestaurant />} />
 
-            <Route path='*' element={<NotFound />} />
-          </Routes>
-        </Suspense>
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Suspense>
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </>
   )
 }

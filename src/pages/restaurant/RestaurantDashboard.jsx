@@ -6,7 +6,7 @@ import { RiQrScan2Line } from "react-icons/ri";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { SalesChart } from '@/components/restaurant/SalesChart';
 import SalesChart2 from '@/components/restaurant/SalesChart2';
@@ -142,6 +142,7 @@ const RestaurantDashborad = () => {
     const [recentOrderTotalPage, setRecentOrderTotalPage] = useState()
 
     const navigate = useNavigate()
+    const params = useParams()
 
     return (
         <AdminWrapper>
@@ -153,7 +154,7 @@ const RestaurantDashborad = () => {
                     </div>
                     <div className='flex justify-start items-center gap-4'>
                         <button onClick={() => navigate('/admin/restaurant/edit-profile')} className='h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]'>Edit Profile</button>
-                        <button onClick={() => navigate('/admin/restaurant/addmenu')} className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2'><span className='text-xl'>+</span> Add Menu</button>
+                        <button onClick={() => navigate(`/admin/restaurant/${params?.restaurantId}/menu`)} className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2'><span className='text-xl'>+</span> Add Menu</button>
                     </div>
                 </div>
                 <div className='flex justify-between items-center gap-6 w-full mb-8'>
