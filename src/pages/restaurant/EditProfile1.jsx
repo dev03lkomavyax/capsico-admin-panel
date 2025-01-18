@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom'
 
 const libraries = ["places", "marker"];
 
-const EditProfile1 = ({ setPage }) => {
+const EditProfile1 = ({ setPage, restaurant }) => {
     const navigate = useNavigate();
 
     const form = useForm({
@@ -42,9 +42,27 @@ const EditProfile1 = ({ setPage }) => {
         }
     })
 
-    const { register, control, watch, setValue, getValues } = form;
+    const { register, control, watch, setValue, getValues, reset } = form;
     const [isOtpModalOpen, setIsOtpModalOpen] = useState(false)
-    console.log("import.meta.env.VITE_GOOGLE_MAPS_API_KEY", import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+
+    const { basicInfo, location,partnerDetails } = restaurant || {};
+
+    useEffect(() => {
+        reset({
+            restaurantName: basicInfo?.name || "",
+            restaurantAddress: "",
+            latitude: location?.coordinates[1] || "",
+            longitude: location?.coordinates[0] || "",
+            phoneNumber: basicInfo?.phone || "",
+            phoneNumber2: partnerDetails?.phone || "",
+            STDCode: "",
+            landlineNumber: "",
+            fullName: "",
+            email: "",
+            samePhoneNumber: false,
+            receiveUpdate: false,
+        })
+    }, [restaurant])
 
     const samePhoneNumber = watch("samePhoneNumber");
 

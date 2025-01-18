@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FiPlus, FiUpload } from "react-icons/fi";
 import Variants from '@/components/restaurant/Variants'
 import ServingInfo from '@/components/restaurant/ServingInfo'
@@ -95,6 +95,7 @@ const AddMenu = () => {
     setIsAddCustomizationModalOpen(true);
   }
 
+  const { state } = useLocation();
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getCuisines = () => {
@@ -149,7 +150,7 @@ const AddMenu = () => {
     Array.from(data.itemImage).forEach((image) => {
       formData.append("images", image);
     });
-    fetchAddItemData("/admin/add-menu-item", formData);
+    fetchAddItemData(`/admin/add-menu-item/${state?.restaurantId}`, formData);
   }
   // menuCategory: "",
   // packagingCharges: "",
@@ -160,6 +161,7 @@ const AddMenu = () => {
   useEffect(() => {
     if (addItemRes?.status === 200 || addItemRes?.status === 201) {
       console.log("add item res", addItemRes);
+      navigate(`/admin/restaurant/${state?.restaurantId}/menu`)
     }
   }, [addItemRes])
 
@@ -413,14 +415,6 @@ const AddMenu = () => {
                                 </div>))}
                             </div>
                           }
-                          {isVariantModalOpen &&
-                            <CreateVariantModel
-                              isVariantModalOpen={isVariantModalOpen}
-                              setIsVariantModalOpen={setIsVariantModalOpen}
-                              setValue={setValue}
-                              getValues={getValues}
-                            />
-                          }
                         </>
                       }
                     </div>
@@ -451,14 +445,6 @@ const AddMenu = () => {
                                   <h4 className="font-inter text-[#969696] font-semibold">Rs {variation?.price}</h4>
                                 </div>))}
                             </div>
-                          }
-                          {isMapAddonsModalOpen &&
-                            <MapAddOnModel
-                              isMapAddonsModalOpen={isMapAddonsModalOpen}
-                              setIsMapAddonsModalOpen={setIsMapAddonsModalOpen}
-                              setValue={setValue}
-                              getValues={getValues}
-                            />
                           }
                         </>
                       }
@@ -635,15 +621,6 @@ const AddMenu = () => {
                             </div>
                           ))}
 
-                          {isAddCustomizationModalOpen &&
-                            <AddCustomizationModal
-                              isAddCustomizationModalOpen={isAddCustomizationModalOpen}
-                              setIsAddCustomizationModalOpen={setIsAddCustomizationModalOpen}
-                              currentIndex={currentIndex}
-                              setValue1={setValue}
-                              getValues1={getValues}
-                            />
-                          }
                         </div>
                       }
                     </div>
@@ -665,14 +642,6 @@ const AddMenu = () => {
                   </div>
                 </div>
 
-                {isCustomizationModalOpen &&
-                  <AddCustomizationCategoryModal
-                    isCustomizationModalOpen={isCustomizationModalOpen}
-                    setIsCustomizationModalOpen={setIsCustomizationModalOpen}
-                    setValue={setValue}
-                    getValues={getValues}
-                  />
-                }
                 <div className='flex gap-5 bg-[#FFFFFF] w-full p-4'>
                   <button className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
                   <button className='h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF]'>Save changes</button>
@@ -680,6 +649,43 @@ const AddMenu = () => {
               </form>
             </Form>
           </div>
+
+          {isVariantModalOpen &&
+            <CreateVariantModel
+              isVariantModalOpen={isVariantModalOpen}
+              setIsVariantModalOpen={setIsVariantModalOpen}
+              setValue={setValue}
+              getValues={getValues}
+            />
+          }
+
+          {isMapAddonsModalOpen &&
+            <MapAddOnModel
+              isMapAddonsModalOpen={isMapAddonsModalOpen}
+              setIsMapAddonsModalOpen={setIsMapAddonsModalOpen}
+              setValue={setValue}
+              getValues={getValues}
+            />
+          }
+
+          {isAddCustomizationModalOpen &&
+            <AddCustomizationModal
+              isAddCustomizationModalOpen={isAddCustomizationModalOpen}
+              setIsAddCustomizationModalOpen={setIsAddCustomizationModalOpen}
+              currentIndex={currentIndex}
+              setValue1={setValue}
+              getValues1={getValues}
+            />
+          }
+
+          {isCustomizationModalOpen &&
+            <AddCustomizationCategoryModal
+              isCustomizationModalOpen={isCustomizationModalOpen}
+              setIsCustomizationModalOpen={setIsCustomizationModalOpen}
+              setValue={setValue}
+              getValues={getValues}
+            />
+          }
         </div>
       </section>
     </AdminWrapper>

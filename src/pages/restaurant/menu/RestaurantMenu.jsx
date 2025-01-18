@@ -15,6 +15,7 @@ import DataNotFound from '@/components/DataNotFound'
 import CategoryEditModel from '@/components/menu/CategoryEditModel'
 import SubCategoryEditModel from '@/components/menu/SubCategoryEditModel'
 import ManageInventory from '@/components/menu/ManageInventory'
+import AddOnGroups from '@/components/menu/AddOnGroups'
 
 function RestaurantMenu() {
     const navigate = useNavigate();
@@ -48,7 +49,7 @@ function RestaurantMenu() {
     const { res: foodItemRes, fetchData: fetchFoodItemData, isLoading: isFoodItemLoading } = useGetApiReq();
 
     const getFoodItems = () => {
-        fetchFoodItemData(`/restaurant/category/${categoryId}/food`);
+        fetchFoodItemData(`/admin/category/${categoryId}/food?restaurantId=${params?.restaurantId}`);
     }
 
     useEffect(() => {
@@ -91,7 +92,14 @@ function RestaurantMenu() {
                                 </button>
                                 <div className="overflow-y-auto h-full pb-[180px]">
                                     {allCategories?.map((category) => (
-                                        <ItemComp setCategoryId={setCategoryId} key={category?._id} category={category} getCategories={getCategories} show={true} />
+                                        <ItemComp
+                                            key={category?.id}
+                                            categoryId={categoryId}
+                                            setCategoryId={setCategoryId}
+                                            category={category}
+                                            getCategories={getCategories}
+                                            show={true}
+                                        />
                                     ))}
 
                                     {allCategories.length === 0 && isLoading &&
@@ -108,18 +116,22 @@ function RestaurantMenu() {
                                 </button>
                             </div>
                             {categoryId &&
-                                <div className="right-section w-2/3 bg-white h-full">
-                                    {foodItemsInfo && <h3 className=" class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">{foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})</h3>}
-                                    <button className="flex w-full items-center gap-3 p-5 border-b" onClick={() => navigate(`/admin/restaurant/${123}/addmenu`)}>
-                                        <FaPlus className="primary-color" />
-                                        <span className="class-base1 primary-color">Add New Item</span>
-                                    </button>
-                                    {foodItemsInfo?.itemsByCategory?.map((foodItem) => (
-                                        <Product
-                                            key={foodItem?._id}
-                                            foodItem={foodItem}
-                                        />
-                                    ))}
+                                <div className="right-section relative w-2/3 bg-white overflow-y-auto h-full">
+                                    <div className='sticky top-0 bg-white'>
+                                        {foodItemsInfo && <h3 className=" class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">{foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})</h3>}
+                                        <button className="flex w-full items-center gap-3 p-5 border-b" onClick={() => navigate(`/admin/restaurant/${categoryId}/addmenu`, { state: { restaurantId: params?.restaurantId } })}>
+                                            <FaPlus className="primary-color" />
+                                            <span className="class-base1 primary-color">Add New Item</span>
+                                        </button>
+                                    </div>
+                                    <div className=''>
+                                        {foodItemsInfo?.itemsByCategory?.map((foodItem) => (
+                                            <Product
+                                                key={foodItem?._id}
+                                                foodItem={foodItem}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>}
 
                         </div>

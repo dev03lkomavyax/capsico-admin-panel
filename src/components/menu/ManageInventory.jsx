@@ -7,16 +7,18 @@ import DataNotFound from '../DataNotFound'
 import useGetApiReq from '@/hooks/useGetApiReq'
 import ItemComp from './ItemComp'
 import { BsSearch } from 'react-icons/bs'
+import { useParams } from 'react-router-dom'
 
 const ManageInventory = ({ allCategories }) => {
     const [foodItemsInfo, setFoodItemsInfo] = useState("");
     const [categoryId, setCategoryId] = useState(allCategories[0]?._id || "");
-     const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const params = useParams();
 
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const getFoodItems = () => {
-        fetchData(`/restaurant/category/${categoryId}/food`);
+        fetchData(`/admin/category/${categoryId}/food?restaurantId=${params?.restaurantId}`);
     }
 
     useEffect(() => {
@@ -64,8 +66,8 @@ const ManageInventory = ({ allCategories }) => {
                     </div>
                 </div>
                 {categoryId &&
-                    <div className="right-section w-2/3 bg-white h-full">
-                        {foodItemsInfo && <h3 className=" class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">{foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})</h3>}
+                    <div className="right-section w-2/3 bg-white h-full overflow-y-auto relative">
+                        {foodItemsInfo && <h3 className=" class-base5 p-5 z-10 sticky top-0 bg-[#F2F4F7] border-b border-b-[#CED7DE]">{foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})</h3>}
                         {foodItemsInfo?.itemsByCategory?.map((foodItem) => (
                             <ProductInventory
                                 key={foodItem?._id}

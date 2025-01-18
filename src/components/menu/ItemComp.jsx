@@ -7,7 +7,7 @@ import { BiTrash } from 'react-icons/bi'
 import { FaPlus } from 'react-icons/fa6'
 import SubCategoryEditModel from './SubCategoryEditModel'
 
-const ItemComp = ({ category, getCategories, setCategoryId = () => { } }) => {
+const ItemComp = ({ category, getCategories,categoryId, setCategoryId = () => { } }) => {
     const { name, id, subcategories, itemCount } = category;
 
     const [isOpenb, setIsOpenb] = useState(false);
@@ -27,7 +27,7 @@ const ItemComp = ({ category, getCategories, setCategoryId = () => { } }) => {
     return (
         <div>
             {/* #F2F4F7 */}
-            <div onClick={handleClick} className="w-full flex items-center hover:bg-[#F7FAFF] justify-between border-b-2 p-5 py-3 group cursor-pointer">
+            <div onClick={handleClick} className={`w-full flex items-center hover:bg-[#e6edfb] justify-between border-b-2 p-5 py-3 group cursor-pointer ${categoryId === category?.id && "bg-[#e6edfb]"}`}>
                 <h3 className="text-[#000000] font-medium font-inter">{name} ({itemCount})</h3>
                 <div className='flex items-center gap-8'>
                     <div className='hidden group-hover:flex gap-4'>

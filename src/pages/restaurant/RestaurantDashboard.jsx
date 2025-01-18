@@ -153,7 +153,7 @@ const RestaurantDashborad = () => {
                         <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant</h2>
                     </div>
                     <div className='flex justify-start items-center gap-4'>
-                        <button onClick={() => navigate('/admin/restaurant/edit-profile')} className='h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]'>Edit Profile</button>
+                        <button onClick={() => navigate(`/admin/restaurant/edit-profile`, { state: { restaurantId: params?.restaurantId } })} className='h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]'>Edit Profile</button>
                         <button onClick={() => navigate(`/admin/restaurant/${params?.restaurantId}/menu`)} className='h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2'><span className='text-xl'>+</span> Add Menu</button>
                     </div>
                 </div>

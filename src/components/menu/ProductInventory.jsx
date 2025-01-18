@@ -3,15 +3,20 @@ import { Switch } from '@/components/ui/switch'
 import usePostApiReq from '@/hooks/usePostApiReq'
 import { useEffect, useState } from 'react'
 import VegIcon from '../customIcons/VegIcon'
+import NonVegIcon from '../customIcons/NonVegIcon'
+import { useParams } from 'react-router-dom'
 
 const ProductInventory = ({ foodItem }) => {
     const { name, price, isAvailable, veg } = foodItem;
     const [isOn, setIsOn] = useState(isAvailable);
 
     const { res, fetchData, isLoading } = usePostApiReq();
+    const params = useParams();
 
     const toggleFoodAvailability = (value) => {
-        fetchData(`/restaurant/food-availability/${foodItem?.id}`);
+        console.log("value: ", value);
+        setIsOn(value);
+        fetchData(`/admin/food-availability/${foodItem?.id}?restaurantId=${params?.restaurantId}`);
     }
 
     useEffect(() => {
@@ -26,8 +31,7 @@ const ProductInventory = ({ foodItem }) => {
             <div className='flex gap-3 items-center'>
                 <img className='w-20 rounded' src={`${import.meta.env.VITE_IMAGE_URL}/${foodItem?.image}`} alt="item" />
                 <div className=''>
-                    <VegIcon />
-                    {/* <NonVegIcon /> */}
+                    {veg ? <VegIcon /> : <NonVegIcon />}
                     {/* <EggIcon /> */}
                     <h3 className='eleven-color class-base1 mt-2'>{name}</h3>
                     <p className='class-base1'>₹{price}</p>
