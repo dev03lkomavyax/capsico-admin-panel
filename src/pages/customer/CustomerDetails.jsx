@@ -6,9 +6,30 @@ import location from '@/assets/location.png';
 import sms from '@/assets/sms.png';
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
 import SingleOrderDetails from '@/components/customer/SingleOrderDetails';
+import useGetApiReq from '@/hooks/useGetApiReq';
+import { useEffect, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
+import { useParams } from 'react-router-dom';
 
 const CustomerDetails = () => {
+    const [customerDetailsData, setCustomerDetailsData] = useState("");
+    const { customerId } = useParams()
+    const { res, fetchData, isLoading } = useGetApiReq();
+
+    const getCustomerDetails = () => {
+        fetchData(`/admin/get-customer/${customerId}`)
+    }
+
+    useEffect(() => {
+        getCustomerDetails();
+    }, []);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("getCustomerDetails", res?.data);
+            setCustomerDetailsData(res?.data?.data);
+        }
+    }, [res])
     return (
         <AdminWrapper>
             <div className='p-0'>
@@ -23,21 +44,21 @@ const CustomerDetails = () => {
                         <img className='w-52 h-52 rounded-lg' src={avatar} alt="avatar" />
                         <div className='w-full'>
                             <div className='flex w-full justify-between items-center gap-3'>
-                                <h1 className='font-inter text-3xl font-semibold text-[#202020]'>Prashant Kumar Singh</h1>
+                                <h1 className='font-inter text-3xl font-semibold text-[#202020]'>{customerDetailsData?.name}</h1>
                                 <img className='w-5 h-5 cursor-pointer' src={edit} alt="edit" />
                             </div>
                             <div className="flex flex-col gap-3 mt-5">
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={location} alt="location" />
-                                    <p className='font-inter text-[#696969] text-lg'>New Delhi India</p>
+                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.phone}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={sms} alt="sms" />
-                                    <p className='font-inter text-[#696969] text-lg'>officialprashanttt@gmail.com</p>
+                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.email}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={call} alt="call" />
-                                    <p className='font-inter text-[#696969] text-lg'>+91 8009396321</p>
+                                    <p className='font-inter text-[#696969] text-lg'>+91 {customerDetailsData?.phone}</p>
                                 </div>
                             </div>
                         </div>

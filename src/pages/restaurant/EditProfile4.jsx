@@ -12,7 +12,7 @@ import { PiCameraPlus } from 'react-icons/pi'
 import { useNavigate } from 'react-router-dom'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
 
-const EditProfile4 = ({ setPage }) => {
+const EditProfile4 = ({ setPage, restaurant }) => {
     const form = useForm({
         resolver: zodResolver(EditProfileSchema4),
         defaultValues: {
@@ -31,7 +31,7 @@ const EditProfile4 = ({ setPage }) => {
 
     const navigate = useNavigate();
 
-    const { register, control, watch, setValue, getValues } = form;
+    const { register, control, watch, setValue, getValues, reset } = form;
     const menuImagesRef = register("menuImages");
 
     const menuImages = watch("menuImages");
@@ -39,6 +39,20 @@ const EditProfile4 = ({ setPage }) => {
     useEffect(() => {
         updateMultiplePreview(menuImages, "menuImagesPreview", setValue);
     }, [form, menuImages, setValue]);
+
+    const { basicInfo, location,partnerDetails } = restaurant || {};
+
+    useEffect(() => {
+        // reset({
+        //     timing: "",
+        //     numberType: "",
+        //     number: "",
+        //     isManually: "",
+        //     fullName: "",
+        //     email: "",
+        //     accountingNotificationsNumber: "",
+        // })
+    }, [restaurant])
 
     const onSubmit = (data) => {
         console.log("data", data);
@@ -236,7 +250,7 @@ const EditProfile4 = ({ setPage }) => {
                 </div>
 
                 <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-7'>
-                    <h3 className='text-lg font-bold font-inter text-[#4A5E6D]'>Receiving banking / accounting noyifications (invoices)</h3>
+                    <h3 className='text-lg font-bold font-inter text-[#4A5E6D]'>Receiving banking / accounting notifications (invoices)</h3>
                     <p className='text-xs font-semibold text-[#ABABAB]'>These will be used for billing related communication</p>
                     <div className='mt-5 flex flex-col gap-5'>
                         <FormField
