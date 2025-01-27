@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Checkbox } from '../ui/checkbox'
 import ReactPagination from '../pagination/ReactPagination'
 import { useNavigate } from 'react-router-dom'
+import useGetApiReq from '@/hooks/useGetApiReq'
 
 const data = [
     {
@@ -49,12 +50,31 @@ const Capsico = () => {
     const [page, setPage] = useState(1)
     const navigate = useNavigate();
 
-    const handleOnChange = (value, id) => {
+    const { res, fetchData, isLoading } = useGetApiReq();
+
+    const getAllCustomer = () => {
+        fetchData(`/admin/get-all-customers`)
+    }
+
+    useEffect(() => {
+        getAllCustomer();
+    }, []);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("customer res", res?.data);
+            setCustomerData(res?.data?.data);
+            // setTotalPage(pagination?.totalPages);
+            // setPage(pagination?.page);
+        }
+    }, [res])
+
+    const handleOnChange = (value, userId) => {
         if (value === 'remove') {
 
         }
         else {
-            navigate(`/admin/customer/${id}`)
+            navigate(`/admin/customer/${userId}`)
         }
     }
 
@@ -109,17 +129,17 @@ const Capsico = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {customerData.length > 0 && customerData.filter(data => data.customerName.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
-                        <TableRow key={data.data}>
+                    {customerData?.length > 0 && customerData?.map((data, index) => (
+                        <TableRow key={index}>
                             <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.customerID}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.customerName}</TableCell>
+                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
+                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.name}</TableCell>
                             <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.joinedDate}</TableCell>
-                            <TableCell className="text-[#1D1929] text-[12px] font-normal font-roboto">{data.Location}</TableCell>
+                            <TableCell className="text-[#1D1929] text-[12px] font-normal font-roboto">{data?.addresses?.map((data)=> data.city)}</TableCell>
                             <TableCell className="text-[#667085] text-[10px] font-semibold font-inter">{data.totalSpent}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.lastOrder}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                                <Select onValueChange={(value) => handleOnChange(value, "123")}>
+                                <Select onValueChange={(value) => handleOnChange(value, data?._id)}>
                                     <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
                                         <SelectValue placeholder="Action" />
                                     </SelectTrigger>

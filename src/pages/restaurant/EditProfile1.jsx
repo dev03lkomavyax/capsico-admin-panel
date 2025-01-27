@@ -50,15 +50,15 @@ const EditProfile1 = ({ setPage, restaurant }) => {
     useEffect(() => {
         reset({
             restaurantName: basicInfo?.name || "",
-            restaurantAddress: "",
+            restaurantAddress: location?.addressLine || "",
             latitude: location?.coordinates[1] || "",
             longitude: location?.coordinates[0] || "",
             phoneNumber: basicInfo?.phone || "",
             phoneNumber2: partnerDetails?.phone || "",
             STDCode: "",
             landlineNumber: "",
-            fullName: "",
-            email: "",
+            fullName: partnerDetails?.name || "",
+            email: partnerDetails?.email || "",
             samePhoneNumber: false,
             receiveUpdate: false,
         })

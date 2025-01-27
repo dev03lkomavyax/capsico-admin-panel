@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import offerIcon from '@/assets/Vector.png';
 import promoIcon from '@/assets/Vector.png'
 import OfferComp from './OfferComp'
+import CreateCustomModel from './CreateCustomModel';
 
 
 const Offers = () => {
     const [offerValue, setOfferValue] = useState('bh')
+    const [createCustomModel, setCreateCustomModel] = useState(false)
     return (
         <div>
             <div className="flex gap-3 mt-5">
@@ -62,7 +64,7 @@ const Offers = () => {
                 />
             </div>
             <h2 className='text-[#7991A4] text-base font-medium font-inter'>Personalized offer for you</h2>
-            <div className='bg-[#FFFFFF] rounded-lg flex items-center gap-3 p-5 h-32 max-w-[540px] cursor-pointer'>
+            <div onClick={() => setCreateCustomModel(true)} className='bg-[#FFFFFF] rounded-lg flex items-center gap-3 p-5 h-32 max-w-[540px] cursor-pointer'>
                 <div className="w-[70px] h-[70px] rounded-full bg-[#A4F4E7] flex justify-center items-center">
                     <img src={promoIcon} alt="promoIcon" />
                 </div>
@@ -71,6 +73,11 @@ const Offers = () => {
                     <p className='text-[#7991A4] text-sm font-normal font-inter'>Thrill customers with complimentary discounts on every order.</p>
                 </div>
             </div>
+            {createCustomModel && <CreateCustomModel
+                createCustomModel={createCustomModel}
+                setCreateCustomModel={setCreateCustomModel}
+            />}
+
         </div>
     )
 }

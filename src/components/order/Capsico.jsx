@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Checkbox } from '../ui/checkbox'
 import { useNavigate } from 'react-router-dom'
+import useGetApiReq from '@/hooks/useGetApiReq'
 
-const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, capsicoOrderData }) => {
+const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, capsicoOrderData, setCapsicoOrderData }) => {
 
     const navigate = useNavigate()
 
@@ -15,14 +16,35 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
         navigate(`/admin/order/capsico/${tab}`);
     }
 
-    const handleOnChange = (value, id) => {
+    const handleOnChange = (value, orderId) => {
         if (value === 'remove') {
 
         }
         else {
-            navigate(`/admin/order/${id}`)
+            navigate(`/admin/order/${orderId}`)
         }
     }
+
+    const { res, fetchData, isLoading } = useGetApiReq();
+
+    const getAllOrder = () => {
+        fetchData(`/admin/get-all-orders`)
+    }
+
+    useEffect(() => {
+        getAllOrder();
+    }, []);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("order res", res?.data);
+            setCapsicoOrderData(res?.data?.data);
+            // const { restaurants, pagination } = res?.data?.data;
+            // setRestaurantList(restaurants);
+            // setTotalPage(pagination?.totalPages);
+            // setPage(pagination?.page);
+        }
+    }, [res])
 
     return (
         <>
@@ -87,20 +109,20 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {capsicoOrderData.length > 0 && capsicoOrderData.filter(data => data.customer.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
-                            <TableRow key={data.data}>
+                        {capsicoOrderData?.length > 0 && capsicoOrderData?.map((data) => (
+                            <TableRow key={data?.data}>
                                 <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.orderID}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{data.order}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{data?.orderNumber}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.customer}</TableCell>
                                 <TableCell>
                                     <div className={`${data.status === 'New' && 'text-[#1619ac] bg-[#b9cbed]' || data.status === 'Preparing' && 'text-[#AC9D16] bg-[#FAFDD4]' || data.status === 'Complete' && 'text-[#4FAC16] bg-[#DCFDD4]' || data.status === 'Cancelled' && 'text-[#AC1616] bg-[#FDD4D4]'} w-[76px] flex justify-center items-center h-[24px] text-[10px] font-normal font-sans rounded-[10px]`}>{data.status}</div>
                                 </TableCell>
                                 <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.createdDate}</TableCell>
                                 <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{data.restaurantName}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.price}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.amounts?.total}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                                    <Select onValueChange={(value) => handleOnChange(value, "123")}>
+                                    <Select onValueChange={(value) => handleOnChange(value, data?._id)}>
                                         <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
                                             <SelectValue placeholder="Action" />
                                         </SelectTrigger>

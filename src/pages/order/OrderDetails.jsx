@@ -7,15 +7,18 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import useGetApiReq from "@/hooks/useGetApiReq";
 import { OrderSchema } from "@/schema/OrderSchema";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import { FaMinus, FaPlus, FaStar } from 'react-icons/fa6';
 import { FiPhone } from "react-icons/fi";
 import { GrLocation } from "react-icons/gr";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
+import { useParams } from "react-router-dom";
+import { format } from "date-fns";
 
 const libraries = ["places", "marker"];
 
@@ -58,6 +61,8 @@ const OrderDetails = () => {
     };
     const [deliveryAgent, setDeliveryAgent] = useState("");
     const [open, setOpen] = useState(false);
+    const [orderDetailsData, setOrderDetailsData] = useState(false);
+    const { orderId } = useParams()
 
     const [center, setCenter] = useState({
         lat: 19.8429547,
@@ -73,7 +78,25 @@ const OrderDetails = () => {
             temperature: "",
         }
     })
+
     const { register, control, watch, setValue, getValues } = form;
+
+    const { res, fetchData, isLoading } = useGetApiReq();
+
+    const getOrderDetails = () => {
+        fetchData(`/admin/get-order/${orderId}`)
+    }
+
+    useEffect(() => {
+        getOrderDetails();
+    }, []);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("getOrderDetails", res?.data);
+            setOrderDetailsData(res?.data?.data);
+        }
+    }, [res])
 
     const onSubmit = (data) => {
         console.log("data", data);
@@ -98,11 +121,10 @@ const OrderDetails = () => {
                     <div className='rounded-lg bg-white px-4 py-10'>
                         <div className="flex justify-center flex-col items-center">
                             <img className="w-32 h-32 rounded-full" src={avatar} alt="avatar" />
-                            <h2 className='font-medium font-roboto mt-3 text-xl'>Leon Barrows</h2>
+                            <h2 className='font-medium font-roboto mt-3 text-xl'>{orderDetailsData?.userId?.name}</h2>
                             <p className="font-roboto text-[#838383] text-sm">Customer</p>
                             {status === "Preparing" &&
-                                <Button className="w-full text-white bg-[#1064FD] mt-2 hover:bg-[#1064FD]">Order ready in 10:19</Button>
-                            }
+                                <Button className="w-full text-white bg-[#1064FD] mt-2 hover:bg-[#1064FD]">Order ready in {orderDetailsData?.timing?.expectedPreparationTime}</Button>}
                             {status === "New order" &&
                                 <div className="border rounded-lg p-3 w-full">
                                     <h5 className="font-inter -mt-[6px] font-medium text-[10px] text-[#666666]">Enter food preparation time</h5>
@@ -120,7 +142,7 @@ const OrderDetails = () => {
                         </div>
                         <div className="flex flex-col mt-12">
                             <h2 className="font-roboto text-sm mb-2">History</h2>
-                            <History status={status} />
+                            <History status={status} timing={orderDetailsData?.timing && orderDetailsData?.timing} />
                         </div>
                     </div>
                     <div className=''>
@@ -141,9 +163,7 @@ const OrderDetails = () => {
                                 <h2 className="font-inter text-sm font-medium">Price</h2>
                             </div>
                             <div className="flex flex-col gap-3 mt-3">
-                                <OrderItem capsico={capsico} />
-                                <OrderItem capsico={capsico} />
-                                <OrderItem capsico={capsico} />
+                                <OrderItem capsico={capsico} items={orderDetailsData?.items} />
                             </div>
                             <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                                 <h3 className='font-roboto font-medium flex gap-1 items-center text-[#515151]'>
@@ -155,7 +175,7 @@ const OrderDetails = () => {
                                     }
                                 </h3>
                                 <div></div>
-                                <h3 className="font-roboto text-[#515151] font-medium">₹390</h3>
+                                <h3 className="font-roboto text-[#515151] font-medium">₹{orderDetailsData?.amounts?.total}</h3>
                             </div>
                         </div>
                         <div className='rounded-lg bg-white mt-5 p-4 px-6'>

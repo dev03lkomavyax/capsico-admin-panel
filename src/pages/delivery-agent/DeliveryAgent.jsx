@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -10,15 +10,37 @@ import ReactPagination from '@/components/pagination/ReactPagination'
 import DeliveryAgentComp from '@/components/delivery-agent/DeliveryAgentComp'
 import { ChevronsUpDown } from 'lucide-react'
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
+import useGetApiReq from '@/hooks/useGetApiReq'
 
 
 const DeliveryAgent = () => {
-    const [customerData, setCustomerData] = useState([])
+    const [deliveryAgentData, setDeliveryAgentData] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [page, setPage] = useState(1)
     const [pageCount, setPageCount] = useState(5)
     const [status, setStatus] = useState("All");
     const [dateFilter, setDateFilter] = useState("Today");
+
+    const { res, fetchData, isLoading } = useGetApiReq();
+
+    const getAllDeliveryAgent = () => {
+        fetchData(`/admin/get-all-deliveryPartners`)
+    }
+
+    useEffect(() => {
+        getAllDeliveryAgent();
+    }, []);
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            console.log("deliveryAgent res", res?.data);
+            setDeliveryAgentData(res?.data?.data);
+            // const { restaurants, pagination } = res?.data?.data;
+            // setRestaurantList(restaurants);
+            // setTotalPage(pagination?.totalPages);
+            // setPage(pagination?.page);
+        }
+    }, [res])
 
     return (
         <AdminWrapper>
@@ -78,9 +100,15 @@ const DeliveryAgent = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {Array(10).fill("*").map((_, i) => (
+                            {/* {Array(10).fill("*").map((_, i) => (
                                 <DeliveryAgentComp
                                     key={i}
+                                />
+                            ))} */}
+                            {deliveryAgentData.length > 0 && deliveryAgentData.map((agent, index) => (
+                                <DeliveryAgentComp
+                                    key={index}
+                                    agent={agent}
                                 />
                             ))}
                         </TableBody>

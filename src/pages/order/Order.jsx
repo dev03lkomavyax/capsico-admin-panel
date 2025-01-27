@@ -1,7 +1,8 @@
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import Capsico from '@/components/order/Capsico'
 import Quickly from '@/components/order/Quickly'
-import { useState } from 'react'
+import useGetApiReq from '@/hooks/useGetApiReq'
+import { useEffect, useState } from 'react'
 import ReactPaginate from 'react-paginate'
 
 const data = [
@@ -54,7 +55,6 @@ const Order = () => {
 
   const pageCount = 16
 
-
   return (
     <AdminWrapper>
       <div className='flex flex-col gap-6 w-full h-full py-8 px-12 bg-[#f9f9f9]'>
@@ -69,7 +69,7 @@ const Order = () => {
           </button>
         </section>
         {selectTab === 'capsico' &&
-          <Capsico selectOrderTab={selectOrderTab} setSelectOrderTab={setSelectOrderTab} searchQuery={searchQuery} setSearchQuery={setSearchQuery} capsicoOrderData={capsicoOrderData} />
+          <Capsico selectOrderTab={selectOrderTab} setCapsicoOrderData={setCapsicoOrderData} setSelectOrderTab={setSelectOrderTab} searchQuery={searchQuery} setSearchQuery={setSearchQuery} capsicoOrderData={capsicoOrderData} />
         }
         {selectTab === 'quickly' &&
           <Quickly selectOrderTab={selectOrderTab} setSelectOrderTab={setSelectOrderTab} searchQuery={searchQuery} setSearchQuery={setSearchQuery} quicklyOrderData={quicklyOrderData} />

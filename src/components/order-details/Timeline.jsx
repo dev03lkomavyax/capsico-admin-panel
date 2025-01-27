@@ -2,6 +2,7 @@ import React from 'react'
 import { FaCheck, FaXmark } from 'react-icons/fa6'
 
 const Timeline = ({ title, time, status, className }) => {
+    console.log("timing", time)
     return (
         <div className="flex items-center space-x-2">
             <div className={`flex items-center justify-center w-6 h-6 ${className} p-[6px] text-white rounded-full`}>
