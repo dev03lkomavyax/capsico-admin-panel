@@ -17,11 +17,17 @@ import RightChart from '@/components/admin/RightChart'
 import { Progress } from '@/components/ui/progress'
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import { useNavigate } from 'react-router-dom'
+import { getSocket } from '@/socket'
 
 const AdminDashBoard = () => {
     const [dayFilter, setDayFilter] = useState("Today");
     const [dayFilter2, setDayFilter2] = useState("Today");
     const navigate = useNavigate();
+    const socket = getSocket();
+
+    socket.on("connection", (socket) => {
+        console.log("connection", socket);
+    })
 
     return (
         <AdminWrapper>

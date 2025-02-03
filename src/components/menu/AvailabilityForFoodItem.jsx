@@ -15,7 +15,7 @@ const AvailabilityForFoodItem = ({ form }) => {
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const restaurantTimings = () => {
-        fetchData("/restaurant/Restaurant-timings");
+        fetchData("/admin/Restaurant-timings");
     }
 
     useEffect(() => {

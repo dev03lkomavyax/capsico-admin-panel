@@ -643,7 +643,7 @@ const AddMenu = () => {
                 </div>
 
                 <div className='flex gap-5 bg-[#FFFFFF] w-full p-4'>
-                  <button className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
+                  <button type='button' className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
                   <button className='h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF]'>Save changes</button>
                 </div>
               </form>
