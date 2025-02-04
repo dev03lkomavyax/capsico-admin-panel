@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CreateCustomModelSecondSchema } from '@/schema/CreateCustomModel'
 
-const CreateCustomModelSecond = () => {
+const CreateCustomModelSecond = ({onSubmit}) => {
   const form = useForm({
     resolver: zodResolver(CreateCustomModelSecondSchema),
     defaultValues: {

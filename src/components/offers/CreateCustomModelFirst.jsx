@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CreateCustomModelFirstSchema } from '@/schema/CreateCustomModel'
 
-const CreateCustomModelFirst = () => {
+const CreateCustomModelFirst = ({onSubmit}) => {
 
   const form = useForm({
     resolver: zodResolver(CreateCustomModelFirstSchema),
@@ -59,7 +59,7 @@ const CreateCustomModelFirst = () => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea className="resize-none h-[108px]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
