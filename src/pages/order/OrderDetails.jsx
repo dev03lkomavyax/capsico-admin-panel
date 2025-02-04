@@ -113,7 +113,7 @@ const OrderDetails = () => {
                         </div>
                         <span className='text-sm text-[#5F5F5F] font-roboto'>Orders/orders details</span>
                     </div>
-                    <Button className={`${status === "Delivered" ? "text-[#167316] bg-[#CEFFCA]" : status === "Preparing" ? "text-[#787A23] bg-[#F7FFCA]" : status === "Cancelled" ? "text-[#BF1010] bg-[#FFE7E7]" : "text-[#6223B5] bg-[#E1CAFF]"} h-[54px] w-[167px] text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}>{status}</Button>
+                    <div className={`${status === "Delivered" ? "text-[#167316] bg-[#CEFFCA]" : status === "Preparing" ? "text-[#787A23] bg-[#F7FFCA]" : status === "Cancelled" ? "text-[#BF1010] bg-[#FFE7E7]" : "text-[#6223B5] bg-[#E1CAFF]"} h-[54px] w-[167px] text-xl flex justify-center items-center `}>{status}</div>
                 </div>
 
                 {/* h-[calc(100vh-56px)] */}

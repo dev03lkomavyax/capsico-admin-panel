@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom'
 import useGetApiReq from '@/hooks/useGetApiReq'
 import { getSocket } from '@/socket'
 import { readCookie } from '@/utils/readCookie'
+import { format } from 'date-fns'
 
 const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, capsicoOrderData, setCapsicoOrderData }) => {
     const socket = getSocket();
     const navigate = useNavigate()
     const adminInfo = readCookie("userInfo")
+    const [socketActiveOrders, setSocketActiveOrders] = useState([])
 
     useEffect(() => {
         socket.emit("subscribe_all_orders")
@@ -20,6 +22,7 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
 
     socket.on('active_orders', (response) => {
         console.log("active_orders response: ", response);
+        setSocketActiveOrders(response?.orders)
     });
 
     const handleOnClick = (tab) => {
@@ -120,18 +123,45 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {capsicoOrderData?.length > 0 && capsicoOrderData?.map((data) => (
-                            <TableRow key={data?._id}>
+                        {socketActiveOrders?.length > 0 && socketActiveOrders?.map((activeOrder, index) => (
+                            <TableRow key={activeOrder?.id}>
+                                <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{activeOrder?.id}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{activeOrder?.orderNumber}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{activeOrder?.customer?.name}</TableCell>
+                                <TableCell>
+                                    <div className={`${activeOrder?.status === 'New' && 'text-[#1619ac] bg-[#b9cbed]' || activeOrder?.status === 'Preparing' && 'text-[#AC9D16] bg-[#FAFDD4]' || activeOrder?.status === 'Complete' && 'text-[#4FAC16] bg-[#DCFDD4]' || activeOrder?.status === 'Cancelled' && 'text-[#AC1616] bg-[#FDD4D4]'} w-[76px] flex justify-center items-center h-[24px] text-[10px] font-normal font-sans rounded-[10px]`}>{activeOrder?.status}</div>
+                                </TableCell>
+                                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{activeOrder?.timing && format(new Date(activeOrder?.timing?.orderedAt), "dd MMM yyyy")}</TableCell>
+                                <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{activeOrder?.restaurant?.name}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans whitespace-nowrap">₹ {activeOrder?.amounts?.total}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
+                                    <Select onValueChange={(value) => handleOnChange(value, activeOrder?.id)}>
+                                        <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
+                                            <SelectValue placeholder="Action" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectItem value="remove">Remove</SelectItem>
+                                                <SelectItem value="detail">View detail</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                        {capsicoOrderData?.length > 0 && capsicoOrderData?.map((data, index) => (
+                            <TableRow key={index}>
                                 <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{data?.orderNumber}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.customer}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?.customer}</TableCell>
                                 <TableCell>
-                                    <div className={`${data.status === 'New' && 'text-[#1619ac] bg-[#b9cbed]' || data.status === 'Preparing' && 'text-[#AC9D16] bg-[#FAFDD4]' || data.status === 'Complete' && 'text-[#4FAC16] bg-[#DCFDD4]' || data.status === 'Cancelled' && 'text-[#AC1616] bg-[#FDD4D4]'} w-[76px] flex justify-center items-center h-[24px] text-[10px] font-normal font-sans rounded-[10px]`}>{data.status}</div>
+                                    <div className={`${data?.status === 'New' && 'text-[#1619ac] bg-[#b9cbed]' || data?.status === 'Preparing' && 'text-[#AC9D16] bg-[#FAFDD4]' || data?.status === 'Complete' && 'text-[#4FAC16] bg-[#DCFDD4]' || data?.status === 'Cancelled' && 'text-[#AC1616] bg-[#FDD4D4]'} w-[76px] flex justify-center items-center h-[24px] text-[10px] font-normal font-sans rounded-[10px]`}>{data?.status}</div>
                                 </TableCell>
-                                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.createdDate}</TableCell>
-                                <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{data.restaurantName}</TableCell>
-                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.amounts?.total}</TableCell>
+                                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data?.timing && format(new Date(data?.timing?.orderedAt), "dd MMM yyyy")}</TableCell>
+                                <TableCell className="text-[#667085] text-[9px] font-normal font-inter">{data?.restaurantName}</TableCell>
+                                <TableCell className="text-[#1D1929] text-xs font-bold font-sans whitespace-nowrap">₹ {data?.amounts?.total}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
                                     <Select onValueChange={(value) => handleOnChange(value, data?._id)}>
                                         <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
@@ -139,7 +169,6 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                {/* <SelectLabel>Fruits</SelectLabel> */}
                                                 <SelectItem value="remove">Remove</SelectItem>
                                                 <SelectItem value="detail">View detail</SelectItem>
                                             </SelectGroup>
@@ -149,6 +178,7 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                             </TableRow>
                         ))}
                     </TableBody>
+
                 </Table>
             </div>
         </>
