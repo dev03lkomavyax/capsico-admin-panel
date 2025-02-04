@@ -1,6 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -22,6 +26,8 @@ import { useNavigate } from 'react-router-dom';
 
 const AddRestaurant2 = ({ page, setPage }) => {
   const navigate = useNavigate();
+  const [restaurantType, setRestaurantType] = useState("veg")
+  const [price, setPrice] = useState("250")
 
   const form = useForm({
     resolver: zodResolver(addRestaurantSchema2),
@@ -73,6 +79,50 @@ const AddRestaurant2 = ({ page, setPage }) => {
               <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
             </button>
             <Button size="lg" className="w-24 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" type="submit">Save</Button>
+          </div>
+          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mb-6">
+            <div className="space-y-6 pt-6">
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-[#4A5E6D]">Choose Restaurant Type</h3>
+                <RadioGroup value={restaurantType} onValueChange={setRestaurantType} className="flex gap-4">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="veg" id="veg" />
+                    <Label htmlFor="veg" className="text-sm font-normal">
+                      Veg
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="non-veg" id="non-veg" />
+                    <Label htmlFor="non-veg" className="text-sm font-normal">
+                      Non-Veg
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="both" id="both" />
+                    <Label htmlFor="both" className="text-sm font-normal">
+                      Both
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="price" className="text-xl font-bold text-[#4A5E6D]">
+                  Price for one
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-sm text-muted-foreground">Rs</span>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="pl-9"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
             <h3 className='text-xl font-bold text-[#4A5E6D]'>Choose options for your restaurant</h3>

@@ -15,7 +15,7 @@ const RestaurantEditProfile = () => {
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const [restaurant, setRestaurant] = useState("");
-    const [page, setPage] = useState(6);
+    const [page, setPage] = useState(2);
     const { state } = useLocation();
     // restaurantId
     console.log("state", state)

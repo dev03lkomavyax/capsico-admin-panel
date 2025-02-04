@@ -17,9 +17,15 @@ const CreateCustomModel = ({ createCustomModel, setCreateCustomModel }) => {
         setFormData((prev) => ({ ...prev, ...data }))
         setStep(3)
     }
+
+    const handleStepThree = (data) => {
+        setFormData((prev) => ({ ...prev, ...data }))
+        setCreateCustomModel(false)
+    }
+
     return (
         <Dialog open={createCustomModel} onOpenChange={setCreateCustomModel}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] w-full overflow-y-scroll h-[600px]">
                 <DialogHeader>
                     <DialogTitle>Create New Offer</DialogTitle>
                 </DialogHeader>
