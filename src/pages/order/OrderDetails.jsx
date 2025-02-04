@@ -23,9 +23,9 @@ import { format } from "date-fns";
 const libraries = ["places", "marker"];
 
 // const status = "Delivered";
-const status = "Preparing";
+// const status = "Preparing";
 // const status = "New order";
-// const status = "Cancelled";
+const status = "Cancelled";
 
 const capsico = true;
 // const capsico = false;

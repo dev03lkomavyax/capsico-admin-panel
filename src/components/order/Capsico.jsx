@@ -6,10 +6,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Checkbox } from '../ui/checkbox'
 import { useNavigate } from 'react-router-dom'
 import useGetApiReq from '@/hooks/useGetApiReq'
+import { getSocket } from '@/socket'
+import { readCookie } from '@/utils/readCookie'
 
 const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuery, capsicoOrderData, setCapsicoOrderData }) => {
-
+    const socket = getSocket();
     const navigate = useNavigate()
+    const adminInfo = readCookie("userInfo")
+
+    useEffect(() => {
+        socket.emit("subscribe_all_orders")
+    }, [])
+
+    socket.on('active_orders', (response) => {
+        console.log("active_orders response: ", response);
+    });
 
     const handleOnClick = (tab) => {
         setSelectOrderTab(tab);
@@ -110,7 +121,7 @@ const Capsico = ({ selectOrderTab, setSelectOrderTab, searchQuery, setSearchQuer
                     </TableHeader>
                     <TableBody>
                         {capsicoOrderData?.length > 0 && capsicoOrderData?.map((data) => (
-                            <TableRow key={data?.data}>
+                            <TableRow key={data?._id}>
                                 <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
                                 <TableCell className="text-[#1D1929] text-xs font-bold font-roboto">{data?.orderNumber}</TableCell>

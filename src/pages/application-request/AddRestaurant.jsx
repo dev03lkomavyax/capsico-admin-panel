@@ -12,7 +12,7 @@ import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
 
 const AddRestaurant = () => {
     const [pageCount, setPageCount] = useState(6);
-    const [page, setPage] = useState(2);
+    const [page, setPage] = useState(6);
 
     return (
         <AdminWrapper>
