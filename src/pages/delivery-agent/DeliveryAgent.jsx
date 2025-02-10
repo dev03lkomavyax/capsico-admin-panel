@@ -11,6 +11,7 @@ import DeliveryAgentComp from '@/components/delivery-agent/DeliveryAgentComp'
 import { ChevronsUpDown } from 'lucide-react'
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import useGetApiReq from '@/hooks/useGetApiReq'
+import { Link } from 'react-router-dom'
 
 
 const DeliveryAgent = () => {
@@ -45,6 +46,11 @@ const DeliveryAgent = () => {
     return (
         <AdminWrapper>
             <section className='flex flex-col gap-6 w-full h-full'>
+                <div className="w-full flex justify-end mb-6">
+                    <Link to={'/admin/delivery-agent-request'} className="flex justify-end items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        Application request
+                    </Link>
+                </div>
                 <section className='flex justify-between items-center w-full'>
                     <div className='flex justify-start items-center -ml-4'>
                         <BsSearch className='relative left-8 text-[#1D1929]' />
