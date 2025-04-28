@@ -59,7 +59,7 @@ const CreateCustomModelFirst = ({onSubmit}) => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea className="resize-none h-[108px]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

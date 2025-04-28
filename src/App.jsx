@@ -38,6 +38,9 @@ const VendorProducts = lazy(() => import('./pages/vendor/VendorProducts'))
 const DeliveryAgent = lazy(() => import('./pages/delivery-agent/DeliveryAgent'))
 const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryAgentDetails'))
 const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
+const DeliveryAgentRequest = lazy(() => import('./pages/delivery-agent/DeliveryAgentRequest'))
+const AddDeliveryPartner = lazy(() => import('./pages/delivery-agent/AddDeliveryPartner'))
+const DeliveryPartnerDetails = lazy(() => import('./pages/delivery-agent/DeliveryPartnerDetails'))
 const AvailableBalanceDetails = lazy(() => import('./pages/delivery-agent/AvailableBalanceDetails'))
 const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
 const SubAdminList = lazy(() => import('./pages/admin/SubAdminList'))
@@ -144,6 +147,9 @@ function App() {
             <Route path='/admin/delivery-agent/:deliveryAgentId' element={<DeliveryAgentDetails />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/edit-profile' element={<DeliveryAgentProfileEdit />} />
             <Route path='/admin/delivery-agent/:deliveryAgentId/available-balance' element={<AvailableBalanceDetails />} />
+            <Route path='/admin/delivery-agent-request' element={<DeliveryAgentRequest />} />
+            <Route path='/admin/add-delivery-partner' element={<AddDeliveryPartner />} />
+            <Route path='/admin/delivery-agent-request/:deliveryPartnerId' element={<DeliveryPartnerDetails />} />
 
             <Route path='/admin/sub-admin' element={<SubAdminList />} />
             <Route path='/admin/sub-admin/add-subadmin' element={<AddSubAdmin />} />

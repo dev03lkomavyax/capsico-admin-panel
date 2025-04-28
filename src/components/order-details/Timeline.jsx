@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import React from 'react'
 import { FaCheck, FaXmark } from 'react-icons/fa6'
 
@@ -10,7 +11,7 @@ const Timeline = ({ title, time, status, className }) => {
             </div>
             <div className="flex flex-col">
                 <span className="text-black font-medium text-sm">{title}</span>
-                <span className="text-[#6E6D6D] text-xs">{time}</span>
+                <span className="text-[#6E6D6D] text-xs">{time &&  format(new Date(time), "dd-MM-yyyy")}</span>
             </div>
         </div>
     )

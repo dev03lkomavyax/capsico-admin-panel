@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CreateCustomModelThirdSchema } from '@/schema/CreateCustomModel'
 import { Switch } from '../ui/switch'
 
-const CreateCustomModelThird = () => {
+const CreateCustomModelThird = ({onSubmit}) => {
   const form = useForm({
     resolver: zodResolver(CreateCustomModelThirdSchema),
     defaultValues: {
