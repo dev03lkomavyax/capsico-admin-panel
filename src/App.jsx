@@ -1,15 +1,14 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
-import './App.css';
-import Dashboard from './pages/Dashboard';
-import Fallback from './components/Fallback';
+import { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { Route, Routes, useNavigate } from "react-router-dom";
+import './App.css';
+import Fallback from './components/Fallback';
 import BackdropLoader from './components/loader/BackdropLoader';
+import ProtectedRoute from './components/ProtectedRoute';
 import useGetApiReq from './hooks/useGetApiReq';
 import usePostApiReq from './hooks/usePostApiReq';
 import { readCookie } from './utils/readCookie';
-import { Toaster } from 'react-hot-toast';
-import ProtectedRoute from './components/ProtectedRoute';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/Order/Order'));
@@ -80,7 +79,7 @@ function App() {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       localStorage.setItem("admin-status", `${res?.data?.isAuthenticated}`);
-      // console.log("status response", res);
+      console.log("status response", res);
       res?.data?.shouldLoggOut && logout();
       !res?.data?.isAuthenticated && refreshToken();
     }

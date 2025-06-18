@@ -7,65 +7,31 @@ import { Checkbox } from '../ui/checkbox'
 import ReactPagination from '../pagination/ReactPagination'
 import { useNavigate } from 'react-router-dom'
 import useGetApiReq from '@/hooks/useGetApiReq'
-
-const data = [
-    {
-        customerID: "1264903",
-        customerName: "Vivek",
-        joinedDate: `March ${21, 2020}`,
-        Location: "Adiyaman Hotel",
-        totalSpent: "$19.09",
-        lastOrder: "$19.09",
-    },
-    {
-        customerID: "1264903",
-        customerName: "Aditya",
-        joinedDate: `March ${21, 2020}`,
-        Location: "Adiyaman Hotel",
-        totalSpent: "$19.09",
-        lastOrder: "$19.09",
-    },
-    {
-        customerID: "1264903",
-        customerName: "Piyush",
-        joinedDate: `March ${21, 2020}`,
-        Location: "Adiyaman Hotel",
-        totalSpent: "$19.09",
-        lastOrder: "$19.09",
-    },
-    {
-        customerID: "1264903",
-        customerName: "Aditya",
-        joinedDate: `March ${21, 2020}`,
-        Location: "Adiyaman Hotel",
-        totalSpent: "$19.09",
-        lastOrder: "$19.09",
-    },
-]
+import { format } from 'date-fns'
 
 const Capsico = () => {
-    const [customerData, setCustomerData] = useState(data)
+    const [customerData, setCustomerData] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
-    const [totalPage, setTotalPage] = useState(16)
+    const [totalPage, setTotalPage] = useState(1)
     const [page, setPage] = useState(1)
     const navigate = useNavigate();
 
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const getAllCustomer = () => {
-        fetchData(`/admin/get-all-customers`)
+        fetchData(`/admin/get-all-customers?searchQuery=${searchQuery}&page=${page}&limit=${5}`);
     }
 
     useEffect(() => {
         getAllCustomer();
-    }, []);
+    }, [searchQuery,page]);
 
     useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {
             console.log("customer res", res?.data);
             setCustomerData(res?.data?.data);
-            // setTotalPage(pagination?.totalPages);
-            // setPage(pagination?.page);
+            setTotalPage(res?.data?.pagination?.totalPages);
+            setPage(res?.data?.pagination?.page);
         }
     }, [res])
 
@@ -134,7 +100,7 @@ const Capsico = () => {
                             <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.name}</TableCell>
-                            <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.joinedDate}</TableCell>
+                            <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.createdAt && format(new Date(data.createdAt), 'dd/MM/yyyy')}</TableCell>
                             <TableCell className="text-[#1D1929] text-[12px] font-normal font-roboto">{data?.addresses?.map((data)=> data.city)}</TableCell>
                             <TableCell className="text-[#667085] text-[10px] font-semibold font-inter">{data.totalSpent}</TableCell>
                             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.lastOrder}</TableCell>

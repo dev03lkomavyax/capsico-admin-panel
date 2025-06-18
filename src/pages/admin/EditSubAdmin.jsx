@@ -1,237 +1,300 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AddSubAdminSchema, EditSubAdminSchema } from "@/schema/AddSubAdminSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { FaEye, FaEyeSlash } from "react-icons/fa6"
-import { useLocation, useNavigate } from 'react-router-dom'
-import { MdKeyboardArrowLeft } from 'react-icons/md'
-import ChangePassword from '@/components/admin/ChangePassword'
-import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
-import { Label } from '@/components/ui/label'
-import { permissions } from '@/constants/permissions'
-import useGetApiReq from '@/hooks/useGetApiReq'
-import usePatchApiReq from '@/hooks/usePatchApiReq'
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import ChangePassword from "@/components/admin/ChangePassword";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { permissions } from "@/constants/permissions";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import { EditSubAdminSchema } from "@/schema/AddSubAdminSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const EditSubAdmin = () => {
-    const form = useForm({
-        resolver: zodResolver(EditSubAdminSchema),
-        defaultValues: {
-            position: '',
-            name: '',
-            phoneNumber: '',
-            email: '',
-            permissions: {
-                dashboard: "none",
-                subAdmin: "none",
-                customer: "none",
-                restaurant: "none",
-                vendor: "none",
-                deliveryAgent: "none",
-                order: "none",
-                review: "none",
-                offer: "none",
-                applicationRequest: "none"
-            },
-        }
-    })
+  const form = useForm({
+    resolver: zodResolver(EditSubAdminSchema),
+    defaultValues: {
+      position: "",
+      name: "",
+      phoneNumber: "",
+      email: "",
+      permissions: {
+        dashboard: "none",
+        subAdmin: "none",
+        customer: "none",
+        restaurant: "none",
+        vendor: "none",
+        deliveryAgent: "none",
+        order: "none",
+        review: "none",
+        offer: "none",
+        applicationRequest: "none",
+      },
+    },
+  });
 
-    const { control, reset, handleSubmit, setValue } = form
-    const [isShowPassword, setIsShowPassword] = useState(false);
-    const { state } = useLocation();
-    const navigate = useNavigate()
-    const { res, fetchData, isLoading } = useGetApiReq();
-    const { res: updateAdminRes, fetchData: uploadAdminData, isLoading: isAdminLoading } = usePatchApiReq();
+  const { control, reset, handleSubmit, setValue } = form;
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isChangePassword, setIsChangePassword] = useState(false);
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const { res, fetchData, isLoading } = useGetApiReq();
+  const {
+    res: updateAdminRes,
+    fetchData: uploadAdminData,
+    isLoading: isAdminLoading,
+  } = usePatchApiReq();
 
-    const getSubadminDetails = () => {
-        fetchData(`/admin/get-subadmin-details/${state?.subadminId}`);
+  const getSubadminDetails = () => {
+    fetchData(`/admin/get-subadmin-details/${state?.subadminId}`);
+  };
+
+  useEffect(() => {
+    getSubadminDetails();
+  }, [state?.subadminId]);
+
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      console.log("subadmin details res", res);
+      const { subAdmin } = res?.data?.data || {};
+      subAdmin?.email && setValue("email", subAdmin.email);
+      subAdmin?.position && setValue("position", subAdmin.position);
+      subAdmin?.name && setValue("name", subAdmin.name);
+      subAdmin?.phone && setValue("phoneNumber", subAdmin.phone);
+      subAdmin?.permissions && setValue("permissions", subAdmin.permissions);
     }
+  }, [res]);
 
-    useEffect(() => {
-        getSubadminDetails();
-    }, [state?.subadminId])
+  const onSubmit = (data) => {
+    console.log("data", data);
 
-    useEffect(() => {
-        if (res?.status === 200 || res?.status === 201) {
-            console.log("subadmin details res", res);
-            const { subAdmin } = res?.data?.data || {};
-            subAdmin?.email && setValue("email", subAdmin.email);
-            subAdmin?.position && setValue("position", subAdmin.position);
-            subAdmin?.name && setValue("name", subAdmin.name);
-            subAdmin?.phone && setValue("phoneNumber", subAdmin.phone);
-            subAdmin?.permissions && setValue("permissions", subAdmin.permissions);
-        }
-    }, [res])
+    uploadAdminData(`/admin/update-subadmin/${state?.subadminId}`, {
+      name: data.name,
+      email: data.email,
+      position: data.position,
+      phone: data.phoneNumber,
+      permissions: data.permissions,
+    });
+  };
 
-    const onSubmit = (data) => {
-        console.log('data', data)
-
-        uploadAdminData(`/admin/update-subadmin/${state?.subadminId}`, {
-            name: data.name,
-            email: data.email,
-            position: data.position,
-            phone: data.phoneNumber,
-            permissions: data.permissions,
-        });
+  useEffect(() => {
+    if (updateAdminRes?.status === 200 || updateAdminRes?.status === 201) {
+      console.log("subadmin update res", updateAdminRes);
+      getSubadminDetails();
     }
+  }, [updateAdminRes]);
 
-    useEffect(() => {
-        if (updateAdminRes?.status === 200 || updateAdminRes?.status === 201) {
-            console.log("subadmin update res", updateAdminRes);
-            getSubadminDetails();
-        }
-    }, [updateAdminRes])
+  return (
+    <AdminWrapper>
+      <section className="px-0 py-0 w-full">
+        <div className="bg-[#FFFFFF] px-8 py-6">
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className=" w-full bg-[#FFFFFF]"
+            >
+              <div className="flex gap-1 items-center mb-4">
+                <MdKeyboardArrowLeft
+                  onClick={() => navigate(-1)}
+                  className="text-[#1064FD] text-3xl cursor-pointer"
+                />
+                <h2 className="text-[#1064FD] text-2xl text-left font-bold font-nunito">
+                  Edit sub admin
+                </h2>
+              </div>
 
-    return (
-        <AdminWrapper>
-            <section className='px-0 py-0 w-full'>
-                {/* <div className='flex justify-between items-center mb-8'>
-                    <div className='flex justify-start items-center'>
-                        <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
-                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Sub Admin</h2>
-                    </div>
-                </div> */}
-                <div className='bg-[#FFFFFF] px-8 py-6'>
-                    <Form {...form}>
-                        <form onSubmit={handleSubmit(onSubmit)} className=" w-full bg-[#FFFFFF]">
-                            <div className='flex gap-1 items-center mb-4'>
-                                <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#1064FD] text-3xl cursor-pointer' />
-                                <h2 className='text-[#1064FD] text-2xl text-left font-bold font-nunito'>Edit sub admin</h2>
-                            </div>
+              <div className="grid grid-cols-3 gap-6">
+                <FormField
+                  control={control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
+                        Position
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                            <SelectValue placeholder="Select Position" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="manager">Manager</SelectItem>
+                            <SelectItem value="support">Support</SelectItem>
+                            <SelectItem value="analyst">Analyst</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                            <div className="grid grid-cols-3 gap-6">
-                                <FormField
-                                    control={control}
-                                    name="position"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Position</FormLabel>
-                                            <FormControl>
-                                                <Select value={field.value} onValueChange={field.onChange}>
-                                                    <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                                        <SelectValue placeholder="Select Position" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="manager">Manager</SelectItem>
-                                                        <SelectItem value="support">Support</SelectItem>
-                                                        <SelectItem value="analyst">Analyst</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                <FormField
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
+                        Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Full Name"
+                          className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                                <FormField
-                                    control={control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Name</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Full Name" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                <FormField
+                  control={control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
+                        Phone number
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="10- digit number"
+                          className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                                <FormField
-                                    control={control}
-                                    name="phoneNumber"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Phone number</FormLabel>
-                                            <FormControl>
-                                                <Input type="number" placeholder="10- digit number" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
+                        Email
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Email address"
+                          className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                                <FormField
-                                    control={control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Email</FormLabel>
-                                            <FormControl>
-                                                <Input type="email" placeholder="Email address" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+              <Label className="text-sm font-medium inline-block mt-5">
+                Permissions
+              </Label>
 
-                                {/* <FormField
-                                    control={control}
-                                    name="password"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Password</FormLabel>
-                                            <FormControl>
-                                                <div className="relative">
-                                                    <Input type={isShowPassword ? "text" : "password"} placeholder="*************" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
-                                                    {isShowPassword ?
-                                                        <FaEyeSlash onClick={() => setIsShowPassword(false)} className='absolute text-gray-600 right-3 bottom-3 cursor-pointer text-lg' />
-                                                        : <FaEye onClick={() => setIsShowPassword(true)} className='absolute text-gray-600 right-3 bottom-3 cursor-pointer text-lg' />
-                                                    }
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                /> */}
-                            </div>
+              <div className="grid grid-cols-6 gap-3 mt-1">
+                {permissions.map((permission) => (
+                  <FormField
+                    key={permission.value}
+                    control={control}
+                    name={`permissions.${permission.value}`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium capitalize">
+                          {permission.label}
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl
+                              className={`bg-[#F9FAFB] border-[#D1D5DB] rounded-lg`}
+                            >
+                              <SelectTrigger className="w-full text-[#6B7280] text-sm font-normal font-inter">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="read">Read</SelectItem>
+                                <SelectItem value="read&write">
+                                  Read and Write
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
 
-                            <Label className="text-sm font-medium inline-block mt-5">Permissions</Label>
+              <button
+                type="button"
+                onClick={() => setIsChangePassword(true)}
+                className="text-[#397FFE] text-base font-semibold font-inter mt-3 cursor-pointer"
+              >
+                Change password
+              </button>
 
-                            <div className="grid grid-cols-6 gap-3 mt-1">
-                                {permissions.map((permission) => (
-                                    <FormField
-                                        key={permission.value}
-                                        control={control}
-                                        name={`permissions.${permission.value}`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-sm font-medium capitalize">{permission.label}</FormLabel>
-                                                <FormControl>
-                                                    <Select onValueChange={field.onChange} value={field.value}>
-                                                        <FormControl className={`bg-[#F9FAFB] border-[#D1D5DB] rounded-lg`}>
-                                                            <SelectTrigger className="w-full text-[#6B7280] text-sm font-normal font-inter">
-                                                                <SelectValue />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            <SelectGroup>
-                                                                <SelectItem value="none">None</SelectItem>
-                                                                <SelectItem value="read">Read</SelectItem>
-                                                                <SelectItem value="read&write">Read and Write</SelectItem>
-                                                            </SelectGroup>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
-                            </div>
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  className="h-11 w-[190px] mt-5 bg-[#1064FD] hover:bg-[#1064FD] text-base"
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+        {isChangePassword && (
+          <ChangePassword
+            isChangePassword={isChangePassword}
+            setIsChangePassword={setIsChangePassword}
+            subadminId={state?.subadminId}
+          />
+        )}
+      </section>
+    </AdminWrapper>
+  );
+};
 
-                            <ChangePassword />
-                            <div className='flex justify-end'>
-                                <Button type="submit" className='h-11 w-[190px] mt-5 bg-[#1064FD] hover:bg-[#1064FD] text-base'>Save Changes</Button>
-                            </div>
-                        </form>
-                    </Form>
-                </div>
-            </section>
-        </AdminWrapper>
-    )
-}
-
-export default EditSubAdmin
+export default EditSubAdmin;

@@ -21,8 +21,8 @@ const SingleRestaurantComp = ({ data }) => {
             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.name}</TableCell>
             <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data?.createdAt && format(data?.createdAt, 'MMMM yyyy')}</TableCell>
             <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">{`${data?.location?.address}, ${data?.location?.city}, ${data?.location?.state}, ${data?.location?.pinCode}`}</TableCell>
-            <TableCell className="text-[#000000] text-[10px] font-semibold font-inter">₹0</TableCell>
-            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">₹0</TableCell>
+            <TableCell className="text-[#000000] text-xs font-semibold font-inter">₹0</TableCell>
+            <TableCell className="text-[#1D1929] text-xs font-semibold font-inter">₹0</TableCell>
             <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
                 <span className={`${data?.status === "PENDING" && "text-[#FFC107]"} ${data?.status === "APPROVED" && "text-[#28A745]"} ${data?.status === "REJECTED" && "text-[#DC3545]"} ${data?.status === "SUSPENDED" && "text-[#6C757D]"}`}>{data?.status}</span>
             </TableCell>

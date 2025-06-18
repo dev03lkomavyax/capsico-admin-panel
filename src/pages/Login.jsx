@@ -36,8 +36,18 @@ const Login = () => {
         if (res?.status === 200 || res?.status === 201) {
             navigate("/admin/dashboard");
             localStorage.setItem("adminAccessToken", res?.data?.accessToken)
+            localStorage.setItem("admin-status", true)
         }
     }, [res])
+
+    useEffect(() => {
+        const isAuthenticated = JSON.parse(localStorage.getItem("admin-status") || false)
+        if (isAuthenticated) {
+            navigate("/admin/dashboard");
+        }
+    
+    }, [])
+    
 
     return (
         <section className='flex justify-center items-center w-full h-screen bg-[#4880FF]'>

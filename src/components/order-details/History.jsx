@@ -86,14 +86,14 @@ const History = ({ status, timing }) => {
             {status === "Cancelled" && <>
                 <Timeline
                     title="Order cancelled"
-                    time={timing}
+                    // time={timing}
                     status={status}
                     className="bg-[#F05542]"
                 />
                 <div className="ml-3 border-l border-dashed border-gray-400 h-8"></div>
                 <Timeline
                     title="Order received"
-                    time={timing}
+                    // time={timing}
                     status={status}
                     className="bg-[#57A748]"
                 />

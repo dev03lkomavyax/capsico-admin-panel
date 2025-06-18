@@ -24,12 +24,12 @@ const DeliveryAgent = () => {
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const getAllDeliveryAgent = () => {
-        fetchData(`/admin/get-all-deliveryPartners`)
+        fetchData(`/admin/get-all-deliveryPartners?searchQuery=${searchQuery}&page=${page}&limit=${10}`);
     }
 
     useEffect(() => {
         getAllDeliveryAgent();
-    }, []);
+    }, [searchQuery, page]);
 
     useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {

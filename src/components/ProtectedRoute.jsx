@@ -3,11 +3,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
 
-    const isAuthenticated = true;
-    // console.log("isAuthenticated", isAuthenticated);
+    const isAuthenticated = JSON.parse(localStorage.getItem("admin-status"))
 
     if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" />;
     }
 
     return (

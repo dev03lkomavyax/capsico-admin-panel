@@ -8,21 +8,13 @@ import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 import useGetApiReq from '@/hooks/useGetApiReq'
 import Spinner from '@/components/Spinner'
 import DataNotFound from '@/components/DataNotFound'
+import Subadmin from '@/components/Subadmin'
 
 
 const SubAdminList = () => {
     const { res, fetchData, isLoading } = useGetApiReq();
     const [subAdminList, setSubAdminList] = useState([])
-
-    const navigate = useNavigate()
-
-    const handleValueChange = (value, subadminId) => {
-        if (value === 'remove') {
-        }
-        else {
-            navigate('/admin/sub-admin/edit-subadmin', { state: { subadminId } })
-        }
-    }
+    const navigate = useNavigate();
 
     const getAllSubadmins = () => {
         fetchData("/admin/get-all-subadmin");
@@ -65,28 +57,8 @@ const SubAdminList = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {subAdminList.length > 0 && subAdminList.map((subadmin, i) => (
-                                <TableRow key={i}>
-                                    <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin._id}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.name}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.position}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.email}</TableCell>
-                                    <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.phone}</TableCell>
-                                    <TableCell>
-                                        <Select onValueChange={(value) => handleValueChange(value, subadmin?._id)}>
-                                            <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#252525] text-sm font-medium font-roboto border-[#E9E9EA] border-[1px] rounded-[10px]">
-                                                <SelectValue placeholder="Action" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem className='text-[#252525] text-sm font-medium font-roboto' value="remove">Remove</SelectItem>
-                                                    <SelectItem className='text-[#252525] text-sm font-medium font-roboto' value="edit">Edit</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </TableCell>
-                                </TableRow>
+                            {subAdminList.length > 0 && subAdminList.map((subadmin) => (
+                                <Subadmin key={subadmin._id} getAllSubadmins={getAllSubadmins} subadmin={subadmin} />
                             ))}
                         </TableBody>
                     </Table>
@@ -99,10 +71,6 @@ const SubAdminList = () => {
                         <DataNotFound name="Sub Admins" />
                     }
                 </div>
-                {/* <div className='border-[#1AA6F1] flex items-center w-fit'>
-                    <button className='text-[#1AA6F1] text-sm font-normal font-inter bg-[#FFFFFF] h-12 rounded-s-lg px-5'>Metric</button>
-                    <button className='text-[#FFFFFF] text-sm font-normal font-inter bg-[#4A5E6D] h-12 rounded-e-lg px-5'>Overview</button>
-                </div> */}
             </section>
         </AdminWrapper>
     )
