@@ -34,8 +34,8 @@ const AlertModal = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={disabled} onClick={handleConfirm}>
+          <AlertDialogCancel onClick={handleCancel} className="h-9">Cancel</AlertDialogCancel>
+          <AlertDialogAction className="bg-[#4A67FF] hover:bg-[#4A67FF] h-9" disabled={disabled} onClick={handleConfirm}>
             Confirm
           </AlertDialogAction>
         </AlertDialogFooter>

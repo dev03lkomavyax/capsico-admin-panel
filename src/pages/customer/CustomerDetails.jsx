@@ -5,15 +5,17 @@ import avatar from '@/assets/Image-198.png';
 import location from '@/assets/location.png';
 import sms from '@/assets/sms.png';
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
-import SingleOrderDetails from '@/components/customer/SingleOrderDetails';
+import CustomerOrders from '@/components/customer/CustomerOrders';
 import useGetApiReq from '@/hooks/useGetApiReq';
 import { useEffect, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CustomerDetails = () => {
     const [customerDetailsData, setCustomerDetailsData] = useState("");
     const { customerId } = useParams()
+    const navigate = useNavigate();
+    
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const getCustomerDetails = () => {
@@ -30,35 +32,36 @@ const CustomerDetails = () => {
             setCustomerDetailsData(res?.data?.data);
         }
     }, [res])
+
     return (
         <AdminWrapper>
             <div className='p-0'>
                 <div className='flex justify-between h-14'>
-                    <div className="flex items-center gap-1">
+                    <button onClick={() => navigate(-1)} className="flex items-center gap-1">
                         <IoIosArrowBack className='text-2xl' />
                         <span className='font-roboto text-lg font-medium'>Customer detail</span>
-                    </div>
+                    </button>
                 </div>
                 <div className="grid grid-cols-[60%_38%] gap-[2%]">
                     <div className='bg-white p-5 rounded-lg flex gap-10'>
-                        <img className='w-52 h-52 rounded-lg' src={avatar} alt="avatar" />
+                        <img className='w-52 h-52 rounded-lg' src={customerDetailsData.image ? `${import.meta.env.VITE_IMAGE_URL}/${customerDetailsData.image}`:avatar} alt="avatar" />
                         <div className='w-full'>
                             <div className='flex w-full justify-between items-center gap-3'>
-                                <h1 className='font-inter text-3xl font-semibold text-[#202020]'>{customerDetailsData?.name}</h1>
+                                <h1 className='font-inter text-3xl font-semibold text-[#202020] capitalize'>{customerDetailsData?.name}</h1>
                                 <img className='w-5 h-5 cursor-pointer' src={edit} alt="edit" />
                             </div>
                             <div className="flex flex-col gap-3 mt-5">
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={location} alt="location" />
-                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.phone}</p>
+                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.addresses?.[0]?.city || "N/A"}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={sms} alt="sms" />
-                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.email}</p>
+                                    <p className='font-inter text-[#696969] text-lg'>{customerDetailsData?.email || "N/A"}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <img className='w-5 h-5' src={call} alt="call" />
-                                    <p className='font-inter text-[#696969] text-lg'>+91 {customerDetailsData?.phone}</p>
+                                    <p className='font-inter text-[#696969] text-lg'>+91 {customerDetailsData?.phone || "N/A"}</p>
                                 </div>
                             </div>
                         </div>
@@ -81,14 +84,7 @@ const CustomerDetails = () => {
                     </div>
                 </div>
 
-                <div className="rounded-lg mt-7 p-5 bg-white">
-                    <h2 className='font-inter font-semibold'>Order history</h2>
-                    <div className="flex flex-col mt-5">
-                        <SingleOrderDetails rating={true} />
-                        <SingleOrderDetails rating={false} />
-                        <SingleOrderDetails rating={true} />
-                    </div>
-                </div>
+                <CustomerOrders />
             </div>
         </AdminWrapper>
     )

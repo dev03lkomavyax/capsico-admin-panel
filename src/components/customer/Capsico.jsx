@@ -1,30 +1,52 @@
-import React, { useEffect, useState } from 'react'
-import { BsSearch } from 'react-icons/bs'
-import { Input } from '../ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import { Checkbox } from '../ui/checkbox'
-import ReactPagination from '../pagination/ReactPagination'
-import { useNavigate } from 'react-router-dom'
-import useGetApiReq from '@/hooks/useGetApiReq'
-import { format } from 'date-fns'
+import React, { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import { Input } from "../ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "../ui/table";
+import { Checkbox } from "../ui/checkbox";
+import ReactPagination from "../pagination/ReactPagination";
+import { useNavigate } from "react-router-dom";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { format } from "date-fns";
+import Spinner from "../Spinner";
+import DataNotFound from "../DataNotFound";
+import { LIMIT } from "@/constants/constants";
+import Customer from "./Customer";
 
-const Capsico = () => {
-    const [customerData, setCustomerData] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
-    const [totalPage, setTotalPage] = useState(1)
-    const [page, setPage] = useState(1)
-    const navigate = useNavigate();
+const Capsico = ({ setCapsicoCustomers }) => {
+    const [customerData, setCustomerData] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [totalPage, setTotalPage] = useState(1);
+    const [page, setPage] = useState(1);
+    const [filterByDate, setFilterByDate] = useState("today");
+
 
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const getAllCustomer = () => {
-        fetchData(`/admin/get-all-customers?searchQuery=${searchQuery}&page=${page}&limit=${5}`);
-    }
+        fetchData(
+            `/admin/get-all-customers?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}`
+        );
+    };
 
     useEffect(() => {
         getAllCustomer();
-    }, [searchQuery,page]);
+    }, [searchQuery, page, filterByDate]);
 
     useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {
@@ -32,99 +54,87 @@ const Capsico = () => {
             setCustomerData(res?.data?.data);
             setTotalPage(res?.data?.pagination?.totalPages);
             setPage(res?.data?.pagination?.page);
+            setCapsicoCustomers(res?.data?.pagination?.total);
         }
-    }, [res])
-
-    const handleOnChange = (value, userId) => {
-        if (value === 'remove') {
-
-        }
-        else {
-            navigate(`/admin/customer/${userId}`)
-        }
-    }
+    }, [res]);
 
     return (
         <div>
-            <div className='flex justify-between items-center w-full mb-4'>
-                <div className='flex justify-start items-center -ml-4'>
-                    <BsSearch className='relative left-8 text-[#1D1929]' />
-                    <Input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto' />
+            <div className="flex justify-between items-center w-full mb-4">
+                <div className="flex justify-start items-center -ml-4">
+                    <BsSearch className="relative left-8 text-[#1D1929]" />
+                    <Input
+                        type="text"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto"
+                    />
                 </div>
-                <div className='flex justify-between items-center w-[230px]'>
-                    <Select>
-                        <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                            <SelectValue placeholder="All" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">All</SelectItem>
-                                <SelectItem value="newOrder">New Order</SelectItem>
-                                <SelectItem value="preparedry">Prepared</SelectItem>
-                                <SelectItem value="completed">Completed</SelectItem>
-                                <SelectItem value="cancelled">Cancelled</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                            <SelectValue placeholder="Today" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">Yesterday</SelectItem>
-                                <SelectItem value="banana">Tommarrow</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+
+                <Select value={filterByDate} onValueChange={(value) => setFilterByDate(value)}>
+                    <SelectTrigger className="flex justify-between items-center w-auto h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                        <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="all">All</SelectItem>
+                            <SelectItem value="today">Today</SelectItem>
+                            <SelectItem value="week">This Week</SelectItem>
+                            <SelectItem value="month">This Month</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
-            <Table className='bg-[#FFFFFF]'>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Customer ID</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Customer Name</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Joined Date</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Total spent</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Last order</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {customerData?.length > 0 && customerData?.map((data, index) => (
-                        <TableRow key={index}>
-                            <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?._id}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.name}</TableCell>
-                            <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.createdAt && format(new Date(data.createdAt), 'dd/MM/yyyy')}</TableCell>
-                            <TableCell className="text-[#1D1929] text-[12px] font-normal font-roboto">{data?.addresses?.map((data)=> data.city)}</TableCell>
-                            <TableCell className="text-[#667085] text-[10px] font-semibold font-inter">{data.totalSpent}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.lastOrder}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-                                <Select onValueChange={(value) => handleOnChange(value, data?._id)}>
-                                    <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#003CFF] text-sm font-semibold font-sans border-[#E9E9EA] border-[1px] rounded-[10px]">
-                                        <SelectValue placeholder="Action" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {/* <SelectLabel>Fruits</SelectLabel> */}
-                                            <SelectItem value="remove">Remove</SelectItem>
-                                            <SelectItem value="detail">View detail</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </TableCell>
+            <div className="bg-[#FFFFFF] rounded-lg mb-6">
+                <Table className="bg-[#FFFFFF]">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-10">
+                                {
+                                    <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+                                }
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Customer ID
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Customer Name
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Joined Date
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Location
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Total spent
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Last order
+                            </TableHead>
+                            <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                Action
+                            </TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {customerData?.length > 0 &&
+                            customerData?.map((item) => (
+                                <Customer key={item?._id} item={item} getAllCustomer={getAllCustomer} />
+                            ))}
+                    </TableBody>
+                </Table>
+
+                {isLoading && <Spinner />}
+                {customerData.length === 0 && !isLoading && (
+                    <DataNotFound name="Customers" />
+                )}
+            </div>
+
             <ReactPagination totalPage={totalPage} setPage={setPage} />
         </div>
-    )
-}
+    );
+};
 
-export default Capsico
+export default Capsico;

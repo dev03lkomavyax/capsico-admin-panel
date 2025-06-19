@@ -6,6 +6,8 @@ import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
 
 const CustomerList = () => {
     const [selectTab, setSelectTab] = useState('capsico')
+    const [capsicoCustomers, setCapsicoCustomers] = useState(0);
+    const [quicklyCustomers, setQuicklyCustomers] = useState(0);
 
     return (
         <AdminWrapper>
@@ -19,18 +21,18 @@ const CustomerList = () => {
                 <section className='flex justify-start items-center'>
                     <button onClick={() => setSelectTab('capsico')} className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${selectTab === 'capsico' ? 'border-[#003CFF]' : 'border-transparent'}`}>
                         <h6 className='text-[#1D1929] text-sm font-semibold font-roboto'>Capsico</h6>
-                        <p className='text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto bg-[#FF6F03] w-[22px] h-[22px] rounded-[7px]'>20</p>
+                        <p className={`text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto ${selectTab === 'capsico' ? 'bg-[#FF6F03]' : 'bg-[#ABABAB]'} w-[22px] h-[22px] rounded-[7px]`}>{capsicoCustomers}</p>
                     </button>
                     <button onClick={() => setSelectTab('quickly')} className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${selectTab === 'quickly' ? 'border-[#003CFF]' : 'border-transparent'}`}>
                         <h6 className='text-[#1D1929] text-sm font-semibold font-roboto'>Quickly</h6>
-                        <p className='text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto bg-[#ABABAB] w-[22px] h-[22px] rounded-[7px]'>48</p>
+                        <p className={`text-[#FFFFFF] text-[10px] flex justify-center items-center font-normal font-roboto ${selectTab === 'quickly' ? 'bg-[#FF6F03]' : 'bg-[#ABABAB]'} w-[22px] h-[22px] rounded-[7px]`}>{quicklyCustomers}</p>
                     </button>
                 </section>
                 {selectTab === 'capsico' &&
-                    <Capsico />
+                    <Capsico setCapsicoCustomers={setCapsicoCustomers} />
                 }
                 {selectTab === 'quickly' &&
-                    <Quickly />
+                    <Quickly setQuicklyCustomers={setQuicklyCustomers} />
                 }
             </div>
         </AdminWrapper>

@@ -1,3 +1,4 @@
 const DEBOUNCE_DELAY = 800;
+const LIMIT = 10;
 
-export { DEBOUNCE_DELAY }
+export { DEBOUNCE_DELAY,LIMIT }

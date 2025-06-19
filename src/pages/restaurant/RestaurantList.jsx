@@ -24,12 +24,13 @@ const RestaurantList = () => {
     const [totalPage, setTotalPage] = useState(1)
     const [page, setPage] = useState(1)
     const [status, setStatus] = useState("all")
+    const [filterByDate, setFilterByDate] = useState("today")
 
     const navigate = useNavigate()
 
     const getAllRestaurant = useCallback(() => {
-        fetchData(`/admin/get-restaurants?page=${page}&search=${searchQuery}&status=${status === "all" ? "" : status}`);
-    }, [page, searchQuery, status]);
+        fetchData(`/admin/get-restaurants?page=${page}&search=${searchQuery}&status=${status === "all" ? "" : status}&&dateFilter=${filterByDate}`);
+    }, [page, searchQuery, status, filterByDate]);
 
     useEffect(() => {
         let handler;
@@ -48,7 +49,7 @@ const RestaurantList = () => {
         if (!searchQuery) {
             getAllRestaurant();
         }
-    }, [page, status, searchQuery]);
+    }, [page, status, searchQuery, filterByDate]);
 
     useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {
@@ -97,18 +98,16 @@ const RestaurantList = () => {
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                        <Select>
-                            <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                <SelectValue placeholder="Today" />
+                        <Select value={filterByDate} onValueChange={(value) => setFilterByDate(value)}>
+                            <SelectTrigger className="flex justify-between items-center w-auto h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Fruits</SelectLabel>
-                                    <SelectItem value="apple">Apple</SelectItem>
-                                    <SelectItem value="banana">Banana</SelectItem>
-                                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                                    <SelectItem value="grapes">Grapes</SelectItem>
-                                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                                    <SelectItem value="all">All</SelectItem>
+                                    <SelectItem value="today">Today</SelectItem>
+                                    <SelectItem value="week">This Week</SelectItem>
+                                    <SelectItem value="month">This Month</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

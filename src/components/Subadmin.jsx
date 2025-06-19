@@ -1,18 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "./AlertModal";
+import { Button } from "./ui/button";
 
 const Subadmin = ({ subadmin, getAllSubadmins }) => {
   const navigate = useNavigate();
@@ -31,12 +24,14 @@ const Subadmin = ({ subadmin, getAllSubadmins }) => {
     }
   }, [res, getAllSubadmins]);
 
-  const handleValueChange = (value, subadminId) => {
-    if (value === "remove") {
-      setIsAlertDeleteModalOpen(true);
-    } else {
-      navigate("/admin/sub-admin/edit-subadmin", { state: { subadminId } });
-    }
+  const handleEdit = () => {
+    navigate("/admin/sub-admin/edit-subadmin", {
+      state: { subadminId: subadmin._id },
+    });
+  };
+
+  const handleRemove = () => {
+    setIsAlertDeleteModalOpen(true);
   };
 
   return (
@@ -63,36 +58,21 @@ const Subadmin = ({ subadmin, getAllSubadmins }) => {
           {subadmin.phone}
         </TableCell>
         <TableCell>
-          <Select
-            onValueChange={(value) => handleValueChange(value, subadmin?._id)}
-          >
-            <SelectTrigger className="flex justify-between items-center w-[120px] h-[30px] text-[#252525] text-sm font-medium font-roboto border-[#E9E9EA] border-[1px] rounded-[10px]">
-              <SelectValue placeholder="Action" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  className="text-[#252525] text-sm font-medium font-roboto"
-                  value="remove"
-                >
-                  Remove
-                </SelectItem>
-                <SelectItem
-                  className="text-[#252525] text-sm font-medium font-roboto"
-                  value="edit"
-                >
-                  Edit
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2 items-center">
+            <Button onClick={handleEdit} size="xs" variant="capsico">
+              Edit
+            </Button>
+            <Button onClick={handleRemove} size="xs" variant="destructive">
+              Remove
+            </Button>
+          </div>
         </TableCell>
       </TableRow>
 
       {isAlertDeleteModalOpen && (
         <AlertModal
-          isAlertDeleteModalOpen={isAlertDeleteModalOpen}
-          setIsAlertDeleteModalOpen={setIsAlertDeleteModalOpen}
+          isAlertModalOpen={isAlertDeleteModalOpen}
+          setIsAlertModalOpen={setIsAlertDeleteModalOpen}
           header="Delete Subadmin"
           description="Are you sure you want to delete this subadmin? This action cannot be undone."
           disabled={isLoading}
