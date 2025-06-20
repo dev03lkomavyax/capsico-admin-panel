@@ -55,10 +55,10 @@ const SubAdminList = () => {
             <section className="px-0 py-0 w-full min-h-screen">
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex justify-start items-center">
-                        <MdKeyboardArrowLeft
+                        {/* <MdKeyboardArrowLeft
                             onClick={() => navigate(-1)}
                             className="text-[#000000] text-4xl cursor-pointer"
-                        />
+                        /> */}
                         <h2 className="text-[#000000] text-xl font-medium font-roboto">
                             Sub Admin List
                         </h2>

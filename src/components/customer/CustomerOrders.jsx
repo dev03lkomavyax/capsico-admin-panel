@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import ReactPagination from "../pagination/ReactPagination";
 import { LIMIT } from "@/constants/constants";
+import Spinner from "../Spinner";
+import DataNotFound from "../DataNotFound";
 
 const CustomerOrders = () => {
     const [customerOrders, setCustomerOrders] = useState([]);
@@ -39,6 +41,14 @@ const CustomerOrders = () => {
                 {customerOrders.map((order) => (
                     <SingleOrderDetails key={order?._id} order={order} rating={true} />
                 ))}
+
+                {customerOrders.length === 0 && isLoading &&
+                    <Spinner />
+                }
+
+                {customerOrders.length === 0 && !isLoading &&
+                    <DataNotFound name="Orders" />
+                }
             </div>
 
             <ReactPagination totalPage={totalPage} setPage={setPage} />

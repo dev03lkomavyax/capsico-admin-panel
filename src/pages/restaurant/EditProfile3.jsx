@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { EditProfileSchema2 } from '@/schema/restaurantSchema';
+import usePostApiReq from '@/hooks/usePostApiReq';
+import { EditProfileSchema2, EditProfileSchema3 } from '@/schema/restaurantSchema';
 import { updateMultiplePreview } from '@/utils/updatePreview';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { PiCameraPlus } from 'react-icons/pi';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const EditProfile3 = ({ setPage }) => {
     const form = useForm({
-        resolver: zodResolver(EditProfileSchema2),
+        resolver: zodResolver(EditProfileSchema3),
         defaultValues: {
             menuImages: "",
             foodImages: "",
@@ -21,8 +23,10 @@ const EditProfile3 = ({ setPage }) => {
     })
 
     const navigate = useNavigate();
+    const {pathname} = useLocation();
 
     const { register, control, watch, setValue, getValues } = form;
+    const { res, fetchData, isLoading } = usePostApiReq();
 
     const menuImagesRef = register("menuImages");
     const restaurantRef = register("restaurant");
@@ -39,9 +43,44 @@ const EditProfile3 = ({ setPage }) => {
     }, [form, menuImages, restaurant, foodImages, setValue]);
 
     const onSubmit = (data) => {
+        // setIsRegisterSuccessModalOpen(true);
         console.log("data", data);
-        setPage((prev) => prev + 1);
+        const { menuImages, restaurant:restaurantImages, foodImages } = data;
+
+        const formData = new FormData();
+
+        // Handle Menu Images
+        if (menuImages?.length > 0) {
+            Array.from(menuImages).forEach((file) => {
+                formData.append("menuImages", file);
+            });
+        }
+
+        // Handle Restaurant Images
+        if (restaurantImages?.length > 0) {
+            Array.from(restaurantImages).forEach((file) => {
+                formData.append("restaurantImages", file);
+            });
+        }
+
+        // Handle Food Images
+        if (foodImages?.length > 0) {
+            Array.from(foodImages).forEach((file) => {
+                formData.append("foodImages", file);
+            });
+        }
+
+        fetchData(`/admin/restraunt-registration-upload-images/${restaurant?._id || restaurant?.id || "68550fa5acbd8e70333f11e0"}`, formData);
     }
+
+
+    useEffect(() => {
+        if (res?.status === 200 || res?.status === 201) {
+            toast.success(res?.data.message);
+            setPage(4);
+        }
+    }, [res])
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
@@ -49,9 +88,9 @@ const EditProfile3 = ({ setPage }) => {
                     <div className="flex justify-between gap-2 mb-8">
                         <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
                             <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                            <h2 className='text-[#000000] text-xl font-medium font-roboto'>{pathname.includes("/add-restaurant") ? "Add Restaurant" : "Edit Profile"}</h2>
                         </button>
-                        <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+                        <Button disabled={isLoading} size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
                     </div>
                     <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
                         <div className='w-full mt-4'>
@@ -187,9 +226,6 @@ const EditProfile3 = ({ setPage }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="flex justify-end gap-2 mt-10">
-                    <Button size="lg" className="w-20" type="submit">Done</Button>
                 </div>
             </form>
         </Form>

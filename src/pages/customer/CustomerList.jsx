@@ -14,7 +14,7 @@ const CustomerList = () => {
             <div className='flex flex-col gap-6 w-full h-full py-0 px-0'>
                 <div className=''>
                     <div className="flex items-center gap-1">
-                        <IoIosArrowBack className='text-2xl' />
+                        {/* <IoIosArrowBack className='text-2xl' /> */}
                         <span className='text-[#000000] font-roboto text-xl font-medium'>General Customer </span>
                     </div>
                 </div>

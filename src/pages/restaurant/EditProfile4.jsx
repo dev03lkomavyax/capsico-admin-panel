@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { updateMultiplePreview } from '@/utils/updatePreview'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { PiCameraPlus } from 'react-icons/pi'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
 
 const EditProfile4 = ({ setPage, restaurant }) => {
@@ -30,6 +30,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     })
 
     const navigate = useNavigate();
+    const { pathname } = useLocation();
 
     const { register, control, watch, setValue, getValues, reset } = form;
     const menuImagesRef = register("menuImages");
@@ -65,7 +66,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                 <div className="flex justify-between gap-2 mb-8">
                     <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
                         <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>Edit Profile</h2>
+                        <h2 className='text-[#000000] text-xl font-medium font-roboto'>{pathname.includes("/add-restaurant") ? "Add Restaurant" : "Edit Profile"}</h2>
                     </button>
                     <Button size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
                 </div>
@@ -332,9 +333,6 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                                 />
                             </>}
                     </div>
-                </div>
-                <div className="flex justify-end gap-2 mt-10">
-                    <Button size="lg" className="w-20" type="submit">Done</Button>
                 </div>
             </form>
         </Form>
