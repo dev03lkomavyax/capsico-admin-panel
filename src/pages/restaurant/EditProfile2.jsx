@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import cuisines from '@/data/cuisines.json';
+import { OPTIONS } from '@/constants/constants';
 import days from '@/data/days.json';
 import restaurantOptions from '@/data/restaurantOptions.json';
 import useGetApiReq from '@/hooks/useGetApiReq';
@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+
 const EditProfile2 = ({ setPage, restaurant }) => {
   const form = useForm({
     resolver: zodResolver(EditProfileSchema2),
@@ -33,9 +34,10 @@ const EditProfile2 = ({ setPage, restaurant }) => {
       cuisines: [],
       openingTime: "",
       closingTime: "",
+      restaurantType: "VEG",
       days: [],
-    }
-  })
+    },
+  });
 
   const { register, control, watch, setValue, getValues, reset } = form;
   const [showMoreRestaurantOptions, setShowMoreRestaurantOptions] = useState(false)
@@ -63,15 +65,22 @@ const EditProfile2 = ({ setPage, restaurant }) => {
     console.log('Selected restaurantOptions:', selectedRestaurantOptions);
   }, [selectedCuisines, selectedRestaurantOptions, selectedDays]);
 
-  const { basicInfo, location, partnerDetails } = restaurant || {};
-  
+  const { businessDetails, operatingHours, vegType } = restaurant || {};
+
   useEffect(() => {
-      reset({
-        restaurantOptions: [],
-        cuisines: [],
-        openingTime: "",
-        closingTime: "",
-        days: [],
+    const operatingHoursKeys = operatingHours ? Object.keys(operatingHours) : [];
+      const days = operatingHoursKeys
+      .map((key) => ({ day: key, isOpen: operatingHours[key].isOpen,open:operatingHours[key].open,close:operatingHours[key].close }))
+      .filter((day) => day.isOpen);
+
+          reset({
+        restaurantOptions: businessDetails?.restaurantTypes || [],
+        cuisines:businessDetails?.cuisines.map((cuisine) => cuisine.id) || [],
+        openingTime: days[0]?.open || "",
+        closingTime: days[0]?.close || "",
+        restaurantType: vegType || "",
+        priceForOne: businessDetails?.priceForOne || "",
+        days:days.map((day) => day.day) || [] ,
       });
     }, [restaurant]);
 
@@ -122,7 +131,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
     }
 
     data.restaurantOptions.forEach((opt) => {
-      restaurantTypes[opt] = true
+      restaurantTypes[OPTIONS[opt]] = true;
     });
 
     data.days.forEach((day) => {
@@ -154,7 +163,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
           <div className="flex justify-between gap-2 mb-8">
-            <button onClick={() => navigate(-1)} className='flex justify-start items-center'>
+            <button onClick={() => setPage((page)=> page-1)} className='flex justify-start items-center'>
               <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
               <h2 className='text-[#000000] text-xl font-medium font-roboto'>{pathname.includes("/add-restaurant") ? "Add Restaurant" : "Edit Profile"}</h2>
             </button>
@@ -173,7 +182,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                         className="flex gap-5"
                       >
                         <FormItem className="flex items-center space-x-3 space-y-0">

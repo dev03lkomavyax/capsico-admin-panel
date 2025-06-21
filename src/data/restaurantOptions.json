@@ -1,34 +1,30 @@
 [
   {
-    "id": "bakery",
+    "id": "BAKERY",
     "label": "Bakery"
   },
   {
-    "id": "pureVeg",
+    "id": "PURE_VEG",
     "label": "Pure Veg"
   },
   {
-    "id": "foodCourt",
+    "id": "FOOD_COURT",
     "label": "Food Court"
   },
   {
-    "id": "dessertShop",
+    "id": "DESSERT_SHOP",
     "label": "Dessert Shop"
   },
   {
-    "id": "beverageShop",
+    "id": "BEVERAGE_SHOP",
     "label": "Beverage Shop"
   },
   {
-    "id": "fastFood",
+    "id": "FAST_FOOD",
     "label": "Fast Food"
   },
   {
-    "id": "casualFoodStall",
+    "id": "CASUAL_FOOD_STALL",
     "label": "Casual Food Stall"
-  },
-  {
-    "id": "fastFood",
-    "label": "Fast Food"
   }
 ]

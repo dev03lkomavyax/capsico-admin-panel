@@ -85,7 +85,7 @@ const RestaurantList = () => {
                     </div>
                     <div className='flex justify-between items-center gap-4'>
                         <Select onValueChange={setStatus} value={status}>
-                            <SelectTrigger className="flex justify-between items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                            <SelectTrigger className="flex justify-between items-center w-32 h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
                                 <SelectValue placeholder="Select Status" />
                             </SelectTrigger>
                             <SelectContent>
@@ -99,7 +99,7 @@ const RestaurantList = () => {
                             </SelectContent>
                         </Select>
                         <Select value={filterByDate} onValueChange={(value) => setFilterByDate(value)}>
-                            <SelectTrigger className="flex justify-between items-center w-auto h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                            <SelectTrigger className="flex justify-between items-center w-32 h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
                                 <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent>

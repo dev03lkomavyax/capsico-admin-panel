@@ -127,7 +127,7 @@ export const EditProfileSchema2 = z.object({
     restaurantType: z.enum(["BOTH", "VEG", "NON_VEG"], {
         required_error: "Please select a restaurant type.",
     }),
-    priceForOne: z.string().min(1, "Price for one in required"),
+    priceForOne: z.coerce.number().min(1, "Price for one in required"),
     restaurantOptions: z
         .array(z.string())
         .min(1, "Please select at least one restaurant option"),
@@ -138,6 +138,11 @@ export const EditProfileSchema2 = z.object({
 });
 
 export const EditProfileSchema3 = z.object({
+    menuImages: z.any(),
+    foodImages: z.any(),
+    restaurant: z.any(),
+});
+export const AddProfileSchema3 = z.object({
     menuImages: z
         .any()
         .refine((file) => file && file.length > 0, "Menu Images are required"),
@@ -172,10 +177,14 @@ export const EditProfileSchema5 = z.object({
         .string()
         .min(10, "PAN number must be 10 characters")
         .max(10, "PAN number must be 10 characters"),
-    panImage: z.any().refine(file => file && file.length > 0, "Pan Card is required"),
-    FSSAICertificateNumber: z.string().min(14, "FSSAI Certificate must be 14 digits"),
+    panImage: z
+        .any(),
+    FSSAICertificateNumber: z
+        .string()
+        .min(14, "FSSAI Certificate must be 14 digits"),
     FSSAIExpiryDate: z.date(),
-    fssaiImage: z.any().refine(file => file && file.length > 0, "FSSAI Certificate is required"),
+    fssaiImage: z
+        .any(),
     accountHolderName: z.string().min(1, "Account Holder Name is required"),
     bankAccountNumber: z
         .string()
@@ -188,7 +197,41 @@ export const EditProfileSchema5 = z.object({
             'IFSC code must be in the format: 4 letters, "0", and 6 alphanumeric characters'
         ),
     bankName: z.string().min(1, "Bank Name is required"),
-    bankBranch: z.string().regex(/^[a-zA-Z\s]+$/, 'Branch name must contain only letters and spaces'),
+    bankBranch: z
+        .string()
+        .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
+});
+
+export const AddProfileSchema5 = z.object({
+    panNumber: z
+        .string()
+        .min(10, "PAN number must be 10 characters")
+        .max(10, "PAN number must be 10 characters"),
+    panImage: z
+        .any()
+        .refine((file) => file && file.length > 0, "Pan Card is required"),
+    FSSAICertificateNumber: z
+        .string()
+        .min(14, "FSSAI Certificate must be 14 digits"),
+    FSSAIExpiryDate: z.date(),
+    fssaiImage: z
+        .any()
+        .refine((file) => file && file.length > 0, "FSSAI Certificate is required"),
+    accountHolderName: z.string().min(1, "Account Holder Name is required"),
+    bankAccountNumber: z
+        .string()
+        .regex(/^\d+$/, "Account number must contain only digits")
+        .min(8, "Account number must be at least 8 digits long"),
+    IFSCCode: z
+        .string()
+        .regex(
+            /^[A-Z]{4}0[A-Z0-9]{6}$/,
+            'IFSC code must be in the format: 4 letters, "0", and 6 alphanumeric characters'
+        ),
+    bankName: z.string().min(1, "Bank Name is required"),
+    bankBranch: z
+        .string()
+        .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
 });
 
 export const categorySchema = z.object({

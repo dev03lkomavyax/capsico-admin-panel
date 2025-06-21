@@ -673,12 +673,10 @@ const EditProfile1 = ({
                           <div className="flex gap-0 border rounded w-full">
                             <Select className="">
                               <SelectTrigger className="w-[100px] border-none focus-visible:ring-0 focus:ring-0 focus-visible:ring-offset-0">
-                                <SelectValue placeholder="Select" />
+                                <SelectValue placeholder="India" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="india">India</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="system">System</SelectItem>
                               </SelectContent>
                             </Select>
                             <Input

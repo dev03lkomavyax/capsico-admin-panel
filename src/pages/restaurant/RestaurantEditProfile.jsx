@@ -15,8 +15,6 @@ const RestaurantEditProfile = () => {
   const [restaurant, setRestaurant] = useState("");
   const [page, setPage] = useState(1);
   const { state } = useLocation();
-  // restaurantId
-  console.log("state", state);
 
   const getRestaurant = useCallback(() => {
     fetchData(`/admin/get-restaurant/${state?.restaurantId}`);

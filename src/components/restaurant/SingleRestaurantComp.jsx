@@ -40,7 +40,7 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
             <TableRow>
                 <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
                 <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data?.id}</TableCell>
-                <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data?.name}</TableCell>
+                <TableCell className="text-[#1D1929] text-xs font-bold font-sans w-60">{data?.name}</TableCell>
                 <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data?.createdAt && format(data?.createdAt, 'MMMM yyyy')}</TableCell>
                 <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">{`${data?.location?.address}, ${data?.location?.city}, ${data?.location?.state}, ${data?.location?.pinCode}`}</TableCell>
                 <TableCell className="text-[#000000] text-xs font-semibold font-inter">₹0</TableCell>
