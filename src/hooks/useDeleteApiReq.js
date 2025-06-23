@@ -22,6 +22,8 @@ const useDeleteApiReq = () => {
                 console.log("delete api response", response);
             }
         } catch (error) {
+            console.log("error", error);
+            
             if (error?.response.status === 403) {
                 // await dispatch(handleUnautorizedModalOpen({ isUnautorizedModalOpen: true }));
             }

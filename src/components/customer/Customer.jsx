@@ -73,7 +73,7 @@ const Customer = ({ item, getAllCustomer }) => {
                     isAlertModalOpen={isAlertModalOpen}
                     setIsAlertModalOpen={setIsAlertModalOpen}
                     header="Delete Customer"
-                    description="Are you sure you want to delete this customer? This action cannot be undone."
+                    description="Are you sure you want to delete this Customer? This action cannot be undone."
                     disabled={isLoading}
                     onConfirm={deleteCustomer}
                 />

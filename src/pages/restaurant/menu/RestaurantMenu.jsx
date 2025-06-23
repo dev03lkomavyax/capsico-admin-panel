@@ -177,8 +177,8 @@ function RestaurantMenu() {
                     </button>
                   </div>
                   <div className="">
-                    {foodItemsInfo?.itemsByCategory?.map((foodItem) => (
-                      <Product key={foodItem?._id} foodItem={foodItem} />
+                    {foodItemsInfo?.itemsByCategory?.map((foodItem,index) => (
+                      <Product key={index} foodItem={foodItem} getFoodItems={getFoodItems} />
                     ))}
                   </div>
                 </div>

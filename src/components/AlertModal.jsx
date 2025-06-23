@@ -9,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
+import { Button } from "./ui/button";
 
 const AlertModal = ({
   isAlertModalOpen,
@@ -34,10 +35,16 @@ const AlertModal = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel} className="h-9">Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-[#4A67FF] hover:bg-[#4A67FF] h-9" disabled={disabled} onClick={handleConfirm}>
-            Confirm
-          </AlertDialogAction>
+          <AlertDialogCancel onClick={handleCancel} className="h-9">
+            Cancel
+          </AlertDialogCancel>
+            <Button
+              onClick={handleConfirm}
+              disabled={disabled}
+              variant="capsico"
+            >
+              Confirm
+            </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
