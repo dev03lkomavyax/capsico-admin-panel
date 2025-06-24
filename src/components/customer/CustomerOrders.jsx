@@ -39,7 +39,7 @@ const CustomerOrders = () => {
 
             <div className="flex flex-col mt-5">
                 {customerOrders.map((order) => (
-                    <SingleOrderDetails key={order?._id} order={order} rating={true} />
+                    <SingleOrderDetails key={order?._id} order={order} />
                 ))}
 
                 {customerOrders.length === 0 && isLoading &&
