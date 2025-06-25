@@ -152,7 +152,7 @@ function App() {
             <Route path='/admin/sub-admin/update-admin-profile' element={<UpdateAdminProfile />} />
 
             <Route path='/admin/offers' element={<Offers />} />
-            <Route path='/admin/offers/create-offer' element={<CreateOfferPage />} />
+            <Route path='/admirn/offers/create-offer' element={<CreateOfferPage />} />
 
             <Route path='/admin/application-request' element={<ApplicationRequest />} />
             <Route path='/admin/application-request/add-restaurant' element={<AddRestaurant />} />
