@@ -1,9 +1,8 @@
-import vegicon from '@/assets/vegicon.png';
-import VegIcon from '../customIcons/VegIcon';
 import EggIcon from '../customIcons/EggIcon';
 import NonVegIcon from '../customIcons/NonVegIcon';
+import VegIcon from '../customIcons/VegIcon';
 
-const OrderItem = ({ capsico, items }) => {
+const OrderItem = ({ items }) => {
     return (
         <>
             {
@@ -11,7 +10,7 @@ const OrderItem = ({ capsico, items }) => {
                     return (
                       <div
                         key={index}
-                        className="grid grid-cols-[1fr_80px_1fr] gap-5"
+                        className="grid grid-cols-3 gap-5"
                       >
                         <div className="flex items-center gap-3">
                           {item?.foodId?.FoodType === "veg" && <VegIcon />}
@@ -21,10 +20,10 @@ const OrderItem = ({ capsico, items }) => {
                             {item?.name}
                           </h3>
                         </div>
-                        <h3 className="font-inter text-sm font-medium text-[#515151]">
+                        <h3 className="font-inter text-sm text-center font-medium text-[#515151]">
                           {item?.quantity}
                         </h3>
-                        <h3 className="font-inter text-sm font-medium text-[#515151] text-center">
+                        <h3 className="font-inter text-sm font-medium text-[#515151] text-right">
                           ₹{item?.itemTotal}
                         </h3>
                       </div>

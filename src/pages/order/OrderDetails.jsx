@@ -35,8 +35,9 @@ import { FaMinus, FaPlus, FaStar } from "react-icons/fa6";
 import { FiPhone } from "react-icons/fi";
 import { GrLocation } from "react-icons/gr";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
+import { viewDbImagePreview } from "@/lib/utils";
 
 const libraries = ["places", "marker"];
 
@@ -80,6 +81,7 @@ const OrderDetails = () => {
   const [open, setOpen] = useState(false);
   const [orderDetailsData, setOrderDetailsData] = useState(false);
   const { orderId } = useParams();
+  const navigate = useNavigate();
 
   const [center, setCenter] = useState({
     lat: 19.8429547,
@@ -124,12 +126,15 @@ const OrderDetails = () => {
       <section>
         <div className="flex justify-between h-14">
           <div>
-            <div className="flex items-center gap-1">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1"
+            >
               <IoIosArrowBack className="text-2xl" />
               <span className="font-roboto text-lg font-medium">
                 Order ID #{orderDetailsData?.orderNumber}
               </span>
-            </div>
+            </button>
             <span className="text-sm text-[#5F5F5F] font-roboto">
               Orders/Order Details
             </span>
@@ -156,14 +161,18 @@ const OrderDetails = () => {
             <div className="flex justify-center flex-col items-center">
               <img
                 className="w-32 h-32 rounded-full"
-                src={avatar}
+                src={
+                  orderDetailsData?.userId?.image
+                    ? viewDbImagePreview(orderDetailsData?.userId?.image)
+                    : avatar
+                }
                 alt="avatar"
               />
               <h2 className="font-medium font-roboto mt-3 text-xl">
                 {orderDetailsData?.userId?.name}
               </h2>
               <p className="font-roboto text-[#838383] text-sm">Customer</p>
-              {status === "Preparing" && (
+              {status === "preparing" && (
                 <Button className="w-full text-white bg-[#1064FD] mt-2 hover:bg-[#1064FD]">
                   Order ready in{" "}
                   {orderDetailsData?.timing?.expectedPreparationTime}
@@ -201,7 +210,8 @@ const OrderDetails = () => {
             <div className="flex flex-col mt-12">
               <h2 className="font-roboto text-sm mb-2">History</h2>
               <History
-                status={status}
+                status={orderDetailsData?.status}
+                history={orderDetailsData?.statusHistory}
                 timing={orderDetailsData?.timing && orderDetailsData?.timing}
               />
             </div>
@@ -232,71 +242,73 @@ const OrderDetails = () => {
               </div>
             </div>
             <div className="rounded-lg bg-white mt-5 p-4 px-6">
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <h2 className="font-inter text-sm font-medium">Items</h2>
-                <h2 className="font-inter text-sm font-medium">Oty</h2>
                 <h2 className="font-inter text-sm font-medium text-center">
+                  Oty
+                </h2>
+                <h2 className="font-inter text-sm font-medium text-right">
                   Price
                 </h2>
               </div>
               <div className="flex flex-col gap-3 mt-3">
-                <OrderItem capsico={capsico} items={orderDetailsData?.items} />
+                <OrderItem items={orderDetailsData?.items} />
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Sub Total
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
                   ₹{orderDetailsData?.amounts?.subtotal}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Coupon Discount
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
                   ₹{orderDetailsData?.amounts?.couponDiscount}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Delivery Fee
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
                   ₹{orderDetailsData?.amounts?.deliveryFee}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Packaging Charge
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
                   ₹{orderDetailsData?.amounts?.packagingCharge}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Tip
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
                   ₹{orderDetailsData?.amounts?.tip}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Tax
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] font-medium text-center">
-                  ₹{orderDetailsData?.amounts?.taxes?.total}
+                <h3 className="font-roboto text-[#515151] font-medium text-right">
+                  ₹{orderDetailsData?.amounts?.taxes?.total?.toFixed(2)}
                 </h3>
               </div>
-              <div className="grid grid-cols-[1fr_80px_1fr] gap-3 mt-3 border-t-2 border-dashed pt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">
                 <h3 className="font-roboto font-medium flex gap-1 items-center text-[#515151]">
                   Total amount
                   {status === "New order" && (
@@ -306,7 +318,7 @@ const OrderDetails = () => {
                   )}
                 </h3>
                 <div></div>
-                <h3 className="font-roboto text-[#515151] text-center font-medium">
+                <h3 className="font-roboto text-[#515151] text-right font-medium">
                   ₹{orderDetailsData?.amounts?.total}
                 </h3>
               </div>

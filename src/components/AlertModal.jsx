@@ -43,7 +43,7 @@ const AlertModal = ({
               disabled={disabled}
               variant="capsico"
             >
-              Confirm
+              {disabled ? "Loading..." : "Confirm"}
             </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

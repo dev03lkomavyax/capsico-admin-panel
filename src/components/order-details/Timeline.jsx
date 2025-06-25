@@ -9,7 +9,7 @@ const Timeline = ({ title, time, status, className }) => {
                 {status === "Cancelled" ? <FaXmark /> : <FaCheck />}
             </div>
             <div className="flex flex-col">
-                <span className="text-black font-medium text-sm">{title}</span>
+                <span className="text-black font-medium capitalize text-sm">{title}</span>
                 <span className="text-[#6E6D6D] text-xs">{time}</span>
             </div>
         </div>

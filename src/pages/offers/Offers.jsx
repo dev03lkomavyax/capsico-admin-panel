@@ -4,7 +4,7 @@ import TrackOffer from '@/components/offers/TrackOffer';
 import { useState } from 'react'
 
 const Offers = () => {
-    const [isCreateOffer, setIsCreateOffer] = useState(true);
+    const [isCreateOffer, setIsCreateOffer] = useState(false);
     return (
         <AdminWrapper>
             <section className='w-full'>

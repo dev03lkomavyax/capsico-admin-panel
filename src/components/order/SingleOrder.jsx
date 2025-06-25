@@ -75,7 +75,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
         </TableCell>
         <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
           {data?.createdAt &&
-            format(new Date(data.createdAt), "MMM dd, hh:mm a")}
+            format(new Date(data.createdAt), "MMM dd, yyyy")}
         </TableCell>
         <TableCell className="text-[#667085] text-[9px] font-normal font-inter">
           {data.restaurant?.name}

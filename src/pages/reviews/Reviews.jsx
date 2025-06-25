@@ -1,5 +1,6 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper"
 import DataNotFound from "@/components/DataNotFound"
+import ReactPagination from "@/components/pagination/ReactPagination"
 import NegativeReviewsChart from "@/components/reviews/NegativeReviewsChart"
 import PositiveReviewsChart from "@/components/reviews/PositiveReviewsChart"
 import Review from "@/components/reviews/Review"
@@ -25,20 +26,20 @@ const Reviews = () => {
     const [dateFilter, setDateFilter] = useState("today");
     const [ratingSort, setRatingSort] = useState("latest");
     const [reviews, setReviews] = useState([]);
-    const [totalPage, setTotalPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
 
     const { res, fetchData, isLoading } = useGetApiReq();
     
       const getAllReviews = () => {
         fetchData(
-          `/admin/get-reviews?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}`
+          `/admin/get-reviews?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&sortBy=${ratingSort}&ratingType=${status}`
         );
       };
     
       useEffect(() => {
         getAllReviews();
-      }, [searchQuery, page, dateFilter]);
+      }, [searchQuery, page, dateFilter,ratingSort,status]);
     
       useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {
@@ -78,10 +79,13 @@ const Reviews = () => {
                 onValueChange={(value) => setStatus(value)}
               >
                 <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                  <SelectValue placeholder="Today" />
+                  <SelectValue placeholder="Select Review Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="restaurant">Restaurant</SelectItem>
+                  <SelectItem value="deliveryAgent">Delivery Agent</SelectItem>
+                  <SelectItem value="food">food</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -108,7 +112,7 @@ const Reviews = () => {
                   Others review
                 </h2>
                 <p className="font-inter text-sm text-[#5A5A5A]">
-                  Here is customer review about restaurants
+                  Here is customer reviews
                 </p>
               </div>
               <Select
@@ -125,9 +129,9 @@ const Reviews = () => {
               </Select>
             </div>
             <div className="flex flex-col gap-6 mt-5">
-                {reviews.map((review)=> (
-                    <Review key={review?._id} review={review} />
-                ))}
+              {reviews.map((review) => (
+                <Review key={review?._id} review={review} />
+              ))}
             </div>
 
             {isLoading && <Spinner />}
@@ -135,6 +139,8 @@ const Reviews = () => {
               <DataNotFound name="Reviews" />
             )}
           </div>
+
+          <ReactPagination totalPage={totalPage} setPage={setPage} />
         </section>
       </AdminWrapper>
     );

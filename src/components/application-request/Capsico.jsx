@@ -1,135 +1,156 @@
-import React, { useState } from 'react'
-import { BsSearch } from 'react-icons/bs'
-import { Input } from '../ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import { Checkbox } from '../ui/checkbox'
-import ReactPagination from '../pagination/ReactPagination'
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import ReactPagination from "../pagination/ReactPagination";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import SingleRestaurantReq from "./SingleRestaurantReq";
+import { LIMIT } from "@/constants/constants";
+import SingleRestaurantReqSkeleton from "./SingleRestaurantReqSkeleton";
+import DataNotFound from "../DataNotFound";
 
-const data = [
-    {
-        restaurantID: "1264903",
-        restaurantName: "PIYUsh",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
-    },
-    {
-        restaurantID: "1264903",
-        restaurantName: "Adiyaman Hotel",
-        registerdDate: `March ${21, 2020}`,
-        location: "Naimish Sharay Dham"
+const Capsico = ({ setCapsicoReqNos }) => {
+  const [restaurantRequests, setRestaurantRequests] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [filterByDate, setFilterByDate] = useState("today");
+
+  const { res, fetchData, isLoading } = useGetApiReq();
+
+  const getRestaurantRequests = () => {
+    fetchData(
+      `/admin/get-unapproved-restaurants?search=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}`
+    );
+  };
+
+  useEffect(() => {
+    getRestaurantRequests();
+  }, [searchQuery, page, filterByDate]);
+
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      console.log("restaurant reqs res", res?.data);
+      setRestaurantRequests(res?.data?.restaurants);
+      setTotalPage(res?.data?.pagination?.totalPages);
+      setCapsicoReqNos(res?.data?.pagination?.total || 0);
+      setPage(res?.data?.pagination?.page);
     }
-]
+  }, [res]);
 
-const Capsico = () => {
-    const [applicationRequestList, setApplicationRequestList] = useState(data)
-  const [searchQuery, setSearchQuery] = useState('')
-    const [totalPage, setTotalPage] = useState(16)
-    const [page, setPage] = useState(1)
-
-    return (
-        <div>
-            <div className='flex justify-between items-center w-full mb-4'>
-                <div className='flex justify-start items-center -ml-4'>
-                    <BsSearch className='relative left-8 text-[#1D1929]' />
-                    <Input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto' />
-                </div>
-                <div className='flex justify-between items-center w-[230px]'>
-                    <Select>
-                        <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                            <SelectValue placeholder="All" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">All</SelectItem>
-                                <SelectItem value="newOrder">New Order</SelectItem>
-                                <SelectItem value="preparedry">Prepared</SelectItem>
-                                <SelectItem value="completed">Completed</SelectItem>
-                                <SelectItem value="cancelled">Cancelled</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                            <SelectValue placeholder="Today" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">Yesterday</SelectItem>
-                                <SelectItem value="banana">Tommarrow</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-            <Table className='bg-[#FFFFFF] rounded-lg mb-6'>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant ID</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant Name</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Registered Date</TableHead>
-                        <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
-                        <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {applicationRequestList.length > 0 && applicationRequestList.filter(data => data.restaurantName.toLowerCase().includes(searchQuery.toLowerCase())).map((data) => (
-                        <TableRow key={data.data}>
-                            <TableCell className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-sans">{data.restaurantID}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-bold font-sans">{data.restaurantName}</TableCell>
-                            <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">{data.registerdDate}</TableCell>
-                            <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">{data.location}</TableCell>
-                            <TableCell className='flex gap-10'>
-                                <button className="bg-[#D02C2C] px-4 py-[6px] rounded-[10px] text-[#FFFFFF] text-xs font-semibold font-sans">Reject</button>
-                                <button className="bg-[#4B9A57] px-4 py-[6px] rounded-[10px] text-[#FFFFFF] text-xs font-semibold font-sans">Approve</button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <ReactPagination totalPage={totalPage} setPage={setPage} />
+  return (
+    <div>
+      <div className="flex justify-between items-center w-full mb-4">
+        <div className="flex justify-start items-center -ml-4">
+          <BsSearch className="relative left-8 text-[#1D1929]" />
+          <Input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto"
+          />
         </div>
-    )
-}
+        <div className="flex items-center">
+          {/* <Select>
+            <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                <SelectItem value="apple">All</SelectItem>
+                <SelectItem value="newOrder">New Order</SelectItem>
+                <SelectItem value="preparedry">Prepared</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select> */}
+          <Select
+            value={filterByDate}
+            onValueChange={(value) => setFilterByDate(value)}
+          >
+            <SelectTrigger className="flex justify-between items-center w-[109px] h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+              <SelectValue placeholder="Today" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="bg-white rounded-lg mb-6">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-10">
+                {
+                  <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+                }
+              </TableHead>
+              <TableHead className="w-24 text-[#ABABAB] text-xs font-normal font-roboto">
+                Restaurant ID
+              </TableHead>
+              <TableHead className=" w-60 text-[#ABABAB] text-xs font-normal font-roboto">
+                Restaurant Name
+              </TableHead>
+              <TableHead className="w-[100px] whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">
+                Registered Date
+              </TableHead>
+              <TableHead className="w-60 text-[#ABABAB] text-xs font-normal font-roboto">
+                Location
+              </TableHead>
+              <TableHead className="w-20 text-[#ABABAB] text-xs font-normal font-roboto">
+                Action
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {restaurantRequests?.map((req) => (
+              <SingleRestaurantReq
+                key={req._id}
+                req={req}
+                getRestaurantRequests={getRestaurantRequests}
+              />
+            ))}
 
-export default Capsico
+            {isLoading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <SingleRestaurantReqSkeleton key={i} />
+              ))}
+          </TableBody>
+        </Table>
+
+        {restaurantRequests?.length === 0 && !isLoading && (
+          <DataNotFound name="Restaurant Requests" />
+        )}
+      </div>
+
+      <ReactPagination totalPage={totalPage} setPage={setPage} />
+    </div>
+  );
+};
+
+export default Capsico;
