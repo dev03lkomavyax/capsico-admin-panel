@@ -54,7 +54,7 @@ const Order = () => {
 
   return (
     <AdminWrapper>
-      <div className="flex flex-col gap-6 w-full h-full py-8 px-12 bg-[#f9f9f9]">
+      <div className="flex flex-col gap-6 w-full h-full py-8 px-12r">
         <section className="flex justify-start items-center">
           <button
             onClick={() => setSelectTab("capsico")}

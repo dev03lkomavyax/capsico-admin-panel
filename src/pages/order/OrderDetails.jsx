@@ -149,7 +149,7 @@ const OrderDetails = () => {
                 : orderDetailsData?.status === "cancelled"
                 ? "text-[#BF1010] bg-[#FFE7E7]"
                 : "text-[#6223B5] bg-[#E1CAFF]"
-            } h-[54px] capitalize w-[167px] text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}
+            } h-[54px] capitalize w-auto px-3 text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}
           >
             {orderDetailsData?.status}
           </Button>
@@ -323,234 +323,8 @@ const OrderDetails = () => {
                 </h3>
               </div>
             </div>
-            <div className="rounded-lg bg-white mt-5 p-4 px-6">
-              {status !== "Cancelled" && (
-                <>
-                  <h2 className="font-roboto font-semibold">Track Order</h2>
-                  <div className="grid grid-cols-[60%_38%] gap-[2%] mt-3">
-                    <div>
-                      <LoadScript
-                        googleMapsApiKey={
-                          import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-                        }
-                        libraries={libraries}
-                        loadingElement={<div>Loading...</div>}
-                        async
-                      >
-                        <GoogleMap
-                          mapContainerStyle={containerStyle}
-                          center={center}
-                          zoom={10}
-                        >
-                          <Marker position={center} />
-                        </GoogleMap>
-                      </LoadScript>
-                    </div>
-                    <div>
-                      <div className="border rounded-lg p-4 h-auto">
-                        <h4 className="text-sm font-medium font-inter text-[#515151] -mt-2">
-                          Delivery Partner info
-                        </h4>
-
-                        {status === "New order" && (
-                          <div className="mt-3">
-                            <h2 className="text-xs font-inter text-[#1D1D1D] font-medium">
-                              Delivery partner will be assigned shortly.{" "}
-                            </h2>
-                            <p className="font-inter text-[10px] text-[#7C7C7C]">
-                              The delivery partner will be assigned after
-                              Restaurant accept the order.{" "}
-                            </p>
-                          </div>
-                        )}
-
-                        {!deliveryAgent ? (
-                          <Popover
-                            open={open}
-                            onOpenChange={() => setOpen(!open)}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={open}
-                                className="w-full mt-4 h-9 px-4 justify-between"
-                              >
-                                {deliveryAgent
-                                  ? frameworks.find(
-                                      (framework) =>
-                                        framework.value === deliveryAgent
-                                    )?.label
-                                  : "Select"}
-                                <IoIosArrowDown />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[300px] p-0">
-                              <Command>
-                                <CommandInput
-                                  placeholder="Search Name"
-                                  className="h-9"
-                                />
-                                <CommandList>
-                                  <CommandEmpty>
-                                    No framework found.
-                                  </CommandEmpty>
-                                  <CommandGroup>
-                                    {frameworks.map((framework) => (
-                                      <CommandItem
-                                        key={framework.value}
-                                        value={framework.value}
-                                        onSelect={(currentValue) => {
-                                          setDeliveryAgent(
-                                            currentValue === deliveryAgent
-                                              ? ""
-                                              : currentValue
-                                          );
-                                          setOpen(false);
-                                        }}
-                                        className="flex justify-between items-center"
-                                      >
-                                        <div className="flex gap-2 items-center">
-                                          <img
-                                            className="w-6 h-6 rounded-full bg-blue-200"
-                                            src=""
-                                            alt=""
-                                          />
-                                          <h3 className="text-[10px]">
-                                            Corey Gislason
-                                          </h3>
-                                        </div>
-                                        <p className="font-semibold text-[10px] text-[#003CFF]">
-                                          Available Now
-                                        </p>
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        ) : (
-                          <>
-                            {status !== "New order" && (
-                              <>
-                                <div className="flex justify-between items-center gap-2 mt-4">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full bg-[#A4CAFE] flex justify-center items-center text-white font-inter">
-                                      R
-                                    </div>
-                                    <div className="flex flex-col justify-center">
-                                      <h4 className="text-sm font-inter">
-                                        Roberts
-                                      </h4>
-                                      <p className="text-[10px] font-inter -mt-[1px]">
-                                        ID: 2478950
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-col justify-center">
-                                    <h4 className="text-xs font-inter">
-                                      Rating
-                                    </h4>
-                                    <p className="font-inter -mt-[1px] flex items-center gap-1">
-                                      <span className="text-sm text-[#FFA901]">
-                                        4.8
-                                      </span>
-                                      <FaStar className="text-[#FFA901]" />
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="flex gap-3 items-center mt-3">
-                                  <FiPhone />
-                                  <span className="text-xs font-inter">
-                                    Mobile No: (704) 555-0127
-                                  </span>
-                                </div>
-                                <div className="flex gap-3 items-center mt-2">
-                                  <GrLocation />
-                                  <span className="text-xs font-inter">
-                                    Locality : R.N Nagar, Gorakhpur
-                                  </span>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-sm font-inter mt-2 font-medium hover:bg-transparent p-0 text-[#003CFF] hover:text-[#003CFF]"
-                                >
-                                  View more
-                                </Button>
-                              </>
-                            )}
-                            <Form {...form}>
-                              <form
-                                onSubmit={form.handleSubmit(onSubmit)}
-                                className="w-full mt-3"
-                              >
-                                <div className="w-full">
-                                  <FormField
-                                    control={control}
-                                    name="otp"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <div className="grid grid-cols-2 gap-2">
-                                          <FormLabel className="text-lg text-[#3B3B3B] font-bold font-inter">
-                                            Enter OTP
-                                          </FormLabel>
-                                          <FormControl>
-                                            <Input
-                                              type="number"
-                                              placeholder=""
-                                              className="placeholder:text-[#3B3B3B] w-full"
-                                              {...field}
-                                            />
-                                          </FormControl>
-                                        </div>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                </div>
-
-                                <div className="mt-2">
-                                  <FormField
-                                    control={control}
-                                    name="temperature"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel className="text-sm text-[#3B3B3B] font-inter">
-                                          Enter Balaji’s Body temperature
-                                        </FormLabel>
-                                        <FormControl>
-                                          <div className="w-full grid grid-cols-2 mt-3 gap-5">
-                                            <Input
-                                              placeholder="98.4° F"
-                                              className="placeholder:text-[#3B3B3B] w-full"
-                                              {...field}
-                                            />
-                                            <Button
-                                              type="submit"
-                                              className="w-full rounded-xl hover:text-white bg-[#1064FD] hover:bg-[#225ac1]"
-                                            >
-                                              Submit
-                                            </Button>
-                                          </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                </div>
-                              </form>
-                            </Form>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {status === "Cancelled" && (
+            {status === "cancelled" && (
+              <div className="rounded-lg bg-white mt-5 p-4 px-6">
                 <div>
                   <div className="border rounded-lg p-4">
                     <h3 className="font-inter font-medium text-sm text-[#515151]">
@@ -561,8 +335,8 @@ const OrderDetails = () => {
                     </p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

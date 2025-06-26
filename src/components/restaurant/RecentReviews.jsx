@@ -1,9 +1,8 @@
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ReactStars from "react-stars";
-import SingleReview from "./SingleReview";
 import DataNotFound from "../DataNotFound";
+import SingleReview from "./SingleReview";
 
 const RecentReviews = () => {
   const [reveiwData, setReveiwData] = useState([]);

@@ -20,7 +20,6 @@ import { BsSearch } from "react-icons/bs"
 import { IoIosArrowBack } from 'react-icons/io'
 
 const Reviews = () => {
-    const [selected, setSelected] = useState("");
     const [searchQuery, setSearchQuery] = useState('');
     const [status, setStatus] = useState("all");
     const [dateFilter, setDateFilter] = useState("today");
@@ -54,7 +53,6 @@ const Reviews = () => {
       <AdminWrapper>
         <section>
           <div className="flex gap-2 items-center">
-            <IoIosArrowBack className="text-3xl" />
             <h1 className="text-xl font-medium font-roboto">Reviews</h1>
           </div>
           <div className="grid grid-cols-2 gap-8 mt-5">

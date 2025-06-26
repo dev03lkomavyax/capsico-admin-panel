@@ -57,8 +57,7 @@ const OrderStatusCount = ({ handleOnClick, selectOrderTab }) => {
   return (
     <section className="flex justify-start items-center gap-5">
       <button
-        onClick={() => handleOnClick("all")}
-        className={`max-w-[295px] w-full h-20 text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${
+        className={`max-w-[295px] w-full h-20 cursor-default text-[#163AB0] text-xl font-medium font-roboto rounded-lg ${
           selectOrderTab === "allOrder" ? "bg-[#cfe0ff]" : "bg-[#E3EDFF]"
         }`}
       >

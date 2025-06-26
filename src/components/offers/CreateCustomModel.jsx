@@ -25,7 +25,7 @@ const CreateCustomModel = ({ createCustomModel, setCreateCustomModel }) => {
                 </DialogHeader>
                 {step === 1 && <CreateCustomModelFirst onSubmit={handleStepOne} />}
                 {step === 2 && <CreateCustomModelSecond onSubmit={handleStepTwo} />}
-                {step === 3 && <CreateCustomModelThird onSubmit={handleStepThree} />}
+                {step === 3 && <CreateCustomModelThird onSubmit={()=>{}} />}
             </DialogContent>
         </Dialog>
     )

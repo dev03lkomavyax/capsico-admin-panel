@@ -66,6 +66,11 @@ const DeliveryAgent = () => {
   return (
     <AdminWrapper>
       <section className="flex flex-col gap-6 w-full h-full">
+        <div className="flex justify-start items-center">
+          <h2 className="text-[#000000] text-xl font-medium font-roboto">
+            Delivery Agents
+          </h2>
+        </div>
         <section className="flex justify-between items-center w-full">
           <div className="flex justify-start items-center -ml-4">
             <BsSearch className="relative left-8 text-[#1D1929]" />
@@ -108,7 +113,7 @@ const DeliveryAgent = () => {
           </div>
         </section>
         <div className="bg-[#FFFFFF]">
-          <Table >
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-10">
@@ -151,7 +156,11 @@ const DeliveryAgent = () => {
                             ))} */}
               {deliveryAgentData.length > 0 &&
                 deliveryAgentData.map((agent, index) => (
-                  <DeliveryAgentComp key={index} agent={agent} getAllDeliveryAgent={getAllDeliveryAgent} />
+                  <DeliveryAgentComp
+                    key={index}
+                    agent={agent}
+                    getAllDeliveryAgent={getAllDeliveryAgent}
+                  />
                 ))}
             </TableBody>
           </Table>

@@ -19,8 +19,14 @@ const CreateCustomModelFirst = ({onSubmit}) => {
       discountType: "percentage",
       discountValue: 0,
       maxDiscount: 0,
-    }
-  })
+      applicableTo: "All Items",
+      usageLimits: 100,
+      minOrderValue: 0,
+      maxUsage: 0,
+      maxUsesPerUser: 3,
+      usageFrequency: "No Restriction",
+    },
+  });
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
