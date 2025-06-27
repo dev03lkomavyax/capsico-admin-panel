@@ -45,7 +45,7 @@ const Reviews = () => {
           console.log("reviews res", res);
           setReviews(res?.data?.reviews);
           setTotalPage(res?.data?.pagination?.totalPages);
-          setPage(res?.data?.pagination?.page);
+          // setPage(res?.data?.pagination?.page);
         }
       }, [res]);
 

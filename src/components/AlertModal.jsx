@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
