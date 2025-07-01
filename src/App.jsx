@@ -11,8 +11,8 @@ import usePostApiReq from './hooks/usePostApiReq';
 import { readCookie } from './utils/readCookie';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
-const Order = lazy(() => import('./pages/Order/Order'));
-const OrderDetails = lazy(() => import('./pages/Order/OrderDetails'));
+const Order = lazy(() => import('./pages/order/Order'));
+const OrderDetails = lazy(() => import('./pages/order/OrderDetails'));
 const Login = lazy(() => import('./pages/Login'))
 const Reviews = lazy(() => import('./pages/reviews/Reviews'))
 const StatusList = lazy(() => import('./components/order/StatusList'))
