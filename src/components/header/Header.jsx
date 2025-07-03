@@ -1,11 +1,11 @@
+import usePostApiReq from "@/hooks/usePostApiReq";
 import { readCookie } from "@/utils/readCookie";
-import { Loader, LogOutIcon } from "lucide-react";
+import { LogOutIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa6";
 import { FiBell, FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../AlertModal";
-import useGetApiReq from "@/hooks/useGetApiReq";
 import Spinner from "../Spinner";
 
 const Header = () => {
@@ -14,10 +14,13 @@ const Header = () => {
 
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-    const { res, fetchData, isLoading } = useGetApiReq();
+    const { res, fetchData, isLoading } = usePostApiReq();
+
+    console.log("userInfo", userInfo);
+    
 
     const logout = () => {
-        fetchData(`/admin/logout-admin`);
+        fetchData(`/admin/logout-all`,{role:userInfo.role || "admin",phone:userInfo.phone});
     };
 
     useEffect(() => {
