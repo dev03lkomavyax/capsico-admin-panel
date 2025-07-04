@@ -7,6 +7,7 @@ import { FiBell, FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../AlertModal";
 import Spinner from "../Spinner";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const userInfo = readCookie("userInfo");
@@ -29,6 +30,7 @@ const Header = () => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("logout res", res);
       localStorage.removeItem("admin-status");
+      Cookies.remove("admin-status");
       navigate("/");
       setIsLogoutModalOpen(false);
     }

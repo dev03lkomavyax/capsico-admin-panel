@@ -1,19 +1,19 @@
-import { SocketProvider } from '@/socket';
-import { Navigate, Outlet } from 'react-router-dom';
+import { SocketProvider } from "@/socket";
+import Cookies from "js-cookie";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
+  const isAuthenticated = JSON.parse(Cookies.get("admin-status")|| "false");
 
-    const isAuthenticated = JSON.parse(localStorage.getItem("admin-status"))
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/" />;
-    }
-
-    return (
-        <SocketProvider>
-            <Outlet />
-        </SocketProvider>
-    )
+  return (
+    <SocketProvider>
+      <Outlet />
+    </SocketProvider>
+  );
 };
 
 export default ProtectedRoute;
