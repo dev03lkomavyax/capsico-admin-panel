@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const isAuthenticated = JSON.parse(Cookies.get("admin-status")|| "false");
+  const isAuthenticated = JSON.parse(localStorage.getItem("admin-status")|| "false");
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;

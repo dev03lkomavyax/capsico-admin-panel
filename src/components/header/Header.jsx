@@ -11,13 +11,13 @@ import Cookies from "js-cookie";
 
 const Header = () => {
   const userInfo = readCookie("userInfo");
+  console.log("userInfo", userInfo);
   const navigate = useNavigate();
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const { res, fetchData, isLoading } = usePostApiReq();
 
-  console.log("userInfo", userInfo);
 
   const logout = () => {
     fetchData(`/admin/logout-all`, {
