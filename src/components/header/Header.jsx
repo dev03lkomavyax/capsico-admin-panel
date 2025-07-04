@@ -30,6 +30,7 @@ const Header = () => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("logout res", res);
       localStorage.removeItem("admin-status");
+      Cookies.remove("userInfo");
       Cookies.remove("admin-status");
       navigate("/");
       setIsLogoutModalOpen(false);

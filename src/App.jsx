@@ -62,7 +62,7 @@ function App() {
   }
 
   const token = readCookie("userInfo");
-  console.log("userInfo", token);
+  console.log("token", token);
 
   const refreshToken = () => {
     fetchRefreshData("/admin/refresh-token");
