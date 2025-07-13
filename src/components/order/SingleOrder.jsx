@@ -39,7 +39,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
       console.log("order delete res", res);
       getAllOrder();
     }
-  }, [res, getAllOrder]);
+  }, [res]);
 
   return (
     <>

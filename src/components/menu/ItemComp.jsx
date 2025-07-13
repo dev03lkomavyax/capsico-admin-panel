@@ -52,7 +52,7 @@ const ItemComp = ({
       getCategories();
       setCategoryId("");
     }
-  }, [res, getCategories]);
+  }, [res]);
 
   const haddleSubCategory = () => {
     setIsOpenSubCategoryModel(true);

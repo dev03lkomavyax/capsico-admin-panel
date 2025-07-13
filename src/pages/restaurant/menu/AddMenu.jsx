@@ -60,7 +60,7 @@ const AddMenu = () => {
       itemDescription: "",
       cuisine: "",
       foodType: "",
-      menuCategory: "",
+      // menuCategory: "",
       basePrice: "",
       packagingCharges: "",
       numberOfPeople: "",
@@ -102,7 +102,7 @@ const AddMenu = () => {
     fetchData("/admin/get-cuisines");
   }
 
-  console.log("getvalues data", getValues());
+  // console.log("getvalues data", getValues());
 
   useEffect(() => {
     getCuisines();
@@ -152,11 +152,6 @@ const AddMenu = () => {
     });
     fetchAddItemData(`/admin/add-menu-item/${state?.restaurantId}`, formData);
   }
-  // menuCategory: "",
-  // packagingCharges: "",
-  // numberOfPeople: "",
-  // dishSize: "",
-  // customizations: [],
 
   useEffect(() => {
     if (addItemRes?.status === 200 || addItemRes?.status === 201) {
@@ -264,7 +259,7 @@ const AddMenu = () => {
                         />
                       </div>
 
-                      <div className="w-full mt-5">
+                      {/* <div className="w-full mt-5">
                         <FormField
                           control={control}
                           name="menuCategory"
@@ -285,7 +280,7 @@ const AddMenu = () => {
                             </FormItem>
                           )}
                         />
-                      </div>
+                      </div> */}
 
                       <div className="w-full mt-5">
                         <FormField

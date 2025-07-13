@@ -95,26 +95,26 @@ const EditProfile1 = ({
 
   const { basicInfo, location, partnerDetails } = restaurant || {};
 
-  useEffect(() => {
-    reset({
-      restaurantName: basicInfo?.name || "",
-      restaurantEmail: basicInfo?.email || "",
-      addressLine: location?.addressLine || "",
-      city: location?.city || "",
-      state: location?.state || "",
-      pinCode: location?.pinCode || "",
-      latitude: location?.coordinates[1] || "",
-      longitude: location?.coordinates[0] || "",
-      phoneNumber: basicInfo?.phone || "",
-      phoneNumber2: partnerDetails?.phone || "",
-      STDCode: "",
-      landlineNumber: "",
-      fullName: partnerDetails?.name || "",
-      email: partnerDetails?.email || "",
-      samePhoneNumber: false,
-      receiveUpdate: false,
-    });
-  }, [restaurant]);
+  // useEffect(() => {
+  //   reset({
+  //     restaurantName: basicInfo?.name || "",
+  //     restaurantEmail: basicInfo?.email || "",
+  //     addressLine: location?.addressLine || "",
+  //     city: location?.city || "",
+  //     state: location?.state || "",
+  //     pinCode: location?.pinCode || "",
+  //     latitude: location?.coordinates[1] || "",
+  //     longitude: location?.coordinates[0] || "",
+  //     phoneNumber: basicInfo?.phone || "",
+  //     phoneNumber2: partnerDetails?.phone || "",
+  //     STDCode: "",
+  //     landlineNumber: "",
+  //     fullName: partnerDetails?.name || "",
+  //     email: partnerDetails?.email || "",
+  //     samePhoneNumber: false,
+  //     receiveUpdate: false,
+  //   });
+  // }, [restaurant]);
 
   const containerStyle = {
     width: "50%",
@@ -214,12 +214,14 @@ const EditProfile1 = ({
     console.log("isPhoneNumberVerified", isPhoneNumberVerified);
     console.log("isPhoneNumber2Verified", isPhoneNumber2Verified);
     console.log("samePhoneNumber", samePhoneNumber);
-    // if (
-    //   !isPhoneNumberVerified ||
-    //   (!samePhoneNumber && !isPhoneNumber2Verified)
-    // ) {
-    //   toast.error("Number not verified");
-    //   return;
+    // if (!restaurant) {
+    //   if (
+    //     !isPhoneNumberVerified ||
+    //     (!samePhoneNumber && !isPhoneNumber2Verified)
+    //   ) {
+    //     toast.error("Number not verified");
+    //     return;
+    //   }
     // }
 
     const apiData = {

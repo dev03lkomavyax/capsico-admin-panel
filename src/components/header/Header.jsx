@@ -18,7 +18,6 @@ const Header = () => {
 
   const { res, fetchData, isLoading } = usePostApiReq();
 
-
   const logout = () => {
     fetchData(`/admin/logout-all`, {
       role: userInfo?.role || "admin",
@@ -29,7 +28,7 @@ const Header = () => {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("logout res", res);
-      localStorage.removeItem("admin-status");
+      localStorage.setItem("admin-status", false);
       Cookies.remove("userInfo");
       Cookies.remove("admin-status");
       navigate("/");

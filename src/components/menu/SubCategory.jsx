@@ -40,7 +40,7 @@ const SubCategory = ({
       getCategories();
       handleSubcategoryClick("");
     }
-  }, [res, getCategories]);
+  }, [res]);
 
   return (
     <div

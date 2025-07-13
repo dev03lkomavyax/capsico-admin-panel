@@ -22,7 +22,7 @@ const Subadmin = ({ subadmin, getAllSubadmins }) => {
       console.log("subadims res", res);
       getAllSubadmins();
     }
-  }, [res, getAllSubadmins]);
+  }, [res]);
 
   const handleEdit = () => {
     navigate("/admin/sub-admin/edit-subadmin", {

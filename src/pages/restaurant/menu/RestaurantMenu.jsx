@@ -165,9 +165,12 @@ function RestaurantMenu() {
                     <button
                       className="flex w-full items-center gap-3 p-5 border-b"
                       onClick={() =>
-                        navigate(`/admin/restaurant/${categoryId}/addmenu`, {
-                          state: { restaurantId: params?.restaurantId },
-                        })
+                        navigate(
+                          `/admin/restaurant/${params?.restaurantId}/${categoryId}/addmenu`,
+                          {
+                            state: { restaurantId: params?.restaurantId },
+                          }
+                        )
                       }
                     >
                       <FaPlus className="primary-color" />
@@ -177,8 +180,12 @@ function RestaurantMenu() {
                     </button>
                   </div>
                   <div className="">
-                    {foodItemsInfo?.itemsByCategory?.map((foodItem,index) => (
-                      <Product key={index} foodItem={foodItem} getFoodItems={getFoodItems} />
+                    {foodItemsInfo?.itemsByCategory?.map((foodItem, index) => (
+                      <Product
+                        key={index}
+                        foodItem={foodItem}
+                        getFoodItems={getFoodItems}
+                      />
                     ))}
                   </div>
                 </div>

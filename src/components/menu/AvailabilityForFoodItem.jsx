@@ -6,16 +6,18 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import days from '@/data/days.json';
 import useGetApiReq from '@/hooks/useGetApiReq';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const AvailabilityForFoodItem = ({ form }) => {
     const { control, watch, getValues } = form;
     const [operatingHours, setOperatingHours] = useState("");
+    const params = useParams();
 
-    console.log("days", getValues("days"));
+    // console.log("params", params);
     const { res, fetchData, isLoading } = useGetApiReq();
 
     const restaurantTimings = () => {
-        fetchData("/admin/Restaurant-timings");
+        fetchData(`/admin/Restaurant-timings/${params?.restaurantId}`);
     }
 
     useEffect(() => {
@@ -63,7 +65,7 @@ const AvailabilityForFoodItem = ({ form }) => {
                                                 {thursday?.isOpen && <p>{`Thu: ${thursday?.timings?.open} - ${thursday?.timings?.close}`}</p>}
                                                 {friday?.isOpen && <p>{`Fri: ${friday?.timings?.open} - ${friday?.timings?.close}`}</p>}
                                                 {saturday?.isOpen && <p>{`Sat: ${saturday?.timings?.open} - ${saturday?.timings?.close}`}</p>}
-                                                {sunday?.isOpen && <p>{`Sat: ${sunday?.timings?.open} - ${sunday?.timings?.close}`}</p>}
+                                                {sunday?.isOpen && <p>{`Sun: ${sunday?.timings?.open} - ${sunday?.timings?.close}`}</p>}
                                             </div>
                                         </div>
                                     </div>

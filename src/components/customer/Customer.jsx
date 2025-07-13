@@ -31,7 +31,7 @@ const Customer = ({ item, getAllCustomer }) => {
             console.log("customer res", res);
             getAllCustomer();
         }
-    }, [res, getAllCustomer]);
+    }, [res]);
 
     return (
         <>

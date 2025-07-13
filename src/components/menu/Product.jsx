@@ -26,7 +26,7 @@ const Product = ({ foodItem, getFoodItems }) => {
     if (res?.status === 200 || res?.status === 201) {
       getFoodItems();
     }
-  }, [res, getFoodItems]);
+  }, [res]);
 
   return (
     <div className="px-5 py-3 flex justify-between items-center group gap-2 border-b hover:bg-[#F7FAFF] cursor-pointer">

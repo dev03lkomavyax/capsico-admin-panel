@@ -43,7 +43,7 @@ const DeliveryAgentComp = ({ agent, getAllDeliveryAgent }) => {
       console.log("delete delivery agent res", res);
       getAllDeliveryAgent();
     }
-  }, [res, getAllDeliveryAgent]);
+  }, [res]);
 
   return (
     <>

@@ -37,7 +37,7 @@ export const addItemSchema = z
         itemDescription: z.string().min(1, "Item Description is required"),
         cuisine: z.string().min(1, "Cuisine is required"),
         foodType: z.string().min(1, "Food Type is required"),
-        menuCategory: z.string().min(1, "Menu Category is required"),
+        // menuCategory: z.string().min(1, "Menu Category is required"),
         basePrice: z.string().min(1, "Price cannot be 0"),
         preparationTime: z.string().min(1, "Preparation Time is required"),
         packagingCharges: z.string().min(1, "Packaging Charges is required"),

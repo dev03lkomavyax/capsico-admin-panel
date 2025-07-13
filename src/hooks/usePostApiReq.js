@@ -23,11 +23,11 @@ const usePostApiReq = () => {
             }
         } catch (error) {
             console.log("post api error =>", error);
+            toast.error(error.response?.data?.message || "An error occurred.")
             if (error?.response?.status === 403) {
                 // await dispatch(handleUnautorizedModalOpen({ isUnautorizedModalOpen: true }));
             }
             else {
-                toast.error(error.response?.data?.message || "An error occurred.")
                 // await dispatch(handleErrorModal({ isOpen: true, message: error.response?.data?.message || "An error occurred.", isLogoutBtn: true }));
             }
         } finally {

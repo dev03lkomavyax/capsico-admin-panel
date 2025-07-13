@@ -44,7 +44,7 @@ const SingleRestaurantReq = ({ req, getRestaurantRequests }) => {
       setIsDeleteAlertModalOpen(false);
       getRestaurantRequests();
     }
-  }, [res1, setIsReqRjectModal]);
+  }, [res1 ]);
 
   return (
     <>

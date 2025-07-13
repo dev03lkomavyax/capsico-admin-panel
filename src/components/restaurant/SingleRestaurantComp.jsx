@@ -33,7 +33,7 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
             console.log("restaurant delete res", res);
             getAllRestaurant();
         }
-    }, [res, getAllRestaurant]);
+    }, [res]);
 
     return (
         <>
