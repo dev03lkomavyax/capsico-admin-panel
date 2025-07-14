@@ -100,7 +100,7 @@ const DeliveryAgentDetails = () => {
                 </h1>
                 <img
                   onClick={() =>
-                    navigate("/admin/delivery-agent/123/edit-profile")
+                    navigate(`/admin/delivery-agent/${deliveryAgentId}/edit-profile`)
                   }
                   className="w-5 h-5 cursor-pointer"
                   src={edit}
