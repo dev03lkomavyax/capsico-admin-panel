@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox } from "../ui/checkbox";
 import ReactPagination from "../pagination/ReactPagination";
 import SingleOrder from "./SingleOrder";
+import Spinner from "../Spinner";
+import DataNotFound from "../DataNotFound";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ const RecentOrders = () => {
 
   const getAllOrder = () => {
     fetchData(
-      `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${"all"}&status=${
+      `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
         status === "all" ? "" : status
       }`
     );
@@ -63,16 +65,66 @@ const RecentOrders = () => {
         <div className="flex justify-start items-center">
           <p className="text-[#333843] text-lg font-medium font-inter flex items-center gap-2">
             Recent Orders
-            <span className="text-[#0D894F] text-sm font-semibold font-inter bg-[#E7F4EE] py-1 px-3 rounded-full">
+            {/* <span className="text-[#0D894F] text-sm font-semibold font-inter bg-[#E7F4EE] py-1 px-3 rounded-full">
               +2 Orders
-            </span>
+            </span> */}
           </p>
         </div>
         <div className="flex justify-start items-center gap-4">
-          <button className="h-10 border-[1px] border-[#E0E2E7] rounded-lg flex justify-center items-center gap-2 text-[#667085] text-sm font-medium font-inter bg-[#FFFFFF] px-4">
+          {/* <button className="h-10 border-[1px] border-[#E0E2E7] rounded-lg flex justify-center items-center gap-2 text-[#667085] text-sm font-medium font-inter bg-[#FFFFFF] px-4">
             <HiOutlineAdjustmentsHorizontal className="text-[20px]" />
             <span>Filters</span>
-          </button>
+          </button> */}
+          <div className="flex items-center gap-4">
+            <Select value={status} onValueChange={(value) => setStatus(value)}>
+              <SelectTrigger className="h-10 w-44 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="preparing">Preparing</SelectItem>
+                  <SelectItem value="ready_for_pickup">
+                    Ready for Pickup
+                  </SelectItem>
+                  <SelectItem value="picked_up">Picked Up</SelectItem>
+                  <SelectItem value="out_for_delivery">
+                    Out for Delivery
+                  </SelectItem>
+                  <SelectItem value="arriving">Arriving</SelectItem>
+                  <SelectItem value="delivered">Delivered</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="delivery_issue">Delivery Issue</SelectItem>
+                  <SelectItem value="PREPARING">PREPARING</SelectItem>
+                  <SelectItem value="READY">Ready</SelectItem>
+                  <SelectItem value="DELIVERYPARTNER_ACCEPTED">
+                    Delivery Partner Accepted
+                  </SelectItem>
+                  <SelectItem value="reached_delivery_location">
+                    Reached Delivery Location
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
+              value={filterByDate}
+              onValueChange={(value) => setFilterByDate(value)}
+            >
+              <SelectTrigger className="h-10 text-[#1D1929] w-32 text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This Week</SelectItem>
+                  <SelectItem value="month">This Month</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <button className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]">
             See More
           </button>
@@ -122,8 +174,11 @@ const RecentOrders = () => {
                   getAllOrder={getAllOrder}
                 />
               ))}
+
           </TableBody>
         </Table>
+            {isLoading && <Spinner />}
+            {capsicoOrderData.length === 0 && !isLoading && <DataNotFound name="Orders" />}
         {/* <ReactPagination setPage={setPage} totalPage={totalPage} /> */}
       </div>
     </div>

@@ -1,8 +1,10 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const DeliveryAgentProfileSchema = z.object({
-  userImage: z.string(),
+  userImage: z.any(),
   userImagePreview: z.string().default(""),
+  panCard: z.any(),
+  panCardPreview: z.any(),
   aadharFront: z.any(),
   aadharFrontPreview: z.string().default(""),
   aadharBack: z.any(),
@@ -10,20 +12,21 @@ export const DeliveryAgentProfileSchema = z.object({
   drivingLicense: z.any(),
   drivingLicenseImagePreview: z.string().default(""),
   fullName: z.string().min(1, "Full name is required"),
-  address: z.string().min(1, "Address is required"),
+  address: z.record(z.any()).optional(),
   email: z.string().email("Please enter a valid email address"),
-  phone: z
+  gender: z.string().min(1, "Gender is required"),
+  phone: z.coerce
     .string()
-    .min(10, "Phone number should be 10 digits")
-    .max(10, "Phone number should be 10 digits"),
-  altPhone: z
-    .string()
-    .regex(/^[0-9]{10,12}$/, "Please enter a valid alternate phone number"),
+    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+  // altPhone: z
+  //   .string()
+  //   .regex(/^[0-9]{10,12}$/, "Please enter a valid alternate phone number"),
   aadharNumber: z
     .string()
     .length(12, "Aadhar number should be exactly 12 digits"),
   DLNumber: z.string().min(1, "Driving License number is required"),
   DLExpiry: z.date(),
+  dateOfBirth: z.date(),
   bankName: z.string().min(1, "Bank name is required"),
   accountNumber: z.string().min(1, "Account number is required"),
   IFSCcode: z.string().min(1, "IFSC code is required"),

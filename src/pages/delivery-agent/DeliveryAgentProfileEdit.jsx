@@ -23,7 +23,7 @@ import { MdCancel } from "react-icons/md";
 import { updatePreview } from "@/utils/updatePreview";
 import { PiCameraPlus } from "react-icons/pi";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, EditIcon, User } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -33,9 +33,32 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import UpdateAddressModal from "./UpdateAddressModal";
 
 const DeliveryAgentProfileEdit = () => {
   const navigate = useNavigate();
+  const [isUpdateAddressModalOpen, setIsUpdateAddressModalOpen] =
+    useState(false);
+  const formatFullAddress = (address) => {
+    const parts = [
+      address?.street || "",
+      address?.city || "",
+      address?.state || "",
+      address?.pincode || "",
+      "India",
+    ].filter(Boolean);
+
+    return parts.join(", ");
+  };
 
   const [isEdit, setIsEdit] = useState(false);
   const [deliveryPartnerDetailsData, setDeliveryPartnerDetailsData] =
@@ -46,7 +69,7 @@ const DeliveryAgentProfileEdit = () => {
     res: res1,
     fetchData: fetchData1,
     isLoading: isLoading1,
-  } = useGetApiReq();
+  } = usePatchApiReq();
 
   const getDeliveryPartnerDetails = () => {
     fetchData(`/admin/get-delivery-partner/${deliveryAgentId}`);
@@ -79,8 +102,10 @@ const DeliveryAgentProfileEdit = () => {
       drivingLicenseImagePreview: "",
       panCardPreview: "",
       fullName: "",
+      gender: "",
       address: "New Delhi India",
       email: "officialprashanttt@gmail.com",
+      dateOfBirth: "",
       phone: "8009396321",
       altPhone: "987654321012",
       aadharNumber: "111111110000",
@@ -96,7 +121,8 @@ const DeliveryAgentProfileEdit = () => {
   const { register, control, watch, setValue, getValues } = form;
 
   useEffect(() => {
-    const { documents, earnings } = deliveryPartnerDetailsData || {};
+    const { documents, earnings, personalInfo, address } =
+      deliveryPartnerDetailsData || {};
 
     const { bankDetails } = earnings || {};
 
@@ -110,10 +136,20 @@ const DeliveryAgentProfileEdit = () => {
           deliveryPartnerDetailsData?.personalInfo?.profileImage
         }`
     );
+    setValue(
+      "dateOfBirth",
+      personalInfo?.dateOfBirth && new Date(personalInfo?.dateOfBirth)
+    );
+    setValue("gender", personalInfo?.gender);
+    setValue("address", address);
 
     setValue("aadharNumber", documents?.aadharCard?.number);
     setValue("DLNumber", documents?.drivingLicense?.number);
-    setValue("DLExpiry", documents?.drivingLicense?.expiryDate);
+    setValue(
+      "DLExpiry",
+      documents?.drivingLicense?.expiryDate &&
+        new Date(documents?.drivingLicense?.expiryDate)
+    );
     setValue("panCardNumber", documents?.panCard?.number);
     setValue("accountNumber", bankDetails?.accountNumber);
     setValue(
@@ -144,7 +180,9 @@ const DeliveryAgentProfileEdit = () => {
     setValue("IFSCcode", bankDetails?.ifscCode);
     setValue("upiId", bankDetails?.upiId);
     setValue("accountHolderName", bankDetails?.accountHolderName);
-  }, [res]);
+  }, [deliveryPartnerDetailsData]);
+
+  console.log("getValues", getValues());
 
   const userImageRef = register("userImage");
   const aadharFrontRef = register("aadharFront");
@@ -182,63 +220,61 @@ const DeliveryAgentProfileEdit = () => {
       name: data.fullName,
       email: data.email,
       phone: data.phone,
+      dateOfBirth: data.dateOfBirth,
+      gender: data.gender,
+    };
+    const languages = ["English", "Hindi"];
+    const vehicleInfo = {
+      type: data.type,
+      registrationNumber: data.registrationNumber,
+    };
+    const documents = {
+      drivingLicense: {
+        number: data.DLNumber,
+        expiryDate: data.DLExpiry,
+      },
+      aadharCard: {
+        number: data.aadharNumber,
+      },
+      panCard: {
+        number: data.panCardNumber,
+      },
     };
 
-    // formdata.append("personalInfo[name]", "Ravi Kumar 123");
-    // formdata.append("personalInfo[email]", "ravi.kumar123@example.com");
-    // formdata.append("personalInfo[phone]", "9876543219");
-    // formdata.append("personalInfo[dateOfBirth]", "1990-05-10");
-    // formdata.append("personalInfo[gender]", "male");
-    // formdata.append("languages[]", "English");
-    // formdata.append("languages[]", "Hindi");
-    // formdata.append("address[street]", "123 MG Road");
-    // formdata.append("address[city]", "Bangalore");
-    // formdata.append("address[state]", "Karnataka");
-    // formdata.append("address[pincode]", "560001");
-    // formdata.append("address[longitude]", "77.5946");
-    // formdata.append("address[latitude]", "12.9716");
-    // formdata.append("vehicleInfo[type]", "bike");
-    // formdata.append("vehicleInfo[registrationNumber]", "KA01AB1234");
-    // formdata.append("aadharNumber", "123412341234");
-    // formdata.append("status[isOnline]", "false");
-    // formdata.append("status[availability]", "busy");
-    // formdata.append("documents[drivingLicense][number]", "DL12345678");
-    // formdata.append("documents[drivingLicense][expiryDate]", "2030-12-31");
-    // formdata.append("documents[aadharCard][number]", "123456789012");
-    // formdata.append("documents[panCard][number]", "ABCDE1234F");
-    // formdata.append("bankDetails[accountHolderName]", "Vivek Sharma");
-    // formdata.append("bankDetails[accountNumber]", "123456789012");
-    // formdata.append("bankDetails[ifscCode]", "HDFC0001234");
-    // formdata.append("bankDetails[bankName]", "HDFC Bank");
-    // formdata.append("bankDetails[upiId]", "viveksharma@hdfcbank");
-    // formdata.append(
-    //   "profileImage",
-    //   fileInput.files[0],
-    //   "/C:/Users/vivek/Downloads/oleg-demakov-zEIApnww3fU-unsplash.jpg"
-    // );
-    // formdata.append(
-    //   "drivingLicenseImage",
-    //   fileInput.files[0],
-    //   "/C:/Users/vivek/Downloads/oleg-demakov-zEIApnww3fU-unsplash.jpg"
-    // );
-    // formdata.append(
-    //   "aadharFrontImage",
-    //   fileInput.files[0],
-    //   "/C:/Users/vivek/Downloads/oleg-demakov-zEIApnww3fU-unsplash.jpg"
-    // );
-    // formdata.append(
-    //   "aadharBackImage",
-    //   fileInput.files[0],
-    //   "/C:/Users/vivek/Downloads/oleg-demakov-zEIApnww3fU-unsplash.jpg"
-    // );
-    // formdata.append(
-    //   "panCardImage",
-    //   fileInput.files[0],
-    //   "/C:/Users/vivek/Downloads/oleg-demakov-zEIApnww3fU-unsplash.jpg"
-    // );
+    const bankDetails = {
+      accountHolderName: data.accountHolderName,
+      accountNumber: data.accountNumber,
+      ifscCode: data.IFSCcode,
+      bankName: data.bankName,
+      upiId: data.upiId,
+    };
 
-    fetchData1(`/admin/update-profile/${deliveryAgentId}`);
+    formData.append("personalInfo", JSON.stringify(personalInfo));
+    // formData.append("languages", JSON.stringify(languages)); // TODO
+    formData.append("vehicleInfo", JSON.stringify(vehicleInfo));
+    formData.append("aadharNumber", data.aadharNumber);
+    // formData.append("status[isOnline]", "false"); // TODO
+    // formData.append("status[availability]", "busy"); // TODO
+    formData.append("documents", JSON.stringify(documents));
+    formData.append("bankDetails", JSON.stringify(bankDetails));
+    data.userImage && formData.append("profileImage", data.userImage[0]);
+    data.drivingLicense &&
+      formData.append("drivingLicenseImage", data.drivingLicense[0]);
+    data.aadharFront &&
+      formData.append("aadharFrontImage", data.aadharFront[0]);
+    data.aadharBack && formData.append("aadharBackImage", data.aadharBack[0]);
+    data.panCard && formData.append("panCardImage", data.panCard[0]);
+
+    fetchData1(`/admin/update-profile/${deliveryAgentId}`, formData);
   };
+
+  useEffect(() => {
+    if (res1?.status === 200 || res1?.status === 201) {
+      console.log("deliveryPartnerDetailsData update", res1?.data);
+      getDeliveryPartnerDetails();
+      setIsEdit(false);
+    }
+  }, [res1]);
 
   return (
     <AdminWrapper>
@@ -405,21 +441,47 @@ const DeliveryAgentProfileEdit = () => {
                         </p>
                       )}
                     </div>
-
                     <div className="flex items-center gap-2">
-                      <img className="w-5 h-5" src={location} alt="location" />
+                      <CalendarIcon className="w-5 h-5 text-[#797979]" />
                       {isEdit ? (
                         <FormField
                           control={control}
-                          name="address"
+                          name="dateOfBirth"
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Input
-                                  placeholder=""
-                                  className="placeholder:text-[#3B3B3B] w-80"
-                                  {...field}
-                                />
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <FormControl>
+                                      <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                          "w-[240px] px-3 text-left font-normal",
+                                          !field.value &&
+                                            "text-muted-foreground"
+                                        )}
+                                      >
+                                        {field.value ? (
+                                          format(field.value, "PPP")
+                                        ) : (
+                                          <span>Pick a date</span>
+                                        )}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                      </Button>
+                                    </FormControl>
+                                  </PopoverTrigger>
+                                  <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                  >
+                                    <Calendar
+                                      mode="single"
+                                      selected={field.value}
+                                      onSelect={field.onChange}
+                                      initialFocus
+                                    />
+                                  </PopoverContent>
+                                </Popover>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -427,9 +489,79 @@ const DeliveryAgentProfileEdit = () => {
                         />
                       ) : (
                         <p className="font-inter text-[#696969] text-lg">
-                          {getValues("address")}
+                          {watch("dateOfBirth") &&
+                            format(
+                              new Date(getValues("dateOfBirth")),
+                              "yyyy/MM/dd"
+                            )}
                         </p>
                       )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-[#797979]" />
+                      {isEdit ? (
+                        <FormField
+                          control={control}
+                          name="gender"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={field.value}
+                                >
+                                  <SelectTrigger className="flex justify-between items-center w-full h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                    <SelectValue placeholder="Select Gender" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      <SelectItem value="male">Male</SelectItem>
+                                      <SelectItem value="female">
+                                        Female
+                                      </SelectItem>
+                                      <SelectItem value="other">
+                                        Other
+                                      </SelectItem>
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        <p className="font-inter capitalize text-[#696969] text-lg">
+                          {getValues("gender")}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-start gap-2">
+                      <img className="w-5 h-5" src={location} alt="location" />
+                      <p className="font-inter text-[#696969] text-lg">
+                        <div className="">
+                          <p className="text-gray-700 leading-relaxed -mt-1">
+                            {formatFullAddress(getValues("address"))}
+                          </p>
+                          <div className="mt-2 text-xs text-gray-500">
+                            Coordinates:{" "}
+                            {getValues("address") &&
+                              getValues(
+                                "address"
+                              )?.location?.coordinates?.[0].toFixed(4)}
+                            ,{" "}
+                            {getValues(
+                              "address"
+                            )?.location?.coordinates?.[1]?.toFixed(4)}
+                          </div>
+                        </div>
+                      </p>
+                      <EditIcon
+                        onClick={() => setIsUpdateAddressModalOpen(true)}
+                        className="w-5 h-5 text-[#797979] cursor-pointer"
+                      />
                     </div>
                   </div>
                 </div>
@@ -475,7 +607,7 @@ const DeliveryAgentProfileEdit = () => {
                         <FormItem>
                           <div className="w-80">
                             <FormLabel className="cursor-pointer">
-                              {!watch("userImagePreview") && (
+                              {!watch("aadharFrontPreview") && (
                                 <div className="border-2 border-dashed border-[#C2CDD6] w-80 h-60 rounded-lg flex flex-col justify-center items-center">
                                   <div className="flex flex-col items-center primary-color border-dashed rounded px-5">
                                     <PiCameraPlus
@@ -933,6 +1065,15 @@ const DeliveryAgentProfileEdit = () => {
             </form>
           </Form>
         </div>
+
+        {isUpdateAddressModalOpen && (
+          <UpdateAddressModal
+            isModalOpen={isUpdateAddressModalOpen}
+            setIsModalOpen={setIsUpdateAddressModalOpen}
+            address={deliveryPartnerDetailsData?.address}
+            onSuccess={getDeliveryPartnerDetails}
+          />
+        )}
       </section>
     </AdminWrapper>
   );
