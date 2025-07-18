@@ -145,13 +145,13 @@ function RestaurantMenu() {
                     <DataNotFound name="Categories" />
                   )}
                 </div>
-                <button
+                {/* <button
                   onClick={() => setIsAddonGroupsModalOpen(true)}
                   className="primary-color mt-auto bg-white shadow-3xl absolute bottom-0 flex w-full justify-between items-center left-0 p-4"
                 >
                   Go to Add Ons
                   <FaArrowRight className="primary-color" />
-                </button>
+                </button> */}
               </div>
               {categoryId && (
                 <div className="right-section relative w-2/3 bg-white overflow-y-auto h-full">

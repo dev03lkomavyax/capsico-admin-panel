@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import useGetApiReq from './hooks/useGetApiReq';
 import usePostApiReq from './hooks/usePostApiReq';
 import { readCookie } from './utils/readCookie';
+import RecentOrders from './pages/restaurant/RecentOrders';
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Order = lazy(() => import('./pages/order/Order'));
@@ -135,6 +136,10 @@ function App() {
             <Route
               path="/admin/restaurant/:restaurantId/dashboard"
               element={<RestaurantDashborad />}
+            />
+            <Route
+              path="/admin/restaurant/:restaurantId/dashboard/recent-orders"
+              element={<RecentOrders />}
             />
             <Route
               path="/admin/restaurant/edit-profile"

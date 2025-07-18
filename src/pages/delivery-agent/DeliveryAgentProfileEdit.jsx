@@ -103,6 +103,8 @@ const DeliveryAgentProfileEdit = () => {
       panCardPreview: "",
       fullName: "",
       gender: "",
+      backgroundCheckStatus: "",
+      currentStatus: "",
       address: "New Delhi India",
       email: "officialprashanttt@gmail.com",
       dateOfBirth: "",
@@ -121,7 +123,7 @@ const DeliveryAgentProfileEdit = () => {
   const { register, control, watch, setValue, getValues } = form;
 
   useEffect(() => {
-    const { documents, earnings, personalInfo, address } =
+    const { documents, earnings, personalInfo, address, accountStatus } =
       deliveryPartnerDetailsData || {};
 
     const { bankDetails } = earnings || {};
@@ -177,6 +179,8 @@ const DeliveryAgentProfileEdit = () => {
         `${import.meta.env.VITE_IMAGE_URL}/${documents?.panCard?.image}`
     );
     setValue("bankName", bankDetails?.bankName);
+    setValue("currentStatus", accountStatus?.currentStatus);
+    setValue("backgroundCheckStatus", accountStatus?.backgroundCheckStatus);
     setValue("IFSCcode", bankDetails?.ifscCode);
     setValue("upiId", bankDetails?.upiId);
     setValue("accountHolderName", bankDetails?.accountHolderName);
@@ -248,10 +252,15 @@ const DeliveryAgentProfileEdit = () => {
       bankName: data.bankName,
       upiId: data.upiId,
     };
+    const accountStatus = {
+      currentStatus: data.currentStatus,
+      backgroundCheckStatus: data.backgroundCheckStatus,
+    };
 
     formData.append("personalInfo", JSON.stringify(personalInfo));
     // formData.append("languages", JSON.stringify(languages)); // TODO
     formData.append("vehicleInfo", JSON.stringify(vehicleInfo));
+    formData.append("accountStatus", JSON.stringify(accountStatus));
     formData.append("aadharNumber", data.aadharNumber);
     // formData.append("status[isOnline]", "false"); // TODO
     // formData.append("status[availability]", "busy"); // TODO
@@ -348,7 +357,6 @@ const DeliveryAgentProfileEdit = () => {
                     alt="avatar"
                   />
                 )}
-
                 <div className="w-full">
                   <div className="flex w-full justify-between items-center gap-3">
                     {isEdit ? (
@@ -371,7 +379,7 @@ const DeliveryAgentProfileEdit = () => {
                       />
                     ) : (
                       <h1 className="font-inter text-3xl font-semibold text-[#202020]">
-                        {getValues("fullName")}
+                        {getValues("fullName") || "N/A"}
                       </h1>
                     )}
                     {isEdit ? (
@@ -388,140 +396,268 @@ const DeliveryAgentProfileEdit = () => {
                       />
                     )}
                   </div>
-                  <div className="flex flex-col gap-3 mt-5">
-                    <div className="flex items-center gap-2">
-                      <img className="w-5 h-5" src={sms} alt="sms" />
-                      {isEdit ? (
-                        <FormField
-                          control={control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  placeholder="Enter Email"
-                                  type="email"
-                                  className="placeholder:text-[#3B3B3B] w-80"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      ) : (
-                        <p className="font-inter text-[#696969] text-lg">
-                          {getValues("email")}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <img className="w-5 h-5" src={call} alt="call" />
-                      {isEdit ? (
-                        <FormField
-                          control={control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  placeholder="Enter Phone No."
-                                  type="number"
-                                  className="placeholder:text-[#3B3B3B] w-80"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      ) : (
-                        <p className="font-inter text-[#696969] text-lg">
-                          {getValues("phone")}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CalendarIcon className="w-5 h-5 text-[#797979]" />
-                      {isEdit ? (
-                        <FormField
-                          control={control}
-                          name="dateOfBirth"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <FormControl>
-                                      <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                          "w-[240px] px-3 text-left font-normal",
-                                          !field.value &&
-                                            "text-muted-foreground"
-                                        )}
-                                      >
-                                        {field.value ? (
-                                          format(field.value, "PPP")
-                                        ) : (
-                                          <span>Pick a date</span>
-                                        )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                  >
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={field.onChange}
-                                      initialFocus
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      ) : (
-                        <p className="font-inter text-[#696969] text-lg">
-                          {watch("dateOfBirth") &&
-                            format(
-                              new Date(getValues("dateOfBirth")),
-                              "yyyy/MM/dd"
+                  <div className="flex gap-5">
+                    <div className="flex flex-col gap-3 mt-5">
+                      <div className="flex items-center gap-2">
+                        <img className="w-5 h-5" src={sms} alt="sms" />
+                        {isEdit ? (
+                          <FormField
+                            control={control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter Email"
+                                    type="email"
+                                    className="placeholder:text-[#3B3B3B] w-80"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
                             )}
-                        </p>
-                      )}
-                    </div>
+                          />
+                        ) : (
+                          <p className="font-inter text-[#696969] text-lg">
+                            {getValues("email") || "N/A"}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <img className="w-5 h-5" src={call} alt="call" />
+                        {isEdit ? (
+                          <FormField
+                            control={control}
+                            name="phone"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter Phone No."
+                                    type="number"
+                                    className="placeholder:text-[#3B3B3B] w-80"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ) : (
+                          <p className="font-inter text-[#696969] text-lg">
+                            {getValues("phone") || "N/A"}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CalendarIcon className="w-5 h-5 text-[#797979]" />
+                        {isEdit ? (
+                          <FormField
+                            control={control}
+                            name="dateOfBirth"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Popover>
+                                    <PopoverTrigger asChild>
+                                      <FormControl>
+                                        <Button
+                                          variant={"outline"}
+                                          className={cn(
+                                            "w-[240px] px-3 text-left font-normal",
+                                            !field.value &&
+                                              "text-muted-foreground"
+                                          )}
+                                        >
+                                          {field.value ? (
+                                            format(field.value, "PPP")
+                                          ) : (
+                                            <span>Pick a date</span>
+                                          )}
+                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                      </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                      className="w-auto p-0"
+                                      align="start"
+                                    >
+                                      <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        initialFocus
+                                      />
+                                    </PopoverContent>
+                                  </Popover>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ) : (
+                          <p className="font-inter text-[#696969] text-lg">
+                            {watch("dateOfBirth")
+                              ? format(
+                                  new Date(getValues("dateOfBirth")),
+                                  "yyyy/MM/dd"
+                                )
+                              : "N/A"}
+                          </p>
+                        )}
+                      </div>
 
-                    <div className="flex items-center gap-2">
-                      <User className="w-5 h-5 text-[#797979]" />
+                      <div className="flex items-center gap-2">
+                        <User className="w-5 h-5 text-[#797979]" />
+                        {isEdit ? (
+                          <FormField
+                            control={control}
+                            name="gender"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                  >
+                                    <SelectTrigger className="flex justify-between items-center w-full h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                      <SelectValue placeholder="Select Gender" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectGroup>
+                                        <SelectItem value="male">
+                                          Male
+                                        </SelectItem>
+                                        <SelectItem value="female">
+                                          Female
+                                        </SelectItem>
+                                        <SelectItem value="other">
+                                          Other
+                                        </SelectItem>
+                                      </SelectGroup>
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ) : (
+                          <p className="font-inter capitalize text-[#696969] text-lg">
+                            {getValues("gender") || "N/A"}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-start gap-2">
+                        <img
+                          className="w-5 h-5"
+                          src={location}
+                          alt="location"
+                        />
+                        <p className="font-inter text-[#696969] text-lg">
+                          <div className="">
+                            <p className="text-gray-700 leading-relaxed -mt-1">
+                              {formatFullAddress(getValues("address"))}
+                            </p>
+                            <div className="mt-2 text-xs text-gray-500">
+                              Coordinates:{" "}
+                              {getValues("address") &&
+                                getValues(
+                                  "address"
+                                )?.location?.coordinates?.[0].toFixed(4)}
+                              ,{" "}
+                              {getValues(
+                                "address"
+                              )?.location?.coordinates?.[1]?.toFixed(4)}
+                            </div>
+                          </div>
+                        </p>
+                        <EditIcon
+                          onClick={() => setIsUpdateAddressModalOpen(true)}
+                          className="w-5 h-5 text-[#797979] cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-5 ml-5">
                       {isEdit ? (
                         <FormField
                           control={control}
-                          name="gender"
+                          name="currentStatus"
                           render={({ field }) => (
                             <FormItem>
+                              <FormLabel>Current Status</FormLabel>
                               <FormControl>
                                 <Select
                                   onValueChange={field.onChange}
                                   value={field.value}
                                 >
-                                  <SelectTrigger className="flex justify-between items-center w-full h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
-                                    <SelectValue placeholder="Select Gender" />
+                                  <SelectTrigger className="flex justify-between items-center w-40 h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                    <SelectValue placeholder="Select Status" />
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectGroup>
-                                      <SelectItem value="male">Male</SelectItem>
-                                      <SelectItem value="female">
-                                        Female
+                                      <SelectItem value="pending">
+                                        Pending
                                       </SelectItem>
-                                      <SelectItem value="other">
-                                        Other
+                                      <SelectItem value="approved">
+                                        Approved
+                                      </SelectItem>
+                                      <SelectItem value="rejected">
+                                        Rejected
+                                      </SelectItem>
+                                      <SelectItem value="blocked">
+                                        Blocked
+                                      </SelectItem>
+                                      <SelectItem value="hold">Hold</SelectItem>
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        <p className="font-inter capitalize text-black">
+                          <span className="text-[#797979] text-base">
+                            Current Status:
+                          </span>{" "}
+                          <span className="font-semibold">
+                            {getValues("currentStatus") || "N/A"}
+                          </span>
+                        </p>
+                      )}
+
+                      {isEdit ? (
+                        <FormField
+                          control={control}
+                          name="backgroundCheckStatus"
+                          render={({ field }) => (
+                            <FormItem className="mt-4">
+                              <FormLabel>Background Check Status</FormLabel>
+                              <FormControl>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={field.value}
+                                >
+                                  <SelectTrigger className="flex justify-between items-center w-40 h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
+                                    <SelectValue placeholder="Select Status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      <SelectItem value="pending">
+                                        Pending
+                                      </SelectItem>
+                                      <SelectItem value="completed">
+                                        Completed
+                                      </SelectItem>
+                                      <SelectItem value="failed">
+                                        Failed
+                                      </SelectItem>
+                                      <SelectItem value="not_required">
+                                        Not Required
                                       </SelectItem>
                                     </SelectGroup>
                                   </SelectContent>
@@ -532,36 +668,13 @@ const DeliveryAgentProfileEdit = () => {
                           )}
                         />
                       ) : (
-                        <p className="font-inter capitalize text-[#696969] text-lg">
-                          {getValues("gender")}
+                        <p className="font-inter capitalize text-black">
+                          <span className="text-[#797979] text-base">Background Check Status:</span>{" "}
+                          <span className="font-semibold">
+                            {getValues("backgroundCheckStatus") || "N/A"}
+                          </span>
                         </p>
                       )}
-                    </div>
-
-                    <div className="flex items-start gap-2">
-                      <img className="w-5 h-5" src={location} alt="location" />
-                      <p className="font-inter text-[#696969] text-lg">
-                        <div className="">
-                          <p className="text-gray-700 leading-relaxed -mt-1">
-                            {formatFullAddress(getValues("address"))}
-                          </p>
-                          <div className="mt-2 text-xs text-gray-500">
-                            Coordinates:{" "}
-                            {getValues("address") &&
-                              getValues(
-                                "address"
-                              )?.location?.coordinates?.[0].toFixed(4)}
-                            ,{" "}
-                            {getValues(
-                              "address"
-                            )?.location?.coordinates?.[1]?.toFixed(4)}
-                          </div>
-                        </div>
-                      </p>
-                      <EditIcon
-                        onClick={() => setIsUpdateAddressModalOpen(true)}
-                        className="w-5 h-5 text-[#797979] cursor-pointer"
-                      />
                     </div>
                   </div>
                 </div>
@@ -591,7 +704,7 @@ const DeliveryAgentProfileEdit = () => {
                   />
                 ) : (
                   <p className="font-inter text-[#696969] text-lg">
-                    {getValues("aadharNumber")}
+                    {getValues("aadharNumber") || "N/A"}
                   </p>
                 )}
               </div>
@@ -723,7 +836,7 @@ const DeliveryAgentProfileEdit = () => {
                   />
                 ) : (
                   <p className="font-inter text-[#696969] text-lg">
-                    {getValues("DLNumber")}
+                    {getValues("DLNumber") || "N/A"}
                   </p>
                 )}
               </div>
@@ -771,8 +884,9 @@ const DeliveryAgentProfileEdit = () => {
                   />
                 ) : (
                   <p className="font-inter text-[#696969] text-lg">
-                    {watch("DLExpiry") &&
-                      format(new Date(getValues("DLExpiry")), "yyyy/MM/dd")}
+                    {watch("DLExpiry")
+                      ? format(new Date(getValues("DLExpiry")), "yyyy/MM/dd")
+                      : "N/A"}
                   </p>
                 )}
               </div>
@@ -859,7 +973,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("bankName")}
+                      {getValues("bankName") || "N/A"}
                     </p>
                   )}
                 </div>
@@ -886,7 +1000,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("accountHolderName")}
+                      {getValues("accountHolderName") || "N/A"}
                     </p>
                   )}
                 </div>
@@ -915,7 +1029,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("accountNumber")}
+                      {getValues("accountNumber") || "N/A"}
                     </p>
                   )}
                 </div>
@@ -943,7 +1057,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("IFSCcode")}
+                      {getValues("IFSCcode") || "N/A"}
                     </p>
                   )}
                 </div>
@@ -969,7 +1083,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("upiId")}
+                      {getValues("upiId") || "N/A"}
                     </p>
                   )}
                 </div>
@@ -997,7 +1111,7 @@ const DeliveryAgentProfileEdit = () => {
                     />
                   ) : (
                     <p className="font-inter text-[#696969] text-lg">
-                      {getValues("panCardNumber")}
+                      {getValues("panCardNumber") || "N/A"}
                     </p>
                   )}
                 </div>

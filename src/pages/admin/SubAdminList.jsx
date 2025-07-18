@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import DataNotFound from "@/components/DataNotFound";
+import ReactPagination from "@/components/pagination/ReactPagination";
+import Spinner from "@/components/Spinner";
+import Subadmin from "@/components/Subadmin";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table";
-import { MdKeyboardArrowLeft } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import Spinner from "@/components/Spinner";
-import DataNotFound from "@/components/DataNotFound";
-import Subadmin from "@/components/Subadmin";
 import { LIMIT } from "@/constants/constants";
-import ReactPagination from "@/components/pagination/ReactPagination";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SubAdminList = () => {
     const { res, fetchData, isLoading } = useGetApiReq();

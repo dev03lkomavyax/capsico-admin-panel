@@ -7,7 +7,7 @@ import Spinner from "../Spinner";
 import DataNotFound from "../DataNotFound";
 
 const TrackOffer = () => {
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("all");
   const [offerActiveTab, setOfferActiveTab] = useState(false);
   const [coupons, setCoupons] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -36,7 +36,7 @@ const TrackOffer = () => {
     <div className="px-5 py-5">
       <div className="bg-white py-3 pb-0 w-auto inline-flex gap-2">
         <button
-          onClick={() => setSelected("All")}
+          onClick={() => setSelected("all")}
           className={`pb-2 px-3 border-b-4 class-base1 ${
             selected === "All"
               ? "border-[#1AA6F1] primary-color"

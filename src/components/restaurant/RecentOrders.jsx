@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import {
   Select,
   SelectContent,
@@ -11,38 +9,36 @@ import {
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useGetApiReq from "@/hooks/useGetApiReq";
 import { LIMIT } from "@/constants/constants";
-import { useNavigate } from "react-router-dom";
-import { Checkbox } from "../ui/checkbox";
-import ReactPagination from "../pagination/ReactPagination";
-import SingleOrder from "./SingleOrder";
-import Spinner from "../Spinner";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import DataNotFound from "../DataNotFound";
+import Spinner from "../Spinner";
+import { Checkbox } from "../ui/checkbox";
+import SingleOrder from "./SingleOrder";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
-  const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [filterByDate, setFilterByDate] = useState("today");
-  const [selectOrderTab, setSelectOrderTab] = useState("allOrder");
   const [capsicoOrderData, setCapsicoOrderData] = useState([]);
   const [status, setStatus] = useState("all");
+  const params = useParams();
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getAllOrder = () => {
     fetchData(
-      `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
-        status === "all" ? "" : status
-      }`
+      `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&restaurantId=${
+        params?.restaurantId
+      }&status=${status === "all" ? "" : status}`
     );
   };
 
@@ -125,7 +121,14 @@ const RecentOrders = () => {
               </SelectContent>
             </Select>
           </div>
-          <button className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]">
+          <button
+            onClick={() =>
+              navigate(
+                `/admin/restaurant/${params?.restaurantId}/dashboard/recent-orders`
+              )
+            }
+            className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]"
+          >
             See More
           </button>
         </div>
@@ -174,11 +177,12 @@ const RecentOrders = () => {
                   getAllOrder={getAllOrder}
                 />
               ))}
-
           </TableBody>
         </Table>
-            {isLoading && <Spinner />}
-            {capsicoOrderData.length === 0 && !isLoading && <DataNotFound name="Orders" />}
+        {isLoading && <Spinner />}
+        {capsicoOrderData.length === 0 && !isLoading && (
+          <DataNotFound name="Orders" />
+        )}
         {/* <ReactPagination setPage={setPage} totalPage={totalPage} /> */}
       </div>
     </div>

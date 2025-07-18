@@ -1,18 +1,8 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import ReactPagination from "@/components/pagination/ReactPagination";
 import RecentOrders from "@/components/restaurant/RecentOrders";
 import RecentReviews from "@/components/restaurant/RecentReviews";
 import { SalesChart } from "@/components/restaurant/SalesChart";
 import SalesChart2 from "@/components/restaurant/SalesChart2";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -24,7 +14,6 @@ import {
 import { useState } from "react";
 import { BiCheckShield } from "react-icons/bi";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
-import { MdKeyboardArrowLeft } from "react-icons/md";
 import { PiShoppingCartSimple } from "react-icons/pi";
 import { RiQrScan2Line } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";

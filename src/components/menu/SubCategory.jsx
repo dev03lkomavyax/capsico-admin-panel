@@ -44,14 +44,21 @@ const SubCategory = ({
 
   return (
     <div
-      onClick={() => handleSubcategoryClick(subcategory?.id)}
-      key={subcategory.id}
       className={cn(
-        "w-full group cursor-pointer flex items-center justify-between pl-9 pr-5 py-4 border-b-2 group hover:bg-[#F7FAFF]",
+        "w-full group flex items-center justify-between pl-9 pr-5 py-4 border-b-2 group hover:bg-[#F7FAFF]",
         categoryId === subcategory?.id && "bg-[#e6edfb]"
       )}
     >
-      <h3 className="seven-color class-base1">
+      <h3
+        onClick={() =>
+          handleSubcategoryClick(subcategory?.id, subcategory?.isActive)
+        }
+        className={cn(
+          "text-[#000000] font-medium font-inter",
+          !subcategory?.isActive && "opacity-50",
+          subcategory?.isActive && "hover:text-blue-600 cursor-pointer"
+        )}
+      >
         {subcategory.name} ({subcategory?.itemCount})
       </h3>
 

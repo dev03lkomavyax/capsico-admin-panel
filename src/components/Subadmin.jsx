@@ -38,12 +38,10 @@ const Subadmin = ({ subadmin, getAllSubadmins }) => {
     <>
       <TableRow>
         <TableCell className="w-10">
-          {
-            <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
-          }
+          <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
         </TableCell>
-        <TableCell className="text-[#252525] text-sm font-medium font-roboto">
-          {subadmin._id}
+        <TableCell className="text-[#252525] text-sm whitespace-nowrap font-medium font-roboto">
+          {subadmin?.customAdminId || "N/A"}
         </TableCell>
         <TableCell className="text-[#252525] text-sm font-medium font-roboto">
           {subadmin.name}

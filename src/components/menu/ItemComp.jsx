@@ -19,7 +19,7 @@ const ItemComp = ({
   categoryId,
   setCategoryId = () => {},
 }) => {
-  const { name, id, subcategories, itemCount } = category;
+  const { name, id, subcategories, itemCount, isActive } = category;
 
   const [isOpenb, setIsOpenb] = useState(false);
 
@@ -59,25 +59,35 @@ const ItemComp = ({
   };
 
   const handleClick = () => {
-    setIsOpenb(!isOpenb);
-    setCategoryId(id);
+    if (isActive) {
+      setIsOpenb(!isOpenb);
+      setCategoryId(id);
+    }
   };
 
-  const handleSubcategoryClick = (value) => {
+  const handleSubcategoryClick = (value,isActive) => {
     // setIsOpenb(!isOpenb);
-    setCategoryId(value);
+    if(isActive){
+      setCategoryId(value);
+    }
   };
 
   return (
     <div>
       {/* #F2F4F7 */}
       <div
-        onClick={handleClick}
-        className={`w-full flex items-center hover:bg-[#e6edfb] justify-between border-b-2 p-5 py-3 group cursor-pointer ${
+        className={`w-full flex items-center hover:bg-[#e6edfb] disabled:bg-gray-300 justify-between border-b-2 p-5 py-3 group ${
           categoryId === category?.id && "bg-[#e6edfb]"
         }`}
       >
-        <h3 className="text-[#000000] font-medium font-inter">
+        <h3
+          onClick={handleClick}
+          className={cn(
+            "text-[#000000] font-medium font-inter",
+            !isActive && "opacity-50",
+            isActive && "hover:text-blue-600 cursor-pointer"
+          )}
+        >
           {name} ({itemCount})
         </h3>
         <div className="flex items-center gap-8">
@@ -92,6 +102,7 @@ const ItemComp = ({
             />
           </div>
           <IoIosArrowDown
+            onClick={() => setIsOpenb(!isOpenb)}
             className={`seven-color text-xl cursor-pointer transform transition-transform duration-200 ${
               isOpenb && "rotate-180 duration-200"
             }`}

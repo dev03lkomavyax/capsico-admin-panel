@@ -153,7 +153,7 @@ const CreateCouponModal = ({
       maxUsagePerUser: data.maxUsesPerUser,
       usageFrequency: data.usageFrequency,
     };
-    addCoupon(`/admin/add-coupon`, apiData);
+    addCoupon(`/admin/create-coupon`, apiData);
   };
   
   useEffect(() => {
