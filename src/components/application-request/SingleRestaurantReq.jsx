@@ -54,8 +54,8 @@ const SingleRestaurantReq = ({ req, getRestaurantRequests }) => {
             <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
           }
         </TableCell>
-        <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-          {req?._id}
+        <TableCell className="text-[#1D1929] text-xs whitespace-nowrap font-normal font-sans">
+          {req?.customRestaurantId || "N/A"}
         </TableCell>
         <TableCell className="text-[#1D1929] text-xs font-bold capitalize font-sans">
           {req?.name}

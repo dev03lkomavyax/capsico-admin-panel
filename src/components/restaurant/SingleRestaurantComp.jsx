@@ -39,12 +39,10 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
       <>
         <TableRow>
           <TableCell className="w-10">
-            {
               <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
-            }
           </TableCell>
-          <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
-            {data?.id}
+          <TableCell className="text-[#1D1929] text-xs whitespace-nowrap font-normal font-sans">
+            {data?.customRestaurantId || "N/A"}
           </TableCell>
           <TableCell className="text-[#1D1929] text-xs font-bold font-sans w-60">
             {data?.name}
