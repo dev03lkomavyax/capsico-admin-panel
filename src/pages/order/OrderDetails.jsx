@@ -3,41 +3,16 @@ import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import History from "@/components/order-details/History";
 import OrderItem from "@/components/order-details/OrderItem";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { viewDbImagePreview } from "@/lib/utils";
 import { OrderSchema } from "@/schema/OrderSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaMinus, FaPlus, FaStar } from "react-icons/fa6";
-import { FiPhone } from "react-icons/fi";
-import { GrLocation } from "react-icons/gr";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
+import { FaMinus, FaPlus } from "react-icons/fa6";
+import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import { format } from "date-fns";
-import { viewDbImagePreview } from "@/lib/utils";
+import AssignDeliveryPartnerModal from "./AssignDeliveryPartnerModal";
 
 const libraries = ["places", "marker"];
 
@@ -46,33 +21,8 @@ const libraries = ["places", "marker"];
 // const status = "New order";
 const status = "Cancelled";
 
-const capsico = true;
-// const capsico = false;
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 const OrderDetails = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const containerStyle = {
     width: "100%",
     height: "280px",
@@ -139,24 +89,38 @@ const OrderDetails = () => {
               Orders/Order Details
             </span>
           </div>
-          <Button
-            className={`${
-              orderDetailsData?.status === "delivered"
-                ? "text-[#167316] bg-[#CEFFCA]"
-                : orderDetailsData?.status === "preparing" ||
-                  orderDetailsData?.status === "pending"
-                ? "text-[#787A23] bg-[#F7FFCA]"
-                : orderDetailsData?.status === "cancelled"
-                ? "text-[#BF1010] bg-[#FFE7E7]"
-                : "text-[#6223B5] bg-[#E1CAFF]"
-            } h-[54px] capitalize w-auto px-3 text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}
-          >
-            {orderDetailsData?.status}
-          </Button>
+          {isModalOpen && (
+            <AssignDeliveryPartnerModal
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              getDetails={getOrderDetails}
+            />
+          )}
+          <div className="flex gap-3">
+            {orderDetailsData?.status === "confirmed" && (
+              <Button onClick={() => setIsModalOpen(true)} className="px-3">
+                Assign Delivery Partner
+              </Button>
+            )}
+            <Button
+              className={`${
+                orderDetailsData?.status === "delivered"
+                  ? "text-[#167316] bg-[#CEFFCA]"
+                  : orderDetailsData?.status === "preparing" ||
+                    orderDetailsData?.status === "pending"
+                  ? "text-[#787A23] bg-[#F7FFCA]"
+                  : orderDetailsData?.status === "cancelled"
+                  ? "text-[#BF1010] bg-[#FFE7E7]"
+                  : "text-[#6223B5] bg-[#E1CAFF]"
+              } h-[54px] capitalize w-auto px-3 text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}
+            >
+              {orderDetailsData?.status}
+            </Button>
+          </div>
         </div>
 
         {/* h-[calc(100vh-56px)] */}
-        <div className="grid grid-cols-[26%_71%] gap-[3%] mt-5 h-screen">
+        <div className="grid grid-cols-[26%_71%] gap-[3%] mt-5">
           <div className="rounded-lg bg-white px-4 py-10">
             <div className="flex justify-center flex-col items-center">
               <img
@@ -220,7 +184,7 @@ const OrderDetails = () => {
             <div className="rounded-lg bg-white p-4 px-6 flex justify-between items-center">
               <div>
                 <span className="text-sm font-roboto">
-                  {capsico ? "Restaurant Details" : "Vendor Details"}
+                  {true ? "Restaurant Details" : "Vendor Details"}
                 </span>
                 <h2 className="font-inter text-xl capitalize font-medium mt-3">
                   {orderDetailsData?.restaurantId?.name}
@@ -234,6 +198,11 @@ const OrderDetails = () => {
               </div>
               <div>
                 <Button
+                  onClick={() =>
+                    navigate(
+                      `/admin/restaurant/${orderDetailsData?.restaurantId?._id}/dashboard`
+                    )
+                  }
                   variant="ghost"
                   className="text-xl font-inter font-semibold hover:bg-transparent text-[#003CFF] hover:text-[#003CFF]"
                 >
@@ -241,6 +210,37 @@ const OrderDetails = () => {
                 </Button>
               </div>
             </div>
+            {orderDetailsData?.deliveryPartner && (
+              <div className="rounded-lg bg-white p-4 px-6 mt-5 flex justify-between items-center">
+                <div>
+                  <span className="text-sm font-roboto">
+                    Delivery Partner Details
+                  </span>
+                  <h2 className="font-inter text-xl capitalize font-medium mt-3">
+                    {
+                      orderDetailsData?.deliveryPartner?.partnerId?.personalInfo
+                        ?.name
+                    }
+                  </h2>
+                  <span className="font-inter text-[#565656]">
+                    {
+                      orderDetailsData?.deliveryPartner?.partnerId?.address
+                        ?.street
+                    }
+                    ,{" "}
+                    {
+                      orderDetailsData?.deliveryPartner?.partnerId?.address
+                        ?.city
+                    }
+                    , {orderDetailsData?.deliveryPartner?.partnerId?.address.state},{" "}
+                    {
+                      orderDetailsData?.deliveryPartner?.partnerId?.address
+                        ?.pincode
+                    }
+                  </span>
+                </div>
+              </div>
+            )}
             <div className="rounded-lg bg-white mt-5 p-4 px-6">
               <div className="grid grid-cols-3 gap-3">
                 <h2 className="font-inter text-sm font-medium">Items</h2>
@@ -269,7 +269,7 @@ const OrderDetails = () => {
                 </h3>
                 <div></div>
                 <h3 className="font-roboto text-[#515151] font-medium text-right">
-                  ₹{orderDetailsData?.amounts?.couponDiscount}
+                  ₹{orderDetailsData?.amounts?.couponDiscount || 0}
                 </h3>
               </div>
               <div className="grid grid-cols-3 gap-3 mt-3 border-t-2 border-dashed pt-3">

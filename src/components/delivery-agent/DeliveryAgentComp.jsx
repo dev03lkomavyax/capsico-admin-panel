@@ -52,7 +52,7 @@ const DeliveryAgentComp = ({ agent, getAllDeliveryAgent }) => {
           <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
         </TableCell>
         <TableCell className="text-[#1D1929] text-xs whitespace-nowrap font-normal font-sans">
-          {agent?.customDeliveryPartnerId || "N/A"}
+          {agent?.partnerId || "N/A"}
         </TableCell>
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
           {agent?.personalInfo?.name}
