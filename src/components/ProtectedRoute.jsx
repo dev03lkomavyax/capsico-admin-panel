@@ -1,13 +1,11 @@
 import { SocketProvider } from "@/socket";
 import { readCookie } from "@/utils/readCookie";
-import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const isAuthenticated = JSON.parse(
-    localStorage.getItem("admin-status") || "false"
-  );
+  const adminStatus = readCookie("admin-status");
+  const isAuthenticated = JSON.parse(JSON.stringify(adminStatus) || "false");
 
   const [isReturn, setIsReturn] = useState(true);
   const userInfo = readCookie("userInfo");
@@ -54,7 +52,15 @@ const ProtectedRoute = () => {
     } else {
       if (isAuthenticated) navigate(-1); // Only navigate back if the user is logged in but unauthorized
     }
-  }, [pathname, userInfo,foundValue,value,isAuthenticated,navigate,permissions]);
+  }, [
+    pathname,
+    userInfo,
+    foundValue,
+    value,
+    isAuthenticated,
+    navigate,
+    permissions,
+  ]);
 
   return (
     <SocketProvider>
