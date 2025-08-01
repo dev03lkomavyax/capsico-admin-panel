@@ -29,7 +29,7 @@ const Capsico = ({ setCapsicoCustomers }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
-  const [filterByDate, setFilterByDate] = useState("today");
+  const [filterByDate, setFilterByDate] = useState("all");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 

@@ -160,6 +160,7 @@ const RestaurantDashborad = () => {
             </button>
           </div>
         </div>
+        <RecentOrders />
         <div className="flex justify-between items-center gap-6 w-full mb-8">
           <button
             onClick={() => navigate("/admin/restaurant/revenue")}
@@ -354,7 +355,7 @@ const RestaurantDashborad = () => {
             <RecentReviews />
           </div>
         </div>
-       <RecentOrders />
+       
       </section>
     </AdminWrapper>
   );

@@ -86,6 +86,14 @@ const SubAdminList = () => {
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                                     Mobile Number
                                 </TableHead>
+                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                 CityName
+                                </TableHead>
+
+                                    <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                                  Status
+                                </TableHead>
+
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                                     Action
                                 </TableHead>

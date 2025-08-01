@@ -6,8 +6,8 @@ const AdminSidebar = () => {
   const { pathname } = useLocation();
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
-  console.log("permissions", permissions);
-  console.log("userInfo", userInfo);
+  // console.log("permissions", permissions);
+  // console.log("userInfo", userInfo);
 
   const perm = {
     dashboard: "dashboard",

@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 const Header = () => {
   const userInfo = readCookie("userInfo");
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
   const navigate = useNavigate();
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);

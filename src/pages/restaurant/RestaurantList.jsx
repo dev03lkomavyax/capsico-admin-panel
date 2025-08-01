@@ -23,7 +23,7 @@ const RestaurantList = () => {
     const [totalPage, setTotalPage] = useState(1)
     const [page, setPage] = useState(1)
     const [status, setStatus] = useState("all")
-    const [filterByDate, setFilterByDate] = useState("today")
+    const [filterByDate, setFilterByDate] = useState("all")
 
     const navigate = useNavigate()
 

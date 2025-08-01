@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
   const { pathname } = useLocation();
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   const perm = {
     dashboard: "dashboard",
@@ -29,8 +29,8 @@ const ProtectedRoute = () => {
   const value = pathname.split("/admin/").join("").split("/")[0];
   const navigate = useNavigate();
   let foundValue = perm[value];
-  console.log("value", value);
-  console.log("foundValue", foundValue);
+  // console.log("value", value);
+  // console.log("foundValue", foundValue);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;

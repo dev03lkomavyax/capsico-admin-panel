@@ -23,6 +23,7 @@ const AddSubAdmin = () => {
             phoneNumber: '',
             email: '',
             password: '',
+            cityName:'',
             permissions: {
                 dashboard: "none",
                 subAdmin: "none",
@@ -54,6 +55,7 @@ const AddSubAdmin = () => {
             name: data.name,
             phone: Number(data.phoneNumber),
             email: data.email,
+            cityName:data.cityName,
             password: data.password,
             permissions: data.permissions,
         }
@@ -150,7 +152,7 @@ const AddSubAdmin = () => {
                                     </FormItem>
                                 )}
                             />
-
+                            
                             <FormField
                                 control={control}
                                 name="password"
@@ -159,12 +161,26 @@ const AddSubAdmin = () => {
                                         <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>Password</FormLabel>
                                         <FormControl>
                                             <div className="relative">
-                                                <Input type={isShowPassword ? "text" : "password"} placeholder="*************" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
+                                                <Input type={isShowPassword ? "text" : "password"} placeholder="*************" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg `} {...field} />
                                                 {isShowPassword ?
                                                     <FaEyeSlash onClick={() => setIsShowPassword(false)} className='absolute text-gray-600 right-3 bottom-3 cursor-pointer text-lg' />
                                                     : <FaEye onClick={() => setIsShowPassword(true)} className='absolute text-gray-600 right-3 bottom-3 cursor-pointer text-lg' />
+                                               
                                                 }
                                             </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                                      <FormField
+                                control={control}
+                                name="cityName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>CityName</FormLabel>
+                                        <FormControl>
+                                            <Input type="text" placeholder="CityName" className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`} {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
