@@ -1,6 +1,8 @@
 import { readCookie } from "@/utils/readCookie";
 import { Link, useLocation } from "react-router-dom";
 import "./sidebar.css";
+import { MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const AdminSidebar = () => {
   const { pathname } = useLocation();
@@ -272,6 +274,33 @@ const AdminSidebar = () => {
               }`}
             >
               Delivery Agent
+            </span>
+          </Link>
+        )}
+        {permissions && permissions[perm["delivery-agent"]] !== "none" && (
+          <Link
+            to="/admin/delivery-charges"
+            className={`flex items-center gap-3 px-4 py-3 ${
+              pathname.includes("/admin/delivery-charges")
+                ? "bg-[#F1F6FF]"
+                : "bg-[#FFFFFF]"
+            }`}
+          >
+            <MapPin
+              className={cn(
+                "size-4 text-[#4A4A4A]",
+                pathname.includes("/admin/delivery-charges") && "text-[#397FFE]"
+              )}
+            />
+
+            <span
+              className={`text-lg font-normal font-sans group-hover:inline ${
+                pathname.includes("/admin/delivery-charges")
+                  ? "text-[#397FFE]"
+                  : "text-[#4A4A4A]"
+              }`}
+            >
+              Delivery Charges
             </span>
           </Link>
         )}

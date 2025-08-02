@@ -1,104 +1,131 @@
-import { lazy, Suspense, useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { lazy, Suspense, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import './App.css';
-import Fallback from './components/Fallback';
-import BackdropLoader from './components/loader/BackdropLoader';
-import ProtectedRoute from './components/ProtectedRoute';
-import useGetApiReq from './hooks/useGetApiReq';
-import usePostApiReq from './hooks/usePostApiReq';
-import { readCookie } from './utils/readCookie';
-import RecentOrders from './pages/restaurant/RecentOrders';
+import "./App.css";
+import Fallback from "./components/Fallback";
+import BackdropLoader from "./components/loader/BackdropLoader";
+import ProtectedRoute from "./components/ProtectedRoute";
+import useGetApiReq from "./hooks/useGetApiReq";
+import usePostApiReq from "./hooks/usePostApiReq";
+import { readCookie } from "./utils/readCookie";
+import RecentOrders from "./pages/restaurant/RecentOrders";
+import Cookies from "js-cookie";
 
-const NotFound = lazy(() => import('./pages/NotFound'));
-const Order = lazy(() => import('./pages/order/Order'));
-const OrderDetails = lazy(() => import('./pages/order/OrderDetails'));
-const Login = lazy(() => import('./pages/Login'))
-const Reviews = lazy(() => import('./pages/reviews/Reviews'))
-const StatusList = lazy(() => import('./components/order/StatusList'))
-const NewOrder = lazy(() => import('./pages/order/NewOrder'))
+const NotFound = lazy(() => import("./pages/NotFound"));
+const DeliveryCharges = lazy(() => import("./pages/delivery-charges/DeliveryCharges"));
+const Order = lazy(() => import("./pages/order/Order"));
+const OrderDetails = lazy(() => import("./pages/order/OrderDetails"));
+const Login = lazy(() => import("./pages/Login"));
+const Reviews = lazy(() => import("./pages/reviews/Reviews"));
+const StatusList = lazy(() => import("./components/order/StatusList"));
+const NewOrder = lazy(() => import("./pages/order/NewOrder"));
 // const Restaurant = lazy(()=> import('./pages/restaurant/Restaurant'))
-const RestaurantList = lazy(() => import('./pages/restaurant/RestaurantList'))
-const RestaurantDashborad = lazy(() => import('./pages/restaurant/RestaurantDashboard'))
+const RestaurantList = lazy(() => import("./pages/restaurant/RestaurantList"));
+const RestaurantDashborad = lazy(() =>
+  import("./pages/restaurant/RestaurantDashboard")
+);
 // const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
-const AddMenu = lazy(() => import('./pages/restaurant/menu/AddMenu'));
-const Review = lazy(() => import('./pages/restaurant/Reviews'));
-const Revenue = lazy(() => import('./pages/revenue/Revenue'));
-const CustomerList = lazy(() => import('./pages/customer/CustomerList'));
-const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
-const RestaurantEditProfile = lazy(() => import('./pages/restaurant/RestaurantEditProfile'))
-const RestaurantMenu = lazy(() => import('./pages/restaurant/menu/RestaurantMenu'))
-const VendorList = lazy(() => import('./pages/vendor/VendorList'))
-const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard'))
-const VendorReviews = lazy(() => import('./pages/vendor/VendorReviews'))
-const VendorRevenue = lazy(() => import('./pages/vendor/VendorRevenue'))
-const VendorEditProfile = lazy(() => import('./pages/vendor/VendorEditProfile'))
-const VendorProducts = lazy(() => import('./pages/vendor/VendorProducts'))
-const DeliveryAgent = lazy(() => import('./pages/delivery-agent/DeliveryAgent'))
-const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryAgentDetails'))
-const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
-const AvailableBalanceDetails = lazy(() => import('./pages/delivery-agent/AvailableBalanceDetails'))
-const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
-const SubAdminList = lazy(() => import('./pages/admin/SubAdminList'))
-const AddSubAdmin = lazy(() => import('./pages/admin/AddSubAdmin'))
-const EditSubAdmin = lazy(() => import('./pages/admin/EditSubAdmin'))
-const AdminDashBoard = lazy(() => import('./pages/admin/AdminDashBoard'))
-const SalesReport = lazy(() => import('./pages/admin/SalesReport'))
-const UpdateAdminProfile = lazy(() => import('./pages/admin/UpdateAdminProfile'))
-const Offers = lazy(() => import('./pages/offers/Offers'))
-const CreateOfferPage = lazy(() => import('./pages/offers/CreateOfferPage'))
-const ApplicationRequest = lazy(() => import('./pages/application-request/ApplicationRequest'))
-const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaurant'))
+const AddMenu = lazy(() => import("./pages/restaurant/menu/AddMenu"));
+const Review = lazy(() => import("./pages/restaurant/Reviews"));
+const Revenue = lazy(() => import("./pages/revenue/Revenue"));
+const CustomerList = lazy(() => import("./pages/customer/CustomerList"));
+const CustomerDetails = lazy(() => import("./pages/customer/CustomerDetails"));
+const RestaurantEditProfile = lazy(() =>
+  import("./pages/restaurant/RestaurantEditProfile")
+);
+const RestaurantMenu = lazy(() =>
+  import("./pages/restaurant/menu/RestaurantMenu")
+);
+const VendorList = lazy(() => import("./pages/vendor/VendorList"));
+const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
+const VendorReviews = lazy(() => import("./pages/vendor/VendorReviews"));
+const VendorRevenue = lazy(() => import("./pages/vendor/VendorRevenue"));
+const VendorEditProfile = lazy(() =>
+  import("./pages/vendor/VendorEditProfile")
+);
+const VendorProducts = lazy(() => import("./pages/vendor/VendorProducts"));
+const DeliveryAgent = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgent")
+);
+const DeliveryAgentDetails = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgentDetails")
+);
+const DeliveryAgentProfileEdit = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgentProfileEdit")
+);
+const AvailableBalanceDetails = lazy(() =>
+  import("./pages/delivery-agent/AvailableBalanceDetails")
+);
+const ReviewsDetails = lazy(() => import("./pages/reviews/ReviewsDetails"));
+const SubAdminList = lazy(() => import("./pages/admin/SubAdminList"));
+const AddSubAdmin = lazy(() => import("./pages/admin/AddSubAdmin"));
+const EditSubAdmin = lazy(() => import("./pages/admin/EditSubAdmin"));
+const AdminDashBoard = lazy(() => import("./pages/admin/AdminDashBoard"));
+const SalesReport = lazy(() => import("./pages/admin/SalesReport"));
+const UpdateAdminProfile = lazy(() =>
+  import("./pages/admin/UpdateAdminProfile")
+);
+const Offers = lazy(() => import("./pages/offers/Offers"));
+const CreateOfferPage = lazy(() => import("./pages/offers/CreateOfferPage"));
+const ApplicationRequest = lazy(() =>
+  import("./pages/application-request/ApplicationRequest")
+);
+const AddRestaurant = lazy(() =>
+  import("./pages/application-request/AddRestaurant")
+);
 
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
   const { res, fetchData } = useGetApiReq();
-  const { res: refreshRes, fetchData: fetchRefreshData, } = usePostApiReq();
-  const { res: logoutRes, fetchData: fetchLogoutData, } = usePostApiReq();
+  const { res: refreshRes, fetchData: fetchRefreshData } = usePostApiReq();
+  const { res: logoutRes, fetchData: fetchLogoutData } = usePostApiReq();
   const navigate = useNavigate();
 
   const getStatus = () => {
     fetchData("/admin/status");
-  }
+  };
 
   const token = readCookie("userInfo");
   console.log("token", token);
 
   const refreshToken = () => {
     fetchRefreshData("/admin/refresh-token");
-  }
+  };
 
   const logout = () => {
-    fetchLogoutData("/admin/logout-all", { phone: token?.phone, role: "admin" });
-  }
+    fetchLogoutData("/admin/logout-all", {
+      phone: token?.phone,
+      role: "admin",
+    });
+  };
 
   useEffect(() => {
     getStatus();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-      localStorage.setItem("admin-status", `${res?.data?.isAuthenticated}`);
+      Cookies.set("admin-status", `${res?.data?.isAuthenticated}`);
       console.log("status response", res);
       res?.data?.shouldLoggOut && logout();
       !res?.data?.isAuthenticated && refreshToken();
     }
-  }, [res])
-
+  }, [res]);
 
   useEffect(() => {
     if (refreshRes?.status === 200 || refreshRes?.status === 201) {
-      localStorage.setItem("admin-status", true);
+      Cookies.set("admin-status", true);
     }
-  }, [refreshRes])
+  }, [refreshRes]);
 
   useEffect(() => {
     if (logoutRes?.status === 200 || logoutRes?.status === 201) {
-      localStorage.setItem("admin-status", "false");
-      navigate("/")
+       Cookies.set("admin-status", "false");
+       Cookies.remove("userInfo");
+      navigate("/");
     }
-  }, [logoutRes])
+  }, [logoutRes]);
 
   return (
     <>
@@ -227,6 +254,7 @@ function App() {
               path="/admin/application-request/add-restaurant"
               element={<AddRestaurant />}
             />
+            <Route path="/admin/delivery-charges" element={<DeliveryCharges />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
@@ -238,4 +266,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
