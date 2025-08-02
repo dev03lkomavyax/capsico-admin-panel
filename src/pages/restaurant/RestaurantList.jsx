@@ -124,7 +124,7 @@ const RestaurantList = () => {
                                 <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
                                 <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Total Sale</TableHead>
                                 <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Last sale</TableHead>
-                                <TableHead className="w-20 text-[#ABABAB] text-xs font-normal font-roboto">Status</TableHead>
+                                <TableHead className="w-20 text-[#ABABAB] text-xs font-normal font-roboto">Account Status</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>
                             </TableRow>
                         </TableHeader>

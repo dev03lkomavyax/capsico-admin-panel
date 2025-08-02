@@ -103,20 +103,20 @@ const EditSubAdmin = () => {
   }, [res]);
 
   // NEW: Toggle handler function
-  const handleToggle = async () => {
-    const newStatus = !toggleStatus;
-    setToggleStatus(newStatus);
+  // const handleToggle = async () => {
+  //   const newStatus = !toggleStatus;
+  //   setToggleStatus(newStatus);
     
-    try {
-      await toggleStatusAPI(`/admin/toggle-status/${state?.subadminId}`);
-      // Refresh the details after successful toggle
-      getSubadminDetails();
-    } catch (error) {
-      // Revert status on error
-      setToggleStatus(!newStatus);
-      console.error('Toggle failed:', error);
-    }
-  };
+  //   try {
+  //     await toggleStatusAPI(`/admin/toggle-status/${state?.subadminId}`);
+  //     // Refresh the details after successful toggle
+  //     getSubadminDetails();
+  //   } catch (error) {
+  //     // Revert status on error
+  //     setToggleStatus(!newStatus);
+  //     console.error('Toggle failed:', error);
+  //   }
+  // };
 
   // NEW: Effect to handle toggle response
   useEffect(() => {
@@ -169,7 +169,7 @@ const EditSubAdmin = () => {
                   <span className={`text-sm font-medium ${toggleStatus ? 'text-green-600' : 'text-gray-500'}`}>
                     {toggleStatus ? 'Active' : 'Inactive'}
                   </span>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={handleToggle}
                     disabled={isToggling}
@@ -180,9 +180,9 @@ const EditSubAdmin = () => {
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                         toggleStatus ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
+                      }`} */}
+                    {/* /> */}
+                  {/* </button> */}
                 </div>
               </div>
 
