@@ -50,6 +50,8 @@ const Offers = lazy(() => import('./pages/offers/Offers'))
 const CreateOfferPage = lazy(() => import('./pages/offers/CreateOfferPage'))
 const ApplicationRequest = lazy(() => import('./pages/application-request/ApplicationRequest'))
 const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaurant'))
+const AvailableCitiesList= lazy(() => import('./pages/admin/AvailableCities/availableCities'));
+const CityFormPage = lazy(() => import('./pages/admin/AvailableCities/availableCityForm'));
 
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
@@ -228,6 +230,9 @@ function App() {
               element={<AddRestaurant />}
             />
           </Route>
+          <Route path="/admin/available-cities" element={<AvailableCitiesList />} />
+     <Route path="/admin/available-cities/create" element={<CityFormPage />} />
+  <Route path="/admin/available-cities/:id" element={<CityFormPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

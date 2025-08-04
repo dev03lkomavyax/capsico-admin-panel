@@ -13,6 +13,7 @@ const AdminSidebar = () => {
     dashboard: "dashboard",
     "sub-admin": "subAdmin",
     customer: "customer",
+   availableCities: "availableCities",
     restaurant: "restaurant",
     vendor: "vendor",
     "delivery-agent": "deliveryAgent",
@@ -144,6 +145,101 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
+
+
+         {/* {permissions && permissions[perm["availabeCities"]] !== "none" && (
+          <Link
+            to={`/admin/customer`}
+            className={`flex items-center gap-3 px-4 py-3 ${
+              pathname.includes("/admin/availabeCities")
+                ? "bg-[#F1F6FF]"
+                : "bg-[#FFFFFF]"
+            }`}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                stroke={`${
+                  pathname.includes("/admin/availabeCities") ? "#397FFE" : "#4A4A4A"
+                }`}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
+                stroke={`${
+                  pathname.includes("/admin/availabeCities") ? "#397FFE" : "#4A4A4A"
+                }`}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span
+              className={`text-lg font-normal font-sans group-hover:inline ${
+                pathname.includes("/admin/availabeCities")
+                  ? "text-[#397FFE]"
+                  : "text-[#4A4A4A]"
+              }`}
+            >
+              Available Cities
+            </span>
+          </Link>
+        )} */}
+        {permissions && permissions[perm["availableCities"]] !== "none" && (
+  <Link
+    to="/admin/available-cities"
+    className={`flex items-center gap-3 px-4 py-3 ${
+      pathname.includes("/admin/available-cities")
+        ? "bg-[#F1F6FF]"
+        : "bg-[#FFFFFF]"
+    }`}
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+        stroke={`${
+          pathname.includes("/admin/available-cities") ? "#397FFE" : "#4A4A4A"
+        }`}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
+        stroke={`${
+          pathname.includes("/admin/available-cities") ? "#397FFE" : "#4A4A4A"
+        }`}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+    <span
+      className={`text-lg font-normal font-sans group-hover:inline ${
+        pathname.includes("/admin/available-cities")
+          ? "text-[#397FFE]"
+          : "text-[#4A4A4A]"
+      }`}
+    >
+      Available Cities
+    </span>
+  </Link>
+)}
+
         {permissions && permissions[perm["restaurant"]] !== "none" && (
           <Link
             to={`/admin/restaurant`}

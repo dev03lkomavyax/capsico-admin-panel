@@ -16,7 +16,9 @@ import { BiCheckShield } from "react-icons/bi";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { PiShoppingCartSimple } from "react-icons/pi";
 import { RiQrScan2Line } from "react-icons/ri";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+
 
 const data = [
   {
@@ -129,6 +131,9 @@ const RestaurantDashborad = () => {
 
   const navigate = useNavigate();
   const params = useParams();
+
+  const location = useLocation(); // 
+const isViewMode = location.state?.mode === "view"; 
 
   return (
     <AdminWrapper>
