@@ -4,6 +4,7 @@ import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Spinner from "@/components/Spinner";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import usePostApiReq from "@/hooks/useGetApiReq";
+import { axiosInstance } from "@/utils/axiosInstance";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -18,8 +19,16 @@ const CityFormPage = () => {
   const isAdd = mode === "add" || (!id && !mode);
   const navigate = useNavigate();
 
-  const { res: getRes, fetchData: fetchCity, isLoading: getLoading } = useGetApiReq();
-  const { res: postRes, fetchData: saveCity, isLoading: postLoading } = usePostApiReq();
+  const {
+    res: getRes,
+    fetchData: fetchCity,
+    isLoading: getLoading,
+  } = useGetApiReq();
+  const {
+    res: postRes,
+    fetchData: saveCity,
+    isLoading: postLoading,
+  } = usePostApiReq();
 
   const [fields, setFields] = useState({
     city: "",
@@ -27,7 +36,7 @@ const CityFormPage = () => {
     longitude: "",
     radius: "",
     description: "",
-    status: true
+    status: true,
   });
   const [error, setError] = useState("");
 
@@ -48,7 +57,7 @@ const CityFormPage = () => {
         longitude: getRes.data.longitude || "",
         radius: getRes.data.radius || "",
         description: getRes.data.description || "",
-        status: getRes.data.status !== undefined ? getRes.data.status : true
+        status: getRes.data.status !== undefined ? getRes.data.status : true,
       });
     }
     // For Add mode, clear fields if needed
@@ -59,14 +68,20 @@ const CityFormPage = () => {
         longitude: "",
         radius: "",
         description: "",
-        status: true
+        status: true,
       });
     }
+
+    console.log("getRes - get city", getRes);
+
     // eslint-disable-next-line
   }, [getRes, isEdit, isView, isAdd]);
 
   useEffect(() => {
-    if ((postRes?.status === 200 || postRes?.status === 201) && (isAdd || isEdit)) {
+    if (
+      (postRes?.status === 200 || postRes?.status === 201) &&
+      (isAdd || isEdit)
+    ) {
       navigate("/admin/available-cities");
     } else if (postRes && postRes.status !== 200 && postRes.status !== 201) {
       setError(postRes?.data?.message || "Failed to save city!");
@@ -79,33 +94,63 @@ const CityFormPage = () => {
     setFields({ ...fields, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!fields.city || !fields.latitude || !fields.longitude || !fields.radius || !fields.description) {
+    if (
+      !fields.city ||
+      !fields.latitude ||
+      !fields.longitude ||
+      !fields.radius ||
+      !fields.description
+    ) {
       setError("All fields are required.");
       return;
     }
-    if (isEdit && id) {
-      saveCity(`/availableCities/updateCity/${id}`, {
-        city: fields.city,
-        latitude: parseFloat(fields.latitude),
-        longitude: parseFloat(fields.longitude),
-        radius: parseFloat(fields.radius),
-        description: fields.description,
-        status: fields.status
-      });
-    } else if (isAdd) {
-      saveCity("/availableCities/create", {
-        city: fields.city,
-        latitude: parseFloat(fields.latitude),
-        longitude: parseFloat(fields.longitude),
-        radius: parseFloat(fields.radius),
-        description: fields.description,
-        status: fields.status
-      });
+    try {
+      if (isEdit && id) {
+        // saveCity(`/availableCities/updateCity/${id}`, {
+        //   city: fields.city,
+        //   latitude: parseFloat(fields.latitude),
+        //   longitude: parseFloat(fields.longitude),
+        //   radius: parseFloat(fields.radius),
+        //   description: fields.description,
+        //   status: fields.status,
+        // });
+
+        const { data } = await axiosInstance.post(
+          `/availableCities/updateCity/${id}`,
+          {
+            city: fields.city,
+            latitude: parseFloat(fields.latitude),
+            longitude: parseFloat(fields.longitude),
+            radius: parseFloat(fields.radius),
+            description: fields.description,
+            status: fields.status,
+          },
+          { withCredentials: true }
+        );
+        console.log("create api", data);
+        
+      } else if (isAdd) {
+        const { data } = await axiosInstance.post(
+          "/availableCities/create",
+          {
+            city: fields.city,
+            latitude: parseFloat(fields.latitude),
+            longitude: parseFloat(fields.longitude),
+            radius: parseFloat(fields.radius),
+            description: fields.description,
+            status: fields.status,
+          },
+          { withCredentials: true }
+        );
+
+        console.log("create api", data);
+      }
+    } catch (error) {
+      console.log("create api error", error);
     }
   }
-
 
   // Show Spinner while fetching data for edit/view
   if ((isEdit || isView) && getLoading) {
@@ -202,8 +247,9 @@ const CityFormPage = () => {
                 type="checkbox"
                 checked={fields.status}
                 disabled={isView}
-                onChange={e => {
-                  if (!isView) setFields({ ...fields, status: e.target.checked });
+                onChange={(e) => {
+                  if (!isView)
+                    setFields({ ...fields, status: e.target.checked });
                 }}
               />{" "}
               {fields.status ? "Active" : "Inactive"}
@@ -214,7 +260,13 @@ const CityFormPage = () => {
                 className="bg-teal-500 text-white rounded px-4 py-2 mt-2 hover:bg-teal-600 disabled:opacity-75"
                 disabled={postLoading}
               >
-                {postLoading ? <Spinner size={16} /> : (isEdit ? "Update" : "Submit")}
+                {postLoading ? (
+                  <Spinner size={16} />
+                ) : isEdit ? (
+                  "Update"
+                ) : (
+                  "Submit"
+                )}
               </button>
             )}
             {(getLoading || postLoading) && <Spinner />}
