@@ -471,8 +471,6 @@
 // // };
 
 // // export default AvailableCitiesList;
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
@@ -512,6 +510,8 @@ const AvailableCitiesList = () => {
   const [cityList, setCityList] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
+  const [deletingIds, setDeletingIds] = useState(new Set());
+  const [togglingIds, setTogglingIds] = useState(new Set());
   const navigate = useNavigate();
 
   const getAllCities = () => {
@@ -535,20 +535,82 @@ const AvailableCitiesList = () => {
   function handleView(city) {
     navigate(`/admin/available-cities/${city._id}?mode=view`);
   }
+
   function handleEdit(city) {
     navigate(`/admin/available-cities/${city._id}?mode=edit`);
   }
-  function handleDelete(city) {
-    if (window.confirm(`Delete city "${city.city}"?`)) {
-      alert("Deleted (mock)");
-      // Implement DELETE API logic if needed
+
+  async function handleDelete(city) {
+    if (!window.confirm(`Are you sure you want to delete "${city.city}"?`)) {
+      return;
+    }
+
+    setDeletingIds(prev => new Set(prev).add(city._id));
+
+    try {
+      const response = await axiosInstance.delete(
+        `/availableCities/deleteCity/${city._id}`,
+        { withCredentials: true }
+      );
+      
+      console.log("Delete successful:", response.data);
+      toast.success(`City "${city.city}" deleted successfully!`);
+      
+      // Refresh the list
+      getAllCities();
+      
+    } catch (error) {
+      console.error("Delete error:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to delete city. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setDeletingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(city._id);
+        return newSet;
+      });
     }
   }
-  function handleStatusToggle(city) {
-    alert(
-      `Status for "${city.city}" would be toggled. Current: ${city.status ? "Active" : "Inactive"}`
-    );
-    // Implement status toggle API call here if needed
+
+  async function handleStatusToggle(city) {
+    setTogglingIds(prev => new Set(prev).add(city._id));
+
+    try {
+      const response = await axiosInstance.post(
+        `/availableCities/updateCity/${city._id}`,
+        {
+          ...city,
+          status: !city.status
+        },
+        { withCredentials: true }
+      );
+      
+      console.log("Status toggle successful:", response.data);
+      const newStatus = !city.status;
+      toast.success(`City "${city.city}" status changed to ${newStatus ? 'Active' : 'Inactive'}!`);
+      
+      // Update the city in the list
+      setCityList(prevList => 
+        prevList.map(c => 
+          c._id === city._id ? { ...c, status: newStatus } : c
+        )
+      );
+      
+    } catch (error) {
+      console.error("Status toggle error:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to update status. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setTogglingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(city._id);
+        return newSet;
+      });
+    }
   }
 
   return (
@@ -575,7 +637,8 @@ const AvailableCitiesList = () => {
                 <TableHead>Longitude</TableHead>
                 <TableHead>Radius</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Created Date</TableHead>
+                <TableHead>Updated Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
@@ -589,14 +652,21 @@ const AvailableCitiesList = () => {
                     <TableCell>{city.latitude ?? "-"}</TableCell>
                     <TableCell>{city.longitude ?? "-"}</TableCell>
                     <TableCell>{city.radius ?? "-"}</TableCell>
-                    <TableCell>{city.description ?? "-"}</TableCell>
+                    <TableCell>
+                      <div className="max-w-xs truncate" title={city.description}>
+                        {city.description ?? "-"}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       {city.createdAt ? formatDate(city.createdAt) : "-"}
                     </TableCell>
                     <TableCell>
+                      {city.updatedAt ? formatDate(city.updatedAt) : "-"}
+                    </TableCell>
+                    <TableCell>
                       <StatusToggleButton
                         active={city.status === true || city.status === 1}
-                        loading={false}
+                        loading={togglingIds.has(city._id)}
                         onClick={() => handleStatusToggle(city)}
                         activeLabel="Active"
                         inactiveLabel="Inactive"
@@ -608,7 +678,7 @@ const AvailableCitiesList = () => {
                         onEdit={() => handleEdit(city)}
                         onDelete={() => handleDelete(city)}
                         permissions={{ view: true, edit: true, delete: true }}
-                        isDeleting={false}
+                        isDeleting={deletingIds.has(city._id)}
                       />
                     </TableCell>
                   </TableRow>
@@ -627,6 +697,162 @@ const AvailableCitiesList = () => {
 };
 
 export default AvailableCitiesList;
+
+
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+// import Spinner from "@/components/Spinner";
+// import DataNotFound from "@/components/DataNotFound";
+// import ReactPagination from "@/components/pagination/ReactPagination";
+// import {
+//   Table,
+//   TableBody,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+//   TableCell
+// } from "@/components/ui/Table";
+// import { LIMIT } from "@/constants/constants";
+// import useGetApiReq from "@/hooks/useGetApiReq";
+// import RowActions from "@/components/ui/actionsIcons";
+// import StatusToggleButton from "@/components/ui/statusButton";
+
+// function formatDate(dateStr) {
+//   if (!dateStr) return '-';
+//   const d = new Date(dateStr);
+//   const pad = n => n.toString().padStart(2, '0');
+//   return [
+//     d.getFullYear(),
+//     pad(d.getMonth() + 1),
+//     pad(d.getDate())
+//   ].join('-') + ' ' + [
+//     pad(d.getHours()),
+//     pad(d.getMinutes()),
+//     pad(d.getSeconds())
+//   ].join(':');
+// }
+
+// const AvailableCitiesList = () => {
+//   const { res, fetchData, isLoading } = useGetApiReq();
+//   const [cityList, setCityList] = useState([]);
+//   const [totalPage, setTotalPage] = useState(1);
+//   const [page, setPage] = useState(1);
+//   const navigate = useNavigate();
+
+//   const getAllCities = () => {
+//     fetchData(`/availableCities/getAllCities?page=${page}&limit=${LIMIT}`);
+//   };
+
+//   useEffect(() => {
+//     getAllCities();
+//     // eslint-disable-next-line
+//   }, [page]);
+
+//   useEffect(() => {
+//     if (res?.status === 200 || res?.status === 201) {
+//       const _cities = res?.data?.data?.cities || res?.data?.data || [];
+//       setCityList(_cities);
+//       setTotalPage(res?.data?.pagination?.totalPages || 1);
+//       setPage(res?.data?.pagination?.page || 1);
+//     }
+//   }, [res]);
+
+//   function handleView(city) {
+//     navigate(`/admin/available-cities/${city._id}?mode=view`);
+//   }
+//   function handleEdit(city) {
+//     navigate(`/admin/available-cities/${city._id}?mode=edit`);
+//   }
+//   function handleDelete(city) {
+//     if (window.confirm(`Delete city "${city.city}"?`)) {
+//       alert("Deleted (mock)");
+//       // Implement DELETE API logic if needed
+//     }
+//   }
+//   function handleStatusToggle(city) {
+//     alert(
+//       `Status for "${city.city}" would be toggled. Current: ${city.status ? "Active" : "Inactive"}`
+//     );
+//     // Implement status toggle API call here if needed
+//   }
+
+//   return (
+//     <AdminWrapper>
+//       <section className="px-0 py-0 w-full min-h-screen">
+//         <div className="flex justify-between items-center mb-8">
+//           <h2 className="text-[#000000] text-xl font-medium font-roboto">
+//             Available Cities
+//           </h2>
+//           <button
+//             onClick={() => navigate("/admin/available-cities/create?mode=add")}
+//             className="h-10 border-[1px] border-[#109cf1] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#109cf1] flex items-center gap-2"
+//           >
+//             <span className="text-xl">+</span> Add City
+//           </button>
+//         </div>
+//         <div className="bg-[#FFFFFF] rounded-lg mb-6">
+//           <Table className="bg-[#FFFFFF]">
+//             <TableHeader>
+//               <TableRow>
+//                 <TableHead>#</TableHead>
+//                 <TableHead>City</TableHead>
+//                 <TableHead>Latitude</TableHead>
+//                 <TableHead>Longitude</TableHead>
+//                 <TableHead>Radius</TableHead>
+//                 <TableHead>Description</TableHead>
+//                 <TableHead>Date</TableHead>
+//                 <TableHead>Status</TableHead>
+//                 <TableHead>Action</TableHead>
+//               </TableRow>
+//             </TableHeader>
+//             <TableBody>
+//               {cityList.length > 0 &&
+//                 cityList.map((city, idx) => (
+//                   <TableRow key={city._id || city.id || idx}>
+//                     <TableCell>{(page - 1) * LIMIT + idx + 1}</TableCell>
+//                     <TableCell>{city.city || "-"}</TableCell>
+//                     <TableCell>{city.latitude ?? "-"}</TableCell>
+//                     <TableCell>{city.longitude ?? "-"}</TableCell>
+//                     <TableCell>{city.radius ?? "-"}</TableCell>
+//                     <TableCell>{city.description ?? "-"}</TableCell>
+//                     <TableCell>
+//                       {city.createdAt ? formatDate(city.createdAt) : "-"}
+//                     </TableCell>
+//                     <TableCell>
+//                       <StatusToggleButton
+//                         active={city.status === true || city.status === 1}
+//                         loading={false}
+//                         onClick={() => handleStatusToggle(city)}
+//                         activeLabel="Active"
+//                         inactiveLabel="Inactive"
+//                       />
+//                     </TableCell>
+//                     <TableCell>
+//                       <RowActions
+//                         onView={() => handleView(city)}
+//                         onEdit={() => handleEdit(city)}
+//                         onDelete={() => handleDelete(city)}
+//                         permissions={{ view: true, edit: true, delete: true }}
+//                         isDeleting={false}
+//                       />
+//                     </TableCell>
+//                   </TableRow>
+//                 ))}
+//             </TableBody>
+//           </Table>
+//           {isLoading && <Spinner />}
+//           {cityList.length === 0 && !isLoading && (
+//             <DataNotFound name="Available Cities" />
+//           )}
+//         </div>
+//         <ReactPagination totalPage={totalPage} setPage={setPage} />
+//       </section>
+//     </AdminWrapper>
+//   );
+// };
+
+// export default AvailableCitiesList;
 
 
 

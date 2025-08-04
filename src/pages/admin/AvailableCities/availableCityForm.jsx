@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Spinner from "@/components/Spinner";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import usePostApiReq from "@/hooks/useGetApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq"; 
+import { axiosInstance } from "@/utils/axiosInstance";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -12,14 +14,23 @@ function useQuery() {
 const CityFormPage = () => {
   const { id } = useParams();
   const query = useQuery();
-  const mode = query.get("mode"); // "edit", "view", or "add"
+  const mode = query.get("mode");
   const isView = mode === "view";
   const isEdit = mode === "edit";
   const isAdd = mode === "add" || (!id && !mode);
   const navigate = useNavigate();
 
-  const { res: getRes, fetchData: fetchCity, isLoading: getLoading } = useGetApiReq();
-  const { res: postRes, fetchData: saveCity, isLoading: postLoading } = usePostApiReq();
+  const {
+    res: getRes,
+    fetchData: fetchCity,
+    isLoading: getLoading,
+  } = useGetApiReq();
+
+  const {
+    res: postRes,
+    fetchData: saveCity,
+    isLoading: postLoading,
+  } = usePostApiReq();
 
   const [fields, setFields] = useState({
     city: "",
@@ -27,31 +38,52 @@ const CityFormPage = () => {
     longitude: "",
     radius: "",
     description: "",
-    status: true
+    status: true,
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false); // Add this state
 
+  // Fetch city data when component mounts
   useEffect(() => {
-    // Only fetch city for edit or view
     if ((isEdit || isView) && id) {
+      console.log("Fetching city data for ID:", id); // Debug log
       fetchCity(`/availableCities/getCityById/${id}`);
     }
-    // eslint-disable-next-line
-  }, [id, isEdit, isView]);
+  }, [id, isEdit, isView, fetchCity]);
 
-  // Prefill fields when city info is fetched
+  // Handle API response
   useEffect(() => {
-    if ((isEdit || isView) && getRes?.status === 200 && getRes.data) {
-      setFields({
-        city: getRes.data.city || "",
-        latitude: getRes.data.latitude || "",
-        longitude: getRes.data.longitude || "",
-        radius: getRes.data.radius || "",
-        description: getRes.data.description || "",
-        status: getRes.data.status !== undefined ? getRes.data.status : true
-      });
+    if (getRes) {
+      console.log("API Response:", getRes); // Debug log
+      
+      if (getRes.status === 200 && getRes.data) {
+        // Handle different possible response structures
+        const cityData = getRes.data.data || getRes.data; // Check if data is nested
+        
+        console.log("City data:", cityData); // Debug log
+        
+        setFields({
+          city: cityData.city || "",
+          latitude: cityData.latitude?.toString() || "",
+          longitude: cityData.longitude?.toString() || "",
+          radius: cityData.radius?.toString() || "",
+          description: cityData.description || "",
+          status: cityData.status !== undefined ? cityData.status : true,
+        });
+        setDataLoaded(true);
+      } else if (getRes.status !== 200) {
+        // Handle API errors
+        const errorMessage = getRes.data?.message || "Failed to fetch city data";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      }
     }
-    // For Add mode, clear fields if needed
+  }, [getRes]);
+
+  // Reset form for add mode
+  useEffect(() => {
     if (isAdd) {
       setFields({
         city: "",
@@ -59,56 +91,105 @@ const CityFormPage = () => {
         longitude: "",
         radius: "",
         description: "",
-        status: true
+        status: true,
       });
+      setDataLoaded(true);
     }
-    // eslint-disable-next-line
-  }, [getRes, isEdit, isView, isAdd]);
-
-  useEffect(() => {
-    if ((postRes?.status === 200 || postRes?.status === 201) && (isAdd || isEdit)) {
-      navigate("/admin/available-cities");
-    } else if (postRes && postRes.status !== 200 && postRes.status !== 201) {
-      setError(postRes?.data?.message || "Failed to save city!");
-    }
-    // eslint-disable-next-line
-  }, [postRes]);
+  }, [isAdd]);
 
   function handleChange(e) {
     if (isView) return;
     setFields({ ...fields, [e.target.name]: e.target.value });
+    if (error) setError("");
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!fields.city || !fields.latitude || !fields.longitude || !fields.radius || !fields.description) {
+    if (
+      !fields.city ||
+      !fields.latitude ||
+      !fields.longitude ||
+      !fields.radius ||
+      !fields.description
+    ) {
       setError("All fields are required.");
       return;
     }
-    if (isEdit && id) {
-      saveCity(`/availableCities/updateCity/${id}`, {
+
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const payload = {
         city: fields.city,
         latitude: parseFloat(fields.latitude),
         longitude: parseFloat(fields.longitude),
         radius: parseFloat(fields.radius),
         description: fields.description,
-        status: fields.status
-      });
-    } else if (isAdd) {
-      saveCity("/availableCities/create", {
-        city: fields.city,
-        latitude: parseFloat(fields.latitude),
-        longitude: parseFloat(fields.longitude),
-        radius: parseFloat(fields.radius),
-        description: fields.description,
-        status: fields.status
-      });
+        status: fields.status,
+      };
+
+      if (isEdit && id) {
+        const { data } = await axiosInstance.post(
+          `/availableCities/updateCity/${id}`,
+          payload,
+          { withCredentials: true }
+        );
+        console.log("update api", data);
+        toast.success("City updated successfully!");
+        navigate("/admin/available-cities");
+      } else if (isAdd) {
+        const { data } = await axiosInstance.post(
+          "/availableCities/create",
+          payload,
+          { withCredentials: true }
+        );
+        console.log("create api", data);
+        toast.success("City created successfully!");
+        navigate("/admin/available-cities");
+      }
+    } catch (error) {
+      console.log("api error", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to save city. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm(`Are you sure you want to delete "${fields.city}"?`)) {
+      return;
+    }
 
-  // Show Spinner while fetching data for edit/view
-  if ((isEdit || isView) && getLoading) {
+    setIsDeleting(true);
+    try {
+      const response = await axiosInstance.delete(
+        `/availableCities/deleteCity/${id}`,
+        { withCredentials: true }
+      );
+      
+      console.log("Delete successful:", response.data);
+      toast.success("City deleted successfully!");
+      navigate("/admin/available-cities");
+      
+    } catch (error) {
+      console.error("Delete error:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to delete city. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Show loading spinner while fetching data
+  if ((isEdit || isView) && (getLoading || !dataLoaded)) {
     return (
       <AdminWrapper>
         <div className="w-full flex items-center justify-center min-h-screen">
@@ -141,7 +222,7 @@ const CityFormPage = () => {
                 value={fields.city}
                 onChange={handleChange}
                 disabled={isView}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded disabled:bg-gray-100"
                 required
               />
             </div>
@@ -154,7 +235,7 @@ const CityFormPage = () => {
                 value={fields.latitude}
                 onChange={handleChange}
                 disabled={isView}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded disabled:bg-gray-100"
                 required
               />
             </div>
@@ -167,7 +248,7 @@ const CityFormPage = () => {
                 value={fields.longitude}
                 onChange={handleChange}
                 disabled={isView}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded disabled:bg-gray-100"
                 required
               />
             </div>
@@ -180,7 +261,7 @@ const CityFormPage = () => {
                 value={fields.radius}
                 onChange={handleChange}
                 disabled={isView}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded disabled:bg-gray-100"
                 required
               />
             </div>
@@ -191,9 +272,9 @@ const CityFormPage = () => {
                 value={fields.description}
                 onChange={handleChange}
                 disabled={isView}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded disabled:bg-gray-100"
                 required
-              ></textarea>
+              />
             </div>
             <div className="flex items-center gap-2">
               <label>Status:</label>
@@ -202,23 +283,55 @@ const CityFormPage = () => {
                 type="checkbox"
                 checked={fields.status}
                 disabled={isView}
-                onChange={e => {
-                  if (!isView) setFields({ ...fields, status: e.target.checked });
+                onChange={(e) => {
+                  if (!isView)
+                    setFields({ ...fields, status: e.target.checked });
                 }}
-              />{" "}
-              {fields.status ? "Active" : "Inactive"}
+              />
+              <span>{fields.status ? "Active" : "Inactive"}</span>
             </div>
-            {!isView && (
-              <button
-                type="submit"
-                className="bg-teal-500 text-white rounded px-4 py-2 mt-2 hover:bg-teal-600 disabled:opacity-75"
-                disabled={postLoading}
-              >
-                {postLoading ? <Spinner size={16} /> : (isEdit ? "Update" : "Submit")}
-              </button>
-            )}
-            {(getLoading || postLoading) && <Spinner />}
-            {error && <div className="text-red-500 text-sm">{error}</div>}
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 mt-4">
+              {!isView && (
+                <button
+                  type="submit"
+                  className="bg-teal-500 text-white rounded px-4 py-2 hover:bg-teal-600 disabled:opacity-75 flex items-center gap-2"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Spinner size={16} />
+                      {isEdit ? "Updating..." : "Creating..."}
+                    </>
+                  ) : isEdit ? (
+                    "Update"
+                  ) : (
+                    "Create"
+                  )}
+                </button>
+              )}
+
+              {(isEdit || isView) && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 disabled:opacity-75 flex items-center gap-2"
+                >
+                  {isDeleting ? (
+                    <>
+                      <Spinner size={16} />
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
+                </button>
+              )}
+            </div>
+
+            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           </form>
         </div>
       </section>
@@ -227,3 +340,4 @@ const CityFormPage = () => {
 };
 
 export default CityFormPage;
+
