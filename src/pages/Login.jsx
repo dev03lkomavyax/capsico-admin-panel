@@ -11,6 +11,7 @@ import { BiSolidHide } from "react-icons/bi";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { readCookie } from "@/utils/readCookie";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -47,9 +48,11 @@ const Login = () => {
   }, [res]);
 
   useEffect(() => {
-    const isAuthenticated = JSON.parse(
-      localStorage.getItem("admin-status") || false
-    );
+    // const isAuthenticated = JSON.parse(
+    //   localStorage.getItem("admin-status") || false
+    // );
+    const adminStatus = readCookie("admin-status");
+    const isAuthenticated = JSON.parse(JSON.stringify(adminStatus) || "false");
     if (isAuthenticated) {
       navigate("/admin/dashboard");
     }

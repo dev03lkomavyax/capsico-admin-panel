@@ -374,6 +374,7 @@ const CityFormPage = () => {
     radius: "",
     description: "",
     status: true,
+    status: true,
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -419,6 +420,7 @@ const CityFormPage = () => {
         radius: "",
         description: "",
         status: true,
+        status: true,
       });
       setDataLoaded(true);
       setError("");
@@ -436,7 +438,15 @@ const CityFormPage = () => {
   }
 
   async function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    if (
+      !fields.city ||
+      !fields.latitude ||
+      !fields.longitude ||
+      !fields.radius ||
+      !fields.description
+    ) {
     if (
       !fields.city ||
       !fields.latitude ||
