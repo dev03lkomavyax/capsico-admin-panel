@@ -14,6 +14,9 @@ import Cookies from "js-cookie";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const DeliveryCharges = lazy(() => import("./pages/delivery-charges/DeliveryCharges"));
+const AddDeliveryChargeForm = lazy(() =>
+  import("./pages/delivery-charges/AddDeliveryChargeForm")
+);
 const Order = lazy(() => import("./pages/order/Order"));
 const OrderDetails = lazy(() => import("./pages/order/OrderDetails"));
 const Login = lazy(() => import("./pages/Login"));
@@ -236,11 +239,31 @@ function App() {
               path="/admin/application-request/add-restaurant"
               element={<AddRestaurant />}
             />
-            <Route path="/admin/delivery-charges" element={<DeliveryCharges />} />
+            <Route
+              path="/admin/delivery-charges"
+              element={<DeliveryCharges />}
+            />
+            <Route
+              path="/admin/delivery-charges/add"
+              element={<AddDeliveryChargeForm />}
+            />
+            <Route
+              path="/admin/delivery-charges/update"
+              element={<AddDeliveryChargeForm />}
+            />
           </Route>
-          <Route path="/admin/available-cities" element={<AvailableCitiesList />} />
-     <Route path="/admin/available-cities/create" element={<CityFormPage />} />
-  <Route path="/admin/available-cities/:id" element={<CityFormPage />} />
+          <Route
+            path="/admin/available-cities"
+            element={<AvailableCitiesList />}
+          />
+          <Route
+            path="/admin/available-cities/create"
+            element={<CityFormPage />}
+          />
+          <Route
+            path="/admin/available-cities/:id"
+            element={<CityFormPage />}
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
