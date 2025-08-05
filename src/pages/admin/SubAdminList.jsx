@@ -1,3 +1,4 @@
+
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import DataNotFound from "@/components/DataNotFound";
 import ReactPagination from "@/components/pagination/ReactPagination";
@@ -9,7 +10,7 @@ import {
   TableBody,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
@@ -23,6 +24,7 @@ const SubAdminList = () => {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
+  // Fetch admin list
   const getAllSubadmins = () => {
     fetchData(`/admin/get-all-subadmin?page=${page}&limit=${LIMIT}`);
   };
@@ -46,19 +48,15 @@ const SubAdminList = () => {
     <AdminWrapper>
       <section className="px-0 py-0 w-full min-h-screen">
         <div className="flex justify-between items-center mb-8">
-          <div className="flex justify-start items-center">
-            <h2 className="text-[#000000] text-xl font-medium font-roboto">
-              Sub Admin List
-            </h2>
-          </div>
-          <div className="flex justify-start items-center gap-4">
-            <button
-              onClick={() => navigate("/admin/sub-admin/add-subadmin")}
-              className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2"
-            >
-              <span className="text-xl">+</span> Add sub Admin
-            </button>
-          </div>
+          <h2 className="text-[#000000] text-xl font-medium font-roboto">
+            Sub Admin List
+          </h2>
+          <button
+            onClick={() => navigate("/admin/sub-admin/add-subadmin")}
+            className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2"
+          >
+            <span className="text-xl">+</span> Add sub Admin
+          </button>
         </div>
         <div className="bg-[#FFFFFF] rounded-lg mb-6">
           <Table className="bg-[#FFFFFF]">
@@ -67,50 +65,36 @@ const SubAdminList = () => {
                 <TableHead className="w-10">
                   <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
                 </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  ID
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Full Name
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Position
-                </TableHead>
-                <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Email Address
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Mobile Number
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  CityName
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Status
-                </TableHead>
-                <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-                  Action
-                </TableHead>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead className="w-[100px]">Full Name</TableHead>
+                <TableHead className="w-[100px]">Position</TableHead>
+                <TableHead className="w-[200px]">Email Address</TableHead>
+                <TableHead className="w-[100px]">Mobile Number</TableHead>
+                <TableHead className="w-[100px]">CityName</TableHead>
+                <TableHead className="w-[100px]">Status</TableHead>
+                <TableHead className="w-[100px]">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subAdminList.length > 0 &&
+              {subAdminList.length > 0 ? (
                 subAdminList.map((subadmin) => (
                   <Subadmin
                     key={subadmin._id}
-                    getAllSubadmins={getAllSubadmins}
                     subadmin={subadmin}
+                    getAllSubadmins={getAllSubadmins}
                   />
-                ))}
+                ))
+              ) : (
+                !isLoading && (
+                  <TableRow>
+                    <td colSpan={9}><DataNotFound name="Sub Admins" /></td>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
-
           {isLoading && <Spinner />}
-          {subAdminList.length === 0 && !isLoading && (
-            <DataNotFound name="Sub Admins" />
-          )}
         </div>
-
         <ReactPagination totalPage={totalPage} setPage={setPage} />
       </section>
     </AdminWrapper>
@@ -118,6 +102,23 @@ const SubAdminList = () => {
 };
 
 export default SubAdminList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 // import DataNotFound from "@/components/DataNotFound";
