@@ -104,6 +104,7 @@ const DeliveryCharges = () => {
                 <DeliveryChargeComp
                   key={deliveryCharge._id}
                   deliveryCharge={deliveryCharge}
+                  getDeliveryCharges={getDeliveryCharges}
                 />
               ))}
             </TableBody>

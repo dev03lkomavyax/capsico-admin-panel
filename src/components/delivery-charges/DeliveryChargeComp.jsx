@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import usePatchApiReq from "@/hooks/usePatchApiReq";
 import { Edit, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,18 +7,17 @@ import AlertModal from "../AlertModal";
 import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 import { TableCell, TableRow } from "../ui/table";
-import {
-  formatDistance,
-  formatDistanceStrict,
-  formatDistanceToNow,
-} from "date-fns";
-import usePostApiReq from "@/hooks/usePostApiReq";
-import usePatchApiReq from "@/hooks/usePatchApiReq";
+import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 
-const DeliveryChargeComp = ({ deliveryCharge }) => {
+const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
   const [isAlertDeleteModalOpen, setIsAlertDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { res, fetchData, isLoading } = usePatchApiReq();
+  const { res, fetchData } = usePatchApiReq();
+  const {
+    res: deleteRes,
+    fetchData: deleteCharge,
+    isLoading: isDeleteChargeLoading,
+  } = useDeleteApiReq();
 
   console.log("deliveryCharge", deliveryCharge);
 
@@ -53,6 +53,17 @@ const DeliveryChargeComp = ({ deliveryCharge }) => {
     }
   }, [res]);
 
+  const deleteChargeFun = () => {
+    deleteCharge(`/delivery-charges/delete/${deliveryCharge?._id}`);
+  };
+
+  useEffect(() => {
+    if (deleteRes?.status === 200 || deleteRes?.status === 201) {
+      console.log("deleteRes res", res);
+      getDeliveryCharges();
+    }
+  }, [deleteRes]);
+
   return (
     <>
       <TableRow>
@@ -70,7 +81,7 @@ const DeliveryChargeComp = ({ deliveryCharge }) => {
         <TableCell>
           {modifiers?.demandSurge?.enabled
             ? `✅ ${modifiers?.demandSurge?.multiplier}x`
-            : "❌"}
+            : "❌ No"}
         </TableCell>
         <TableCell>
           <div className="space-y-2">
@@ -101,8 +112,8 @@ const DeliveryChargeComp = ({ deliveryCharge }) => {
           setIsAlertModalOpen={setIsAlertDeleteModalOpen}
           header="Delete Delivery Charge"
           description="Are you sure you want to delete this delivery charge? This action cannot be undone."
-          disabled={false}
-          onConfirm={() => {}}
+          disabled={isDeleteChargeLoading}
+          onConfirm={deleteChargeFun}
         />
       )}
     </>

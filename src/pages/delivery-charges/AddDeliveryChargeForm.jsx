@@ -1,4 +1,5 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,6 +11,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
 import { deliveryChargeSchema } from "@/schema/DeliveryChargeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeftIcon } from "lucide-react";
@@ -19,11 +22,17 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AddDeliveryChargeForm() {
+  const location = useLocation();
+  const deliveryCharge = location?.state?.deliveryCharge || "";
+  const modifiedPincodes = deliveryCharge?.pincodes?.map((pincode) => ({
+    pincode,
+  }));
+
   const form = useForm({
     resolver: zodResolver(deliveryChargeSchema),
     defaultValues: {
       city: "",
-      pincodes: [""],
+      pincodes: modifiedPincodes || [],
       baseCharge: 20,
       perKmCharge: 5,
       modifiers: {
@@ -37,17 +46,22 @@ export default function AddDeliveryChargeForm() {
   const [newPincode, setNewPincode] = useState("");
   const navigate = useNavigate();
 
-  const {
-    state: { deliveryCharge = "" },
-  } = useLocation();
-
   const { watch, handleSubmit, control, reset } = form;
+  const { res, fetchData, isLoading } = usePostApiReq();
+  const {
+    res: updateRes,
+    fetchData: updateCharge,
+    isLoading: isUpdateChargeLoading,
+  } = usePatchApiReq();
 
   useEffect(() => {
     if (deliveryCharge) {
-      reset(deliveryCharge);
+      reset({
+        ...deliveryCharge,
+        pincodes: modifiedPincodes,
+      });
     }
-  }, [deliveryCharge, reset]);
+  }, [deliveryCharge]);
 
   const { fields, append, remove } = useFieldArray({
     name: "pincodes",
@@ -61,7 +75,7 @@ export default function AddDeliveryChargeForm() {
       return toast.error("Pincode must be exactly 6 digits.");
     }
 
-    const isDuplicate = fields.some((f) => f.value === trimmed);
+    const isDuplicate = fields.some((f) => f.pincode === trimmed);
     if (isDuplicate) {
       return toast.error("Pincode already added.");
     }
@@ -72,13 +86,38 @@ export default function AddDeliveryChargeForm() {
 
   const onSubmit = (values) => {
     console.log(values);
+    if (deliveryCharge) {
+      updateCharge(
+        `/delivery-charges/update/${deliveryCharge._id}/${deliveryCharge.city}`,
+        {
+          ...values,
+          pincodes: values.pincodes.map((item) => item.pincode),
+        }
+      );
+    } else {
+      fetchData("/delivery-charges/create", {
+        ...values,
+        pincodes: values.pincodes.map((item) => item.pincode),
+      });
+    }
   };
+
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      navigate("/admin/delivery-charges");
+    }
+  }, [res]);
+
+  useEffect(() => {
+    if (updateRes?.status === 200 || updateRes?.status === 201) {
+      navigate("/admin/delivery-charges");
+    }
+  }, [updateRes]);
 
   const onError = (error) => {
     console.log("error", error);
   };
 
-  console.log("fields", fields);
   return (
     <AdminWrapper>
       <button onClick={() => navigate(-1)} className="flex gap-2 items-center">
@@ -108,47 +147,55 @@ export default function AddDeliveryChargeForm() {
           />
 
           {/* Pincodes (Single Input + List) */}
-          <FormLabel>Pincodes</FormLabel>
+          <div>
+            <FormLabel className="mt-3">Pincodes</FormLabel>
 
-          {/* Input to enter a new pincode */}
-          <div className="flex items-center gap-2 mt-2">
-            <Input
-              type="number"
-              maxLength={6}
-              pattern="\d{6}"
-              value={newPincode}
-              onChange={(e) => setNewPincode(e.target.value)}
-              placeholder="Enter 6-digit Pincode"
-            />
-            <Button type="button" variant="outline" onClick={handleAddPincode}>
-              Add
-            </Button>
-          </div>
-
-          {/* Show Zod validation message */}
-          <FormMessage>{form.formState.errors?.pincodes?.message}</FormMessage>
-
-          {/* List of added pincodes */}
-          {fields.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {fields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="flex items-center justify-between px-3 py-2 border rounded-md"
-                >
-                  <span>{field.pincode}</span>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => remove(index)}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ))}
+            {/* Input to enter a new pincode */}
+            <div className="flex items-center gap-2 mt-2">
+              <Input
+                type="number"
+                maxLength={6}
+                pattern="\d{6}"
+                value={newPincode}
+                onChange={(e) => setNewPincode(e.target.value)}
+                placeholder="Enter 6-digit Pincode"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleAddPincode}
+              >
+                Add
+              </Button>
             </div>
-          )}
+
+            {/* Show Zod validation message */}
+            <FormMessage>
+              {form.formState.errors?.pincodes?.message}
+            </FormMessage>
+
+            {/* List of added pincodes */}
+            {fields.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="flex items-center justify-between px-3 py-2 border rounded-md"
+                  >
+                    <span>{field.pincode}</span>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => remove(index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Charges */}
           <div className="grid grid-cols-2 gap-4">
@@ -305,8 +352,13 @@ export default function AddDeliveryChargeForm() {
             )}
           />
 
-          <Button variant="capsico" type="submit" className="w-full">
-            Submit
+          <Button
+            disabled={isLoading || isUpdateChargeLoading}
+            variant="capsico"
+            type="submit"
+            className="w-full"
+          >
+            {isLoading || isUpdateChargeLoading ? <Spinner /> : "Submit"}
           </Button>
         </form>
       </Form>

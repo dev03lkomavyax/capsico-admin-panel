@@ -5,27 +5,29 @@ export const deliveryChargeSchema = z.object({
 
   pincodes: z
     .array(
-      z
-        .string()
-        .regex(/^\d{6}$/, { message: "Pincode must be exactly 6 digits" })
+      z.object({
+        pincode: z.string().regex(/^\d{6}$/, {
+          message: "Pincode must be exactly 6 digits",
+        }),
+      })
     )
     .min(1, "At least one pincode is required"),
 
-  baseCharge: z.number().min(0),
-  perKmCharge: z.number().min(0),
+  baseCharge: z.coerce.number().min(0),
+  perKmCharge: z.coerce.number().min(0),
 
   modifiers: z.object({
     timeOfDay: z.object({
-      day: z.number(),
-      night: z.number(),
+      day: z.coerce.number(),
+      night: z.coerce.number(),
     }),
     weather: z.object({
-      rain: z.number(),
-      extreme: z.number(),
+      rain: z.coerce.number(),
+      extreme: z.coerce.number(),
     }),
     demandSurge: z.object({
       enabled: z.boolean(),
-      multiplier: z.number(),
+      multiplier: z.coerce.number(),
     }),
   }),
 
