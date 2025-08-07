@@ -64,7 +64,7 @@ const AddRestaurant4 = ({ page, setPage }) => {
                             name="isRefered"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className=" text-[#5E5858] font-inter">Did a zomato representative refer you to this platform?</FormLabel>
+                                    <FormLabel className=" text-[#5E5858] font-inter">Did a capsico representative refer you to this platform?</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
