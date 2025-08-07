@@ -8,17 +8,18 @@ const AdminSidebar = () => {
   const { pathname } = useLocation();
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
-  // console.log("permissions", permissions);
+  console.log("permissions", permissions);
   // console.log("userInfo", userInfo);
 
   const perm = {
     dashboard: "dashboard",
     "sub-admin": "subAdmin",
     customer: "customer",
-   availableCities: "availableCities",
+    availableCities: "availableCities",
     restaurant: "restaurant",
     vendor: "vendor",
     "delivery-agent": "deliveryAgent",
+    "delivery-charges": "deliveryCharges",
     order: "order",
     reviews: "review",
     offers: "offer",
@@ -148,8 +149,7 @@ const AdminSidebar = () => {
           </Link>
         )}
 
-
-         {/* {permissions && permissions[perm["availabeCities"]] !== "none" && (
+        {/* {permissions && permissions[perm["availabeCities"]] !== "none" && (
           <Link
             to={`/admin/customer`}
             className={`flex items-center gap-3 px-4 py-3 ${
@@ -196,51 +196,55 @@ const AdminSidebar = () => {
           </Link>
         )} */}
         {permissions && permissions[perm["availableCities"]] !== "none" && (
-  <Link
-    to="/admin/available-cities"
-    className={`flex items-center gap-3 px-4 py-3 ${
-      pathname.includes("/admin/available-cities")
-        ? "bg-[#F1F6FF]"
-        : "bg-[#FFFFFF]"
-    }`}
-  >
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-        stroke={`${
-          pathname.includes("/admin/available-cities") ? "#397FFE" : "#4A4A4A"
-        }`}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
-        stroke={`${
-          pathname.includes("/admin/available-cities") ? "#397FFE" : "#4A4A4A"
-        }`}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-    <span
-      className={`text-lg font-normal font-sans group-hover:inline ${
-        pathname.includes("/admin/available-cities")
-          ? "text-[#397FFE]"
-          : "text-[#4A4A4A]"
-      }`}
-    >
-      Available Cities
-    </span>
-  </Link>
-)}
+          <Link
+            to="/admin/available-cities"
+            className={`flex items-center gap-3 px-4 py-3 ${
+              pathname.includes("/admin/available-cities")
+                ? "bg-[#F1F6FF]"
+                : "bg-[#FFFFFF]"
+            }`}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                stroke={`${
+                  pathname.includes("/admin/available-cities")
+                    ? "#397FFE"
+                    : "#4A4A4A"
+                }`}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
+                stroke={`${
+                  pathname.includes("/admin/available-cities")
+                    ? "#397FFE"
+                    : "#4A4A4A"
+                }`}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span
+              className={`text-lg font-normal font-sans group-hover:inline ${
+                pathname.includes("/admin/available-cities")
+                  ? "text-[#397FFE]"
+                  : "text-[#4A4A4A]"
+              }`}
+            >
+              Available Cities
+            </span>
+          </Link>
+        )}
 
         {permissions && permissions[perm["restaurant"]] !== "none" && (
           <Link
@@ -373,33 +377,35 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-        {permissions && permissions[perm["delivery-agent"]] !== "none" && (
-          <Link
-            to="/admin/delivery-charges"
-            className={`flex items-center gap-3 px-4 py-3 ${
-              pathname.includes("/admin/delivery-charges")
-                ? "bg-[#F1F6FF]"
-                : "bg-[#FFFFFF]"
-            }`}
-          >
-            <MapPin
-              className={cn(
-                "size-4 text-[#4A4A4A]",
-                pathname.includes("/admin/delivery-charges") && "text-[#397FFE]"
-              )}
-            />
-
-            <span
-              className={`text-lg font-normal font-sans group-hover:inline ${
+        {permissions[perm["delivery-charges"]] &&
+          permissions[perm["delivery-charges"]] !== "none" && (
+            <Link
+              to="/admin/delivery-charges"
+              className={`flex items-center gap-3 px-4 py-3 ${
                 pathname.includes("/admin/delivery-charges")
-                  ? "text-[#397FFE]"
-                  : "text-[#4A4A4A]"
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
               }`}
             >
-              Delivery Charges
-            </span>
-          </Link>
-        )}
+              <MapPin
+                className={cn(
+                  "size-4 text-[#4A4A4A]",
+                  pathname.includes("/admin/delivery-charges") &&
+                    "text-[#397FFE]"
+                )}
+              />
+
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/delivery-charges")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Delivery Charges
+              </span>
+            </Link>
+          )}
 
         {permissions && permissions[perm["order"]] !== "none" && (
           <Link

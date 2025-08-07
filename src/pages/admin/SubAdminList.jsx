@@ -35,11 +35,14 @@ const SubAdminList = () => {
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
+      console.log("subadims res", res);
       setSubAdminList(res?.data?.data?.subAdmins);
       setTotalPage(res?.data?.pagination?.totalPages);
       setPage(res?.data?.pagination?.page);
     }
   }, [res]);
+
+  // **REMOVED**: All automatic refresh handlers that were causing status resets
 
   return (
     <AdminWrapper>

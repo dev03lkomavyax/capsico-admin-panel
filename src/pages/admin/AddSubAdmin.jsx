@@ -16,28 +16,29 @@ import { useNavigate } from "react-router-dom"
 
 const AddSubAdmin = () => {
     const form = useForm({
-        resolver: zodResolver(AddSubAdminSchema),
-        defaultValues: {
-            position: 'manager',
-            name: '',
-            phoneNumber: '',
-            email: '',
-            password: '',
-            cityName:'',
-            permissions: {
-                dashboard: "none",
-                subAdmin: "none",
-                customer: "none",
-                restaurant: "none",
-                vendor: "none",
-                deliveryAgent: "none",
-                order: "none",
-                review: "none",
-                offer: "none",
-                applicationRequest: "none"
-            },
-        }
-    })
+      resolver: zodResolver(AddSubAdminSchema),
+      defaultValues: {
+        position: "manager",
+        name: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        cityName: "",
+        permissions: {
+          dashboard: "none",
+          subAdmin: "none",
+          customer: "none",
+          restaurant: "none",
+          vendor: "none",
+          deliveryAgent: "none",
+          deliveryCharge: "none",
+          order: "none",
+          review: "none",
+          offer: "none",
+          applicationRequest: "none",
+        },
+      },
+    });
 
     const { control, reset, handleSubmit } = form
     const [isShowPassword, setIsShowPassword] = useState(false);
