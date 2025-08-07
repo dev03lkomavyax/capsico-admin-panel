@@ -751,7 +751,7 @@ import {
   TableHeader,
   TableRow,
   TableCell
-} from "@/components/ui/Table";
+} from "@/components/ui/table";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import RowActions from "@/components/ui/actionsIcons";
