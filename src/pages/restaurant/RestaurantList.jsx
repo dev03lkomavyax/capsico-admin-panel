@@ -122,8 +122,8 @@ const RestaurantList = () => {
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant Name</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Registered Date</TableHead>
                                 <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
-                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Total Sale</TableHead>
-                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Last sale</TableHead>
+                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Email</TableHead>
+                                <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Mobile Number</TableHead>
                                 <TableHead className="w-20 text-[#ABABAB] text-xs font-normal font-roboto">Account Status</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Operational Hours</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Action</TableHead>

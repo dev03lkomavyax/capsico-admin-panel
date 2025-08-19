@@ -11,6 +11,8 @@ import usePostApiReq from "./hooks/usePostApiReq";
 import { readCookie } from "./utils/readCookie";
 import RecentOrders from "./pages/restaurant/RecentOrders";
 import Cookies from "js-cookie";
+import { initFirebaseNotifications } from "./utils/firebaseNotifications";
+
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const DeliveryCharges = lazy(() => import("./pages/delivery-charges/DeliveryCharges"));
@@ -111,6 +113,13 @@ function App() {
       navigate("/");
     }
   }, [logoutRes]);
+  useEffect(() => {
+  getStatus();
+  if (token?.role === "admin") {
+    initFirebaseNotifications();
+  }
+}, []);
+
 
   return (
     <>
