@@ -219,7 +219,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [filterByDate, setFilterByDate] = useState("today");
+  const [filterByDate, setFilterByDate] = useState("all");
   const [status, setStatus] = useState("all");
   const [totalPage, setTotalPage] = useState(1);
   const [selectOrderTab, setSelectOrderTab] = useState("allOrder");
