@@ -83,6 +83,12 @@ const SingleOrder = ({ data, getAllOrder }) => {
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
           {data?.amounts?.total}
         </TableCell>
+                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
+    {data?.orderTiming || "N/A"}
+  </TableCell>
+
+
+        
         <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
           <div className="flex gap-2 items-center">
             <Button onClick={handleEdit} size="xs" variant="capsico">
