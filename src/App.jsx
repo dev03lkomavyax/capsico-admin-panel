@@ -62,6 +62,9 @@ const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaura
 const AvailableCitiesList= lazy(() => import('./pages/admin/AvailableCities/availableCities'));
 const CityFormPage = lazy(() => import('./pages/admin/AvailableCities/availableCityForm'));
 
+const ContentManagement = lazy(() => import('./pages/ContentManagement/ContentManagement'));
+const ContentForm = lazy(() => import('./pages/ContentManagement/ContentForm'));
+
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
   const { res, fetchData } = useGetApiReq();
@@ -274,8 +277,15 @@ function App() {
             element={<CityFormPage />}
           />
 
-          <Route path="*" element={<NotFound />} />
+
+  <Route path="/admin/content-management" element={<ContentManagement />} />
+<Route path="/admin/content-management/add" element={<ContentForm />} />
+<Route path="/admin/content-management/edit/:contentId" element={<ContentForm />} />
+
+
+ <Route path="*" element={<NotFound />} />
         </Routes>
+
       </Suspense>
 
       <Toaster position="top-center" reverseOrder={false} />
