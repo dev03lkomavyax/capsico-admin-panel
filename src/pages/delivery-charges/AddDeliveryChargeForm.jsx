@@ -186,7 +186,7 @@ export default function AddDeliveryChargeForm() {
                     <Button
                       type="button"
                       variant="destructive"
-                      size="sm"
+                      size="icon"
                       onClick={() => remove(index)}
                     >
                       Remove

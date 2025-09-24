@@ -12,10 +12,13 @@ import { readCookie } from "./utils/readCookie";
 import RecentOrders from "./pages/restaurant/RecentOrders";
 import Cookies from "js-cookie";
 import { initFirebaseNotifications } from "./utils/firebaseNotifications";
+import SendPromotionalNotification from "./components/notifications/SendPromotionalNotification";
 
-
+const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const DeliveryCharges = lazy(() => import("./pages/delivery-charges/DeliveryCharges"));
+const DeliveryCharges = lazy(() =>
+  import("./pages/delivery-charges/DeliveryCharges")
+);
 const AddDeliveryChargeForm = lazy(() =>
   import("./pages/delivery-charges/AddDeliveryChargeForm")
 );
@@ -31,39 +34,65 @@ const RestaurantDashborad = lazy(() =>
   import("./pages/restaurant/RestaurantDashboard")
 );
 // const Dashborad = lazy(() => import('./pages/restaurant/Dashborad'));
-const AddMenu = lazy(() => import('./pages/restaurant/menu/AddMenu'));
-const Review = lazy(() => import('./pages/restaurant/Reviews'));
-const Revenue = lazy(() => import('./pages/revenue/Revenue'));
-const CustomerList = lazy(() => import('./pages/customer/CustomerList'));
-const CustomerDetails = lazy(() => import('./pages/customer/CustomerDetails'))
-const RestaurantEditProfile = lazy(() => import('./pages/restaurant/RestaurantEditProfile'))
-const RestaurantMenu = lazy(() => import('./pages/restaurant/menu/RestaurantMenu'))
-const VendorList = lazy(() => import('./pages/vendor/VendorList'))
-const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard'))
-const VendorReviews = lazy(() => import('./pages/vendor/VendorReviews'))
-const VendorRevenue = lazy(() => import('./pages/vendor/VendorRevenue'))
-const VendorEditProfile = lazy(() => import('./pages/vendor/VendorEditProfile'))
-const VendorProducts = lazy(() => import('./pages/vendor/VendorProducts'))
-const DeliveryAgent = lazy(() => import('./pages/delivery-agent/DeliveryAgent'))
-const DeliveryAgentDetails = lazy(() => import('./pages/delivery-agent/DeliveryAgentDetails'))
-const DeliveryAgentProfileEdit = lazy(() => import('./pages/delivery-agent/DeliveryAgentProfileEdit'))
-const AvailableBalanceDetails = lazy(() => import('./pages/delivery-agent/AvailableBalanceDetails'))
-const ReviewsDetails = lazy(() => import('./pages/reviews/ReviewsDetails'))
-const SubAdminList = lazy(() => import('./pages/admin/SubAdminList'))
-const AddSubAdmin = lazy(() => import('./pages/admin/AddSubAdmin'))
-const EditSubAdmin = lazy(() => import('./pages/admin/EditSubAdmin'))
-const AdminDashBoard = lazy(() => import('./pages/admin/AdminDashBoard'))
-const SalesReport = lazy(() => import('./pages/admin/SalesReport'))
-const UpdateAdminProfile = lazy(() => import('./pages/admin/UpdateAdminProfile'))
-const Offers = lazy(() => import('./pages/offers/Offers'))
-const CreateOfferPage = lazy(() => import('./pages/offers/CreateOfferPage'))
-const ApplicationRequest = lazy(() => import('./pages/application-request/ApplicationRequest'))
-const AddRestaurant = lazy(() => import('./pages/application-request/AddRestaurant'))
-const AvailableCitiesList= lazy(() => import('./pages/admin/AvailableCities/availableCities'));
-const CityFormPage = lazy(() => import('./pages/admin/AvailableCities/availableCityForm'));
+const AddMenu = lazy(() => import("./pages/restaurant/menu/AddMenu"));
+const Review = lazy(() => import("./pages/restaurant/Reviews"));
+const Revenue = lazy(() => import("./pages/revenue/Revenue"));
+const CustomerList = lazy(() => import("./pages/customer/CustomerList"));
+const CustomerDetails = lazy(() => import("./pages/customer/CustomerDetails"));
+const RestaurantEditProfile = lazy(() =>
+  import("./pages/restaurant/RestaurantEditProfile")
+);
+const RestaurantMenu = lazy(() =>
+  import("./pages/restaurant/menu/RestaurantMenu")
+);
+const VendorList = lazy(() => import("./pages/vendor/VendorList"));
+const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
+const VendorReviews = lazy(() => import("./pages/vendor/VendorReviews"));
+const VendorRevenue = lazy(() => import("./pages/vendor/VendorRevenue"));
+const VendorEditProfile = lazy(() =>
+  import("./pages/vendor/VendorEditProfile")
+);
+const VendorProducts = lazy(() => import("./pages/vendor/VendorProducts"));
+const DeliveryAgent = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgent")
+);
+const DeliveryAgentDetails = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgentDetails")
+);
+const DeliveryAgentProfileEdit = lazy(() =>
+  import("./pages/delivery-agent/DeliveryAgentProfileEdit")
+);
+const AvailableBalanceDetails = lazy(() =>
+  import("./pages/delivery-agent/AvailableBalanceDetails")
+);
+const ReviewsDetails = lazy(() => import("./pages/reviews/ReviewsDetails"));
+const SubAdminList = lazy(() => import("./pages/admin/SubAdminList"));
+const AddSubAdmin = lazy(() => import("./pages/admin/AddSubAdmin"));
+const EditSubAdmin = lazy(() => import("./pages/admin/EditSubAdmin"));
+const AdminDashBoard = lazy(() => import("./pages/admin/AdminDashBoard"));
+const SalesReport = lazy(() => import("./pages/admin/SalesReport"));
+const UpdateAdminProfile = lazy(() =>
+  import("./pages/admin/UpdateAdminProfile")
+);
+const Offers = lazy(() => import("./pages/offers/Offers"));
+const CreateOfferPage = lazy(() => import("./pages/offers/CreateOfferPage"));
+const ApplicationRequest = lazy(() =>
+  import("./pages/application-request/ApplicationRequest")
+);
+const AddRestaurant = lazy(() =>
+  import("./pages/application-request/AddRestaurant")
+);
+const AvailableCitiesList = lazy(() =>
+  import("./pages/admin/AvailableCities/availableCities")
+);
+const CityFormPage = lazy(() =>
+  import("./pages/admin/AvailableCities/availableCityForm")
+);
 
-const ContentManagement = lazy(() => import('./pages/ContentManagement/ContentManagement'));
-const ContentForm = lazy(() => import('./pages/ContentManagement/ContentForm'));
+const ContentManagement = lazy(() =>
+  import("./pages/ContentManagement/ContentManagement")
+);
+const ContentForm = lazy(() => import("./pages/ContentManagement/ContentForm"));
 
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
@@ -111,18 +140,17 @@ function App() {
 
   useEffect(() => {
     if (logoutRes?.status === 200 || logoutRes?.status === 201) {
-       Cookies.set("admin-status", "false");
-       Cookies.remove("userInfo");
+      Cookies.set("admin-status", "false");
+      Cookies.remove("userInfo");
       navigate("/");
     }
   }, [logoutRes]);
   useEffect(() => {
-  getStatus();
-  if (token?.role === "admin") {
-    initFirebaseNotifications();
-  }
-}, []);
-
+    getStatus();
+    if (token?.role === "admin") {
+      initFirebaseNotifications();
+    }
+  }, []);
 
   return (
     <>
@@ -277,15 +305,27 @@ function App() {
             element={<CityFormPage />}
           />
 
+          <Route
+            path="/admin/content-management"
+            element={<ContentManagement />}
+          />
+          <Route
+            path="/admin/content-management/add"
+            element={<ContentForm />}
+          />
+          <Route
+            path="/admin/content-management/edit/:contentId"
+            element={<ContentForm />}
+          />
 
-  <Route path="/admin/content-management" element={<ContentManagement />} />
-<Route path="/admin/content-management/add" element={<ContentForm />} />
-<Route path="/admin/content-management/edit/:contentId" element={<ContentForm />} />
+          <Route path="/admin/notifications" element={<Notifications />} />
+          <Route
+            path="/admin/notifications/promotional"
+            element={<SendPromotionalNotification />}
+          />
 
-
- <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-
       </Suspense>
 
       <Toaster position="top-center" reverseOrder={false} />
