@@ -30,11 +30,21 @@ import { PiCameraPlus } from "react-icons/pi";
 import Spinner from "../Spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "../ui/calendar";
+import { cn } from "@/lib/utils";
+import { MdCalendarMonth } from "react-icons/md";
 
 const SendPromotionalNotification = () => {
   const [cities, setCities] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(
@@ -51,6 +61,8 @@ const SendPromotionalNotification = () => {
         city: z.string().min(1, "City required."),
         cityName: z.string().optional(),
         restaurant: z.string().min(1, "Restaurant required."),
+        date: z.date().optional().nullable(),
+        time: z.string().optional(),
       })
     ),
     defaultValues: {
@@ -62,10 +74,17 @@ const SendPromotionalNotification = () => {
       restaurant: "",
       image: "",
       imagePreview: "",
+      date: null,
+      time: "",
     },
   });
 
   const { watch, control, handleSubmit, setValue, getValues, register } = form;
+
+   const handleDateSelect = (value) => {
+     setValue("date", value);
+     setOpen(false);
+   };
   console.log("getValues", getValues());
 
   const imageRef = register("image");
@@ -134,6 +153,12 @@ const SendPromotionalNotification = () => {
     formData.append("cityId", data.city);
     formData.append("restaurantId", data.restaurant);
     formData.append("image", data.image[0]);
+    data.date &&
+      formData.append(
+        "scheduleDate",
+        format(new Date(data.date), "yyyy-MM-dd")
+      );
+    data.time && formData.append("scheduleTime", data.time);
     fetchData(`/notification/send-promotional-notification`, formData);
   };
 
@@ -208,7 +233,7 @@ const SendPromotionalNotification = () => {
                   <FormLabel
                     className={`text-[#111928] font-semibold font-inter opacity-80`}
                   >
-                    Title
+                    Title <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -229,7 +254,7 @@ const SendPromotionalNotification = () => {
                   <FormLabel
                     className={`text-[#111928] font-semibold font-inter opacity-80`}
                   >
-                    Description
+                    Description <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -251,7 +276,7 @@ const SendPromotionalNotification = () => {
                     <FormLabel
                       className={`text-[#111928] font-semibold font-inter opacity-80`}
                     >
-                      Radius (In Km)
+                      Radius (In Km) <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -274,7 +299,7 @@ const SendPromotionalNotification = () => {
                     <FormLabel
                       className={`text-[#111928] font-semibold font-inter opacity-80`}
                     >
-                      City
+                      City <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
                       <Select
@@ -322,7 +347,7 @@ const SendPromotionalNotification = () => {
                       <FormLabel
                         className={`text-[#111928] font-semibold font-inter opacity-80`}
                       >
-                        Restaurant
+                        Restaurant <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Select
@@ -356,6 +381,79 @@ const SendPromotionalNotification = () => {
                   )}
                 />
               )}
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`text-[#111928] font-semibold font-inter opacity-80`}
+                    >
+                      Date
+                    </FormLabel>
+                    <FormControl>
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full flex h-10 px-4 border-[#808080] gap-2 justify-start text-[#717171] max-med:px-3 max-med:h-[46px] max-med:rounded-lg",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            <MdCalendarMonth className="text-[#838383] text-xl absolute top-[35%] right-[6.5%]" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span className="text-[#838383] text-base font-normal max-med:text-sm">
+                                Select a date
+                              </span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={handleDateSelect}
+                            // disabled={(date) =>
+                            //   date > new Date() || date < new Date("1900-01-01")
+                            // }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`text-[#111928] font-semibold font-inter opacity-80`}
+                    >
+                      Time
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="time"
+                        id="time-picker"
+                        step="60"
+                        // defaultValue="10:30:00"
+                        className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <Button
               type="submit"

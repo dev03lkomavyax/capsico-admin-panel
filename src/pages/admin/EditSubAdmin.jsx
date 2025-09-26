@@ -1,5 +1,3 @@
-
-
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import ChangePassword from "@/components/admin/ChangePassword";
 import { Button } from "@/components/ui/button";
@@ -51,6 +49,7 @@ const EditSubAdmin = () => {
         review: "none",
         offer: "none",
         applicationRequest: "none",
+        deliveryCharges: "none",
       },
     },
   });
@@ -69,10 +68,7 @@ const EditSubAdmin = () => {
     fetchData: uploadAdminData,
     isLoading: isAdminLoading,
   } = usePatchApiReq();
-  const {
-    res: toggleRes,
-    fetchData: toggleStatusAPI,
-  } = usePatchApiReq();
+  const { res: toggleRes, fetchData: toggleStatusAPI } = usePatchApiReq();
 
   const getSubadminDetails = () => {
     fetchData(`/admin/get-subadmin-details/${state?.subadminId}`);
@@ -185,11 +181,16 @@ const EditSubAdmin = () => {
                   name="position"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
                         Position
                       </FormLabel>
                       <FormControl>
-                        <Select value={field.value} onValueChange={field.onChange}>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
                           <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
                             <SelectValue placeholder="Select Position" />
                           </SelectTrigger>
@@ -210,7 +211,9 @@ const EditSubAdmin = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
                         Name
                       </FormLabel>
                       <FormControl>
@@ -230,7 +233,9 @@ const EditSubAdmin = () => {
                   name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
                         Phone number
                       </FormLabel>
                       <FormControl>
@@ -251,7 +256,9 @@ const EditSubAdmin = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
                         Email
                       </FormLabel>
                       <FormControl>
@@ -273,7 +280,9 @@ const EditSubAdmin = () => {
                   name="cityName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className={`text-[#111928] font-semibold font-nunito opacity-80`}>
+                      <FormLabel
+                        className={`text-[#111928] font-semibold font-nunito opacity-80`}
+                      >
                         City Name
                       </FormLabel>
                       <FormControl>
@@ -295,41 +304,47 @@ const EditSubAdmin = () => {
               </Label>
 
               <div className="grid grid-cols-6 gap-3 mt-1">
-                {permissions.map((permission) => (
-                  <FormField
-                    key={permission.value}
-                    control={control}
-                    name={`permissions.${permission.value}`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium capitalize">
-                          {permission.label}
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <FormControl className={`bg-[#F9FAFB] border-[#D1D5DB] rounded-lg`}>
-                              <SelectTrigger className="w-full text-[#6B7280] text-sm font-normal font-inter">
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectItem value="none">None</SelectItem>
-                                <SelectItem value="read">Read</SelectItem>
-                                <SelectItem value="read&write">
-                                  Read and Write
-                                </SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                ))}
+                {permissions.map((permission) => {
+                  console.log("permissions.${permission.value}",`permissions.${permission.value}`);
+                  
+                  return (
+                    <FormField
+                      key={permission.value}
+                      control={control}
+                      name={`permissions.${permission.value}`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium capitalize">
+                            {permission.label}
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl
+                                className={`bg-[#F9FAFB] border-[#D1D5DB] rounded-lg`}
+                              >
+                                <SelectTrigger className="w-full text-[#6B7280] text-sm font-normal font-inter">
+                                  <SelectValue />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="none">None</SelectItem>
+                                  <SelectItem value="read">Read</SelectItem>
+                                  <SelectItem value="read&write">
+                                    Read and Write
+                                  </SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  );
+                })}
               </div>
 
               <button
@@ -364,45 +379,6 @@ const EditSubAdmin = () => {
 };
 
 export default EditSubAdmin;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //vivek code
 
@@ -463,7 +439,7 @@ export default EditSubAdmin;
 //   const { control, reset, handleSubmit, setValue } = form;
 //   const [isShowPassword, setIsShowPassword] = useState(false);
 //   const [isChangePassword, setIsChangePassword] = useState(false);
-  
+
 //   const { state } = useLocation();
 //   const navigate = useNavigate();
 //   const { res, fetchData, isLoading } = useGetApiReq();
