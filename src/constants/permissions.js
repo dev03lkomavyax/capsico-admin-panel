@@ -10,4 +10,5 @@ export const permissions = [
   { label: "Reviews", value: "review" },
   { label: "Offers", value: "offer" },
   { label: "Application Request", value: "applicationRequest" },
+  { label: "Delivery Charges", value: "deliveryCharges" },
 ];

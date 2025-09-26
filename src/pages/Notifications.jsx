@@ -15,9 +15,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Link } from "react-router-dom";
+import SendBehaviouralNotificationModal from "@/components/notifications/SendBehaviouralNotificationModal";
 
 const Notifications = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [
+    isSendBehaviouralNotificationModalOpen,
+    setIsSendBehaviouralNotificationModalOpen,
+  ] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
@@ -51,24 +56,32 @@ const Notifications = () => {
             Notifications
           </h2>
           <div className="flex gap-5 items-center">
-            {type === "system" && (
-              <Button
-                onClick={() => setIsAddModalOpen(true)}
-                className="w-auto px-4"
-                variant="capsico"
-              >
+            {/* {type === "system" && ( */}
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              className="w-auto px-4"
+              variant="capsico"
+            >
+              <span className="text-xl">+</span> Send{" "}
+              <span className="capitalize">System</span> Notification
+            </Button>
+            {/* )} */}
+            {/* {type === "promotional" && ( */}
+            <Button asChild className="w-auto px-4" variant="capsico">
+              <Link to="/admin/notifications/promotional">
                 <span className="text-xl">+</span> Send{" "}
-                <span className="capitalize">{type}</span> Notification
-              </Button>
-            )}
-            {type === "promotional" && (
-              <Button asChild className="w-auto px-4" variant="capsico">
-                <Link to="/admin/notifications/promotional">
-                  <span className="text-xl">+</span> Send{" "}
-                  <span className="capitalize">{type}</span> Notification
-                </Link>
-              </Button>
-            )}
+                <span className="capitalize">Promotional</span> Notification
+              </Link>
+            </Button>
+            <Button
+              onClick={() => setIsSendBehaviouralNotificationModalOpen(true)}
+              className="w-auto px-4"
+              variant="capsico"
+            >
+              <span className="text-xl">+</span> Send{" "}
+              <span className="capitalize">Behavioural</span> Notification
+            </Button>
+            {/* )} */}
 
             <Select onValueChange={(value) => setType(value)} value={type}>
               <SelectTrigger>
@@ -76,11 +89,14 @@ const Notifications = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="transactional">Transactional</SelectItem>
                   <SelectItem value="promotional">Promotional</SelectItem>
                   <SelectItem value="behavioural">Behavioural</SelectItem>
                   <SelectItem value="system">System</SelectItem>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="Unable to Locate">
+                    Unable to Locate
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -104,6 +120,13 @@ const Notifications = () => {
           <SendNotificationModal
             isAddModalOpen={isAddModalOpen}
             setIsAddModalOpen={setIsAddModalOpen}
+            getNotifications={getNotifications}
+          />
+        )}
+        {isSendBehaviouralNotificationModalOpen && (
+          <SendBehaviouralNotificationModal
+            isAddModalOpen={isSendBehaviouralNotificationModalOpen}
+            setIsAddModalOpen={setIsSendBehaviouralNotificationModalOpen}
             getNotifications={getNotifications}
           />
         )}

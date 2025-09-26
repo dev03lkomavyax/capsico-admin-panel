@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { format } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -32,8 +31,9 @@ import {
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { MdCalendarMonth } from "react-icons/md";
+import { format } from "date-fns";
 
-const SendNotificationModal = ({
+const SendBehaviouralNotificationModal = ({
   isAddModalOpen,
   setIsAddModalOpen,
   getNotifications,
@@ -70,10 +70,12 @@ const SendNotificationModal = ({
 
   const onSubmit = (data) => {
     console.log("data :", data);
+
     fetchData(`/notification/send-notification`, {
       ...data,
       body: data.description,
-      date: format(new Date(data.date), "yyyy-MM-dd"),
+      type: "behavioural",
+      date:format(new Date(data.date),"yyyy-MM-dd")
     });
   };
 
@@ -87,11 +89,11 @@ const SendNotificationModal = ({
 
   return (
     <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <h2 className="text-[#111928] text-xl font-semibold font-inter">
-              Send Notification
+              Send Behavioural Notification
             </h2>
             <FormField
               control={form.control}
@@ -135,6 +137,7 @@ const SendNotificationModal = ({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="appType"
@@ -254,4 +257,4 @@ const SendNotificationModal = ({
   );
 };
 
-export default SendNotificationModal;
+export default SendBehaviouralNotificationModal;
