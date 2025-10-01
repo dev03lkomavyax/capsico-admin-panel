@@ -1,4 +1,5 @@
 import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
+import AllOffers from '@/components/offers/AllOffers';
 import CreateOffer from '@/components/offers/CreateOffer';
 import TrackOffer from '@/components/offers/TrackOffer';
 import { useState } from 'react'
@@ -15,7 +16,7 @@ const Offers = () => {
                 <div className='px-5'>
                     {isCreateOffer ?
                         <CreateOffer />
-                        : <TrackOffer />
+                        : <AllOffers />
                     }
                 </div>
             </section>
