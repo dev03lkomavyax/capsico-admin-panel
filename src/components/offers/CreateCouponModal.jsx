@@ -35,10 +35,12 @@ const CreateCouponModal = ({
   const [cuisines, setCuisines] = useState([]);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(CreateCouponSchema),
     defaultValues: {
+      restaurantId:"",
       couponCode: "",
       couponName: "",
       description: "",
@@ -76,6 +78,32 @@ const CreateCouponModal = ({
     fetchData: addCoupon,
     isLoading: isAddCouponLoading,
   } =usePostApiReq();
+
+    const {
+      res: fetchRestaurantsRes,
+      fetchData: fetchRestaurants,
+      isLoading: isRestaurantsLoading,
+    } = useGetApiReq();
+
+  const getRestaurants = () => {
+      fetchRestaurants(
+        `/admin/get-all-restaurants`
+      );
+    };
+  
+    useEffect(() => {
+      getRestaurants();
+    }, []);
+  
+    useEffect(() => {
+      if (
+        fetchRestaurantsRes?.status === 200 ||
+        fetchRestaurantsRes?.status === 201
+      ) {
+        console.log("fetchRestaurantsRes", fetchRestaurantsRes);
+        setRestaurants(fetchRestaurantsRes?.data?.restaurants || []);
+      }
+    }, [fetchRestaurantsRes]);
 
   const getCuisines = () => {
     fetchData("/admin/get-cuisines");
@@ -132,13 +160,15 @@ const CreateCouponModal = ({
   const onSubmit = (data) => {
     console.log("data", data);
     const apiData = {
+      restaurantId: data.restaurantId,
+      
       name: data.couponName,
+      description: data.description,
+      offerType: data.discountType,
       code: data.couponCode?.toUpperCase(),
       dealoftheday: data.isDealOfDay,
       priority: data.priorityLevel,
-      description: data.description,
       createdBy: "platform",
-      discountType: data.discountType,
       discountValue: data.discountValue,
       maxDiscount: data.maxDiscount,
       minOrderValue: data.minOrderValue,
@@ -183,6 +213,34 @@ const CreateCouponModal = ({
             className="space-y-4"
           >
             <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={control}
+                name="restaurantId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Restaurant</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Restaurant" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {restaurants.map((restaurant) => (
+                          <SelectItem key={restaurant._id} value={restaurant._id}>
+                            {restaurant.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={control}
                 name="couponCode"

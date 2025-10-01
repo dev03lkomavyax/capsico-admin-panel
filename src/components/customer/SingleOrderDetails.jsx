@@ -9,7 +9,7 @@ import EggIcon from '../customIcons/EggIcon';
 
 
 const SingleOrderDetails = ({ order }) => {
-    console.log("order", order);
+    // console.log("order", order);
 
     return (
         <div className='px-2 py-6 grid grid-cols-6 gap-4 items-center border-t border-[#C9C9C9]'>

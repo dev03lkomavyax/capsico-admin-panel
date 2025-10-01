@@ -4,12 +4,13 @@ import "./sidebar.css";
 import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IoNotifications } from "react-icons/io5";
+import { BiFile } from "react-icons/bi";
 
 const AdminSidebar = () => {
   const { pathname } = useLocation();
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
-  console.log("permissions", permissions);
+  // console.log("permissions", permissions);
   // console.log("userInfo", userInfo);
 
   const perm = {
@@ -651,6 +652,32 @@ const AdminSidebar = () => {
             }`}
           >
             Notifications
+          </span>
+        </Link>
+
+        <Link
+          to={`/admin/content`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/content")
+              ? "bg-[#F1F6FF]"
+              : "bg-[#FFFFFF]"
+          }`}
+        >
+          <BiFile
+            className={
+              pathname.includes("/admin/content")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/content")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Content Management
           </span>
         </Link>
       </ul>

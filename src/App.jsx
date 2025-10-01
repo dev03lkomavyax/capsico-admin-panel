@@ -13,6 +13,10 @@ import RecentOrders from "./pages/restaurant/RecentOrders";
 import Cookies from "js-cookie";
 import { initFirebaseNotifications } from "./utils/firebaseNotifications";
 import SendPromotionalNotification from "./components/notifications/SendPromotionalNotification";
+import CreateOffer from "./pages/offers/CreateOffer";
+import UpdateOffer from "./pages/offers/UpdateOffer";
+import Content from "./pages/content/Content";
+import ContentDetails from "./pages/content/ContentDetails";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -266,10 +270,15 @@ function App() {
             />
 
             <Route path="/admin/offers" element={<Offers />} />
-            <Route
+            {/* <Route
               path="/admin/offers/create-offer"
               element={<CreateOfferPage />}
+            /> */}
+            <Route
+              path="/admin/offers/create-offer"
+              element={<CreateOffer />}
             />
+            <Route path="/admin/offers/:id/update" element={<UpdateOffer />} />
 
             <Route
               path="/admin/application-request"
@@ -323,6 +332,9 @@ function App() {
             path="/admin/notifications/promotional"
             element={<SendPromotionalNotification />}
           />
+
+          <Route path="/admin/content" element={<Content />} />
+          <Route path="/admin/content/:slug" element={<ContentDetails />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
