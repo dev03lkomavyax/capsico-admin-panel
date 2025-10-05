@@ -53,7 +53,10 @@ const Offer = ({ offer, getOffers }) => {
         </TableCell>
         <TableCell className="whitespace-nowrap">{offer.scope}</TableCell>
         <TableCell>
-          <Switch checked={offer.isActive} />
+          {/* <Switch checked={offer.isActive} /> */}
+          <Badge variant={isActive ? "default" : "secondary"}>
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
         </TableCell>
         <TableCell className="whitespace-nowrap">
           {format(offer.startDate, "dd-MM-yyyy")}

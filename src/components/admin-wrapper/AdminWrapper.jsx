@@ -7,9 +7,11 @@ const AdminWrapper = ({ children }) => {
   return (
     <div className="flex w-full">
       <AdminSidebar />
-      <div className="h-full w-full">
+      <div className="h-full w-[calc(100%-250px)]">
         <Header />
-        <main className={`main h-[calc(100vh-80px)] p-10 pb-5 relative overflow-y-auto bg-[#F5F7FA]`}>
+        <main
+          className={`main h-[calc(100vh-80px)] p-10 pb-5 relative overflow-y-auto bg-[#F5F7FA]`}
+        >
           {children}
         </main>
       </div>

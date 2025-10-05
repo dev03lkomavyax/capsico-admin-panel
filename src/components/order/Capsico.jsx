@@ -27,6 +27,7 @@ import { LIMIT } from "@/constants/constants";
 import Spinner from "../Spinner";
 import DataNotFound from "../DataNotFound";
 import OrderStatusCount from "./OrderStatusCount";
+import toast from "react-hot-toast";
 
 // const Capsico = ({ setCapsicoOrderNo }) => {
 //   const socket = getSocket();
@@ -207,9 +208,6 @@ import OrderStatusCount from "./OrderStatusCount";
 
 // export default Capsico;
 
-
-
-
 const Capsico = ({ setCapsicoOrderNo }) => {
   const socket = getSocket();
   const navigate = useNavigate();
@@ -226,21 +224,25 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
+  console.log("capsicoOrderData", capsicoOrderData);
+
   useEffect(() => {
     socket.emit("subscribe_all_orders");
 
     const handleActiveOrders = (response) => {
-      if (response?.orders) {
-        setCapsicoOrderData(response.orders);
-        const map = {};
-        response.orders.forEach((order) => {
-          map[order.id] = order.timeline ?? {};
-        });
-        setTimelineMap(map);
-        if (setCapsicoOrderNo) {
-          setCapsicoOrderNo(response.orders.length);
-        }
-      }
+      console.log("active_orders response", response);
+
+      // if (response?.orders) {
+      //   setCapsicoOrderData(response.orders);
+      //   const map = {};
+      //   response.orders.forEach((order) => {
+      //     map[order.id] = order.timeline ?? {};
+      //   });
+      //   setTimelineMap(map);
+      //   if (setCapsicoOrderNo) {
+      //     setCapsicoOrderNo(response.orders.length);
+      //   }
+      // }
     };
 
     socket.on("active_orders", handleActiveOrders);
@@ -256,7 +258,30 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       socket.off("active_orders", handleActiveOrders);
       socket.off("order_timeline_update");
     };
-  }, [socket, setCapsicoOrderNo]);
+  }, [setCapsicoOrderNo]);
+
+  useEffect(() => {
+    const handleNewOrder = (response) => {
+      console.log("New order received:", response);
+      const { order } = response;
+
+      setCapsicoOrderData([
+        {
+          ...order,
+          new: true,
+          restaurant: order.restaurantId,
+          user: order.userId,
+        },
+        ...capsicoOrderData,
+      ]);
+    };
+
+    socket.on("NEW_ORDER", handleNewOrder);
+
+    return () => {
+      socket.off("NEW_ORDER", handleNewOrder);
+    };
+  }, []);
 
   const getAllOrder = () => {
     fetchData(
@@ -311,9 +336,13 @@ const Capsico = ({ setCapsicoOrderNo }) => {
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="preparing">Preparing</SelectItem>
-                <SelectItem value="ready_for_pickup">Ready for Pickup</SelectItem>
+                <SelectItem value="ready_for_pickup">
+                  Ready for Pickup
+                </SelectItem>
                 <SelectItem value="picked_up">Picked Up</SelectItem>
-                <SelectItem value="out_for_delivery">Out for Delivery</SelectItem>
+                <SelectItem value="out_for_delivery">
+                  Out for Delivery
+                </SelectItem>
                 <SelectItem value="arriving">Arriving</SelectItem>
                 <SelectItem value="delivered">Delivered</SelectItem>
                 <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -373,8 +402,8 @@ const Capsico = ({ setCapsicoOrderNo }) => {
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Price
               </TableHead>
-               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
-              Order Timing
+              <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                Order Timing
               </TableHead>
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Action
@@ -386,7 +415,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
               capsicoOrderData.map((data) => (
                 <SingleOrder
                   // key={data?._id}
-                         key={data?._id ?? data?.orderNumber} 
+                  key={data?._id ?? data?.orderNumber}
                   data={data}
                   getAllOrder={getAllOrder}
                 />

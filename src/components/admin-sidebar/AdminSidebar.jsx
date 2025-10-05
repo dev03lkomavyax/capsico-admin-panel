@@ -1,10 +1,11 @@
 import { readCookie } from "@/utils/readCookie";
 import { Link, useLocation } from "react-router-dom";
 import "./sidebar.css";
-import { MapPin } from "lucide-react";
+import { Globe, Layers, MapPin, Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IoNotifications } from "react-icons/io5";
 import { BiFile } from "react-icons/bi";
+import { MdOutlinePlace } from "react-icons/md";
 
 const AdminSidebar = () => {
   const { pathname } = useLocation();
@@ -26,6 +27,8 @@ const AdminSidebar = () => {
     reviews: "review",
     offers: "offer",
     "application-request": "applicationRequest",
+    zones: "zones",
+    notifications: "notifications",
   };
 
   return (
@@ -150,7 +153,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {/* {permissions && permissions[perm["availabeCities"]] !== "none" && (
           <Link
             to={`/admin/customer`}
@@ -206,36 +208,13 @@ const AdminSidebar = () => {
                 : "bg-[#FFFFFF]"
             }`}
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-                stroke={`${
-                  pathname.includes("/admin/available-cities")
-                    ? "#397FFE"
-                    : "#4A4A4A"
-                }`}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
-                stroke={`${
-                  pathname.includes("/admin/available-cities")
-                    ? "#397FFE"
-                    : "#4A4A4A"
-                }`}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Globe
+              className={
+                pathname.includes("/admin/available-cities")
+                  ? "text-[#397FFE] size-5"
+                  : "text-[#4A4A4A] size-5"
+              }
+            />
             <span
               className={`text-lg font-normal font-sans group-hover:inline ${
                 pathname.includes("/admin/available-cities")
@@ -256,36 +235,13 @@ const AdminSidebar = () => {
                 : "bg-[#FFFFFF]"
             }`}
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-                stroke={`${
-                  pathname.includes("/admin/content-management")
-                    ? "#397FFE"
-                    : "#4A4A4A"
-                }`}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
-                stroke={`${
-                  pathname.includes("/admin/content-management")
-                    ? "#397FFE"
-                    : "#4A4A4A"
-                }`}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <BiFile
+              className={
+                pathname.includes("/admin/content-management")
+                  ? "text-[#397FFE] !size-5"
+                  : "text-[#4A4A4A] !size-5"
+              }
+            />
             <span
               className={`text-lg font-normal font-sans group-hover:inline ${
                 pathname.includes("/admin/content-management")
@@ -297,7 +253,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["restaurant"]] !== "none" && (
           <Link
             to={`/admin/restaurant`}
@@ -339,7 +294,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["vendor"]] !== "none" && (
           <Link
             to={`/admin/vendor`}
@@ -383,7 +337,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["delivery-agent"]] !== "none" && (
           <Link
             to={`/admin/delivery-agent`}
@@ -458,7 +411,6 @@ const AdminSidebar = () => {
               </span>
             </Link>
           )}
-
         {permissions && permissions[perm["order"]] !== "none" && (
           <Link
             to={`/admin/order`}
@@ -512,7 +464,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["reviews"]] !== "none" && (
           <Link
             to={`/admin/reviews`}
@@ -548,7 +499,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["offers"]] !== "none" && (
           <Link
             to={`/admin/offers`}
@@ -590,7 +540,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         {permissions && permissions[perm["application-request"]] !== "none" && (
           <Link
             to={`/admin/application-request`}
@@ -628,7 +577,6 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-
         <Link
           to={`/admin/notifications`}
           className={`flex items-center gap-3 px-4 py-3 ${
@@ -654,7 +602,6 @@ const AdminSidebar = () => {
             Notifications
           </span>
         </Link>
-
         <Link
           to={`/admin/content`}
           className={`flex items-center gap-3 px-4 py-3 ${
@@ -666,8 +613,8 @@ const AdminSidebar = () => {
           <BiFile
             className={
               pathname.includes("/admin/content")
-                ? "text-[#397FFE]"
-                : "text-[#4A4A4A]"
+                ? "text-[#397FFE] !size-5"
+                : "text-[#4A4A4A] !size-5"
             }
           />
           <span
@@ -680,6 +627,64 @@ const AdminSidebar = () => {
             Content Management
           </span>
         </Link>
+        {permissions &&
+          permissions[perm["zones"]] &&
+          permissions[perm["zones"]] !== "none" && (
+            <Link
+              to={`/admin/zones`}
+              className={`flex items-center gap-3 px-4 py-3 ${
+                pathname.includes("/admin/zones")
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
+              }`}
+            >
+              <Layers
+                className={
+                  pathname.includes("/admin/zones")
+                    ? "text-[#397FFE] size-5"
+                    : "text-[#4A4A4A] size-5"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/zones")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Zones
+              </span>
+            </Link>
+          )}
+        {/* {permissions &&
+          permissions[perm["tickets"]] &&
+          permissions[perm["tickets"]] !== "none" && ( */}
+        <Link
+          to={`/admin/tickets`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/tickets")
+              ? "bg-[#F1F6FF]"
+              : "bg-[#FFFFFF]"
+          }`}
+        >
+          <Ticket
+            className={
+              pathname.includes("/admin/tickets")
+                ? "text-[#397FFE] size-5"
+                : "text-[#4A4A4A] size-5"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/tickets")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Tickets
+          </span>
+        </Link>
+        {/* )} */}
       </ul>
     </aside>
   );

@@ -36,7 +36,6 @@ const LeftChart = ({ revenueGraph = [], range = "yearly" }) => {
   // transform backend data depending on range
   const chartData = revenueGraph.map((item) => {
     if (range === "today") {
-      console.log("item",item);
       
       return {
         label: `${item._id.hour}:00`,
