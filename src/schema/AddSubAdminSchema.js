@@ -50,6 +50,12 @@ export const AddSubAdminSchema = z.object({
     deliveryCharges: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for deliveryCharges.",
     }),
+    zones: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for zones.",
+    }),
+    notifications: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for notifications.",
+    }),
   }),
 });
 
@@ -95,6 +101,12 @@ export const EditSubAdminSchema = z.object({
     }),
     deliveryCharges: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for deliveryCharges.",
+    }),
+    zones: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for zones.",
+    }),
+    notifications: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for notifications.",
     }),
   }),
 });

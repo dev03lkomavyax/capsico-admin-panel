@@ -17,6 +17,10 @@ import CreateOffer from "./pages/offers/CreateOffer";
 import UpdateOffer from "./pages/offers/UpdateOffer";
 import Content from "./pages/content/Content";
 import ContentDetails from "./pages/content/ContentDetails";
+import Zones from "./pages/zones/Zones";
+import CreateZone from "./pages/zones/CreateZone";
+import Tickets from "./pages/tickets/Tickets";
+import { SocketProvider } from "./socket";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -110,7 +114,7 @@ function App() {
   };
 
   const token = readCookie("userInfo");
-  console.log("token", token);
+  // console.log("token", token);
 
   const refreshToken = () => {
     fetchRefreshData("/admin/refresh-token");
@@ -130,7 +134,7 @@ function App() {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       Cookies.set("admin-status", `${res?.data?.isAuthenticated}`);
-      console.log("status response", res);
+      // console.log("status response", res);
       res?.data?.shouldLoggOut && logout();
       !res?.data?.isAuthenticated && refreshToken();
     }
@@ -163,7 +167,13 @@ function App() {
       <Suspense fallback={<Fallback />}>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
+          <Route
+            element={
+              <SocketProvider>
+                <ProtectedRoute />
+              </SocketProvider>
+            }
+          >
             <Route path="/admin/dashboard" element={<AdminDashBoard />} />
             <Route
               path="/admin/dashboard/reporting"
@@ -300,41 +310,46 @@ function App() {
               path="/admin/delivery-charges/update"
               element={<AddDeliveryChargeForm />}
             />
+            <Route
+              path="/admin/available-cities"
+              element={<AvailableCitiesList />}
+            />
+            <Route
+              path="/admin/available-cities/create"
+              element={<CityFormPage />}
+            />
+            <Route
+              path="/admin/available-cities/:id"
+              element={<CityFormPage />}
+            />
+
+            <Route
+              path="/admin/content-management"
+              element={<ContentManagement />}
+            />
+            <Route
+              path="/admin/content-management/add"
+              element={<ContentForm />}
+            />
+            <Route
+              path="/admin/content-management/edit/:contentId"
+              element={<ContentForm />}
+            />
+
+            <Route path="/admin/notifications" element={<Notifications />} />
+            <Route
+              path="/admin/notifications/promotional"
+              element={<SendPromotionalNotification />}
+            />
+
+            <Route path="/admin/content" element={<Content />} />
+            <Route path="/admin/content/:slug" element={<ContentDetails />} />
+
+            <Route path="/admin/zones" element={<Zones />} />
+            <Route path="/admin/zones/create" element={<CreateZone />} />
+
+            <Route path="/admin/tickets" element={<Tickets />} />
           </Route>
-          <Route
-            path="/admin/available-cities"
-            element={<AvailableCitiesList />}
-          />
-          <Route
-            path="/admin/available-cities/create"
-            element={<CityFormPage />}
-          />
-          <Route
-            path="/admin/available-cities/:id"
-            element={<CityFormPage />}
-          />
-
-          <Route
-            path="/admin/content-management"
-            element={<ContentManagement />}
-          />
-          <Route
-            path="/admin/content-management/add"
-            element={<ContentForm />}
-          />
-          <Route
-            path="/admin/content-management/edit/:contentId"
-            element={<ContentForm />}
-          />
-
-          <Route path="/admin/notifications" element={<Notifications />} />
-          <Route
-            path="/admin/notifications/promotional"
-            element={<SendPromotionalNotification />}
-          />
-
-          <Route path="/admin/content" element={<Content />} />
-          <Route path="/admin/content/:slug" element={<ContentDetails />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

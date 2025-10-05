@@ -1,13 +1,14 @@
-import adminDash1 from "@/assets/admin-dash-1.png";
 import adminDash2 from "@/assets/admin-dash-2.png";
 import adminDash3 from "@/assets/admin-dash-3.png";
 import adminDash4 from "@/assets/admin-dash-4.png";
 
-import graphRed from "@/assets/graph-red.png";
-import graphGreen from "@/assets/graph-green.png";
 import bar1 from "@/assets/bar-1.png";
 import bar2 from "@/assets/bar-2.png";
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Infocard from "@/components/admin/Infocard";
+import LeftChart from "@/components/admin/LeftChart";
+import RightChart from "@/components/admin/RightChart";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -15,16 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import LeftChart from "@/components/admin/LeftChart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MdArrowForwardIos } from "react-icons/md";
-import RightChart from "@/components/admin/RightChart";
-import { Progress } from "@/components/ui/progress";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import { useNavigate } from "react-router-dom";
-import { getSocket } from "@/socket";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { useEffect, useState } from "react";
+import { MdArrowForwardIos } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashBoard = () => {
   const [dayFilter, setDayFilter] = useState("today");
@@ -33,13 +29,12 @@ const AdminDashBoard = () => {
   const [totlaIncome, setTotlaIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const navigate = useNavigate();
-  const socket = getSocket();
 
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-  socket.on("connection", (socket) => {
-    console.log("connection", socket);
-  });
+  // socket.on("connection", (socket) => {
+  //   console.log("connection", socket);
+  // });
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -55,7 +50,7 @@ const AdminDashBoard = () => {
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-      console.log("getStats res", res);
+      // console.log("getStats res", res);
       const data = res?.data.data;
       setStatsData(data || "");
 
@@ -72,7 +67,6 @@ const AdminDashBoard = () => {
       setTotalExpense(expenseSum.toFixed());
     }
   }, [res]);
-  console.log("statsData:", statsData);
 
   return (
     <AdminWrapper>
