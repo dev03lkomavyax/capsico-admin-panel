@@ -21,6 +21,7 @@ import Zones from "./pages/zones/Zones";
 import CreateZone from "./pages/zones/CreateZone";
 import Tickets from "./pages/tickets/Tickets";
 import { SocketProvider } from "./socket";
+import DeliveryAgentPayout from "./pages/delivery-agent/DeliveryAgentPayout";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -253,6 +254,10 @@ function App() {
             <Route
               path="/admin/delivery-agent/:deliveryAgentId"
               element={<DeliveryAgentDetails />}
+            />
+            <Route
+              path="/admin/delivery-agent/:deliveryAgentId/payout"
+              element={<DeliveryAgentPayout />}
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/edit-profile"

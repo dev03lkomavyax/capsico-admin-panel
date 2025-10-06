@@ -9,12 +9,13 @@ import DataNotFound from "@/components/DataNotFound";
 import SingleDelivery from "@/components/delivery-agent/SingleDelivery";
 import ReactPagination from "@/components/pagination/ReactPagination";
 import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { viewDbImagePreview } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const DeliveryAgentDetails = () => {
   const navigate = useNavigate();
@@ -79,6 +80,11 @@ const DeliveryAgentDetails = () => {
               Delivery agent detail
             </span>
           </button>
+          <Button className="w-auto px-4">
+            <Link to={`/admin/delivery-agent/${deliveryAgentId}/payout`}>
+              Payout Info
+            </Link>
+          </Button>
         </div>
         <div className="grid grid-cols-[60%_38%] gap-[2%]">
           <div className="bg-white p-5 rounded-lg flex gap-10">
@@ -100,7 +106,9 @@ const DeliveryAgentDetails = () => {
                 </h1>
                 <img
                   onClick={() =>
-                    navigate(`/admin/delivery-agent/${deliveryAgentId}/edit-profile`)
+                    navigate(
+                      `/admin/delivery-agent/${deliveryAgentId}/edit-profile`
+                    )
                   }
                   className="w-5 h-5 cursor-pointer"
                   src={edit}
