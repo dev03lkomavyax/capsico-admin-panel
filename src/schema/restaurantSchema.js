@@ -157,16 +157,30 @@ export const AddProfileSchema3 = z.object({
         ),
 });
 
+// export const EditProfileSchema4 = z.object({
+//     isRefered: z.boolean().default(false),
+//     timing: z.string().min(1, "Required field"),
+//     menuImages: z
+//         .any()
+//         .refine((file) => file && file.length > 0, "Menu Images are required"),
+//     menuImagesPreview: z.string().optional(), // Can be empty or undefined
+//     numberType: z.enum(["Mobile", "Landline"]).optional(), // Restrict to specific types if applicable
+//     number: z.string().min(1, "Number is required"),
+//     isManually: z.string().default("Enter this information manually"),
+//     fullName: z.string().min(1, "Full name is required"),
+//     email: z.string().email("Invalid email format").optional(),
+//     accountingNotificationsNumber: z.string().optional(),
+// });
 export const EditProfileSchema4 = z.object({
     isRefered: z.boolean().default(false),
     timing: z.string().min(1, "Required field"),
     menuImages: z
         .any()
         .refine((file) => file && file.length > 0, "Menu Images are required"),
-    menuImagesPreview: z.string().optional(), // Can be empty or undefined
-    numberType: z.enum(["Mobile", "Landline"]).optional(), // Restrict to specific types if applicable
+    menuImagesPreview: z.array(z.string()).optional(), // Changed from z.string() to z.array(z.string())
+    numberType: z.enum(["Mobile", "Landline", "Same as restaurant mobile no."]).optional(),
     number: z.string().min(1, "Number is required"),
-    isManually: z.string().default("Enter this information manually"),
+    isManually: z.enum(["Use details of the restaurant owner.", "Enter this information manually"]).default("Enter this information manually"),
     fullName: z.string().min(1, "Full name is required"),
     email: z.string().email("Invalid email format").optional(),
     accountingNotificationsNumber: z.string().optional(),

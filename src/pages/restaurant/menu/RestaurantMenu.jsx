@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { FaArrowRight, FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 
 function RestaurantMenu() {
@@ -23,28 +23,55 @@ function RestaurantMenu() {
   const [isAddonGroupsModalOpen, setIsAddonGroupsModalOpen] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState("");
   const [foodItemsInfo, setFoodItemsInfo] = useState("");
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const params = useParams();
 
-  const getCategories = () => {
-    fetchData(
-      `/admin/get-categories/${params?.restaurantId}?searchQuery=${searchQuery}`
-    );
-  };
+ 
+const getCategories = () => {
+  console.log("🔄 Fetching categories for restaurant:", params?.restaurantId);
+  console.log("🔍 Search query:", searchQuery);
+  
+  const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&searchQuery=${searchQuery}`;
+  console.log("🔍 Full API URL:", url);
+  
+  fetchData(url);
+};
 
   useEffect(() => {
     getCategories();
   }, [searchQuery]);
 
-  useEffect(() => {
-    if (res?.status === 200 || res?.status === 201) {
-      console.log("get category res", res);
-      setAllCategories(res?.data?.data);
+  // Enhanced debug logging
+ useEffect(() => {
+  console.log("📋 Categories API Response:", res);
+  if (res?.status === 200 || res?.status === 201) {
+    console.log("✅ Full response data:", res?.data);
+    console.log("🔍 Response structure:", {
+      success: res?.data?.success,
+      message: res?.data?.message,
+      dataKeys: Object.keys(res?.data?.data || {}),
+      categoriesLength: res?.data?.data?.categories?.length,
+      pagination: res?.data?.pagination
+    });
+    
+    const categories = res?.data?.data?.categories || [];
+    console.log("✅ Extracted categories:", categories);
+    console.log("✅ Number of categories:", categories.length);
+    
+    // If empty, let's see if there are categories but in wrong format
+    if (categories.length === 0) {
+      console.log("⚠️ No categories found for restaurant:", params?.restaurantId);
+      console.log("🔍 Full data object:", res?.data?.data);
     }
-  }, [res]);
+    
+    setAllCategories(categories);
+  }
+}, [res]);
 
+  // For fetching menu items by subcategory
   const {
     res: foodItemRes,
     fetchData: fetchFoodItemData,
@@ -52,29 +79,43 @@ function RestaurantMenu() {
   } = useGetApiReq();
 
   const getFoodItems = () => {
-    fetchFoodItemData(
-      `/admin/category/${categoryId}/food?restaurantId=${params?.restaurantId}`
-    );
+    if (selectedSubCategoryId) {
+      console.log(" Fetching menu items for subcategory:", selectedSubCategoryId);
+      fetchFoodItemData(`/restaurant/category/by-subcategory/${selectedSubCategoryId}`);
+    }
   };
 
   useEffect(() => {
-    categoryId && getFoodItems();
-  }, [categoryId]);
+    getFoodItems();
+  }, [selectedSubCategoryId]);
 
   useEffect(() => {
     if (foodItemRes?.status === 200 || foodItemRes?.status === 201) {
-      console.log("get food items res", foodItemRes);
-      // setFoodItems(res?.data?.data);
-      const { categoryInfo, itemsByCategory, totalItems } =
-        foodItemRes?.data?.data;
-
-      setFoodItemsInfo({
-        categoryInfo,
-        totalItems,
-        itemsByCategory: itemsByCategory[categoryInfo.name],
-      });
+      console.log(" Menu items response:", foodItemRes);
+      const data = foodItemRes?.data?.data;
+      
+      if (data && data.subcategories && data.subcategories.length > 0) {
+        const subcategory = data.subcategories[0];
+        setFoodItemsInfo({
+          categoryInfo: {
+            name: subcategory.name,
+            id: subcategory.subcategoryId
+          },
+          totalItems: data.menuItems?.length || 0,
+          itemsByCategory: data.menuItems || []
+        });
+      }
     }
   }, [foodItemRes]);
+
+  // Handle subcategory click from ItemComp
+  const handleSubcategoryClick = (subcategoryId, isActive) => {
+    console.log("🔄 Subcategory clicked:", subcategoryId, "Active:", isActive);
+    if (isActive) {
+      setSelectedSubCategoryId(subcategoryId);
+      setCategoryId(subcategoryId);
+    }
+  };
 
   return (
     <AdminWrapper>
@@ -101,6 +142,7 @@ function RestaurantMenu() {
             Manage inventory
           </button>
         </div>
+
         {isActiveTab === "editor" && (
           <>
             <div className="flex justify-start items-center -ml-4 mt-5">
@@ -113,84 +155,94 @@ function RestaurantMenu() {
                 className="w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto"
               />
             </div>
+
             <div className="w-full rounded-lg overflow-hidden h-[500px] flex items-start border border-[#CED7DE] my-5">
               <div className="left-section relative w-1/3 h-full rounded-tl-lg bg-white border-r border-r-[#CED7DE]">
-                <h3 className=" class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
+                <h3 className="class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
                   Categories
                 </h3>
+                
                 <button
                   className="flex w-full items-center gap-3 px-5 py-4 border-b"
                   onClick={() => setIsOpenCategoryModel(true)}
                 >
                   <FaPlus className="primary-color" />
-                  <span className="class-base1 primary-color">
-                    Add Category
-                  </span>
+                  <span className="class-base1 primary-color">Add Category</span>
                 </button>
+                
                 <div className="overflow-y-auto h-full pb-[180px]">
-                  {allCategories?.map((category) => (
-                    <ItemComp
-                      key={category?.id}
-                      categoryId={categoryId}
-                      setCategoryId={setCategoryId}
-                      category={category}
-                      getCategories={getCategories}
-                      show={true}
-                    />
-                  ))}
-
-                  {allCategories.length === 0 && isLoading && <Spinner />}
-
-                  {allCategories.length === 0 && !isLoading && (
+                  {isLoading ? (
+                    <div className="flex justify-center items-center p-8">
+                      <Spinner />
+                    </div>
+                  ) : allCategories?.length > 0 ? (
+                    allCategories.map((category) => (
+                      <ItemComp
+                        key={category?.id}
+                        categoryId={categoryId}
+                        setCategoryId={setCategoryId}
+                        category={category}
+                        getCategories={getCategories}
+                        handleSubcategoryClick={handleSubcategoryClick}
+                        show={true}
+                      />
+                    ))
+                  ) : (
                     <DataNotFound name="Categories" />
                   )}
                 </div>
-                {/* <button
-                  onClick={() => setIsAddonGroupsModalOpen(true)}
-                  className="primary-color mt-auto bg-white shadow-3xl absolute bottom-0 flex w-full justify-between items-center left-0 p-4"
-                >
-                  Go to Add Ons
-                  <FaArrowRight className="primary-color" />
-                </button> */}
               </div>
-              {categoryId && (
+
+              {selectedSubCategoryId && (
                 <div className="right-section relative w-2/3 bg-white overflow-y-auto h-full">
                   <div className="sticky top-0 bg-white">
                     {foodItemsInfo && (
-                      <h3 className=" class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
-                        {foodItemsInfo?.categoryInfo?.name} (
-                        {foodItemsInfo?.totalItems})
+                      <h3 className="class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
+                        {foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})
                       </h3>
                     )}
+                    
                     <button
                       className="flex w-full items-center gap-3 p-5 border-b"
                       onClick={() =>
                         navigate(
-                          `/admin/restaurant/${params?.restaurantId}/${categoryId}/addmenu`,
+                          `/admin/restaurant/${params?.restaurantId}/${selectedSubCategoryId}/addmenu`,
                           {
-                            state: { restaurantId: params?.restaurantId },
+                            state: { 
+                              restaurantId: params?.restaurantId,
+                              subcategoryId: selectedSubCategoryId,
+                              categoryId: foodItemsInfo?.categoryInfo?.parentCategoryId 
+                            },
                           }
                         )
                       }
                     >
                       <FaPlus className="primary-color" />
-                      <span className="class-base1 primary-color">
-                        Add New Item
-                      </span>
+                      <span className="class-base1 primary-color">Add New Item</span>
                     </button>
                   </div>
+                  
                   <div className="">
-                    {foodItemsInfo?.itemsByCategory?.map((foodItem, index) => (
-                      <Product
-                        key={index}
-                        foodItem={foodItem}
-                        getFoodItems={getFoodItems}
-                      />
-                    ))}
+                    {isFoodItemLoading ? (
+                      <div className="flex justify-center items-center p-8">
+                        <Spinner />
+                      </div>
+                    ) : foodItemsInfo?.itemsByCategory?.length > 0 ? (
+                      foodItemsInfo.itemsByCategory.map((foodItem, index) => (
+                        <Product
+                          key={foodItem.id || index}
+                          foodItem={foodItem}
+                          getFoodItems={getFoodItems}
+                        />
+                      ))
+                    ) : (
+                      <DataNotFound name="Items" />
+                    )}
                   </div>
                 </div>
               )}
             </div>
+
             {isOpenCategoryModel && (
               <CategoryEditModel
                 isOpenCategoryModel={isOpenCategoryModel}
@@ -203,6 +255,8 @@ function RestaurantMenu() {
               <SubCategoryEditModel
                 isOpenSubCategoryModel={isOpenSubCategoryModel}
                 setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
+                categoryId={categoryId}
+                getCategories={getCategories}
               />
             )}
 

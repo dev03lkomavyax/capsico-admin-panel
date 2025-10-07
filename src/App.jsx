@@ -64,6 +64,9 @@ const CityFormPage = lazy(() => import('./pages/admin/AvailableCities/availableC
 
 const ContentManagement = lazy(() => import('./pages/ContentManagement/ContentManagement'));
 const ContentForm = lazy(() => import('./pages/ContentManagement/ContentForm'));
+const CreateTags = lazy(() => import('./pages/restaurant/menu/menuTagSelector'));
+// const TagsList = lazy(() => import('./pages/admin/TagsList'));
+// const EditTag = lazy(() => import('./pages/admin/EditTag'));
 
 function App() {
   const { isLoading } = useSelector((state) => state.loading);
@@ -183,6 +186,9 @@ function App() {
               path="/admin/restaurant/:restaurantId/menu"
               element={<RestaurantMenu />}
             />
+      <Route path="/admin/tags/create" element={<CreateTags />} />
+  {/* <Route path="/admin/tags" element={<TagsList />} />
+  <Route path="/admin/tags/:tagId/edit" element={<EditTag />} /> */}
 
             <Route path="/admin/customer" element={<CustomerList />} />
             <Route

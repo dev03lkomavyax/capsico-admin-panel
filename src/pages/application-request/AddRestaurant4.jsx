@@ -132,7 +132,7 @@ const AddRestaurant4 = ({ page, setPage }) => {
                 </div>
                 <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-7'>
                     <h3 className='text-lg font-bold text-[#4A5E6D]'>Upload online ordering menu photos</h3>
-                    <p className='text-xs font-semibold text-[#ABABAB]'>Costomers will choose item from this menu while placing online orders</p>
+                    <p className='text-xs font-semibold text-[#ABABAB]'>Customers will choose item from this menu while placing online orders</p>
                     <div className='mt-5 flex flex-col gap-8'>
                         <div className="w-full relative">
                             <FormField
