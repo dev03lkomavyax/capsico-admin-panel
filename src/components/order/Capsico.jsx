@@ -224,65 +224,6 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
-  console.log("capsicoOrderData", capsicoOrderData);
-
-  useEffect(() => {
-    socket.emit("subscribe_all_orders");
-
-    const handleActiveOrders = (response) => {
-      console.log("active_orders response", response);
-
-      // if (response?.orders) {
-      //   setCapsicoOrderData(response.orders);
-      //   const map = {};
-      //   response.orders.forEach((order) => {
-      //     map[order.id] = order.timeline ?? {};
-      //   });
-      //   setTimelineMap(map);
-      //   if (setCapsicoOrderNo) {
-      //     setCapsicoOrderNo(response.orders.length);
-      //   }
-      // }
-    };
-
-    socket.on("active_orders", handleActiveOrders);
-
-    socket.on("order_timeline_update", (update) => {
-      setTimelineMap((prev) => ({
-        ...prev,
-        [update.id]: update.timeline,
-      }));
-    });
-
-    return () => {
-      socket.off("active_orders", handleActiveOrders);
-      socket.off("order_timeline_update");
-    };
-  }, [setCapsicoOrderNo]);
-
-  useEffect(() => {
-    const handleNewOrder = (response) => {
-      console.log("New order received:", response);
-      const { order } = response;
-
-      setCapsicoOrderData([
-        {
-          ...order,
-          new: true,
-          restaurant: order.restaurantId,
-          user: order.userId,
-        },
-        ...capsicoOrderData,
-      ]);
-    };
-
-    socket.on("NEW_ORDER", handleNewOrder);
-
-    return () => {
-      socket.off("NEW_ORDER", handleNewOrder);
-    };
-  }, []);
-
   const getAllOrder = () => {
     fetchData(
       `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
@@ -290,6 +231,90 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       }`
     );
   };
+
+  
+  useEffect(() => {
+    socket.emit("subscribe_all_orders");
+    
+    const handleActiveOrders = (response) => {
+      console.log("active_orders response", response);
+      
+      // if (response?.orders) {
+      //   setCapsicoOrderData(response.orders);
+      //   const map = {};
+      //   response.orders.forEach((order) => {
+        //     map[order.id] = order.timeline ?? {};
+        //   });
+      //   setTimelineMap(map);
+      //   if (setCapsicoOrderNo) {
+      //     setCapsicoOrderNo(response.orders.length);
+      //   }
+      // }
+    };
+    
+    socket.on("active_orders", handleActiveOrders);
+    
+    socket.on("order_timeline_update", (update) => {
+      setTimelineMap((prev) => ({
+        ...prev,
+        [update.id]: update.timeline,
+      }));
+    });
+    
+    return () => {
+      socket.off("active_orders", handleActiveOrders);
+      socket.off("order_timeline_update");
+    };
+  }, [setCapsicoOrderNo]);
+  
+  console.log("capsicoOrderData", capsicoOrderData);
+  useEffect(() => {
+    const handleNewOrder = (response) => {
+      console.log("New order received:", response);
+      const { order } = response;
+      console.log("capsicoOrderData in handleNewOrder", capsicoOrderData);
+      const orderArray = [...capsicoOrderData];
+      
+      console.log("orderArray", orderArray);
+      orderArray.unshift({
+        ...order,
+        new: true,
+        // restaurant: order.restaurantId,
+        user: order.customer,
+      });
+
+      console.log("orderArray-1", orderArray);
+      
+
+      setCapsicoOrderData(orderArray);
+
+      // setCapsicoOrderData([
+      //   {
+      //     ...order,
+      //     new: true,
+      //     // restaurant: order.restaurantId,
+      //     // user: order.userId,
+      //   },
+      //   ...capsicoOrderData,
+      // ]);
+    };
+
+    const handleOrderUpdate = (response) => {
+      console.log("order update:", response);
+      const { order } = response;
+      getAllOrder()
+    };
+
+    socket.on("NEW_ORDER", handleNewOrder);
+    socket.on("order_update", handleOrderUpdate);
+
+    return () => {
+      socket.off("NEW_ORDER", handleNewOrder);
+      socket.off("order_update", handleOrderUpdate);
+    };
+  }, []);
+
+  
 
   useEffect(() => {
     getAllOrder();
@@ -382,7 +407,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10">
-                <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+                {/* <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" /> */}
               </TableHead>
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Order ID

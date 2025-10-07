@@ -232,7 +232,12 @@ const OrderDetails = () => {
                       orderDetailsData?.deliveryPartner?.partnerId?.address
                         ?.city
                     }
-                    , {orderDetailsData?.deliveryPartner?.partnerId?.address.state},{" "}
+                    ,{" "}
+                    {
+                      orderDetailsData?.deliveryPartner?.partnerId?.address
+                        .state
+                    }
+                    ,{" "}
                     {
                       orderDetailsData?.deliveryPartner?.partnerId?.address
                         ?.pincode
@@ -323,15 +328,23 @@ const OrderDetails = () => {
                 </h3>
               </div>
             </div>
-            {status === "cancelled" && (
+            {orderDetailsData?.status === "rejected" && (
               <div className="rounded-lg bg-white mt-5 p-4 px-6">
                 <div>
                   <div className="border rounded-lg p-4">
+                    <p className="text-muted-foreground">
+                      Cancelled By:
+                      <span className="capitalize text-[#515151]">
+                        {" "}
+                        {orderDetailsData?.cancelDetails?.cancelledBy}
+                      </span>
+                    </p>
                     <h3 className="font-inter font-medium text-sm text-[#515151]">
-                      Reason
+                      Reason:
                     </h3>
                     <p className="font-inter text-xs text-[#7C7C7C]">
-                      order placed by mistake
+                      {orderDetailsData?.cancelDetails?.cancellationReason ||
+                        "NA"}
                     </p>
                   </div>
                 </div>
