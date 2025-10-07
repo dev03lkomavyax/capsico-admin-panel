@@ -42,8 +42,10 @@ const Login = () => {
       navigate("/admin/dashboard");
       localStorage.setItem("adminAccessToken", res?.data?.accessToken);
       localStorage.setItem("admin-status", true);
-      Cookies.set("userInfo", JSON.stringify(res?.data?.user));
-      Cookies.set("admin-status", true);
+      Cookies.set("userInfo", JSON.stringify(res?.data?.user), {
+        expires: 365,
+      });
+      Cookies.set("admin-status", true, { expires: 365 });
     }
   }, [res]);
 

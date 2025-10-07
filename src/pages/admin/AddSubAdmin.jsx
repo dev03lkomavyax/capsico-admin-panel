@@ -36,6 +36,10 @@ const AddSubAdmin = () => {
           review: "none",
           offer: "none",
           applicationRequest: "none",
+          deliveryCharges: "none",
+          zones: "none",
+          notifications: "none",
+          tickets: "none",
         },
       },
     });

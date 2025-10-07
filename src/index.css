@@ -300,3 +300,36 @@
 .primary-color{
   @apply text-[#1A56DB]
 }
+
+.blink-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #00b300;
+  /* vivid green */
+  display: inline-block;
+  /* blinking animation: 1s cycle, infinite */
+  animation: blink 1s infinite ease-in-out;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .blink-dot {
+    animation: none;
+    opacity: 1;
+  }
+}

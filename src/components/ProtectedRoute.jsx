@@ -1,11 +1,14 @@
-import { SocketProvider } from "@/socket";
+import { getSocket } from "@/socket";
+import playSound from "@/utils/NotificationSound";
 import { readCookie } from "@/utils/readCookie";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const adminStatus = readCookie("admin-status");
   const isAuthenticated = JSON.parse(JSON.stringify(adminStatus) || "false");
+  const socket = getSocket();
 
   const [isReturn, setIsReturn] = useState(true);
   const userInfo = readCookie("userInfo");
@@ -62,11 +65,46 @@ const ProtectedRoute = () => {
     permissions,
   ]);
 
-  return (
-    <SocketProvider>
-      <Outlet />
-    </SocketProvider>
-  );
+  useEffect(() => {
+    const handleNewOrder = (response) => {
+      console.log("New order received:", response);
+      const { order } = response;
+      toast.success(`New Order #${order.orderNumber} received! 🚀`, {
+        duration: 4000,
+        // position: "top-right",
+      });
+      playSound();
+    };
+
+    const handleOrderUpdate = (response) => {
+      console.log("order update:", response);
+      const { order } = response;
+      if (order.status === "rejected") {
+         toast.error(`Order #${order.orderNumber} rejected by Resaturant! 🚀`, {
+           duration: 4000,
+           // position: "top-right",
+         });
+      } else {
+        toast.success(
+          `Order #${order.orderNumber} accepted by Resaturant! 🚀`,
+          {
+            duration: 4000,
+            // position: "top-right",
+          }
+        );
+      }
+    };
+
+    socket.on("NEW_ORDER", handleNewOrder);
+    socket.on("order_update", handleOrderUpdate);
+
+    return () => {
+      socket.off("NEW_ORDER", handleNewOrder);
+      socket.off("order_update", handleOrderUpdate);
+    };
+  }, []);
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
