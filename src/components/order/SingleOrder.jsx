@@ -21,7 +21,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const handleEdit = () => {
-    navigate(`/admin/order/${data?._id}`);
+    navigate(`/admin/order/${data?._id || data?.id}`);
   };
 
   const handleRemove = () => {
@@ -31,7 +31,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
   const { res, fetchData, isLoading } = useDeleteApiReq();
 
   const deleteOrder = () => {
-    fetchData(`/admin/delete-order?orderId=${data?._id}`);
+    fetchData(`/admin/delete-order?orderId=${data?._id || data?.id}`);
   };
 
   useEffect(() => {
@@ -46,7 +46,14 @@ const SingleOrder = ({ data, getAllOrder }) => {
       <TableRow>
         <TableCell className="w-10">
           {
-            <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+            // <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+            data.new && (
+              <div
+                className="blink-dot"
+                role="img"
+                aria-label="Blinking green dot"
+              ></div>
+            )
           }
         </TableCell>
         {/* <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
@@ -74,8 +81,8 @@ const SingleOrder = ({ data, getAllOrder }) => {
           </div>
         </TableCell>
         <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
-          {data?.createdAt &&
-            format(new Date(data.createdAt), "MMM dd, yyyy")}
+          {data?.timing?.orderedAt &&
+            format(new Date(data.timing?.orderedAt), "MMM dd, yyyy")}
         </TableCell>
         <TableCell className="text-[#667085] text-[9px] font-normal font-inter">
           {data.restaurant?.name}
@@ -83,12 +90,12 @@ const SingleOrder = ({ data, getAllOrder }) => {
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
           {data?.amounts?.total}
         </TableCell>
-                <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
-    {data?.orderTiming || "N/A"}
-  </TableCell>
+        <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
+          {/* {data?.orderTiming || "N/A"} */}
+          {data?.timing?.orderedAt &&
+            format(new Date(data.timing?.orderedAt), "hh:mm a")}
+        </TableCell>
 
-
-        
         <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
           <div className="flex gap-2 items-center">
             <Button onClick={handleEdit} size="xs" variant="capsico">

@@ -69,7 +69,7 @@ const OrderStatusCount = ({ handleOnClick, selectOrderTab }) => {
           selectOrderTab === "newOrder" ? "bg-[#cfe0ff]" : "bg-[#E3EDFF]"
         }`}
       >
-        New Order ({orderStatusCount.newOrders})
+        New Order ({orderStatusCount.newOrders || 0})
       </button>
       <button
         onClick={() => handleOnClick("prepared")}
