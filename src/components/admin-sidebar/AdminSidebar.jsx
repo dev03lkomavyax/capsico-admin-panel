@@ -11,7 +11,7 @@ const AdminSidebar = () => {
   const { pathname } = useLocation();
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
-  // console.log("permissions", permissions);
+  console.log("permissions", permissions);
   // console.log("userInfo", userInfo);
 
   const perm = {
@@ -29,6 +29,8 @@ const AdminSidebar = () => {
     "application-request": "applicationRequest",
     zones: "zones",
     notifications: "notifications",
+    tickets: "tickets",
+    content: "content",
   };
 
   return (
@@ -577,56 +579,67 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )}
-        <Link
-          to={`/admin/notifications`}
-          className={`flex items-center gap-3 px-4 py-3 ${
-            pathname.includes("/admin/notifications")
-              ? "bg-[#F1F6FF]"
-              : "bg-[#FFFFFF]"
-          }`}
-        >
-          <IoNotifications
-            className={
-              pathname.includes("/admin/notifications")
-                ? "text-[#397FFE]"
-                : "text-[#4A4A4A]"
-            }
-          />
-          <span
-            className={`text-lg font-normal font-sans group-hover:inline ${
-              pathname.includes("/admin/notifications")
-                ? "text-[#397FFE]"
-                : "text-[#4A4A4A]"
-            }`}
-          >
-            Notifications
-          </span>
-        </Link>
-        <Link
-          to={`/admin/content`}
-          className={`flex items-center gap-3 px-4 py-3 ${
-            pathname.includes("/admin/content")
-              ? "bg-[#F1F6FF]"
-              : "bg-[#FFFFFF]"
-          }`}
-        >
-          <BiFile
-            className={
-              pathname.includes("/admin/content")
-                ? "text-[#397FFE] !size-5"
-                : "text-[#4A4A4A] !size-5"
-            }
-          />
-          <span
-            className={`text-lg font-normal font-sans group-hover:inline ${
-              pathname.includes("/admin/content")
-                ? "text-[#397FFE]"
-                : "text-[#4A4A4A]"
-            }`}
-          >
-            Content Management
-          </span>
-        </Link>
+
+        {permissions &&
+          permissions[perm["notifications"]] &&
+          permissions[perm["notifications"]] !== "none" && (
+            <Link
+              to={`/admin/notifications`}
+              className={`flex items-center gap-3 px-4 py-3 ${
+                pathname.includes("/admin/notifications")
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
+              }`}
+            >
+              <IoNotifications
+                className={
+                  pathname.includes("/admin/notifications")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/notifications")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Notifications
+              </span>
+            </Link>
+          )}
+
+        {permissions &&
+          permissions[perm["content"]] &&
+          permissions[perm["content"]] !== "none" && (
+            <Link
+              to={`/admin/content`}
+              className={`flex items-center gap-3 px-4 py-3 ${
+                pathname.includes("/admin/content")
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
+              }`}
+            >
+              <BiFile
+                className={
+                  pathname.includes("/admin/content")
+                    ? "text-[#397FFE] !size-5"
+                    : "text-[#4A4A4A] !size-5"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/content")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Terms and Policy
+              </span>
+            </Link>
+          )}
+
         {permissions &&
           permissions[perm["zones"]] &&
           permissions[perm["zones"]] !== "none" && (
@@ -656,35 +669,35 @@ const AdminSidebar = () => {
               </span>
             </Link>
           )}
-        {/* {permissions &&
+        {permissions &&
           permissions[perm["tickets"]] &&
-          permissions[perm["tickets"]] !== "none" && ( */}
-        <Link
-          to={`/admin/tickets`}
-          className={`flex items-center gap-3 px-4 py-3 ${
-            pathname.includes("/admin/tickets")
-              ? "bg-[#F1F6FF]"
-              : "bg-[#FFFFFF]"
-          }`}
-        >
-          <Ticket
-            className={
-              pathname.includes("/admin/tickets")
-                ? "text-[#397FFE] size-5"
-                : "text-[#4A4A4A] size-5"
-            }
-          />
-          <span
-            className={`text-lg font-normal font-sans group-hover:inline ${
-              pathname.includes("/admin/tickets")
-                ? "text-[#397FFE]"
-                : "text-[#4A4A4A]"
-            }`}
-          >
-            Tickets
-          </span>
-        </Link>
-        {/* )} */}
+          permissions[perm["tickets"]] !== "none" && (
+            <Link
+              to={`/admin/tickets`}
+              className={`flex items-center gap-3 px-4 py-3 ${
+                pathname.includes("/admin/tickets")
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
+              }`}
+            >
+              <Ticket
+                className={
+                  pathname.includes("/admin/tickets")
+                    ? "text-[#397FFE] size-5"
+                    : "text-[#4A4A4A] size-5"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/tickets")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Tickets
+              </span>
+            </Link>
+          )}
       </ul>
     </aside>
   );
