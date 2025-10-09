@@ -88,7 +88,11 @@ const ProtectedRoute = () => {
 
     const handleOrderUpdate = (response) => {
       console.log("order update:", response);
-      const { order } = response;
+      const { order, message } = response;
+      if (message) {
+        showToast(message);
+        return;
+      }
       if (order.status === "rejected") {
         toast.error(`Order #${order.orderNumber} rejected by Resaturant! 🚀`, {
           duration: 4000,
@@ -173,17 +177,17 @@ const ProtectedRoute = () => {
 
     socket.on("NEW_ORDER", handleNewOrder);
     socket.on("order_update", handleOrderUpdate);
-    socket.on("order-ready", handleOrderReady); // TODO: Test
-    socket.on("delivery-partner-assigned", handleDeliveryPartnerAssigned); // TODO: Test
-    socket.on("delivery-partner-arrived", handleDeliveryPartnerArrived); // TODO: Test
+    socket.on("order-ready", handleOrderReady);
+    socket.on("delivery-partner-assigned", handleDeliveryPartnerAssigned);
+    socket.on("delivery-partner-arrived", handleDeliveryPartnerArrived);
     socket.on("order-cancelled", handleOrderCancelled); // TODO: Test
-    socket.on("order-picked-up", handleOrderPickedUp); // TODO: Test
-    socket.on("accept-order", handleAcceptOrder); // TODO: Test
-    socket.on("reached-delivery-location", handleReachedDeliveryLocation); // TODO: Test
-    socket.on("order-delivered", handleOrderDelivered); // TODO: Test
-    socket.on("customer-unavailable", handleCustomerUnavailable); // TODO: Test
-    socket.on("items-verified", handleCustomerUnavailable); // TODO: Test
-    socket.on("collection-started", handleItemsVerified); // TODO: Test
+    socket.on("order-picked-up", handleOrderPickedUp);
+    socket.on("accept-order", handleAcceptOrder);
+    socket.on("reached-delivery-location", handleReachedDeliveryLocation);
+    socket.on("order-delivered", handleOrderDelivered);
+    socket.on("customer-unavailable", handleCustomerUnavailable);
+    socket.on("items-verified", handleCustomerUnavailable);
+    socket.on("collection-started", handleItemsVerified);
 
     return () => {
       socket.off("NEW_ORDER", handleNewOrder);

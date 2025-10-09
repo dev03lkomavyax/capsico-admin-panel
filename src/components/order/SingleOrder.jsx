@@ -18,6 +18,8 @@ import AlertModal from "../AlertModal";
 const SingleOrder = ({ data, getAllOrder }) => {
   const navigate = useNavigate();
 
+  const { timing } = data;
+
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const handleEdit = () => {
@@ -40,7 +42,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
       getAllOrder();
     }
   }, [res]);
-
+  
   return (
     <>
       <TableRow>
@@ -64,6 +66,45 @@ const SingleOrder = ({ data, getAllOrder }) => {
         </TableCell>
         <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
           {data?.user?.name}
+        </TableCell>
+        <TableCell>
+          <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+            OrderPlaced: {format(new Date(timing.orderedAt), "hh:mm:ss a")}
+          </p>
+          {timing?.confirmedAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderAccepted(Resturant):{" "}
+              {format(new Date(timing.confirmedAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {/* {timing?.restaurantrejectedAt && (
+            <p className="text-xs text-muted-foreground font-semibold">
+              OrderAccepted(Resturant):{" "}
+              {format(new Date(timing.restaurantrejectedAt), "hh:mm:ss a")}
+            </p>
+          )} */}
+          {timing.acceptedAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderAccepted(DeliveryBoy):{" "}
+              {format(new Date(timing.acceptedAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {timing?.readyAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderPrepared: {format(new Date(timing.readyAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {timing?.pickedUpAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderPickedUp: {format(new Date(timing.pickedUpAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {timing?.deliveredAt && (
+            <p className="text-xs text-muted-foreground font-semibold">
+              OrderDelivered:{" "}
+              {format(new Date(timing.deliveredAt), "hh:mm:ss a")}
+            </p>
+          )}
         </TableCell>
         <TableCell>
           <div

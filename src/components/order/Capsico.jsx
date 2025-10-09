@@ -435,6 +435,9 @@ const Capsico = ({ setCapsicoOrderNo }) => {
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Customer
               </TableHead>
+              <TableHead>
+                Timing
+              </TableHead>
               <TableHead className="w-[120px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Status
               </TableHead>
