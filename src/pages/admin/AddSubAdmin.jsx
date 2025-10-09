@@ -40,6 +40,7 @@ const AddSubAdmin = () => {
           zones: "none",
           notifications: "none",
           tickets: "none",
+          content: "none",
         },
       },
     });

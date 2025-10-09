@@ -53,6 +53,7 @@ const EditSubAdmin = () => {
         zones: "none",
         notifications: "none",
         tickets: "none",
+        content: "none",
       },
     },
   });
@@ -308,7 +309,6 @@ const EditSubAdmin = () => {
 
               <div className="grid grid-cols-6 gap-3 mt-1">
                 {permissions.map((permission) => {
-                  console.log("permissions.${permission.value}",`permissions.${permission.value}`);
                   
                   return (
                     <FormField

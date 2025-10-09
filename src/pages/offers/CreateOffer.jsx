@@ -71,7 +71,7 @@ const CreateOffer = () => {
     },
   });
 
-  const { handleSubmit, control, watch, getValues, reset } = form;
+  const { handleSubmit, control, watch, getValues, reset, formState } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -270,13 +270,14 @@ const CreateOffer = () => {
     if (addCouponRes?.status === 200 || addCouponRes?.status === 201) {
       console.log("addCoupon Res", addCouponRes);
       reset();
-      navigate("/admin/offers")
+      navigate("/admin/offers");
     }
   }, [addCouponRes]);
 
   const onError = (errors) => {
     console.log("Validation Errors:", errors);
   };
+
   return (
     <AdminWrapper>
       <div>
@@ -597,6 +598,13 @@ const CreateOffer = () => {
                         </Button>
                       </div>
                     ))}
+
+                    {formState?.errors?.offerDetails?.comboItems?.root
+                      ?.message && (
+                      <p className="text-destructive">
+                        {formState.errors.offerDetails.comboItems.root.message}
+                      </p>
+                    )}
 
                     <div className="flex justify-end">
                       {/* Add button */}

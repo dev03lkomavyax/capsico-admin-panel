@@ -234,6 +234,7 @@ import {
 } from "@/components/ui/select";
 import usePatchApiReq from "@/hooks/usePatchApiReq";
 import Spinner from "../Spinner";
+import usePutApiReq from "@/hooks/usePutApiReq";
 
 const CategoryEditModel = ({
   isOpenCategoryModel,
@@ -246,7 +247,7 @@ const CategoryEditModel = ({
     res: res1,
     isLoading: isLoading1,
     fetchData: fetchData1,
-  } = usePatchApiReq();
+  } = usePutApiReq();
 
   const form = useForm({
     resolver: zodResolver(categorySchema),
@@ -266,7 +267,7 @@ const CategoryEditModel = ({
     if (category) {
       // Updated to use /restaurant/ endpoint for consistency
       fetchData1(
-        `/restaurant/update-category/${category?.id}?restaurantId=${params?.restaurantId}`,
+        `/restaurant/restaurants/${params?.restaurantId}/update-category/${category?.id}`,
         {
           name: data.category,
           description: data.description,

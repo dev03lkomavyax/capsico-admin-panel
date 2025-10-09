@@ -274,7 +274,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       const { order } = response;
       console.log("capsicoOrderData in handleNewOrder", capsicoOrderData);
       const orderArray = [...capsicoOrderData];
-      
+
       console.log("orderArray", orderArray);
       orderArray.unshift({
         ...order,
@@ -284,7 +284,6 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       });
 
       console.log("orderArray-1", orderArray);
-      
 
       setCapsicoOrderData(orderArray);
 
@@ -302,15 +301,36 @@ const Capsico = ({ setCapsicoOrderNo }) => {
     const handleOrderUpdate = (response) => {
       console.log("order update:", response);
       const { order } = response;
-      getAllOrder()
+      getAllOrder();
     };
 
     socket.on("NEW_ORDER", handleNewOrder);
     socket.on("order_update", handleOrderUpdate);
+    socket.on("order-ready", handleOrderUpdate); // TODO: Test
+    socket.on("delivery-partner-assigned", handleOrderUpdate); // TODO: Test
+    socket.on("delivery-partner-arrived", handleOrderUpdate); // TODO: Test
+    socket.on("order-cancelled", handleOrderUpdate); // TODO: Test
+    socket.on("order-picked-up", handleOrderUpdate); // TODO: Test
+    socket.on("accept-order", handleOrderUpdate); // TODO: Test
+    socket.on("reached-delivery-location", handleOrderUpdate); // TODO: Test
+    socket.on("order-delivered", handleOrderUpdate); // TODO: Test
+    socket.on("customer-unavailable", handleOrderUpdate); // TODO: Test
+    socket.on("items-verified", handleOrderUpdate); // TODO: Test
+    socket.on("collection-started", handleOrderUpdate); // TODO: Test
 
     return () => {
       socket.off("NEW_ORDER", handleNewOrder);
       socket.off("order_update", handleOrderUpdate);
+      socket.off("order-ready", handleOrderUpdate);
+      socket.off("delivery-partner-assigned", handleOrderUpdate);
+      socket.off("delivery-partner-arrived", handleOrderUpdate);
+      socket.off("order-picked-up", handleOrderUpdate);
+      socket.off("accept-order", handleOrderUpdate);
+      socket.off("reached-delivery-location", handleOrderUpdate);
+      socket.off("order-delivered", handleOrderUpdate);
+      socket.off("customer-unavailable", handleOrderUpdate);
+      socket.off("items-verified", handleOrderUpdate);
+      socket.off("collection-started", handleOrderUpdate);
     };
   }, []);
 

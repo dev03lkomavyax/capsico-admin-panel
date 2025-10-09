@@ -60,7 +60,6 @@
 //   const params = useParams();
 //   const { register, control, watch, setValue, reset, getValues } = form;
 //   console.log("getvalues", getValues());
-  
 
 //   const onSubmit = (data) => {
 //     console.log("data", data);
@@ -208,11 +207,7 @@
 
 // export default SubCategoryEditModel;
 
-
-
-
 /* eslint-disable react/prop-types */
-
 
 /* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
@@ -256,6 +251,7 @@ const SubCategoryEditModel = ({
   categoryId, // This is the parent category ID
   getCategories,
   subCategory,
+  subcategoryId,
 }) => {
   const { res, isLoading, fetchData } = usePostApiReq();
   const {
@@ -281,17 +277,21 @@ const SubCategoryEditModel = ({
 
     if (subCategory) {
       // Use your existing update subcategory API: /update-subcategory
-      fetchData1(`/restaurant/update-subcategory`, {
-        subcategoryId: subCategory?.id,
-        name: data.subCategory,
-        description: data.description,
-        isActive: data.isActive,
-      });
+      fetchData1(
+        `/admin/update-subcategory/${params.restaurantId}?subCategoryId=${subcategoryId}`,
+        {
+          subcategoryId: subCategory?.id,
+          name: data.subCategory,
+          description: data.description,
+          isActive: data.isActive,
+        }
+      );
     } else {
       // Use your existing add subcategory API: /post-add-subcategory/:id
-      fetchData(`/restaurant/post-add-subcategory/${categoryId}`, {
+      fetchData(`/restaurant/post-add-subcategory/${params.restaurantId}`, {
         name: data.subCategory,
         description: data.description,
+        categoryId,
       });
     }
   };

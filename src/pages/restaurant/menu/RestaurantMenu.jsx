@@ -26,6 +26,9 @@ function RestaurantMenu() {
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState("");
   const [foodItemsInfo, setFoodItemsInfo] = useState("");
 
+  console.log("foodItemsInfo", foodItemsInfo);
+  
+
   const { res, fetchData, isLoading } = useGetApiReq();
   const params = useParams();
 
@@ -81,7 +84,9 @@ const getCategories = () => {
   const getFoodItems = () => {
     if (selectedSubCategoryId) {
       console.log(" Fetching menu items for subcategory:", selectedSubCategoryId);
-      fetchFoodItemData(`/restaurant/category/by-subcategory/${selectedSubCategoryId}`);
+      fetchFoodItemData(
+        `/admin/category/${selectedSubCategoryId}/food?restaurantId=${params?.restaurantId}`
+      );
     }
   };
 
@@ -89,22 +94,22 @@ const getCategories = () => {
     getFoodItems();
   }, [selectedSubCategoryId]);
 
+  // useEffect(() => {
+  //   getFoodItems();
+  // }, []);
+
   useEffect(() => {
     if (foodItemRes?.status === 200 || foodItemRes?.status === 201) {
-      console.log(" Menu items response:", foodItemRes);
-      const data = foodItemRes?.data?.data;
-      
-      if (data && data.subcategories && data.subcategories.length > 0) {
-        const subcategory = data.subcategories[0];
-        setFoodItemsInfo({
-          categoryInfo: {
-            name: subcategory.name,
-            id: subcategory.subcategoryId
-          },
-          totalItems: data.menuItems?.length || 0,
-          itemsByCategory: data.menuItems || []
-        });
-      }
+      console.log("get food items res", foodItemRes);
+      // setFoodItems(res?.data?.data);
+      const { categoryInfo, itemsByCategory, totalItems } =
+        foodItemRes?.data?.data;
+
+      setFoodItemsInfo({
+        categoryInfo,
+        totalItems,
+        itemsByCategory: itemsByCategory[categoryInfo.name],
+      });
     }
   }, [foodItemRes]);
 
@@ -113,7 +118,7 @@ const getCategories = () => {
     console.log("🔄 Subcategory clicked:", subcategoryId, "Active:", isActive);
     if (isActive) {
       setSelectedSubCategoryId(subcategoryId);
-      setCategoryId(subcategoryId);
+      // setCategoryId(subcategoryId);
     }
   };
 

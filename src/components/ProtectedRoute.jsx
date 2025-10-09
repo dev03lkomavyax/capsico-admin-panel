@@ -5,6 +5,12 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 
+const showToast = (message) => {
+  toast.success(message, {
+    duration: 4000,
+  });
+};
+
 const ProtectedRoute = () => {
   const adminStatus = readCookie("admin-status");
   const isAuthenticated = JSON.parse(JSON.stringify(adminStatus) || "false");
@@ -27,6 +33,10 @@ const ProtectedRoute = () => {
     reviews: "review",
     offers: "offer",
     "application-request": "applicationRequest",
+    zones: "zones",
+    notifications: "notifications",
+    tickets: "tickets",
+    content: "content",
   };
 
   const value = pathname.split("/admin/").join("").split("/")[0];
@@ -80,10 +90,10 @@ const ProtectedRoute = () => {
       console.log("order update:", response);
       const { order } = response;
       if (order.status === "rejected") {
-         toast.error(`Order #${order.orderNumber} rejected by Resaturant! 🚀`, {
-           duration: 4000,
-           // position: "top-right",
-         });
+        toast.error(`Order #${order.orderNumber} rejected by Resaturant! 🚀`, {
+          duration: 4000,
+          // position: "top-right",
+        });
       } else {
         toast.success(
           `Order #${order.orderNumber} accepted by Resaturant! 🚀`,
@@ -95,12 +105,99 @@ const ProtectedRoute = () => {
       }
     };
 
+    const handleOrderReady = (response) => {
+      console.log("handleOrderReady res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleDeliveryPartnerAssigned = (response) => {
+      console.log("handledeliveryPartnerAssigned res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleDeliveryPartnerArrived = (response) => {
+      console.log("handleDeliveryPartnerArrived res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleOrderCancelled = (response) => {
+      console.log("handleOrderCancelled res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleOrderPickedUp = (response) => {
+      console.log("handleOrderCancelled res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleAcceptOrder = (response) => {
+      console.log("handleAcceptOrder res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleReachedDeliveryLocation = (response) => {
+      console.log("handleReachedDeliveryLocation res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleOrderDelivered = (response) => {
+      console.log("handleOrderDelivered res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleCustomerUnavailable = (response) => {
+      console.log("handleCustomerUnavailable res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleItemsVerified = (response) => {
+      console.log("handleItemsVerified res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
+    const handleCollectionStarted = (response) => {
+      console.log("handleCollectionStarted res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
     socket.on("NEW_ORDER", handleNewOrder);
     socket.on("order_update", handleOrderUpdate);
+    socket.on("order-ready", handleOrderReady); // TODO: Test
+    socket.on("delivery-partner-assigned", handleDeliveryPartnerAssigned); // TODO: Test
+    socket.on("delivery-partner-arrived", handleDeliveryPartnerArrived); // TODO: Test
+    socket.on("order-cancelled", handleOrderCancelled); // TODO: Test
+    socket.on("order-picked-up", handleOrderPickedUp); // TODO: Test
+    socket.on("accept-order", handleAcceptOrder); // TODO: Test
+    socket.on("reached-delivery-location", handleReachedDeliveryLocation); // TODO: Test
+    socket.on("order-delivered", handleOrderDelivered); // TODO: Test
+    socket.on("customer-unavailable", handleCustomerUnavailable); // TODO: Test
+    socket.on("items-verified", handleCustomerUnavailable); // TODO: Test
+    socket.on("collection-started", handleItemsVerified); // TODO: Test
 
     return () => {
       socket.off("NEW_ORDER", handleNewOrder);
       socket.off("order_update", handleOrderUpdate);
+      socket.off("order-ready", handleOrderReady);
+      socket.off("delivery-partner-assigned", handleDeliveryPartnerAssigned);
+      socket.off("delivery-partner-arrived", handleDeliveryPartnerArrived);
+      socket.off("order-picked-up", handleOrderPickedUp);
+      socket.off("accept-order", handleAcceptOrder);
+      socket.off("reached-delivery-location", handleReachedDeliveryLocation);
+      socket.off("order-delivered", handleOrderDelivered);
+      socket.off("customer-unavailable", handleCustomerUnavailable);
+      socket.off("items-verified", handleItemsVerified);
+      socket.off("collection-started", handleCollectionStarted);
     };
   }, []);
 

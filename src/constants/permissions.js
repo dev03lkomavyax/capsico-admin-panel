@@ -5,7 +5,7 @@ export const permissions = [
   { label: "Restaurants", value: "restaurant" },
   { label: "Vendor", value: "vendor" },
   { label: "Delivery Agent", value: "deliveryAgent" },
-  { label: "Delivery Charge", value: "deliveryCharge" },
+  // { label: "Delivery Charge", value: "deliveryCharge" },
   { label: "Order", value: "order" },
   { label: "Reviews", value: "review" },
   { label: "Offers", value: "offer" },
@@ -14,4 +14,5 @@ export const permissions = [
   { label: "Zones", value: "zones" },
   { label: "Notifications", value: "notifications" },
   { label: "Tickets", value: "tickets" },
+  { label: "Content", value: "content" },
 ];
