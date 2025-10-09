@@ -126,7 +126,7 @@ const SubCategory = ({
   const deleteSubCategory = () => {
     // Updated to use restaurant endpoint
     fetchData(
-      `/restaurant/delete-subcategory/${params?.restaurantId}?subcategoryId=${subcategory?.id}`
+      `/admin/delete-subcategory/${params?.restaurantId}?subCategoryId=${subcategory?.subCategoryId}`
     );
   };
 
@@ -140,7 +140,7 @@ const SubCategory = ({
   const handleClick = () => {
     if (subcategory?.isActive) {
       setIsSelected(true);
-      handleSubcategoryClick(subcategory?.id, subcategory?.isActive);
+      handleSubcategoryClick(subcategory?.subCategoryId, subcategory?.isActive);
     }
   };
 
@@ -174,10 +174,10 @@ const SubCategory = ({
           />
         </div>
       </div>
-      
+
       {isOpenSubCategoryModel && (
         <SubCategoryEditModel
-          subcategoryId={subcategory?.id}
+          subcategoryId={subcategory?.subCategoryId}
           isOpenSubCategoryModel={isOpenSubCategoryModel}
           setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
           getCategories={getCategories}

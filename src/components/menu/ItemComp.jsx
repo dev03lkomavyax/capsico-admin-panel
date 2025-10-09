@@ -178,8 +178,7 @@ import CategoryEditModel from "./CategoryEditModel";
 import { useParams } from "react-router-dom";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import AlertModal from "../AlertModal";
-
-
+import useGetApiReq from "@/hooks/useGetApiReq";
 
 const ItemComp = ({
   category,
@@ -187,15 +186,16 @@ const ItemComp = ({
   categoryId,
   setCategoryId = () => {},
   handleSubcategoryClick,
-  show
+  show,
 }) => {
   const { name, id, subcategories, itemCount, isActive } = category;
+  const [subCategories, setSubCategories] = useState([]);
 
   const [isOpenb, setIsOpenb] = useState(false);
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  
+
   const params = useParams();
 
   const handleCategoryEdit = (e) => {
@@ -209,10 +209,34 @@ const ItemComp = ({
   };
 
   const { res, fetchData, isLoading } = useDeleteApiReq();
+  const {
+    res: subcategoriesRes,
+    fetchData: getSubcategories,
+    isLoading: isSubcategoriesLoading,
+  } = useGetApiReq();
+
+  const getSubcategoriesFun = () => {
+    getSubcategories(
+      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`
+    );
+  };
+
+  useEffect(() => {
+    if (categoryId && isOpenb) {
+      getSubcategoriesFun();
+    }
+  }, [categoryId, isOpenb]);
+
+  useEffect(() => {
+    if (subcategoriesRes?.status === 200 || subcategoriesRes?.status === 201) {
+      console.log("subcategoriesRes", subcategoriesRes);
+      setSubCategories(subcategoriesRes?.data?.data?.subcategories);
+    }
+  }, [subcategoriesRes]);
 
   const deleteCategory = () => {
     fetchData(
-      `/restaurant/delete-category/${params?.restaurantId}?categoryId=${id}`
+      `/admin/delete-category/${params?.restaurantId}?categoryId=${id}`
     );
   };
 
@@ -231,6 +255,7 @@ const ItemComp = ({
     if (isActive) {
       setIsOpenb(!isOpenb);
       setCategoryId(id);
+      // handleSubcategoryClick(id, isActive);
     }
   };
 
@@ -285,10 +310,10 @@ const ItemComp = ({
       {isOpenb && (
         <div className="flex flex-col">
           {/* Render existing subcategories */}
-          {subcategories?.map((subcategory) => {
+          {subCategories?.map((subcategory) => {
             return (
               <SubCategory
-                key={subcategory.id}
+                key={subcategory.subCategoryId}
                 categoryId={categoryId}
                 subcategory={subcategory}
                 handleSubcategoryClick={onSubcategoryClick}

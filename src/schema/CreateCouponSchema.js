@@ -132,13 +132,14 @@ export const offerSchema = z
         required_error: "Offer type is required",
       }
     ),
-     priorityLevel: z.coerce
-      .number()
-      .min(0, "Priority level must be 0 or greater"),
 
     scope: z.enum(["global", "categorywise", "itemwise"], {
       required_error: "Scope is required",
     }),
+
+    priorityLevel: z.coerce
+      .number()
+      .min(0, "Priority level must be 0 or greater"),
 
     discountValue: z.coerce
       .number()
@@ -162,8 +163,8 @@ export const offerSchema = z
         comboItems: z
           .array(
             z.object({
-              itemId: z.string().min(1, "Item is required"),
-              quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+              itemId: z.string().optional(),
+              quantity: z.coerce.number().optional(),
               isRequired: z.boolean().default(false),
             })
           )
@@ -204,22 +205,21 @@ export const offerSchema = z
     createdByType: z.enum(["admin", "restaurant"]).optional(),
   })
   .superRefine((data, ctx) => {
-
     const comboItems = data.offerDetails?.comboItems;
-  if (comboItems) {
-    const seen = new Set();
-    comboItems.forEach((item, index) => {
-      if (seen.has(item.itemId)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["offerDetails", "comboItems", index, "itemId"], // attach error to the specific field
-          message: "This item is already added to the combo",
-        });
-      } else {
-        seen.add(item.itemId);
-      }
-    });
-  }
+    if (comboItems) {
+      const seen = new Set();
+      comboItems.forEach((item, index) => {
+        if (seen.has(item.itemId)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["offerDetails", "comboItems", index, "itemId"], // attach error to the specific field
+            message: "This item is already added to the combo",
+          });
+        } else {
+          seen.add(item.itemId);
+        }
+      });
+    }
 
     // Ensure endDate > startDate
     if (data.endDate <= data.startDate) {

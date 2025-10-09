@@ -71,7 +71,7 @@ const Zones = () => {
               </Link>
             </Button>
 
-            <Select value={filterType} onValueChange={(v) => setFilterType(v)}>
+            {/* <Select value={filterType} onValueChange={(v) => setFilterType(v)}>
               <SelectTrigger className="min-w-[140px]">
                 <SelectValue placeholder="Filter: Type" />
               </SelectTrigger>
@@ -80,7 +80,7 @@ const Zones = () => {
                 <SelectItem value="circle">Circle</SelectItem>
                 <SelectItem value="polygon">Polygon</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
         </div>
         <div className="bg-white">
