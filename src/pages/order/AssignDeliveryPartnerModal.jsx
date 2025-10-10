@@ -1,10 +1,16 @@
 import DataNotFound from "@/components/DataNotFound";
 import Spinner from "@/components/Spinner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import DeliveryPartner from "./DeliveryPartner";
+import { useParams } from "react-router-dom";
 
 const AssignDeliveryPartnerModal = ({
   isModalOpen,
@@ -12,26 +18,22 @@ const AssignDeliveryPartnerModal = ({
   getDetails,
 }) => {
   const [deliveryPartners, setDeliveryPartners] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(1);
+  const params = useParams();
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
-  const getAllDeliveryAgent = () => {
-    fetchData(`/admin/get-all-deliveryPartners?page=${page}&limit=${LIMIT}`);
+  const getPartnersInZoneByOrder = () => {
+    fetchData(`/zones/get-partners-in-zone-by-order/${params.orderId}`);
   };
 
   useEffect(() => {
-    getAllDeliveryAgent();
+    getPartnersInZoneByOrder();
   }, []);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-      console.log("deliveryAgent res", res?.data);
-      setDeliveryPartners(res?.data?.data);
-      const { pagination } = res?.data || {};
-      setPageCount(pagination?.totalPages);
-      setPage(pagination?.page);
+      console.log("getPartnersInZoneByOrder res", res);
+      setDeliveryPartners(res?.data?.partners);
     }
   }, [res]);
 
@@ -47,7 +49,8 @@ const AssignDeliveryPartnerModal = ({
               key={deliveryPartner?._id}
               id={deliveryPartner?.partnerId}
               partnerId={deliveryPartner?._id}
-              name={deliveryPartner?.personalInfo?.name}
+              distanceFromRestaurant={deliveryPartner?.distanceFromRestaurant}
+              name={deliveryPartner?.name}
               getDetails={getDetails}
               setIsModalOpen={setIsModalOpen}
             />

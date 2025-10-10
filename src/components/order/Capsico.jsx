@@ -232,41 +232,40 @@ const Capsico = ({ setCapsicoOrderNo }) => {
     );
   };
 
-  
   useEffect(() => {
     socket.emit("subscribe_all_orders");
-    
+
     const handleActiveOrders = (response) => {
       console.log("active_orders response", response);
-      
+
       // if (response?.orders) {
       //   setCapsicoOrderData(response.orders);
       //   const map = {};
       //   response.orders.forEach((order) => {
-        //     map[order.id] = order.timeline ?? {};
-        //   });
+      //     map[order.id] = order.timeline ?? {};
+      //   });
       //   setTimelineMap(map);
       //   if (setCapsicoOrderNo) {
       //     setCapsicoOrderNo(response.orders.length);
       //   }
       // }
     };
-    
+
     socket.on("active_orders", handleActiveOrders);
-    
+
     socket.on("order_timeline_update", (update) => {
       setTimelineMap((prev) => ({
         ...prev,
         [update.id]: update.timeline,
       }));
     });
-    
+
     return () => {
       socket.off("active_orders", handleActiveOrders);
       socket.off("order_timeline_update");
     };
   }, [setCapsicoOrderNo]);
-  
+
   console.log("capsicoOrderData", capsicoOrderData);
   useEffect(() => {
     const handleNewOrder = (response) => {
@@ -306,17 +305,18 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
     socket.on("NEW_ORDER", handleNewOrder);
     socket.on("order_update", handleOrderUpdate);
-    socket.on("order-ready", handleOrderUpdate); // TODO: Test
-    socket.on("delivery-partner-assigned", handleOrderUpdate); // TODO: Test
-    socket.on("delivery-partner-arrived", handleOrderUpdate); // TODO: Test
+    socket.on("order-ready", handleOrderUpdate);
+    socket.on("delivery-partner-assigned", handleOrderUpdate);
+    socket.on("delivery-partner-arrived", handleOrderUpdate);
     socket.on("order-cancelled", handleOrderUpdate); // TODO: Test
-    socket.on("order-picked-up", handleOrderUpdate); // TODO: Test
-    socket.on("accept-order", handleOrderUpdate); // TODO: Test
-    socket.on("reached-delivery-location", handleOrderUpdate); // TODO: Test
-    socket.on("order-delivered", handleOrderUpdate); // TODO: Test
-    socket.on("customer-unavailable", handleOrderUpdate); // TODO: Test
-    socket.on("items-verified", handleOrderUpdate); // TODO: Test
-    socket.on("collection-started", handleOrderUpdate); // TODO: Test
+    socket.on("order-picked-up", handleOrderUpdate);
+    socket.on("accept-order", handleOrderUpdate);
+    socket.on("reached-delivery-location", handleOrderUpdate);
+    socket.on("order-delivered", handleOrderUpdate);
+    socket.on("customer-unavailable", handleOrderUpdate);
+    socket.on("items-verified", handleOrderUpdate);
+    socket.on("collection-started", handleOrderUpdate);
+    socket.on("partner-rejected-order", handleOrderUpdate);
 
     return () => {
       socket.off("NEW_ORDER", handleNewOrder);
@@ -331,10 +331,9 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       socket.off("customer-unavailable", handleOrderUpdate);
       socket.off("items-verified", handleOrderUpdate);
       socket.off("collection-started", handleOrderUpdate);
+      socket.off("partner-rejected-order", handleOrderUpdate);
     };
   }, []);
-
-  
 
   useEffect(() => {
     getAllOrder();
@@ -342,6 +341,8 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
+
+      
       setCapsicoOrderData(res?.data?.data || []);
       const { pagination } = res?.data || {};
       setTotalPage(pagination?.totalPages || 0);
@@ -435,9 +436,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Customer
               </TableHead>
-              <TableHead>
-                Timing
-              </TableHead>
+              <TableHead>Timing</TableHead>
               <TableHead className="w-[120px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Status
               </TableHead>
