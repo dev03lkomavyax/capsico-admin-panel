@@ -21,6 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { RefreshCcw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Tickets = () => {
   const [page, setPage] = useState(1);
@@ -54,6 +57,15 @@ const Tickets = () => {
     }
   }, [res]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getTickets();
+    }, 120000); // 120000ms = 2 minutes
+
+    // Cleanup interval on unmount or dependency change
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <AdminWrapper>
       <div>
@@ -62,6 +74,16 @@ const Tickets = () => {
             Tickets
           </h2>
           <div className="flex gap-3 items-center">
+            <div>
+              <Button onClick={getTickets} className="!size-10" size="icon">
+                <RefreshCcw
+                  className={cn(
+                    "size-5 transition-all",
+                    isLoading && "animate-spin"
+                  )}
+                />
+              </Button>
+            </div>
             <Select value={priority} onValueChange={(v) => setPriority(v)}>
               <SelectTrigger className="min-w-[140px]">
                 <SelectValue placeholder="Select Priority" />

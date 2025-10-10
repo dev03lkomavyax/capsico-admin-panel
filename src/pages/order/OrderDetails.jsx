@@ -13,6 +13,7 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignDeliveryPartnerModal from "./AssignDeliveryPartnerModal";
+import { getSocket } from "@/socket";
 
 const libraries = ["places", "marker"];
 
@@ -39,6 +40,7 @@ const OrderDetails = () => {
   });
 
   const [minute, setMinute] = useState(1);
+  const socket = getSocket();
 
   const form = useForm({
     resolver: zodResolver(OrderSchema),
@@ -58,6 +60,19 @@ const OrderDetails = () => {
 
   useEffect(() => {
     getOrderDetails();
+  }, []);
+
+  useEffect(() => {
+    const handleOrderUpdate = (response) => {
+      console.log("order update:", response);
+      const { order } = response;
+      getOrderDetails();
+    };
+
+    socket.on("partner-rejected-order", handleOrderUpdate);
+    return () => {
+      socket.off("partner-rejected-order", handleOrderUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -97,7 +112,8 @@ const OrderDetails = () => {
             />
           )}
           <div className="flex gap-3">
-            {orderDetailsData?.status === "confirmed" && (
+            {(orderDetailsData?.status === "confirmed" ||
+              orderDetailsData?.status === "reassigned_to_partner") && (
               <Button onClick={() => setIsModalOpen(true)} className="px-3">
                 Assign Delivery Partner
               </Button>

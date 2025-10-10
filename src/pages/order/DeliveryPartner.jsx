@@ -3,7 +3,14 @@ import usePostApiReq from "@/hooks/usePostApiReq";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-function DeliveryPartner({ name, id, partnerId, getDetails, setIsModalOpen }) {
+function DeliveryPartner({
+  name,
+  id,
+  partnerId,
+  getDetails,
+  setIsModalOpen,
+  distanceFromRestaurant,
+}) {
   const { res, fetchData, isLoading } = usePostApiReq();
   const params = useParams();
 
@@ -23,6 +30,9 @@ function DeliveryPartner({ name, id, partnerId, getDetails, setIsModalOpen }) {
     <div className="flex justify-between gap-5">
       <p className="w-32">{id}</p>
       <h3 className="flex-1 text-lg font-medium font-roboto">{name}</h3>
+      {distanceFromRestaurant && (
+        <p className="">{distanceFromRestaurant} km</p>
+      )}
       <Button onClick={assignDeliveryAgent} className="w-20">
         Assign
       </Button>

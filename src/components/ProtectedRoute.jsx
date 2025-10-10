@@ -175,6 +175,12 @@ const ProtectedRoute = () => {
       showToast(message);
     };
 
+    const handlePartnerRejectedOrder = (response) => {
+      console.log("handlePartnerRejectedOrder res:", response);
+      const { message } = response;
+      showToast(message);
+    };
+
     socket.on("NEW_ORDER", handleNewOrder);
     socket.on("order_update", handleOrderUpdate);
     socket.on("order-ready", handleOrderReady);
@@ -188,6 +194,7 @@ const ProtectedRoute = () => {
     socket.on("customer-unavailable", handleCustomerUnavailable);
     socket.on("items-verified", handleCustomerUnavailable);
     socket.on("collection-started", handleItemsVerified);
+    socket.on("partner-rejected-order", handlePartnerRejectedOrder);
 
     return () => {
       socket.off("NEW_ORDER", handleNewOrder);
@@ -202,6 +209,7 @@ const ProtectedRoute = () => {
       socket.off("customer-unavailable", handleCustomerUnavailable);
       socket.off("items-verified", handleItemsVerified);
       socket.off("collection-started", handleCollectionStarted);
+      socket.off("partner-rejected-order", handlePartnerRejectedOrder);
     };
   }, []);
 

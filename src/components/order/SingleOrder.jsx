@@ -18,7 +18,7 @@ import AlertModal from "../AlertModal";
 const SingleOrder = ({ data, getAllOrder }) => {
   const navigate = useNavigate();
 
-  const { timing } = data;
+  const { timing, scheduleAt } = data;
 
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
@@ -42,7 +42,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
       getAllOrder();
     }
   }, [res]);
-  
+
   return (
     <>
       <TableRow>
@@ -68,9 +68,17 @@ const SingleOrder = ({ data, getAllOrder }) => {
           {data?.user?.name}
         </TableCell>
         <TableCell>
-          <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
-            OrderPlaced: {format(new Date(timing.orderedAt), "hh:mm:ss a")}
-          </p>
+          {scheduleAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderScheduleAt:{" "}
+              {format(new Date(scheduleAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {timing.orderedAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              OrderPlaced: {format(new Date(timing.orderedAt), "hh:mm:ss a")}
+            </p>
+          )}
           {timing?.confirmedAt && (
             <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
               OrderAccepted(Resturant):{" "}
