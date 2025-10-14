@@ -1,19 +1,17 @@
-import pocket from "@/assets/3dicons.png";
 import call from "@/assets/call.png";
 import edit from "@/assets/edit.png";
 import avatar from "@/assets/Image-198.png";
-import location from "@/assets/location.png";
 import sms from "@/assets/sms.png";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import CustomerOrders from "@/components/customer/CustomerOrders";
+import { Button } from "@/components/ui/button";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { Calendar, Gift } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import UpdateCustomer from "./UpdateCustomer";
-import { Calendar, Gift } from "lucide-react";
 import Addresses from "./Addresses";
-import { Button } from "@/components/ui/button";
+import UpdateCustomer from "./UpdateCustomer";
 
 const CustomerDetails = () => {
   const [customerDetailsData, setCustomerDetailsData] = useState("");

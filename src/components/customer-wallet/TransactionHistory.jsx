@@ -14,28 +14,29 @@ import useGetApiReq from '@/hooks/useGetApiReq';
 import { useParams } from 'react-router-dom';
 import DataNotFound from '../DataNotFound';
 import Spinner from '../Spinner';
+import ManualWalletAdjustmentDialog from './ManualWalletAdjustment';
 
 
-const TransactionHistory = () => {
-      const [transactions, setTransactions] = useState([]);
-      const { customerId } = useParams();
+const TransactionHistory = ({ isModalOpen, setIsModalOpen }) => {
+  const [transactions, setTransactions] = useState([]);
+  const { customerId } = useParams();
 
-      const { res, fetchData, isLoading } = useGetApiReq();
+  const { res, fetchData, isLoading } = useGetApiReq();
 
-      const getTransactionHistory = () => {
-        fetchData(`/wallet/transactions/${customerId}`);
-      };
+  const getTransactionHistory = () => {
+    fetchData(`/wallet/transactions/${customerId}`);
+  };
 
-      useEffect(() => {
-        getTransactionHistory();
-      }, []);
+  useEffect(() => {
+    getTransactionHistory();
+  }, []);
 
-      useEffect(() => {
-        if (res?.status === 200 || res?.status === 201) {
-          console.log("getTransactionHistory res", res);
-          setTransactions(res?.data?.data?.transactions);
-        }
-      }, [res]);
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      console.log("getTransactionHistory res", res);
+      setTransactions(res?.data?.data?.transactions);
+    }
+  }, [res]);
 
   return (
     <div className="overflow-x-auto">
@@ -63,8 +64,16 @@ const TransactionHistory = () => {
       {transactions.length === 0 && !isLoading && (
         <DataNotFound name="Transactions" />
       )}
+
+      {isModalOpen && (
+        <ManualWalletAdjustmentDialog
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          getTransactionHistory={getTransactionHistory}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default TransactionHistory

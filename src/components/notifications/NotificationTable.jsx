@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 const NotificationTable = ({ notifications }) => {
   return (
-    <Table className="w-full border rounded-xl shadow-sm bg-white">
+    <Table className="w-full border shadow-sm bg-white">
       <TableHeader>
         <TableRow>
           <TableHead className="w-[180px]">Title</TableHead>

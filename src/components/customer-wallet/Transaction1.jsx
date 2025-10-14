@@ -56,7 +56,7 @@ const Transaction1 = ({ txn }) => {
           {txn?.orderDetails?.orderNumber || "-"}
         </TableCell>
         <TableCell className="whitespace-nowrap text-sm text-on-surface-variant dark:text-white/80">
-          {txn.timestamp && format(new Date(txn.timestamp), "dd MMM, yyyy")}
+          {txn.timestamp && format(new Date(txn.timestamp), "dd MMM, yyyy hh:mm a")}
         </TableCell>
         <TableCell className="whitespace-nowrap text-sm capitalize text-on-surface-variant dark:text-white/80">
           <Badge variant="outline">{txn.initiatedBy}</Badge>

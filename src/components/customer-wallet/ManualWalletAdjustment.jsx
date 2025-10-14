@@ -38,7 +38,11 @@ const formSchema = z.object({
   reason: z.string().min(3, "Reason is required"),
 });
 
-const ManualWalletAdjustmentDialog = ({ open, setOpen }) => {
+const ManualWalletAdjustmentDialog = ({
+  open,
+  setOpen,
+  getTransactionHistory,
+}) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,6 +79,7 @@ const ManualWalletAdjustmentDialog = ({ open, setOpen }) => {
       console.log("wallet debit/credit res", res);
       setOpen(false);
       reset();
+      getTransactionHistory()
     }
   }, [res]);
 
