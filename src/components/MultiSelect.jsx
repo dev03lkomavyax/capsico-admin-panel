@@ -13,12 +13,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Check, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function MultiSelect({
   label = "Select Items",
   options = [],
   value = [],
   onChange,
+  className = "",
 }) {
   const [open, setOpen] = useState(false);
 
@@ -42,13 +44,11 @@ export default function MultiSelect({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full px-2.5 justify-between">
-            <p className="truncate">
-            {displayText}
-            </p>
+            <p className="truncate">{displayText}</p>
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[320px] p-0">
+        <PopoverContent className={cn("w-[320px] p-0", className)}>
           <Command>
             <CommandInput placeholder="Search..." />
             <CommandEmpty>No results found</CommandEmpty>

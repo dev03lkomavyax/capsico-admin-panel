@@ -70,7 +70,7 @@ const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
         {/* <TableCell className="w-10">
           <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
         </TableCell> */}
-        <TableCell>{city}</TableCell>
+        <TableCell>{city?.city || "NA"}</TableCell>
         <TableCell>{pincodes.join(", ")}</TableCell>
         <TableCell>₹{baseCharge}</TableCell>
         <TableCell>₹{perKmCharge}</TableCell>

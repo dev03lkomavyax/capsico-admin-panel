@@ -11,15 +11,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import useGetApiReq from "@/hooks/useGetApiReq";
 import usePatchApiReq from "@/hooks/usePatchApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import { deliveryChargeSchema } from "@/schema/DeliveryChargeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import DataNotFound from "@/components/DataNotFound";
 
 export default function AddDeliveryChargeForm() {
   const location = useLocation();
@@ -44,20 +54,45 @@ export default function AddDeliveryChargeForm() {
     },
   });
   const [newPincode, setNewPincode] = useState("");
+  const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
-  const { watch, handleSubmit, control, reset } = form;
+  const { watch, handleSubmit, control, reset,getValues } = form;
   const { res, fetchData, isLoading } = usePostApiReq();
   const {
     res: updateRes,
     fetchData: updateCharge,
     isLoading: isUpdateChargeLoading,
   } = usePatchApiReq();
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  console.log("getValues", getValues());
+  
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+    }
+  }, [fetchCitiesRes]);
 
   useEffect(() => {
     if (deliveryCharge) {
       reset({
         ...deliveryCharge,
+        city: deliveryCharge?.city?._id,
         pincodes: modifiedPincodes,
       });
     }
@@ -88,7 +123,7 @@ export default function AddDeliveryChargeForm() {
     console.log(values);
     if (deliveryCharge) {
       updateCharge(
-        `/delivery-charges/update/${deliveryCharge._id}/${deliveryCharge.city}`,
+        `/delivery-charges/update/${deliveryCharge._id}/${deliveryCharge?.city?._id}`,
         {
           ...values,
           pincodes: values.pincodes.map((item) => item.pincode),
@@ -132,7 +167,7 @@ export default function AddDeliveryChargeForm() {
           className="space-y-6 max-w-5xl mx-auto bg-white mt-10 rounded-lg border p-5"
         >
           {/* City */}
-          <FormField
+          {/* <FormField
             control={control}
             name="city"
             render={({ field }) => (
@@ -144,11 +179,57 @@ export default function AddDeliveryChargeForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
+          {!deliveryCharge && <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel
+                  className={`text-[#111928] font-semibold font-inter opacity-80`}
+                >
+                  City <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // const selectedCity = cities.find((c) => c._id === value);
+                      // if (selectedCity) {
+                      //   setValue("cityName", selectedCity.city || "");
+                      // }
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger disabled={isCitiesLoading}>
+                      <SelectValue placeholder="Select City" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {cities.map((city) => (
+                          <SelectItem
+                            key={city?._id}
+                            value={city?._id}
+                            className="capitalize"
+                          >
+                            {city.city}
+                          </SelectItem>
+                        ))}
+                        {cities.length === 0 && <DataNotFound name="Cities" />}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />}
 
           {/* Pincodes (Single Input + List) */}
           <div>
-            <FormLabel className="mt-3">Pincodes</FormLabel>
+            <FormLabel className="mt-3">
+              Pincodes <span className="text-destructive">*</span>
+            </FormLabel>
 
             {/* Input to enter a new pincode */}
             <div className="flex items-center gap-2 mt-2">
@@ -189,7 +270,7 @@ export default function AddDeliveryChargeForm() {
                       size="icon"
                       onClick={() => remove(index)}
                     >
-                      Remove
+                      <Trash />
                     </Button>
                   </div>
                 ))}

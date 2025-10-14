@@ -33,20 +33,41 @@ const Zones = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
   const [filterCity, setFilterCity] = useState("");
+  const [cities, setCities] = useState([]);
 
   const { res, fetchData, isLoading } = useGetApiReq();
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+    }
+  }, [fetchCitiesRes]);
 
   const getZones = () => {
     fetchData(
       `/zones/get-all?page=${page}&type=${
         filterType === "all" ? "" : filterType
-      }`
+      }&cityId=${filterCity === "all" ? "" : filterCity}`
     );
   };
 
   useEffect(() => {
     getZones();
-  }, [page, filterType]);
+  }, [page, filterType, filterCity]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -64,6 +85,30 @@ const Zones = () => {
             Zones
           </h2>
           <div className="flex gap-5 items-center">
+            <Select onValueChange={(v) => setFilterCity(v)} value={filterCity}>
+              <SelectTrigger disabled={isCitiesLoading}>
+                <SelectValue placeholder="Select City" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {cities.length > 0 && (
+                    <>
+                      {cities.map((city) => (
+                        <SelectItem
+                          key={city?._id}
+                          value={city?._id}
+                          className="capitalize"
+                        >
+                          {city.city}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="all">All</SelectItem>
+                    </>
+                  )}
+                  {cities.length === 0 && <DataNotFound name="Cities" />}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             <Button asChild className="w-auto px-4" variant="capsico">
               <Link to="/admin/zones/create">
                 <FaPlus />

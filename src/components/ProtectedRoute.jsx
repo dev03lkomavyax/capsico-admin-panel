@@ -45,9 +45,6 @@ const ProtectedRoute = () => {
   // console.log("value", value);
   // console.log("foundValue", foundValue);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
 
   useEffect(() => {
     // Don’t do anything until userInfo is defined
@@ -213,6 +210,11 @@ const ProtectedRoute = () => {
     };
   }, []);
 
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+  
   return <Outlet />;
 };
 

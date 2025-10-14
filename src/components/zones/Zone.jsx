@@ -12,9 +12,6 @@ import DeliveryPartnerDialog from "./DeliveryPartnerDropdown";
 const Zone = ({ zone, getZones }) => {
   const [isAlertDeleteModalOpen, setIsAlertDeleteModalOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const removeZone = () => {};
-  const toggleActive = () => {};
-  const openEditModal = () => {};
 
   const {
     res: deleteRes,
