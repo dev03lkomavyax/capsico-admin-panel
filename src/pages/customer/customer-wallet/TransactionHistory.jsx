@@ -1,7 +1,7 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import ManualWalletAdjustmentDialog from "@/components/customer-wallet/ManualWalletAdjustment";
 import Transaction1 from "@/components/customer-wallet/Transaction1";
@@ -12,12 +12,11 @@ import {
   TableBody,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import DataNotFound from "@/components/DataNotFound";
 import Spinner from "@/components/Spinner";
-
 
 const TransactionHistory = () => {
   const { customerId } = useParams();
@@ -25,24 +24,26 @@ const TransactionHistory = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { state } = useLocation();
+  const user = state?.user || {};
 
-   const { res, fetchData, isLoading } = useGetApiReq();
+  const { res, fetchData, isLoading } = useGetApiReq();
 
-   const getTransactionHistory = () => {
-     fetchData(`/wallet/transactions/${customerId}?page=${page}&limit=${5}`);
-   };
+  const getTransactionHistory = () => {
+    fetchData(`/wallet/transactions/${customerId}?page=${page}&limit=${10}`);
+  };
 
-   useEffect(() => {
-     getTransactionHistory();
-   }, [page]);
+  useEffect(() => {
+    getTransactionHistory();
+  }, [page]);
 
-   useEffect(() => {
-     if (res?.status === 200 || res?.status === 201) {
-       console.log("getTransactionHistory res", res);
-       setTransactions(res?.data?.data?.transactions);
-       setTotalPage(res?.data?.data?.pagination?.totalPages || 1);
-     }
-   }, [res]);
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      console.log("getTransactionHistory res", res);
+      setTransactions(res?.data?.data?.transactions);
+      setTotalPage(res?.data?.data?.pagination?.totalPages || 1);
+    }
+  }, [res]);
 
   return (
     <AdminWrapper>
@@ -50,6 +51,7 @@ const TransactionHistory = () => {
         <div className="flex justify-between items-center gap-5">
           <Link
             to={`/admin/customer/${customerId}/wallet`}
+            state={{ user }}
             className="inline-flex gap-1 items-center"
           >
             <ChevronLeft />
@@ -103,6 +105,7 @@ const TransactionHistory = () => {
           <ManualWalletAdjustmentDialog
             open={isModalOpen}
             setOpen={setIsModalOpen}
+            getTransactionHistory={getTransactionHistory}
           />
         )}
       </div>

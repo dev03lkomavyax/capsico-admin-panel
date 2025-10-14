@@ -2,12 +2,7 @@ import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import ManualWalletAdjustmentDialog from "@/components/customer-wallet/ManualWalletAdjustment";
 import TransactionHistory from "@/components/customer-wallet/TransactionHistory";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { format } from "date-fns";
 import { ChevronLeft } from "lucide-react";
@@ -15,15 +10,12 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 const CustomerWalletDetails = () => {
-  
-
   const { state } = useLocation();
+  const user = state?.user || {};
   const navigate = useNavigate();
   const { customerId } = useParams();
-  const user = state?.user || {};
 
-
-  const [walletDetails, setWalletDetails] = useState("")
+  const [walletDetails, setWalletDetails] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -62,7 +54,8 @@ const CustomerWalletDetails = () => {
             size="sm"
             onClick={() =>
               navigate(
-                `/admin/customer/${customerId}/wallet/transaction-history`
+                `/admin/customer/${customerId}/wallet/transaction-history`,
+                { state: { user } }
               )
             }
           >
@@ -165,17 +158,13 @@ const CustomerWalletDetails = () => {
                   Manual Wallet Adjustment
                 </Button>
               </CardHeader>
-              <TransactionHistory />
+              <TransactionHistory
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+              />
             </Card>
           </div>
         </div>
-
-        {isModalOpen && (
-          <ManualWalletAdjustmentDialog
-            open={isModalOpen}
-            setOpen={setIsModalOpen}
-          />
-        )}
       </div>
     </AdminWrapper>
   );
