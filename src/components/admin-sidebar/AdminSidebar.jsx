@@ -1,7 +1,15 @@
 import { readCookie } from "@/utils/readCookie";
 import { Link, useLocation } from "react-router-dom";
 import "./sidebar.css";
-import { Globe, Layers, MapPin, Ticket } from "lucide-react";
+import {
+  Flashlight,
+  Focus,
+  Globe,
+  Layers,
+  MapPin,
+  Ticket,
+  Search
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IoNotifications } from "react-icons/io5";
 import { BiFile } from "react-icons/bi";
@@ -11,7 +19,7 @@ const AdminSidebar = () => {
   const { pathname } = useLocation();
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
-  console.log("permissions", permissions);
+  // console.log("permissions", permissions);
   // console.log("userInfo", userInfo);
 
   const perm = {
@@ -31,7 +39,9 @@ const AdminSidebar = () => {
     notifications: "notifications",
     tickets: "tickets",
     content: "content",
+    spotlight: "spotlight",
   };
+  
 
   return (
     <aside
@@ -695,6 +705,35 @@ const AdminSidebar = () => {
                 }`}
               >
                 Tickets
+              </span>
+            </Link>
+          )}
+        {permissions &&
+          permissions[perm["spotlight"]] &&
+          permissions[perm["spotlight"]] !== "none" && (
+            <Link
+              to={`/admin/spotlight`}
+              className={`flex items-center gap-3 px-4 py-3 ${
+                pathname.includes("/admin/spotlight")
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
+              }`}
+            >
+              <Search
+                className={
+                  pathname.includes("/admin/spotlight")
+                    ? "text-[#397FFE] size-5"
+                    : "text-[#4A4A4A] size-5"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/spotlight")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Spotlight
               </span>
             </Link>
           )}

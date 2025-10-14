@@ -41,6 +41,7 @@ const AddSubAdmin = () => {
           notifications: "none",
           tickets: "none",
           content: "none",
+          spotlight: "none",
         },
       },
     });

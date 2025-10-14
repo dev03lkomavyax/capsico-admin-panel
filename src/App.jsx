@@ -22,6 +22,10 @@ import CreateZone from "./pages/zones/CreateZone";
 import Tickets from "./pages/tickets/Tickets";
 import { SocketProvider } from "./socket";
 import DeliveryAgentPayout from "./pages/delivery-agent/DeliveryAgentPayout";
+import Spotlight from "./pages/spotlight/Spotlight";
+import CreateSpotlight from "./pages/spotlight/CreateSpotlight";
+import CustomerWalletDetails from "./pages/customer/customer-wallet/CustomerWalletDetails";
+import TransactionHistory from "./pages/customer/customer-wallet/TransactionHistory";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -227,14 +231,22 @@ function App() {
               path="/admin/restaurant/:restaurantId/menu"
               element={<RestaurantMenu />}
             />
-      <Route path="/admin/tags/create" element={<CreateTags />} />
-  {/* <Route path="/admin/tags" element={<TagsList />} />
+            <Route path="/admin/tags/create" element={<CreateTags />} />
+            {/* <Route path="/admin/tags" element={<TagsList />} />
   <Route path="/admin/tags/:tagId/edit" element={<EditTag />} /> */}
 
             <Route path="/admin/customer" element={<CustomerList />} />
             <Route
               path="/admin/customer/:customerId"
               element={<CustomerDetails />}
+            />
+            <Route
+              path="/admin/customer/:customerId/wallet"
+              element={<CustomerWalletDetails />}
+            />
+            <Route
+              path="/admin/customer/:customerId/wallet/transaction-history"
+              element={<TransactionHistory />}
             />
 
             <Route path="/admin/vendor" element={<VendorList />} />
@@ -358,6 +370,12 @@ function App() {
             <Route path="/admin/zones/create" element={<CreateZone />} />
 
             <Route path="/admin/tickets" element={<Tickets />} />
+
+            <Route path="/admin/spotlight" element={<Spotlight />} />
+            <Route
+              path="/admin/spotlight/create"
+              element={<CreateSpotlight />}
+            />
           </Route>
 
           <Route path="*" element={<NotFound />} />

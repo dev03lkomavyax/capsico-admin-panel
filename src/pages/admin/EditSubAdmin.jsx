@@ -54,6 +54,7 @@ const EditSubAdmin = () => {
         notifications: "none",
         tickets: "none",
         content: "none",
+        spotlight: "none",
       },
     },
   });

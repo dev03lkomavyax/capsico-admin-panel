@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 // import { handleErrorModal } from "@/store/slices/errorSlice";
 import { handleLoading } from "@/store/slices/loadingSlice";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const useGetApiReq = () => {
     const [res, setRes] = useState(null);
@@ -23,6 +24,9 @@ const useGetApiReq = () => {
             toast.error(error.response?.data?.message || "An error occurred.")
             // await dispatch(handleErrorModal({ isOpen: true, message: error.response?.data?.message || "An error occurred.", isLogoutBtn: true }));
             console.log(error)
+             if (error?.response?.status === 401) {
+              Cookies.set("admin-status", false, { expires: 365 });
+             }
         } finally {
             setIsLoading(false);
             await dispatch(handleLoading(false));

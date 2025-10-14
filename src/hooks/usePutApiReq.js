@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../utils/axiosInstance";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const usePutApiReq = () => {
   const [res, setRes] = useState(null);
@@ -32,6 +33,9 @@ const usePutApiReq = () => {
       // }
       // else {
       // }
+        if (error?.response?.status === 401) {
+          Cookies.set("admin-status", false, { expires: 365 });
+        }
     } finally {
       setIsLoading(false);
       await dispatch(handleLoading(false));

@@ -15,4 +15,5 @@ export const permissions = [
   { label: "Notifications", value: "notifications" },
   { label: "Tickets", value: "tickets" },
   { label: "Content", value: "content" },
+  { label: "Spotlight", value: "spotlight" },
 ];

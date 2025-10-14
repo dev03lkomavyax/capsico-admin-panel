@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import UpdateCustomer from "./UpdateCustomer";
 import { Calendar, Gift } from "lucide-react";
 import Addresses from "./Addresses";
+import { Button } from "@/components/ui/button";
 
 const CustomerDetails = () => {
   const [customerDetailsData, setCustomerDetailsData] = useState("");
@@ -43,7 +44,7 @@ const CustomerDetails = () => {
       <div className="p-0">
         <div className="flex justify-between h-14">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/admin/customer")}
             className="flex items-center gap-1"
           >
             <IoIosArrowBack className="text-2xl" />
@@ -51,6 +52,24 @@ const CustomerDetails = () => {
               Customer detail
             </span>
           </button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              navigate(`/admin/customer/${customerId}/wallet`, {
+                state: {
+                  user: {
+                    id: customerDetailsData?.customUserId,
+                    name: customerDetailsData?.name,
+                    phone: customerDetailsData?.phone,
+                    image: customerDetailsData?.image,
+                  },
+                },
+              })
+            }
+          >
+            View Wallet
+          </Button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="bg-white p-5 rounded-lg grid grid-cols-1 md:grid-cols-[208px_1fr] gap-5">

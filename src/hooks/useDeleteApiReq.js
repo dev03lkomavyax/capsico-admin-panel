@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { handleLoading } from "@/store/slices/loadingSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
+import Cookies from "js-cookie";
 
 const useDeleteApiReq = () => {
     const [res, setRes] = useState(null);
@@ -31,6 +32,9 @@ const useDeleteApiReq = () => {
                 toast.error(error.response?.data?.message || "An error occurred.")
                 // await dispatch(handleErrorModal({ isOpen: true, message: error.response?.data?.message || "An error occurred.", isLogoutBtn: true }));
             }
+              if (error?.response?.status === 401) {
+                Cookies.set("admin-status", false, { expires: 365 });
+              }
         } finally {
             setIsLoading(false);
             await dispatch(handleLoading(false));
