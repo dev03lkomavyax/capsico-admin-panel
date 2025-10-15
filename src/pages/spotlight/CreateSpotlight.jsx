@@ -1,4 +1,8 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import DataNotFound from "@/components/DataNotFound";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -7,6 +11,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -14,25 +20,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { ChevronLeft, Search } from "lucide-react";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import DataNotFound from "@/components/DataNotFound";
-import { Link } from "react-router-dom";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import toast from "react-hot-toast";
+import DatePicker from "@/components/DatePicker";
 
 const spotlightSchema = z.object({
-  restaurant: z.string().min(1, "Select a restaurant"),
-  // cuisines: z.array(z.string()).min(1, "Select at least one cuisine"),
-  menuItems: z.array(z.string()).min(1, "Select at least one item"),
-  category: z.string().optional(),
+  restaurantId: z.string().min(1, "Select a restaurant"),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  priority: z
+    .string()
+    .transform((val) => parseInt(val || "0"))
+    .refine((val) => val >= 0 && val <= 100, "Priority must be 0–100"),
+  startDate: z.preprocess(
+    (val) => (val ? new Date(val) : undefined),
+    z.date().optional()
+  ),
+  endDate: z.preprocess(
+    (val) => (val ? new Date(val) : undefined),
+    z.date().optional()
+  ),
+
+  isActive: z.boolean().default(true),
+  spotlightFoodIds: z.array(z.string()).min(1, "Select at least one item"),
 });
 
 const CreateSpotlight = () => {
@@ -40,62 +58,48 @@ const CreateSpotlight = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
+  const [category, setCategory] = useState("");
 
-  console.log("selectedItems", selectedItems);
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(spotlightSchema),
     defaultValues: {
-      restaurant: "",
-      cuisines: ["Italian", "American"],
-      menuItems: selectedItems,
+      restaurantId: "",
+      title: "Featured Items",
+      description: "",
+      priority: "0",
+      startDate: "",
+      endDate: "",
+      isActive: true,
+      spotlightFoodIds: [],
     },
   });
 
-  const { watch, setValue } = form;
-  
+  const {
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = form;
+
+  // console.log("formState-errors", errors);
+
+  // Hooks for APIs
+  const { res: fetchRestaurantsRes, fetchData: fetchRestaurants } =
+    useGetApiReq();
+  const { res: categoryRes, fetchData: categoryFetchData } = useGetApiReq();
+  const { res: itemsRes, fetchData: itemsFetchData } = useGetApiReq();
+  const {
+    res: createRes,
+    fetchData: createSpotlight,
+    isLoading: isSubmitting,
+  } = usePostApiReq();
+
+  // Fetch all restaurants on mount
   useEffect(() => {
-    setValue("menuItems", selectedItems);
-  }, [selectedItems]);
-
-  useEffect(
-    () => {
-      if (watch("restaurant")) {
-        getCategory();
-        setSelectedItems([]); // reset items
-        setValue("category", "");
-      }
-      if (watch("category")) {
-        setSelectedItems([]); // reset items
-      }
-    },
-    [watch("restaurant")],
-    watch("category")
-  );
-
-  const {
-    res: fetchRestaurantsRes,
-    fetchData: fetchRestaurants,
-    isLoading: isRestaurantsLoading,
-  } = useGetApiReq();
-  const {
-    res: categoryRes,
-    fetchData: categoryFetchData,
-    isLoading: categoryIsLoading,
-  } = useGetApiReq();
-
-  const {
-    res: itemsRes,
-    fetchData: itemsFetchData,
-    isLoading: itemsIsLoading,
-  } = useGetApiReq();
-
-  const getRestaurants = () => {
     fetchRestaurants(`/admin/get-all-restaurants`);
-  };
-
-  useEffect(() => {
-    getRestaurants();
   }, []);
 
   useEffect(() => {
@@ -103,24 +107,22 @@ const CreateSpotlight = () => {
       fetchRestaurantsRes?.status === 200 ||
       fetchRestaurantsRes?.status === 201
     ) {
-      console.log("fetchRestaurantsRes", fetchRestaurantsRes);
       setRestaurants(fetchRestaurantsRes?.data?.restaurants || []);
     }
   }, [fetchRestaurantsRes]);
 
-  const getCategory = () => {
-    categoryFetchData(`/admin/get-categories/${watch("restaurant")}`);
-  };
-
+  // Fetch categories on restaurant change
   useEffect(() => {
-    if (watch("restaurant")) {
-      getCategory();
+    if (watch("restaurantId")) {
+      categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`);
+      setSelectedItems([]);
+      setValue("spotlightFoodIds", []);
+      setCategory("");
     }
-  }, [watch("restaurant")]);
+  }, [watch("restaurantId")]);
 
   useEffect(() => {
     if (categoryRes?.status === 200 || categoryRes?.status === 201) {
-      console.log("categoryRes", categoryRes);
       const modifiedCategories = categoryRes?.data?.data?.map((item) => ({
         label: item?.name,
         value: item?.id,
@@ -129,74 +131,79 @@ const CreateSpotlight = () => {
     }
   }, [categoryRes]);
 
-  const getItems = () => {
-    itemsFetchData(`/admin/get-items-by-category/${watch("category")}`);
-  };
-
+  // Fetch items on category change
   useEffect(() => {
-    if (watch("category")) {
-      getItems();
+    if (category) {
+      itemsFetchData(`/admin/get-items-by-category/${category}`);
+      setSelectedItems([]);
+      setValue("spotlightFoodIds", []);
     }
-  }, [watch("category")]);
+  }, [category]);
 
   useEffect(() => {
     if (itemsRes?.status === 200 || itemsRes?.status === 201) {
-      console.log("itemsRes", itemsRes);
-      const modifiedItems = itemsRes?.data?.items?.map((item) => ({
-        label: item?.name,
-        value: item?._id,
-      }));
-      setItems(itemsRes?.data?.items);
+      setItems(itemsRes?.data?.items || []);
     }
   }, [itemsRes]);
 
-  const onSubmit = (data) => {
-    console.log("Spotlight data:", data);
-  };
-  const onError = (error) => {
-    console.log("error", error);
+  const toggleItem = (itemId) => {
+    setSelectedItems((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((i) => i !== itemId)
+        : [...prev, itemId]
+    );
   };
 
-  const toggleItem = (item) => {
-    setSelectedItems((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
+  useEffect(() => {
+    setValue("spotlightFoodIds", selectedItems);
+  }, [selectedItems]);
+
+  // ✅ Submit Handler
+  const onSubmit = async (data) => {
+    console.log("Spotlight payload:", data);
+    await createSpotlight(`/spotlight/createSpotlight`, data);
+  };
+
+  useEffect(() => {
+    if (createRes?.status === 201 || createRes?.status === 200) {
+      toast.success("Spotlight created successfully!");
+      navigate("/admin/spotlight");
+    } else if (createRes?.status >= 400) {
+      toast.error(createRes?.data?.error || "Failed to create spotlight");
+    }
+  }, [createRes]);
+
+  const onError = (errors) => {
+    console.log(errors);
+    // toast.error(Object.values(errors)[0]?.message || "Error");
   };
 
   return (
     <AdminWrapper>
       <div>
-        {/* <h2 className="text-[#000000] text-xl font-medium font-roboto">
-          Create Spotlight
-        </h2> */}
-        <Link to="/admin/spotlight" className="inline-flex gap-1 items-center">
+        <Link
+          to="/admin/spotlight"
+          className="inline-flex gap-1 items-center mb-4"
+        >
           <ChevronLeft />
           <h2 className="text-[#111928] text-xl font-semibold font-inter">
             Create Spotlight
           </h2>
         </Link>
-        <Card className="w-full">
-          {/* <CardHeader className="pb-2">
-            <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              ⭐ Create Spotlight
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Highlight a restaurant and its top menu items in the Spotlight
-              section.
-            </p>
-          </CardHeader> */}
 
+        <Card className="w-full">
           <CardContent className="pt-6">
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit, onError)}
+                onSubmit={handleSubmit(onSubmit, onError)}
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
               >
                 {/* LEFT SIDE */}
                 <div className="md:col-span-2 space-y-6">
+                  {/* Restaurant */}
                   <FormField
-                    control={form.control}
-                    name="restaurant"
+                    control={control}
+                    name="restaurantId"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Select Restaurant</FormLabel>
@@ -219,7 +226,6 @@ const CreateSpotlight = () => {
                                 {restaurant.name}
                               </SelectItem>
                             ))}
-
                             {restaurants.length === 0 && (
                               <DataNotFound name="Restaurants" />
                             )}
@@ -230,162 +236,198 @@ const CreateSpotlight = () => {
                     )}
                   />
 
-                  {/* Search and Filters */}
-                  <div>
-                    <FormLabel>Select Menu Items</FormLabel>
-                    <div className="flex items-center gap-2 my-4">
-                      <div className="flex gap-2 flex-wrap">
-                        {categories.map((cat) => (
-                          <Badge
-                            onClick={() => setValue("category", cat.value)}
-                            key={cat.value}
-                            variant={
-                              watch("category") === cat.value
-                                ? "default"
-                                : "secondary"
-                            }
-                            className={cn(
-                              "cursor-pointer",
-                              cat.label === "All" && "bg-primary text-white"
-                            )}
-                          >
-                            {cat.label}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Menu Item Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {items.map((item) => (
-                        <div
-                          key={item._id}
-                          onClick={() => toggleItem(item._id)}
-                          className={cn(
-                            "rounded-lg p-3 border transition cursor-pointer",
-                            selectedItems.includes(item._id)
-                              ? "border-primary bg-primary/10"
-                              : "border-transparent hover:bg-muted/50"
-                          )}
-                        >
-                          <img
-                            className="aspect-video bg-cover rounded-md mb-3 bg-gray-300"
-                            src={`${import.meta.env.VITE_IMAGE_URL}/${
-                              item.images[0]
-                            })`}
+                  {/* Title */}
+                  <FormField
+                    control={control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Spotlight Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g. Chef’s Specials"
+                            {...field}
                           />
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <p className="font-semibold">{item.name}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {item.category} • ₹{item.price}
-                              </p>
-                            </div>
-                            <p className="text-yellow-500 text-sm font-medium">
-                              ★ {item.rating}
-                            </p>
-                          </div>
-                          <Button
-                            variant={
-                              selectedItems.includes(item.name)
-                                ? "default"
-                                : "secondary"
-                            }
-                            className="mt-3 w-full"
-                            type="button"
-                          >
-                            {selectedItems.includes(item.name)
-                              ? "✓ Selected"
-                              : "Select"}
-                          </Button>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Description */}
+                  <FormField
+                    control={control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Short description..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Menu Items */}
+                  <div>
+                    {watch("restaurantId") && (
+                      <>
+                        <FormLabel>Select Category</FormLabel>
+                        <div className="flex items-center gap-2 my-4 flex-wrap">
+                          {categories.map((cat) => (
+                            <Badge
+                              key={cat.value}
+                              onClick={() => setCategory(cat.value)}
+                              variant={
+                                category === cat.value ? "default" : "secondary"
+                              }
+                              className="cursor-pointer"
+                            >
+                              {cat.label}
+                            </Badge>
+                          ))}
+                          {categories.length === 0 && (
+                            <DataNotFound name="Categories" />
+                          )}
                         </div>
-                      ))}
-                    </div>
-                    {items.length === 0 && <DataNotFound name="Menu Items" />}
+                      </>
+                    )}
+                    {category && (
+                      <>
+                        <div>
+                          <FormLabel>Select Menu Items</FormLabel>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {items.map((item) => (
+                              <div
+                                key={item._id}
+                                onClick={() => toggleItem(item._id)}
+                                className={cn(
+                                  "rounded-lg p-3 border transition cursor-pointer",
+                                  selectedItems.includes(item._id)
+                                    ? "border-primary bg-primary/10"
+                                    : "border-transparent hover:bg-muted/50"
+                                )}
+                              >
+                                <img
+                                  className="aspect-video bg-cover rounded-md mb-3 bg-gray-300"
+                                  src={`${import.meta.env.VITE_IMAGE_URL}/${
+                                    item.images?.[0]
+                                  }`}
+                                  alt={item.name}
+                                />
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                    <p className="font-semibold">{item.name}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      ₹{item.price}
+                                    </p>
+                                  </div>
+                                  <p className="text-yellow-500 text-sm font-medium">
+                                    ★ {item.rating}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          {errors.spotlightFoodIds && (
+                            <FormMessage>
+                              {errors.spotlightFoodIds.message}
+                            </FormMessage>
+                          )}
+                        </div>
+                        {items.length === 0 && (
+                          <DataNotFound name="Menu Items" />
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
 
                 {/* RIGHT SIDE */}
                 <div className="md:col-span-1 space-y-6">
-                  {/* <FormField
-                    control={form.control}
-                    name="cuisines"
+                  {/* Priority */}
+                  <FormField
+                    control={control}
+                    name="priority"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Cuisines</FormLabel>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange(
-                              field.value.includes(value)
-                                ? field.value.filter((v) => v !== value)
-                                : [...field.value, value]
-                            )
-                          }
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select cuisines" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Italian">Italian</SelectItem>
-                            <SelectItem value="American">American</SelectItem>
-                            <SelectItem value="Fast Food">Fast Food</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {field.value.map((cuisine) => (
-                            <Badge key={cuisine} variant="outline">
-                              {cuisine}
-                            </Badge>
-                          ))}
-                        </div>
+                        <FormLabel>Priority (0–100)</FormLabel>
+                        <FormControl>
+                          <Input type="number" min="0" max="100" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
-                  /> */}
+                  />
 
-                  {/* Spotlight Preview */}
-                  {/* <Card className="bg-muted/30">
-                    <CardHeader>
-                      <CardTitle className="text-base font-semibold">
-                        Spotlight Preview
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <h4 className="font-bold text-lg">The Gourmet Kitchen</h4>
-                      <div>
-                        <p className="text-xs uppercase text-muted-foreground font-medium">
-                          Selected Items
-                        </p>
-                        <ul className="list-disc list-inside text-sm mt-1">
-                          {selectedItems.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="text-xs uppercase text-muted-foreground font-medium">
-                          Cuisines
-                        </p>
-                        <div className="flex gap-2 flex-wrap mt-1">
-                          {form.watch("cuisines").map((cuisine) => (
-                            <Badge key={cuisine} variant="secondary">
-                              {cuisine}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card> */}
+                  {/* Start Date */}
+                  <FormField
+                    control={control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Start Date</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* End Date */}
+                  <FormField
+                    control={control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>End Date</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* isActive */}
+                  {/* <FormField
+                    control={control}
+                    name="isActive"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center justify-between p-2 border rounded-md">
+                        <FormLabel className="mb-0">Active</FormLabel>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  /> */}
                 </div>
 
                 {/* ACTIONS */}
                 <div className="col-span-3 flex justify-end gap-4 pt-6 border-t">
-                  <Button variant="outline" type="button">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => navigate("/admin/spotlight")}
+                  >
                     Cancel
                   </Button>
-                  <Button type="submit">Save Spotlight</Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : "Save Spotlight"}
+                  </Button>
                 </div>
               </form>
             </Form>
