@@ -1,16 +1,9 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import ReactPagination from "@/components/pagination/ReactPagination";
+import Spinner from "@/components/Spinner";
 import CreateSpotlightModal from "@/components/spotlight/CreateSpotlightModal";
+import SpotlightComp from "@/components/spotlight/SpotlightComp";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -19,125 +12,206 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { FilterIcon, PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Edit,
-  Eye,
-  PlusIcon,
-  Search,
-  Star,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import DataNotFound from "@/components/DataNotFound";
 
 const Spotlight = () => {
-  const navigate = useNavigate();
   const [isCreateSpotlightModalOpen, setIsCreateSpotlightModalOpen] =
     useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
+  const [spotlights, setSpotlights] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+
+  // ======= Filter States =======
+  const [cityName, setCityName] = useState("");
+  const [restaurantId, setRestaurantId] = useState("");
+  const [isActive, setIsActive] = useState("");
+
+  const { res, fetchData, isLoading } = useGetApiReq();
+  const { res: fetchRestaurantsRes, fetchData: fetchRestaurants } =
+    useGetApiReq();
+
+  useEffect(() => {
+    fetchRestaurants(`/admin/get-all-restaurants`);
+  }, []);
+
+  useEffect(() => {
+    if (
+      fetchRestaurantsRes?.status === 200 ||
+      fetchRestaurantsRes?.status === 201
+    ) {
+      setRestaurants(fetchRestaurantsRes?.data?.restaurants || []);
+    }
+  }, [fetchRestaurantsRes]);
+
+  const getSpotlights = () => {
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    if (cityName) params.append("cityName", cityName);
+    if (restaurantId) params.append("restaurantId", restaurantId);
+    if (isActive) params.append("isActive", isActive);
+
+    fetchData(`/spotlight/getAllSpotlights?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    getSpotlights();
+  }, [page, cityName, restaurantId, isActive]);
+
+  useEffect(() => {
+    if (res?.status === 200 && res?.data?.data?.spotlights) {
+      setSpotlights(res.data.data.spotlights);
+      setTotalPage(res.data.pagination?.totalPages || 1);
+    }
+  }, [res]);
 
   return (
     <AdminWrapper>
       <div>
+        {/* ======= Header ======= */}
         <div className="flex justify-between items-center gap-5">
           <h2 className="text-[#000000] text-xl font-medium font-roboto">
             Spotlight
           </h2>
-          <div className="flex gap-3 items-center">
-            {/* <Button
-              onClick={() => setIsCreateSpotlightModalOpen(true)}
-              className="px-4"
-              variant="capsico"
-            >
-              <PlusIcon />
+          <Button className="px-4 w-auto" variant="capsico" asChild>
+            <Link to="/admin/spotlight/create">
+              <PlusIcon className="mr-1 h-4 w-4" />
               Add Spotlight
-            </Button> */}
-            <Button
-              className="px-4"
-              variant="capsico"
-              asChild
-            >
-              <Link to="/admin/spotlight/create">
-              <PlusIcon />
-              Add Spotlight
-              </Link>
-            </Button>
-          </div>
+            </Link>
+          </Button>
         </div>
 
+        {/* ======= Filters ======= */}
+        <div className="mt-6 flex flex-wrap items-center gap-4 border p-4 rounded-lg bg-white shadow-sm">
+          <div className="flex items-center gap-2">
+            <FilterIcon className="h-4 w-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">Filters</span>
+          </div>
+
+          {/* City Name Filter */}
+          {/* <Input
+            placeholder="Filter by City"
+            value={cityName}
+            onChange={(e) => {
+              setCityName(e.target.value);
+              setPage(1);
+            }}
+            className="w-[180px]"
+          /> */}
+
+          <Select onValueChange={setRestaurantId} value={restaurantId}>
+            <SelectTrigger className="w-auto">
+              <SelectValue placeholder="Select a restaurant" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {restaurants.map((restaurant) => (
+                <SelectItem
+                  key={restaurant?._id}
+                  value={restaurant?._id}
+                  className="capitalize"
+                >
+                  {restaurant.name}
+                </SelectItem>
+              ))}
+              {restaurants.length === 0 && <DataNotFound name="Restaurants" />}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={isActive}
+            onValueChange={(value) => {
+              setIsActive(value);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {/* <SelectItem value="all">All</SelectItem> */}
+              <SelectItem value="true">Active</SelectItem>
+              <SelectItem value="false">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Reset Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setCityName("");
+              setRestaurantId("");
+              setIsActive("");
+              setPage(1);
+            }}
+          >
+            Reset Filters
+          </Button>
+        </div>
+
+        {/* ======= Table ======= */}
         <div className="mt-10">
           <Table className="w-full border shadow-sm bg-white">
             <TableHeader>
               <TableRow>
                 <TableHead>Restaurant</TableHead>
                 <TableHead>Spotlight Items</TableHead>
-                <TableHead>Cuisines</TableHead>
+                <TableHead>Priority</TableHead>
+                <TableHead>Start Date</TableHead>
+                <TableHead>End Date</TableHead>
                 <TableHead>Created On</TableHead>
-                {/* <TableHead className="text-center">Actions</TableHead> */}
+                <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {[
-                {
-                  restaurant: "La Pino'z Pizza",
-                  items: "Veg Margherita, Garlic Bread",
-                  cuisines: "Pizza, Snacks",
-                  date: "14 Oct 2025",
-                },
-                {
-                  restaurant: "Cafe99",
-                  items: "Chicken Burger",
-                  cuisines: "Fast Food",
-                  date: "12 Oct 2025",
-                },
-              ].map((row) => (
-                <TableRow key={row.restaurant}>
-                  <TableCell className="font-medium">
-                    {row.restaurant}
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-6">
+                    <Spinner />
                   </TableCell>
-                  <TableCell>{row.items}</TableCell>
-                  <TableCell>{row.cuisines}</TableCell>
-                  <TableCell>{row.date}</TableCell>
-                  {/* <TableCell className="text-center">
-                            <div className="flex justify-center gap-2">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="hover:text-primary"
-                              >
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="hover:text-primary"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="hover:text-red-500"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell> */}
                 </TableRow>
-              ))}
+              ) : spotlights.length > 0 ? (
+                spotlights.map((spotlight) => (
+                  <SpotlightComp key={spotlight._id} spotlight={spotlight} />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-6">
+                    No spotlights found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
-          <ReactPagination totalPage={totalPage} setPage={setPage} />
+
+          {/* ======= Pagination ======= */}
+          <div className="mt-6">
+            <ReactPagination totalPage={totalPage} setPage={setPage} />
+          </div>
         </div>
 
+        {/* ======= Create Modal (if used) ======= */}
         {isCreateSpotlightModalOpen && (
           <CreateSpotlightModal
             open={isCreateSpotlightModalOpen}
             setOpen={setIsCreateSpotlightModalOpen}
-            getSpotlights={() => {}}
+            getSpotlights={() =>
+              fetchData(`/spotlight/getAllSpotlights?page=${page}`)
+            }
           />
         )}
       </div>
