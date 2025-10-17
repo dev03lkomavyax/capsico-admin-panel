@@ -7,12 +7,14 @@ import { format } from "date-fns";
 import { Button } from "../ui/button";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import AlertModal from "../AlertModal";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Megaphone, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PromoteOffer from "../PromoteOffer";
 
 const Offer = ({ offer, getOffers }) => {
   const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isPromoteOfferModalOpen, setIsPromoteOfferModalOpen] = useState(false);
 
   const { res, fetchData, isLoading } = useDeleteApiReq();
 
@@ -41,7 +43,9 @@ const Offer = ({ offer, getOffers }) => {
     startDate,
     endDate,
     description,
+    offerId,
   } = offer;
+
   return (
     <>
       <TableRow>
@@ -145,6 +149,14 @@ const Offer = ({ offer, getOffers }) => {
             >
               <Trash className="size-5" />
             </Button>
+            <Button
+              onClick={() => setIsPromoteOfferModalOpen(true)}
+              title="Promote Offer"
+              size="icon"
+              variant="outline"
+            >
+              <Megaphone className="size-5" />
+            </Button>
           </div>
         </TableCell>
       </TableRow>
@@ -157,6 +169,14 @@ const Offer = ({ offer, getOffers }) => {
           description="This action cannot be undone. This will permanently delete the offer."
           onConfirm={deleteOffer}
           disabled={isLoading}
+        />
+      )}
+
+      {isPromoteOfferModalOpen && (
+        <PromoteOffer
+          open={isPromoteOfferModalOpen}
+          setOpen={setIsPromoteOfferModalOpen}
+          offerId={offerId}
         />
       )}
     </>

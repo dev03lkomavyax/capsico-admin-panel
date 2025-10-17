@@ -150,6 +150,7 @@ const ManualWalletAdjustmentDialog = ({
                   <FormControl>
                     <Textarea
                       placeholder="Enter reason for adjustment"
+                      className="resize-none"
                       rows={4}
                       {...field}
                     />
