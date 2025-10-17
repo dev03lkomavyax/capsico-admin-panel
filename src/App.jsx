@@ -26,6 +26,7 @@ import Spotlight from "./pages/spotlight/Spotlight";
 import CreateSpotlight from "./pages/spotlight/CreateSpotlight";
 import CustomerWalletDetails from "./pages/customer/customer-wallet/CustomerWalletDetails";
 import TransactionHistory from "./pages/customer/customer-wallet/TransactionHistory";
+import PromotedOffer from "./pages/offers/PromotedOffers";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -310,6 +311,10 @@ function App() {
               element={<CreateOffer />}
             />
             <Route path="/admin/offers/:id/update" element={<UpdateOffer />} />
+            <Route
+              path="/admin/offers/promoted-offer"
+              element={<PromotedOffer />}
+            />
 
             <Route
               path="/admin/application-request"

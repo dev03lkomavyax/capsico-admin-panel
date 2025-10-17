@@ -1,6 +1,3 @@
-import { LIMIT } from "@/constants/constants";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,20 +5,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LIMIT } from "@/constants/constants";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { useEffect, useState } from "react";
+import DataNotFound from "../DataNotFound";
+import ReactPagination from "../pagination/ReactPagination";
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "../ui/table";
-import { Badge } from "../ui/badge";
-import { Switch } from "../ui/switch";
-import { Button } from "../ui/button";
 import Offer from "./Offer";
-import ReactPagination from "../pagination/ReactPagination";
-import DataNotFound from "../DataNotFound";
 
 const AllOffers = () => {
   const [offers, setOffers] = useState([]);
