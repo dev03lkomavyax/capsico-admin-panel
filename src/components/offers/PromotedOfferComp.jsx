@@ -15,30 +15,26 @@ const PromotedOfferComp = ({ offer }) => {
       <TableCell>
         <Badge
           variant={
-            offer.promotion.category === "megaSale"
-              ? "destructive"
-              : "secondary"
+            offer.promotionCategory === "megaSale" ? "destructive" : "secondary"
           }
         >
-          {offer.promotion.category}
+          {offer.promotionCategory}
         </Badge>
       </TableCell>
-      <TableCell>{offer.promotion.priorityLevel}</TableCell>
-      <TableCell>{offer.restaurant.name || "NA"}</TableCell>
-      <TableCell>{offer.restaurant.city || "NA"}</TableCell>
+      <TableCell>{offer.priorityLevel}</TableCell>
+      <TableCell>{offer?.restaurant?.name || "NA"}</TableCell>
+      <TableCell>{offer?.restaurant?.city || "NA"}</TableCell>
       <TableCell>
-        {offer.validity.startDate &&
-          format(new Date(offer.validity.startDate), "dd MMM yyyy")}
+        {offer.promotedAt && format(new Date(offer.promotedAt), "dd MMM yyyy")}
       </TableCell>
       <TableCell>
-        {offer.validity.endDate &&
-          format(new Date(offer.validity.endDate), "dd MMM yyyy")}
+        {offer?.endDate && format(new Date(offer?.endDate), "dd MMM yyyy")}
       </TableCell>
-      <TableCell>{offer.validity.daysRemaining}</TableCell>
+      {/* <TableCell>{offer.validity.daysRemaining}</TableCell>
       <TableCell>
         {offer.usage.current}/{offer.usage.maximum}
-      </TableCell>
-      <TableCell>{offer.promotion.promotedBy?.name || "—"}</TableCell>
+      </TableCell> */}
+      {/* <TableCell>{offer.promotion.promotedBy?.name || "—"}</TableCell> */}
       {/* <TableCell className="text-right">
         <Button
           size="sm"
