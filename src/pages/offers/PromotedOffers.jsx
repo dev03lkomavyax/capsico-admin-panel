@@ -60,10 +60,10 @@ const PromotedOffers = () => {
   const getOffers = () => {
     const query = new URLSearchParams({
       promotionCategory,
-      priorityLevel: priorityLevel === "all" ? "" : priorityLevel,
-      city,
-      sortBy,
-      sortOrder,
+      // priorityLevel: priorityLevel === "all" ? "" : priorityLevel,
+      city:city.toLocaleLowerCase(),
+      // sortBy,
+      // sortOrder,
       page,
       limit: LIMIT,
     }).toString();
@@ -93,7 +93,7 @@ const PromotedOffers = () => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("offers res", res);
       setOffers(res?.data?.data?.offers || []);
-      setTotalPage(res?.data?.data?.pagination?.totalPages);
+      setTotalPage(res?.data?.data?.pagination?.pages);
       // setPage(res?.data?.data?.pagination?.currentPage);
     }
   }, [res]);
@@ -101,36 +101,35 @@ const PromotedOffers = () => {
   return (
     <AdminWrapper>
       <div>
-        <div className="flex flex-wrap gap-3 mb-6 items-end justify-between">
+        <div className="flex gap-3 mb-6 items-end justify-between">
           <Link to="/admin/offers" className="inline-flex gap-1 items-center">
             <ChevronLeft />
             <h2 className="text-[#111928] text-xl font-semibold font-inter">
               Promoted offers
             </h2>
           </Link>
-        </div>
-        <div className="flex flex-wrap gap-3 items-end">
-          {/* Promotion Category */}
-          <div>
-            <label className="text-sm text-gray-600">Promotion Type</label>
-            <Select
-              value={promotionCategory}
-              onValueChange={setPromotionCategory}
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                {/* <SelectItem value="none">None</SelectItem> */}
-                <SelectItem value="megaSale">Mega Sale</SelectItem>
-                <SelectItem value="topRated">Top Rated</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="flex flex-wrap gap-3 items-end">
+            {/* Promotion Category */}
+            <div>
+              <label className="text-sm text-gray-600">Promotion Type</label>
+              <Select
+                value={promotionCategory}
+                onValueChange={setPromotionCategory}
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {/* <SelectItem value="none">None</SelectItem> */}
+                  <SelectItem value="megaSale">Mega Sale</SelectItem>
+                  <SelectItem value="topRated">Top Rated</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Priority Level */}
-          <div>
+            {/* Priority Level */}
+            {/* <div>
             <label className="text-sm text-gray-600">Priority</label>
             <Select value={priorityLevel} onValueChange={setPriorityLevel}>
               <SelectTrigger className="w-[100px]">
@@ -145,40 +144,40 @@ const PromotedOffers = () => {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
-          {/* City (only for superAdmin) */}
-          <div>
-            <label className="text-sm text-gray-600">City</label>
-            <Select value={city} onValueChange={setCity}>
-              <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                {/* <SelectItem value="all">All</SelectItem> */}
-                {cities.map((city) => (
-                  <SelectItem
-                    key={city?._id}
-                    value={city?._id}
-                    className="capitalize"
-                  >
-                    {city.city}
-                  </SelectItem>
-                ))}
-                {cities.length === 0 && <DataNotFound name="Cities" />}
-              </SelectContent>
-            </Select>
-            {/* <Input
+            {/* City (only for superAdmin) */}
+            <div>
+              <label className="text-sm text-gray-600">City</label>
+              <Select value={city} onValueChange={setCity}>
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  {/* <SelectItem value="all">All</SelectItem> */}
+                  {cities.map((city) => (
+                    <SelectItem
+                      key={city?._id}
+                      value={city?.city}
+                      className="capitalize"
+                    >
+                      {city.city}
+                    </SelectItem>
+                  ))}
+                  {cities.length === 0 && <DataNotFound name="Cities" />}
+                </SelectContent>
+              </Select>
+              {/* <Input
               type="text"
               placeholder="Enter city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               className="w-[150px]"
             /> */}
-          </div>
+            </div>
 
-          {/* Sort By */}
-          <div>
+            {/* Sort By */}
+            {/* <div>
             <label className="text-sm text-gray-600">Sort By</label>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[150px]">
@@ -189,10 +188,10 @@ const PromotedOffers = () => {
                 <SelectItem value="promotedAt">Promoted Date</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
-          {/* Sort Order */}
-          <div>
+            {/* Sort Order */}
+            {/* <div>
             <label className="text-sm text-gray-600">Order</label>
             <Select value={sortOrder} onValueChange={setSortOrder}>
               <SelectTrigger className="w-[120px]">
@@ -203,12 +202,13 @@ const PromotedOffers = () => {
                 <SelectItem value="desc">Descending</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
-          {/* Refresh Button */}
-          <Button className="w-auto px-4" variant="capsico" onClick={onReset}>
-            Reset
-          </Button>
+            {/* Refresh Button */}
+            <Button className="w-auto px-4" variant="capsico" onClick={onReset}>
+              Reset
+            </Button>
+          </div>
         </div>
 
         <div className="bg-white mt-10">
@@ -224,9 +224,9 @@ const PromotedOffers = () => {
                 <TableHead>City</TableHead>
                 <TableHead>Start Date</TableHead>
                 <TableHead>End Date</TableHead>
-                <TableHead>Days Left</TableHead>
-                <TableHead>Usage</TableHead>
-                <TableHead>Promoted By</TableHead>
+                {/* <TableHead>Days Left</TableHead>
+                <TableHead>Usage</TableHead> */}
+                {/* <TableHead>Promoted By</TableHead> */}
                 {/* <TableHead className="text-right">Actions</TableHead> */}
               </TableRow>
             </TableHeader>

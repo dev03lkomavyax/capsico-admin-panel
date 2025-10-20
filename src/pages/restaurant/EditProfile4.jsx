@@ -19,6 +19,7 @@ import { PiCameraPlus } from "react-icons/pi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import usePostApiReq from '@/hooks/usePostApiReq';
+import { viewDbImagePreview } from "@/lib/utils";
 
 // const EditProfile4 = ({ setPage, restaurant }) => {
 //   const form = useForm({
@@ -464,10 +465,24 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     updateMultiplePreview(menuImages, "menuImagesPreview", setValue);
   }, [form, menuImages, setValue]);
 
-  const { basicInfo, location, partnerDetails } = restaurant || {};
+  const { step4Data="", basicInfo="" } = restaurant || {};
 
   useEffect(() => {
+     const menuImagesPreviews = basicInfo?.menuImages?.map((image) =>
+          viewDbImagePreview(image)
+        );
     // reset logic if needed for existing restaurant data
+    reset({
+      accountingNotificationsNumber: step4Data?.notificationNumber || "",
+      email: step4Data?.notificationEmail || "",
+      fullName: step4Data?.notificationName || "",
+      isManually: "Enter this information manually",
+      isRefered: step4Data?.didCapsicoReferYou || false,
+      menuImagesPreview: menuImagesPreviews,
+      number: step4Data?.number || "",
+      numberType: step4Data?.numberType || "",
+      timing: step4Data?.onlineOrderTiming || "",
+    });
   }, [restaurant]);
 
   // Handle successful API response
@@ -477,6 +492,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
       setPage((prev) => prev + 1);
     }
   }, [res, setPage]);
+  
 
   const onSubmit = async (data) => {
     console.log("Form data:", data);
@@ -488,17 +504,20 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     formData.append('restaurantId', restaurant?.id || restaurant?._id || '');
     
     // Append form fields
-    formData.append('isRefered', data.isRefered.toString());
-    formData.append('timing', data.timing || '');
+    formData.append("didCapsicoReferYou", data.isRefered);
+    formData.append("onlineOrderTiming", data.timing || "");
     formData.append('numberType', data.numberType || '');
     formData.append('number', data.number || '');
     formData.append('isManually', data.isManually || '');
     
     // Conditional fields for manual entry
     if (data.isManually === "Enter this information manually") {
-      formData.append('fullName', data.fullName || '');
-      formData.append('email', data.email || '');
-      formData.append('accountingNotificationsNumber', data.accountingNotificationsNumber || '');
+      formData.append("notificationName", data.fullName || "");
+      formData.append("notificationEmail", data.email || "");
+      formData.append(
+        "notificationNumber",
+        data.accountingNotificationsNumber || ""
+      );
     }
     
     // Handle multiple file uploads for menu images
@@ -575,8 +594,10 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                   </FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value) => field.onChange(value === 'true')}
-                      defaultValue={field.value?.toString()}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      value={field.value?.toString()}
                       className="flex items-center gap-10 space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -604,12 +625,13 @@ const EditProfile4 = ({ setPage, restaurant }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className=" text-[#5E5858] font-inter">
-                    What are the timings during which customers can place online orders?
+                    What are the timings during which customers can place online
+                    orders?
                   </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                       className="flex flex-col mt-3 space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -643,7 +665,8 @@ const EditProfile4 = ({ setPage, restaurant }) => {
             Upload online ordering menu photos
           </h3>
           <p className="text-xs font-semibold text-[#ABABAB]">
-            Customers will choose items from this menu while placing online orders
+            Customers will choose items from this menu while placing online
+            orders
           </p>
           <div className="mt-5 flex flex-col gap-8">
             <div className="w-full relative">
@@ -653,19 +676,17 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                 render={({ field }) => (
                   <FormItem className="z-20">
                     <FormLabel className="cursor-pointer left-0 w-full h-full top-0">
-                      {(!watch("menuImagesPreview") || watch("menuImagesPreview").length === 0) && (
-                        <div className="border-2 border-dashed border-[#C2CDD6] w-full h-72 flex flex-col justify-center items-center rounded-md">
-                          <div className="border-2 flex flex-col items-center primary-color border-dashed rounded px-5 py-4">
-                            <PiCameraPlus className="text-[#1AA6F1]" size={45} />
-                            <p className="font-bold text-[#1AA6F1] text-center primary-color text-sm mt-2">
-                              Add Photo
-                            </p>
-                          </div>
-                          <p className="font-normal text-xs mt-2">
-                            or drop files to upload
+                      <div className="border-2 mb-3 border-dashed border-[#C2CDD6] w-full h-72  flex flex-col justify-center items-center rounded-md">
+                        <div className="border-2 flex flex-col items-center primary-color border-dashed rounded px-5 py-4">
+                          <PiCameraPlus className="text-[#1AA6F1]" size={45} />
+                          <p className="font-bold text-[#1AA6F1] text-center primary-color text-sm mt-2">
+                            Add Photo
                           </p>
                         </div>
-                      )}
+                        <p className="font-normal text-xs mt-2">
+                          or drop files to upload
+                        </p>
+                      </div>
                     </FormLabel>
                     <FormControl className="hidden">
                       <Input
@@ -679,13 +700,19 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                   </FormItem>
                 )}
               />
-              {watch("menuImagesPreview") && watch("menuImagesPreview").length > 0 && (
-                <div className="flex flex-wrap h-full gap-4">
-                  {watch("menuImagesPreview").map((prev, i) => (
-                    <img key={i} className="w-80 h-52 object-cover rounded-md" src={prev} alt={`Menu ${i + 1}`} />
-                  ))}
-                </div>
-              )}
+              {watch("menuImagesPreview") &&
+                watch("menuImagesPreview").length > 0 && (
+                  <div className="flex flex-wrap h-full gap-4">
+                    {watch("menuImagesPreview").map((prev, i) => (
+                      <img
+                        key={i}
+                        className="w-80 h-52 object-cover rounded-md"
+                        src={prev}
+                        alt={`Menu ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -708,7 +735,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                       className="flex items-center gap-10 space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -727,14 +754,14 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                           Landline
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      {/* <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="Same as restaurant mobile no." />
                         </FormControl>
                         <FormLabel className="font-semibold text-[#797979]">
                           Same as restaurant mobile no.
                         </FormLabel>
-                      </FormItem>
+                      </FormItem> */}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -756,14 +783,14 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                           {...field}
                         />
                       </div>
-                      <Button
+                      {/* <Button
                         type="button"
                         disabled={!watch("number") || watch("number").length < 10}
                         variant="capsico"
                         className="disabled:bg-[#BBBBBB] w-36 rounded"
                       >
                         Verify
-                      </Button>
+                      </Button> */}
                     </div>
                   </FormControl>
                   <FormMessage />

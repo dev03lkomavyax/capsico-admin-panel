@@ -7,18 +7,19 @@ import EditProfile2 from "./EditProfile2";
 import EditProfile3 from "./EditProfile3";
 import EditProfile4 from "./EditProfile4";
 import EditProfile5 from "./EditProfile5";
+import EditProfile7 from "./EditProfile7";
 import EditProfile6 from "./EditProfile6";
 
 const RestaurantEditProfile = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const [restaurant, setRestaurant] = useState("");
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(4);
   const { state } = useLocation();
 
   const getRestaurant = useCallback(() => {
     fetchData(`/admin/get-restaurant/${state?.restaurantId}`);
-  }, [state?.restaurantId]);
+  }, [state?.restaurantId,page]);
 
   useEffect(() => {
     state?.restaurantId && getRestaurant();
@@ -59,7 +60,8 @@ const RestaurantEditProfile = () => {
           {page === 5 && (
             <EditProfile5 restaurant={restaurant} setPage={setPage} />
           )}
-          {page === 6 && <EditProfile6 restaurant={restaurant} />}
+          {page === 6 && <EditProfile6 setPage={setPage} restaurant={restaurant} />}
+          {page === 7 && <EditProfile7 restaurant={restaurant} />}
         </div>
       </section>
     </AdminWrapper>
