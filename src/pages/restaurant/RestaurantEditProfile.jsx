@@ -14,7 +14,7 @@ const RestaurantEditProfile = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const [restaurant, setRestaurant] = useState("");
-  const [page, setPage] = useState(4);
+  const [page, setPage] = useState(1);
   const { state } = useLocation();
 
   const getRestaurant = useCallback(() => {
