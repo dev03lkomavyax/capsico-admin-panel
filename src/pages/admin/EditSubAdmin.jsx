@@ -59,11 +59,13 @@ const EditSubAdmin = () => {
     },
   });
 
-  const { control, reset, handleSubmit, setValue } = form;
+  const { control, reset, handleSubmit, setValue,getValues } = form;
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [toggleStatus, setToggleStatus] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
+  console.log("getValues", getValues());
+  
 
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -132,6 +134,10 @@ const EditSubAdmin = () => {
     });
   };
 
+  const onError = (errors) => {
+    console.log("Form errors:", errors);
+  }
+
   useEffect(() => {
     if (updateAdminRes?.status === 200 || updateAdminRes?.status === 201) {
       getSubadminDetails();
@@ -144,7 +150,7 @@ const EditSubAdmin = () => {
         <div className="bg-[#FFFFFF] px-8 py-6">
           <Form {...form}>
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit, onError)}
               className="w-full bg-[#FFFFFF]"
             >
               <div className="flex gap-1 items-center mb-4">
@@ -310,7 +316,6 @@ const EditSubAdmin = () => {
 
               <div className="grid grid-cols-6 gap-3 mt-1">
                 {permissions.map((permission) => {
-                  
                   return (
                     <FormField
                       key={permission.value}

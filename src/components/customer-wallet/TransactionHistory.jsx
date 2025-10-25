@@ -17,7 +17,11 @@ import Spinner from '../Spinner';
 import ManualWalletAdjustmentDialog from './ManualWalletAdjustment';
 
 
-const TransactionHistory = ({ isModalOpen, setIsModalOpen }) => {
+const TransactionHistory = ({
+  isModalOpen,
+  setIsModalOpen,
+  getWalletDetails,
+}) => {
   const [transactions, setTransactions] = useState([]);
   const { customerId } = useParams();
 
@@ -70,6 +74,7 @@ const TransactionHistory = ({ isModalOpen, setIsModalOpen }) => {
           open={isModalOpen}
           setOpen={setIsModalOpen}
           getTransactionHistory={getTransactionHistory}
+          getWalletDetails={getWalletDetails}
         />
       )}
     </div>

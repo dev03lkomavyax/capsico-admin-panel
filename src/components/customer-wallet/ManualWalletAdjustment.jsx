@@ -42,6 +42,7 @@ const ManualWalletAdjustmentDialog = ({
   open,
   setOpen,
   getTransactionHistory,
+  getWalletDetails= ()=>{},
 }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -79,7 +80,8 @@ const ManualWalletAdjustmentDialog = ({
       console.log("wallet debit/credit res", res);
       setOpen(false);
       reset();
-      getTransactionHistory()
+      getTransactionHistory();
+      getWalletDetails();
     }
   }, [res]);
 

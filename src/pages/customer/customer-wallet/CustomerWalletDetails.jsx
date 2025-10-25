@@ -161,6 +161,7 @@ const CustomerWalletDetails = () => {
               <TransactionHistory
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
+                getWalletDetails={getWalletDetails}
               />
             </Card>
           </div>
