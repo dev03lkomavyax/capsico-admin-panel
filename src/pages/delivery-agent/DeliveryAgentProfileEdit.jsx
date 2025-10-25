@@ -134,9 +134,7 @@ const DeliveryAgentProfileEdit = () => {
     setValue(
       "userImagePreview",
       deliveryPartnerDetailsData?.personalInfo?.profileImage &&
-        `${import.meta.env.VITE_IMAGE_URL}/${
-          deliveryPartnerDetailsData?.personalInfo?.profileImage
-        }`
+        `${deliveryPartnerDetailsData?.personalInfo?.profileImage}`
     );
     setValue(
       "dateOfBirth",
@@ -157,26 +155,20 @@ const DeliveryAgentProfileEdit = () => {
     setValue(
       "aadharFrontPreview",
       documents?.aadharCard?.image?.front &&
-        `${import.meta.env.VITE_IMAGE_URL}/${
-          documents?.aadharCard?.image?.front
-        }`
+        `${documents?.aadharCard?.image?.front}`
     );
     setValue(
       "aadharBackPreview",
       documents?.aadharCard?.image?.front &&
-        `${import.meta.env.VITE_IMAGE_URL}/${
-          documents?.aadharCard?.image?.back
-        }`
+        `${documents?.aadharCard?.image?.back}`
     );
     setValue(
       "drivingLicenseImagePreview",
-      documents?.drivingLicense?.image &&
-        `${import.meta.env.VITE_IMAGE_URL}/${documents?.drivingLicense?.image}`
+      documents?.drivingLicense?.image && `${documents?.drivingLicense?.image}`
     );
     setValue(
       "panCardPreview",
-      documents?.panCard?.image &&
-        `${import.meta.env.VITE_IMAGE_URL}/${documents?.panCard?.image}`
+      documents?.panCard?.image && `${documents?.panCard?.image}`
     );
     setValue("bankName", bankDetails?.bankName);
     setValue("currentStatus", accountStatus?.currentStatus);
@@ -351,9 +343,7 @@ const DeliveryAgentProfileEdit = () => {
                 ) : (
                   <img
                     className="w-40 h-40 rounded-lg"
-                    src={`${import.meta.env.VITE_IMAGE_URL}/${
-                      deliveryPartnerDetailsData?.personalInfo?.profileImage
-                    }`}
+                    src={`${deliveryPartnerDetailsData?.personalInfo?.profileImage}`}
                     alt="avatar"
                   />
                 )}
@@ -669,7 +659,9 @@ const DeliveryAgentProfileEdit = () => {
                         />
                       ) : (
                         <p className="font-inter capitalize text-black">
-                          <span className="text-[#797979] text-base">Background Check Status:</span>{" "}
+                          <span className="text-[#797979] text-base">
+                            Background Check Status:
+                          </span>{" "}
                           <span className="font-semibold">
                             {getValues("backgroundCheckStatus") || "N/A"}
                           </span>

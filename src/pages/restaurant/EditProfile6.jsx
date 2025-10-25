@@ -36,6 +36,8 @@ const EditProfile6 = ({ setPage, restaurant }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  console.log("restaurant", restaurant);
+
   const form = useForm({
     resolver: zodResolver(restaurant ? EditProfileSchema6 : AddProfileSchema6),
     defaultValues: {
@@ -43,6 +45,7 @@ const EditProfile6 = ({ setPage, restaurant }) => {
       businessType: "",
       unitType: "",
       ownerProfile: "",
+      ownerProfilePreview: "",
       assignedCity: "",
       deliveryRadius: "",
       cancellationTime: "",
@@ -51,10 +54,15 @@ const EditProfile6 = ({ setPage, restaurant }) => {
       costTag: "",
       udyamNumber: "",
       firmProof: "",
+      firmProofPreview: "",
       restaurantFront: "",
+      restaurantFrontPreview: "",
       restaurantInside: "",
+      restaurantInsidePreview: "",
       restaurantKitchen: "",
+      restaurantKitchenPreview: "",
       stockArea: "",
+      stockAreaPreview: "",
       commissionPercent: "",
       onboardingSupport: "",
       supportQuery: "",
@@ -62,7 +70,7 @@ const EditProfile6 = ({ setPage, restaurant }) => {
     },
   });
 
-  const { control, watch, setValue } = form;
+  const { control, watch, setValue, reset } = form;
   const { res, fetchData, isLoading } = usePostApiReq();
   const [cities, setCities] = useState([]);
   const { res: fetchCitiesRes, fetchData: fetchCities } = useGetApiReq();
@@ -77,7 +85,49 @@ const EditProfile6 = ({ setPage, restaurant }) => {
     }
   }, [fetchCitiesRes]);
 
+  const { step6Data = "" } = restaurant || {};
+
+  useEffect(() => {
+    reset({
+      agreementAccepted: step6Data?.agreementDeclaration || false,
+      assignedCity: step6Data?.assignedCity || "",
+      businessType: step6Data?.businessType || "",
+      cancellationTime: step6Data?.cancellationConsiderationTime || "",
+      commissionPercent: step6Data?.initialCommissionAgreedPercent || "",
+      costTag: step6Data?.restaurantCostTag || "",
+      dateOfEstablishment: step6Data?.dateOfEstablishment || "",
+      deliveryRadius: step6Data?.deliveryRadius || "",
+      packagingCharges: step6Data?.restaurantPackagingCharges || "",
+      supportQuery: step6Data?.internalUse || "",
+      taxPercent: step6Data?.restaurantTaxesPercent || "",
+      udyamNumber: step6Data?.udyamRegistrationNumber || "",
+      unitType: step6Data?.unitType || "",
+      onboardingSupport: step6Data?.onboardingSupportNeeded || "",
+
+      ownerProfilePreview:
+        step6Data?.images?.ownerProfilePic &&
+        `${step6Data?.images?.ownerProfilePic}`,
+      firmProofPreview:
+        step6Data?.images?.firmEstablishmentProof &&
+        `${step6Data?.images?.firmEstablishmentProof}`,
+      restaurantFrontPreview:
+        step6Data?.images?.restaurantFrontImage &&
+        `${step6Data?.images?.restaurantFrontImage}`,
+      restaurantInsidePreview:
+        step6Data?.images?.restaurantInside &&
+        `${step6Data?.images?.restaurantInside}`,
+      restaurantKitchenPreview:
+        step6Data?.images?.restaurantKitchenImage &&
+        `${step6Data?.images?.restaurantKitchenImage}`,
+      stockAreaPreview:
+        step6Data?.images?.stockKeepingAreaImage &&
+        `${step6Data?.images?.stockKeepingAreaImage}`,
+    });
+  }, [restaurant]);
+
   const onSubmit = (data) => {
+    console.log("data", data);
+
     const formData = new FormData();
 
     const mappedFields = {
@@ -115,8 +165,8 @@ const EditProfile6 = ({ setPage, restaurant }) => {
     };
 
     Object.entries(imageMapping).forEach(([formKey, apiKey]) => {
-      if (data[formKey] instanceof FileList && data[formKey].length > 0) {
-        formData.append(apiKey, data[formKey][0]);
+      if (data[formKey] instanceof File) {
+        formData.append(apiKey, data[formKey]);
       }
     });
 

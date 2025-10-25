@@ -42,6 +42,7 @@ const DeliveryAgentComp = ({ agent, getAllDeliveryAgent }) => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("delete delivery agent res", res);
       getAllDeliveryAgent();
+      setIsAlertModalOpen(false);
     }
   }, [res]);
 

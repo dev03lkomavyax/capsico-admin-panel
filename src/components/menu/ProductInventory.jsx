@@ -29,7 +29,7 @@ const ProductInventory = ({ foodItem }) => {
     return (
         <div className='px-5 py-3 flex justify-between items-center group gap-2 border-b hover:bg-[#F7FAFF] cursor-pointer'>
             <div className='flex gap-3 items-center'>
-                <img className='w-20 rounded' src={`${import.meta.env.VITE_IMAGE_URL}/${foodItem?.image}`} alt="item" />
+                <img className='w-20 rounded' src={`${foodItem?.image}`} alt="item" />
                 <div className=''>
                     {veg ? <VegIcon /> : <NonVegIcon />}
                     {/* <EggIcon /> */}

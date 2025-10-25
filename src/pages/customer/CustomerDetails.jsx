@@ -75,7 +75,7 @@ const CustomerDetails = () => {
               className="w-52 h-52 rounded-lg"
               src={
                 customerDetailsData.image
-                  ? `${import.meta.env.VITE_IMAGE_URL}/${
+                  ? `${
                       customerDetailsData.image
                     }`
                   : avatar

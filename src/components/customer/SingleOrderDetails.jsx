@@ -14,7 +14,7 @@ const SingleOrderDetails = ({ order }) => {
     return (
         <div className='px-2 py-6 grid grid-cols-6 gap-4 items-center border-t border-[#C9C9C9]'>
             <div className='flex gap-2 items-center'>
-                <img className='w-9 h-9 object-cover rounded-lg' src={order?.restaurantId?.images?.[0] ? `${import.meta.env.VITE_IMAGE_URL}/${order?.restaurantId?.images?.[0]}` : avatar} alt="order" />
+                <img className='w-9 h-9 object-cover rounded-lg' src={order?.restaurantId?.images?.[0] ? `${order?.restaurantId?.images?.[0]}` : avatar} alt="order" />
                 <div>
                     <h2 className='font-inter text-sm font-bold capitalize'>{order?.restaurantId?.name || "N/A"} </h2>
                     <p className='font-inter text-[10px] text-[#6B7280]'>{order?.restaurantId?.address?.addressLine || "N/A"}</p>

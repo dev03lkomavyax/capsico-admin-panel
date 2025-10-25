@@ -524,7 +524,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     if (data.menuImages && data.menuImages.length > 0) {
       // Append each file individually
       Array.from(data.menuImages).forEach((file) => {
-        formData.append('menuImages', file);
+        formData.append("onlineOrderMenu", file);
       });
     }
 

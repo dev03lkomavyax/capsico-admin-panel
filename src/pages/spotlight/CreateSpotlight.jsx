@@ -314,9 +314,7 @@ const CreateSpotlight = () => {
                               >
                                 <img
                                   className="aspect-video bg-cover rounded-md mb-3 bg-gray-300"
-                                  src={`${import.meta.env.VITE_IMAGE_URL}/${
-                                    item.images?.[0]
-                                  }`}
+                                  src={`${item.images?.[0]}`}
                                   alt={item.name}
                                 />
                                 <div className="flex justify-between items-center">
