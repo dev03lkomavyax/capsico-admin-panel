@@ -70,10 +70,13 @@ const EditProfile6 = ({ setPage, restaurant }) => {
     },
   });
 
-  const { control, watch, setValue, reset } = form;
+  const { control, watch, setValue, reset,getValues } = form;
   const { res, fetchData, isLoading } = usePostApiReq();
   const [cities, setCities] = useState([]);
   const { res: fetchCitiesRes, fetchData: fetchCities } = useGetApiReq();
+
+  console.log("getValues", getValues());
+  
 
   useEffect(() => {
     fetchCities("/availableCities/get-all");
@@ -313,7 +316,9 @@ const EditProfile6 = ({ setPage, restaurant }) => {
                     <FormControl>
                       <Select
                         value={field.value}
+                        key={field.value}
                         onValueChange={field.onChange}
+
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select city" />
