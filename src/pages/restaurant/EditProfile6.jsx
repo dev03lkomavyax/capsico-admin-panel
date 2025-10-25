@@ -344,7 +344,7 @@ const EditProfile6 = ({ setPage, restaurant }) => {
               { name: "cancellationTime", label: "Cancellation Time (min)" },
               { name: "taxPercent", label: "Restaurant Tax (%)" },
               { name: "packagingCharges", label: "Packaging Charges (₹)" },
-              { name: "costTag", label: "Cost Tag (Low / Medium / High)" },
+              { name: "costTag", label: "Restaurant Cost Tag (Avg. Cost)" },
               { name: "udyamNumber", label: "Udyam Registration Number" },
               { name: "commissionPercent", label: "Initial Commission (%)" },
             ].map((f) => (

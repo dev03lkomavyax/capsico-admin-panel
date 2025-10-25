@@ -459,6 +459,9 @@ const EditProfile4 = ({ setPage, restaurant }) => {
   const { register, control, watch, setValue, getValues, reset } = form;
   const menuImagesRef = register("menuImages");
 
+  console.log("getValues", getValues());
+  
+
   const menuImages = watch("menuImages");
 
   useEffect(() => {
@@ -476,7 +479,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
       accountingNotificationsNumber: step4Data?.notificationNumber || "",
       email: step4Data?.notificationEmail || "",
       fullName: step4Data?.notificationName || "",
-      isManually: "Enter this information manually",
+      isManually: step4Data.isManually,
       isRefered: step4Data?.didCapsicoReferYou || false,
       menuImagesPreview: menuImagesPreviews,
       number: step4Data?.number || "",
@@ -818,7 +821,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                       className="flex flex-col space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
