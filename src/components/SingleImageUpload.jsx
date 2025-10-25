@@ -62,9 +62,9 @@ export default function SingleImageUpload({
               </p>
             )}
 
-            <FormLabel className="cursor-pointer w-full">
+            {/* <FormLabel className="cursor-pointer w-full"> */}
               <div
-                className="border-2 border-dashed border-[#C2CDD6] mb-3 w-full h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative"
+                className="border-2 cursor-pointer border-dashed border-[#C2CDD6] mb-3 w-full h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {preview ? (
@@ -95,7 +95,7 @@ export default function SingleImageUpload({
                   </div>
                 )}
               </div>
-            </FormLabel>
+            {/* </FormLabel> */}
 
             <FormControl className="hidden">
               <Input

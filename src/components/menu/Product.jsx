@@ -33,7 +33,7 @@ const Product = ({ foodItem, getFoodItems }) => {
       <div className="flex gap-3 items-center">
         <img
           className="w-20 rounded"
-          src={`${import.meta.env.VITE_IMAGE_URL}/${foodItem?.image}`}
+          src={`${foodItem?.image}`}
           alt="item"
         />
         <div className="">

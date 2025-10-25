@@ -11,7 +11,7 @@ const SingleDelivery = ({ order }) => {
           className="w-9 h-9 object-cover rounded-lg"
           src={
             order?.restaurantId?.images?.[0]
-              ? `${import.meta.env.VITE_IMAGE_URL}/${
+              ? `${
                   order?.restaurantId?.images?.[0]
                 }`
               : avatar

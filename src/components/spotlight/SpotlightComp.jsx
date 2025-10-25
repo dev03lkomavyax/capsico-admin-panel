@@ -9,7 +9,7 @@ const SpotlightComp = ({ spotlight }) => {
         <div className="flex items-center gap-2">
           {/* {spotlight.restaurantId?.images?.[0] && (
             <img
-              src={`${import.meta.env.VITE_IMAGE_URL}/${
+              src={`${
                 spotlight.restaurantId.images[0]
               }`}
               alt={spotlight.restaurantId.name}
