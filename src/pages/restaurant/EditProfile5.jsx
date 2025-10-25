@@ -45,6 +45,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
       IFSCCode: "",
       bankName: "",
       bankBranch: "",
+      gstNo: "",
     },
   });
 
@@ -65,7 +66,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
     updatePreview(fssaiImage, "fssaiPreview", setValue);
   }, [form, panImage, fssaiImage, setValue]);
 
-  const { bankDetails, documents } = restaurant || {};
+  const { bankDetails, documents, gstNo } = restaurant || {};
 
   useEffect(() => {
     const { fssai, idProof } = documents || {};
@@ -80,6 +81,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
         ? new Date(fssai?.expiryDate)
         : new Date(),
       panNumber: idProof?.number,
+      gstNo: gstNo,
       fssaiPreview: fssai?.image && viewDbImagePreview(fssai?.image),
       panImagePreview:
         idProof?.images?.front && viewDbImagePreview(idProof?.images?.front),
@@ -99,6 +101,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
       IFSCCode,
       bankName,
       bankBranch,
+      gstNo,
     } = data;
 
     const formData = new FormData();
@@ -114,6 +117,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
     formData.append("ifscCode", IFSCCode);
     formData.append("bankName", bankName);
     formData.append("bankBranch", bankBranch);
+    formData.append("gstNo", gstNo);
 
     fetchData(
       `/admin/restraunt-registration5/${
@@ -448,6 +452,33 @@ const EditProfile5 = ({ setPage, restaurant }) => {
                       <FormControl>
                         <Input
                           placeholder="Branch Name"
+                          className="placeholder:text-[#667085] w-full placeholder:font-inter"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+            <h3 className="text-lg font-bold font-inter text-[#4A5E6D]">
+              GST Details
+            </h3>
+            <div className="mt-5 flex flex-col gap-8">
+              <div className="w-2/3">
+                <FormField
+                  control={control}
+                  name="gstNo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel></FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="GST Number"
                           className="placeholder:text-[#667085] w-full placeholder:font-inter"
                           {...field}
                         />

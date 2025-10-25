@@ -257,6 +257,13 @@ export const EditProfileSchema5 = z.object({
   bankBranch: z
     .string()
     .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
+  gstNo: z
+    .string()
+    .regex(
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+      "Invalid GST Number format"
+    )
+    .optional(),
 });
 
 export const AddProfileSchema5 = z.object({
@@ -289,6 +296,13 @@ export const AddProfileSchema5 = z.object({
   bankBranch: z
     .string()
     .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
+  gstNo: z
+    .string()
+    .regex(
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+      "Invalid GST Number format"
+    )
+    .optional(),
 });
 
 export const categorySchema = z.object({
