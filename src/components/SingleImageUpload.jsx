@@ -63,38 +63,38 @@ export default function SingleImageUpload({
             )}
 
             {/* <FormLabel className="cursor-pointer w-full"> */}
-              <div
-                className="border-2 cursor-pointer border-dashed border-[#C2CDD6] mb-3 w-full h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {preview ? (
-                  <>
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="object-cover w-full h-full rounded-md"
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemove();
-                      }}
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 px-[6px] text-xs hover:bg-red-700 transition"
-                    >
-                      ✕
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center text-[#1AA6F1] px-5 py-4">
-                    <PiCameraPlus size={45} />
-                    <p className="font-bold text-sm mt-2">Add Photo</p>
-                    <p className="font-normal text-xs mt-2 text-muted-foreground">
-                      Click to upload
-                    </p>
-                  </div>
-                )}
-              </div>
+            <div
+              className="border-2 cursor-pointer border-dashed border-[#C2CDD6] mb-3 w-full aspect-square h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {preview ? (
+                <>
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="object-cover aspect-square w-full h-full rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove();
+                    }}
+                    className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 px-[6px] text-xs hover:bg-red-700 transition"
+                  >
+                    ✕
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col items-center text-[#1AA6F1] px-5 py-4">
+                  <PiCameraPlus size={45} />
+                  <p className="font-bold text-sm mt-2">Add Photo</p>
+                  <p className="font-normal text-xs mt-2 text-muted-foreground">
+                    Click to upload
+                  </p>
+                </div>
+              )}
+            </div>
             {/* </FormLabel> */}
 
             <FormControl className="hidden">

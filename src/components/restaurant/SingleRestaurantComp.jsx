@@ -99,6 +99,9 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans w-60">
           {data?.name}
         </TableCell>
+        <TableCell className="text-[#1D1929] text-xs font-bold font-sans w-60">
+          {data?.otp || "No OTP"}
+        </TableCell>
 
         <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
           {data?.createdAt
