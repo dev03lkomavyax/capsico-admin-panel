@@ -1,5 +1,6 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Capsico from "@/components/application-request/Capsico";
+import DeliveryPartnerRequestes from "@/components/application-request/delivery-partner/DeliveryPartnerRequestes";
 import Quickly from "@/components/application-request/Quickly";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -53,6 +54,18 @@ const ApplicationRequest = () => {
                 48
               </p>
             </button>
+            <button
+              onClick={() => setSelectTab("delivery-partner")}
+              className={`flex justify-center items-center gap-[10px] px-[30px] py-3 border-b-[3px] ${
+                selectTab === "delivery-partner"
+                  ? "border-[#003CFF]"
+                  : "border-transparent"
+              }`}
+            >
+              <h6 className="text-[#1D1929] text-sm font-semibold font-roboto">
+                Delivery Partners
+              </h6>
+            </button>
           </section>
           {/* {selectTab === "capsico" && (
             <Button
@@ -72,8 +85,11 @@ const ApplicationRequest = () => {
             </Button>
           )} */}
         </div>
-        {selectTab === "capsico" && <Capsico setCapsicoReqNos={setCapsicoReqNos} />}
+        {selectTab === "capsico" && (
+          <Capsico setCapsicoReqNos={setCapsicoReqNos} />
+        )}
         {selectTab === "quickly" && <Quickly />}
+        {selectTab === "delivery-partner" && <DeliveryPartnerRequestes />}
       </section>
     </AdminWrapper>
   );

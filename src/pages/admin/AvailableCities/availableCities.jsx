@@ -824,9 +824,9 @@ const AvailableCitiesList = () => {
     }
   }
   function handleStatusToggle(city) {
-    alert(
-      `Status for "${city.city}" would be toggled. Current: ${city.status ? "Active" : "Inactive"}`
-    );
+    // alert(
+    //   `Status for "${city.city}" would be toggled. Current: ${city.status ? "Active" : "Inactive"}`
+    // );
     // Implement status toggle API call here if needed
   }
 

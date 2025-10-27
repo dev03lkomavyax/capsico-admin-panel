@@ -116,7 +116,7 @@ const PromoteOffer = ({ open, setOpen, offerId }) => {
                   <FormLabel>Promotion Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>

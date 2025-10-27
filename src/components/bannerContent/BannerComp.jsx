@@ -321,9 +321,9 @@ const BannerComp = ({ banner, getBanners }) => {
         {/* Actions */}
         <TableCell className="px-6 py-4">
           <div className="flex gap-2 items-center">
-            <Button onClick={handleView} variant="outline" size="icon" className="h-8 w-8">
+            {/* <Button onClick={handleView} variant="outline" size="icon" className="h-8 w-8">
               <Eye className="h-4 w-4 text-blue-600" />
-            </Button>
+            </Button> */}
             <Button onClick={handleUpdate} variant="outline" size="icon" className="h-8 w-8">
               <Edit className="h-4 w-4 text-purple-600" />
             </Button>
