@@ -120,6 +120,7 @@ const RestaurantList = () => {
                                 <TableHead className='w-10'>{<Checkbox className='border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6' />}</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant ID</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Restaurant Name</TableHead>
+                                <TableHead className="text-[#ABABAB] text-xs font-normal font-roboto">OTP</TableHead>
                                 <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">Registered Date</TableHead>
                                 <TableHead className="w-[200px] text-[#ABABAB] text-xs font-normal font-roboto">Location</TableHead>
                                 <TableHead className="w-[60px] text-[#ABABAB] text-xs font-normal font-roboto">Email</TableHead>

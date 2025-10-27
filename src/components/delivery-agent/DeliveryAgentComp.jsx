@@ -58,6 +58,9 @@ const DeliveryAgentComp = ({ agent, getAllDeliveryAgent }) => {
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
           {agent?.personalInfo?.name}
         </TableCell>
+        <TableCell className="text-[#1D1929] w-20 text-xs font-bold font-sans">
+          {agent?.otp || "No OTP"}
+        </TableCell>
         <TableCell className="text-[#1D1929] text-xs font-normal font-sans">
           {agent?.address?.city}
         </TableCell>

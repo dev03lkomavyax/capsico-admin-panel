@@ -27,6 +27,7 @@ import CreateSpotlight from "./pages/spotlight/CreateSpotlight";
 import CustomerWalletDetails from "./pages/customer/customer-wallet/CustomerWalletDetails";
 import TransactionHistory from "./pages/customer/customer-wallet/TransactionHistory";
 import PromotedOffer from "./pages/offers/PromotedOffers";
+import AddDeliveryAgent from "./pages/delivery-agent/AddDeliveryAgent";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -268,6 +269,7 @@ function App() {
             <Route path="/admin/vendor/products" element={<VendorProducts />} />
 
             <Route path="/admin/delivery-agent" element={<DeliveryAgent />} />
+            <Route path="/admin/delivery-agent/add" element={<AddDeliveryAgent />} />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId"
               element={<DeliveryAgentDetails />}

@@ -23,12 +23,14 @@ import { IoIosArrowBack } from "react-icons/io";
 import ReactPaginate from "react-paginate";
 import ReactPagination from "@/components/pagination/ReactPagination";
 import DeliveryAgentComp from "@/components/delivery-agent/DeliveryAgentComp";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Plus } from "lucide-react";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { LIMIT } from "@/constants/constants";
 import Spinner from "@/components/Spinner";
 import DataNotFound from "@/components/DataNotFound";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const DeliveryAgent = () => {
   const [deliveryAgentData, setDeliveryAgentData] = useState([]);
@@ -37,6 +39,7 @@ const DeliveryAgent = () => {
   const [pageCount, setPageCount] = useState(5);
   const [status, setStatus] = useState("all");
   const [dateFilter, setDateFilter] = useState("today");
+  const navigate = useNavigate();
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -66,10 +69,16 @@ const DeliveryAgent = () => {
   return (
     <AdminWrapper>
       <section className="flex flex-col gap-6 w-full h-full">
-        <div className="flex justify-start items-center">
+        <div className="flex justify-between items-center">
           <h2 className="text-[#000000] text-xl font-medium font-roboto">
             Delivery Agents
           </h2>
+          <Button asChild className="w-auto px-4">
+            <Link to={"/admin/delivery-agent/add"}>
+              <Plus />
+              Add
+            </Link>
+          </Button>
         </div>
         <section className="flex justify-between items-center w-full">
           <div className="flex justify-start items-center -ml-4">
@@ -127,6 +136,9 @@ const DeliveryAgent = () => {
                 </TableHead>
                 <TableHead className="w-[100px] whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">
                   Delivery Agent Name
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">
+                  OTP
                 </TableHead>
                 <TableHead className="w-[100px] whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">
                   Location
