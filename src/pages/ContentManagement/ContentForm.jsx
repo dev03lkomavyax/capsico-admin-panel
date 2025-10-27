@@ -5,6 +5,7 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 import useGetApiReq from '@/hooks/useGetApiReq';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import AdminWrapper from '@/components/admin-wrapper/AdminWrapper';
 
 
 // const ContentForm = () => {
@@ -431,227 +432,261 @@ const ContentForm = () => {
   }, [res, navigate]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/admin/content-management')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              {isEditing ? 'Edit Banner' : 'Add New Banner'}
-            </h1>
+    <AdminWrapper>
+      <div className="min-h-screen">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/admin/content-management")}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {isEditing ? "Edit Banner" : "Add New Banner"}
+              </h1>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-lg shadow-lg p-8"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* City */}
+            <div>
+              <label
+                htmlFor="city"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                City *
+              </label>
+              <select
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select City</option>
+                {cities.map((c) => (
+                  <option key={c._id} value={c.city}>
+                    {c.city}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* City */}
-          <div>
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-              City *
-            </label>
-            <select
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select City</option>
-              {cities.map((c) => (
-                <option key={c._id} value={c.city}>
-                  {c.city}
-                </option>
+            {/* Banner Type */}
+            <div>
+              <label
+                htmlFor="bannerType"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Banner Type *
+              </label>
+              <select
+                id="bannerType"
+                name="bannerType"
+                value={formData.bannerType}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="capsico">Capsico</option>
+                <option value="quickly">Quickly</option>
+                <option value="global">Global</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            {/* Title */}
+            <div className="md:col-span-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Title *
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter banner title"
+              />
+            </div>
+
+            {/* Description */}
+            <div className="md:col-span-2">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter banner description"
+              />
+            </div>
+
+            {/* Radius */}
+            <div>
+              <label
+                htmlFor="radius"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Radius (km)
+              </label>
+              <input
+                type="number"
+                id="radius"
+                name="radius"
+                value={formData.radius}
+                onChange={handleInputChange}
+                min="1"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="10"
+              />
+            </div>
+
+            {/* Start Time */}
+            <div>
+              <label
+                htmlFor="startTime"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Start Time *
+              </label>
+              <input
+                type="time"
+                id="startTime"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            {/* End Time */}
+            <div>
+              <label
+                htmlFor="endTime"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                End Time *
+              </label>
+              <input
+                type="time"
+                id="endTime"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+
+            {/* Images */}
+            <div className="md:col-span-2">
+              <label
+                htmlFor="images"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Banner Images *
+              </label>
+              <input
+                type="file"
+                id="images"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                required={!isEditing}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Select multiple images for the banner
+              </p>
+            </div>
+
+            {/* Links */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Banner Links
+              </label>
+              {formData.links.map((link, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="url"
+                    value={link}
+                    onChange={(e) => handleLinkChange(index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://example.com"
+                  />
+                  {formData.links.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => removeLinkField(index)}
+                      className="px-3 py-2 w-auto text-red-600 hover:text-red-800"
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
               ))}
-            </select>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addLinkField}
+                className="text-blue-600 hover:text-blue-800 text-sm"
+              >
+                + Add another link
+              </Button>
+            </div>
           </div>
 
-          {/* Banner Type */}
-          <div>
-            <label htmlFor="bannerType" className="block text-sm font-medium text-gray-700 mb-2">
-              Banner Type *
-            </label>
-            <select
-              id="bannerType"
-              name="bannerType"
-              value={formData.bannerType}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="capsico">Capsico</option>
-              <option value="quickly">Quickly</option>
-              <option value="global">Global</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          {/* Title */}
-          <div className="md:col-span-2">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter banner title"
-            />
-          </div>
-
-          {/* Description */}
-          <div className="md:col-span-2">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter banner description"
-            />
-          </div>
-
-          {/* Radius */}
-          <div>
-            <label htmlFor="radius" className="block text-sm font-medium text-gray-700 mb-2">
-              Radius (km)
-            </label>
-            <input
-              type="number"
-              id="radius"
-              name="radius"
-              value={formData.radius}
-              onChange={handleInputChange}
-              min="1"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="10"
-            />
-          </div>
-
-          {/* Start Time */}
-          <div>
-            <label htmlFor="startTime" className="block text-sm font-medium text-gray-700 mb-2">
-              Start Time *
-            </label>
-            <input
-              type="time"
-              id="startTime"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-
-          {/* End Time */}
-          <div>
-            <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-2">
-              End Time *
-            </label>
-            <input
-              type="time"
-              id="endTime"
-              name="endTime"
-              value={formData.endTime}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-          </div>
-
-          {/* Images */}
-          <div className="md:col-span-2">
-            <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
-              Banner Images *
-            </label>
-            <input
-              type="file"
-              id="images"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-              required={!isEditing}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <p className="text-xs text-gray-500 mt-1">Select multiple images for the banner</p>
-          </div>
-
-          {/* Links */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Banner Links
-            </label>
-            {formData.links.map((link, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="url"
-                  value={link}
-                  onChange={(e) => handleLinkChange(index, e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://example.com"
-                />
-                {formData.links.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => removeLinkField(index)}
-                    className="px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
+          {/* Submit Buttons */}
+          <div className="flex justify-end gap-4 mt-8">
             <Button
               type="button"
               variant="outline"
-              onClick={addLinkField}
-              className="text-blue-600 hover:text-blue-800 text-sm"
+              onClick={() => navigate("/admin/content-management")}
             >
-              + Add another link
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              {isLoading
+                ? "Saving..."
+                : isEditing
+                ? "Update Banner"
+                : "Create Banner"}
             </Button>
           </div>
-        </div>
-
-        {/* Submit Buttons */}
-        <div className="flex justify-end gap-4 mt-8">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => navigate('/admin/content-management')}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="bg-blue-500 hover:bg-blue-600 text-white"
-          >
-            {isLoading ? 'Saving...' : (isEditing ? 'Update Banner' : 'Create Banner')}
-          </Button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </AdminWrapper>
   );
 };
 
