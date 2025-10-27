@@ -40,6 +40,9 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
 
         // axios handles JSON parsing already
         const current = res?.data?.data || null
+        console.log(`res:${data.name}`, res);
+        console.log(`current:${data.name}`, current);
+        
 
         if (mounted) {
           setIsOpen(!!current?.isOpen)
