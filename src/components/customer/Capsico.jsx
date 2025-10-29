@@ -100,6 +100,9 @@ const Capsico = ({ setCapsicoCustomers }) => {
                 Customer Name
               </TableHead>
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
+                OTP
+              </TableHead>
+              <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
                 Joined Date
               </TableHead>
               <TableHead className="w-[100px] text-[#ABABAB] text-xs font-normal font-roboto">
