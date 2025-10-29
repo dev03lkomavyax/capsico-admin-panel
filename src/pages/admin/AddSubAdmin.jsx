@@ -28,6 +28,7 @@ const AddSubAdmin = () => {
           dashboard: "none",
           subAdmin: "none",
           customer: "none",
+          availableCities: "none",
           restaurant: "none",
           vendor: "none",
           deliveryAgent: "none",
@@ -42,6 +43,7 @@ const AddSubAdmin = () => {
           tickets: "none",
           content: "none",
           spotlight: "none",
+          termsandPolicy: "none",
         },
       },
     });

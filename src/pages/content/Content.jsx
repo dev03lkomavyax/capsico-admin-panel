@@ -7,7 +7,7 @@ const Content = () => {
     const options = [
       {
         label: "Terms and Policy",
-        href: "/admin/content/termsandPolicy",
+        href: "/admin/termsandPolicy/termsandPolicy",
         time: "Last Update 28 mins ago",
       },
     ];

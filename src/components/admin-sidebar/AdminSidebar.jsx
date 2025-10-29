@@ -39,6 +39,7 @@ const AdminSidebar = () => {
     notifications: "notifications",
     tickets: "tickets",
     content: "content",
+    termsandPolicy: "termsandPolicy",
     spotlight: "spotlight",
   };
   
@@ -211,34 +212,36 @@ const AdminSidebar = () => {
             </span>
           </Link>
         )} */}
-        {permissions && permissions[perm["availableCities"]] !== "none" && (
-          <Link
-            to="/admin/available-cities"
-            className={`flex items-center gap-3 px-4 py-3 ${
-              pathname.includes("/admin/available-cities")
-                ? "bg-[#F1F6FF]"
-                : "bg-[#FFFFFF]"
-            }`}
-          >
-            <Globe
-              className={
+        {permissions &&
+          permissions[perm["availableCities"]] &&
+          permissions[perm["availableCities"]] !== "none" && (
+            <Link
+              to="/admin/available-cities"
+              className={`flex items-center gap-3 px-4 py-3 ${
                 pathname.includes("/admin/available-cities")
-                  ? "text-[#397FFE] size-5"
-                  : "text-[#4A4A4A] size-5"
-              }
-            />
-            <span
-              className={`text-lg font-normal font-sans group-hover:inline ${
-                pathname.includes("/admin/available-cities")
-                  ? "text-[#397FFE]"
-                  : "text-[#4A4A4A]"
+                  ? "bg-[#F1F6FF]"
+                  : "bg-[#FFFFFF]"
               }`}
             >
-              Available Cities
-            </span>
-          </Link>
-        )}
-        {permissions && permissions[perm["contentManagement"]] !== "none" && (
+              <Globe
+                className={
+                  pathname.includes("/admin/available-cities")
+                    ? "text-[#397FFE] size-5"
+                    : "text-[#4A4A4A] size-5"
+                }
+              />
+              <span
+                className={`text-lg font-normal font-sans group-hover:inline ${
+                  pathname.includes("/admin/available-cities")
+                    ? "text-[#397FFE]"
+                    : "text-[#4A4A4A]"
+                }`}
+              >
+                Available Cities
+              </span>
+            </Link>
+          )}
+        {permissions && permissions[perm["content"]] !== "none" && (
           <Link
             to="/admin/content-management"
             className={`flex items-center gap-3 px-4 py-3 ${
@@ -621,26 +624,26 @@ const AdminSidebar = () => {
           )}
 
         {permissions &&
-          permissions[perm["content"]] &&
-          permissions[perm["content"]] !== "none" && (
+          permissions[perm["termsandPolicy"]] &&
+          permissions[perm["termsandPolicy"]] !== "none" && (
             <Link
-              to={`/admin/content`}
+              to={`/admin/termsandPolicy`}
               className={`flex items-center gap-3 px-4 py-3 ${
-                pathname.includes("/admin/content")
+                pathname.includes("/admin/termsandPolicy")
                   ? "bg-[#F1F6FF]"
                   : "bg-[#FFFFFF]"
               }`}
             >
               <BiFile
                 className={
-                  pathname.includes("/admin/content")
+                  pathname.includes("/admin/termsandPolicy")
                     ? "text-[#397FFE] !size-5"
                     : "text-[#4A4A4A] !size-5"
                 }
               />
               <span
                 className={`text-lg font-normal font-sans group-hover:inline ${
-                  pathname.includes("/admin/content")
+                  pathname.includes("/admin/termsandPolicy")
                     ? "text-[#397FFE]"
                     : "text-[#4A4A4A]"
                 }`}

@@ -59,11 +59,17 @@ export const AddSubAdminSchema = z.object({
     content: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for content.",
     }),
+    termsandPolicy: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for termsandPolicy.",
+    }),
     tickets: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for tickets.",
     }),
     spotlight: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for spotlight.",
+    }),
+    availableCities: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for availableCities.",
     }),
   }),
 });
@@ -120,11 +126,17 @@ export const EditSubAdminSchema = z.object({
     content: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for content.",
     }),
+    termsandPolicy: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for termsandPolicy.",
+    }),
     tickets: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for tickets.",
     }),
     spotlight: z.enum(["none", "read", "read&write"], {
       required_error: "Please select an access level for spotlight.",
+    }),
+    availableCities: z.enum(["none", "read", "read&write"], {
+      required_error: "Please select an access level for availableCities.",
     }),
   }),
 });
