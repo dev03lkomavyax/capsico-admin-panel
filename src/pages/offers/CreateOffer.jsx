@@ -59,7 +59,7 @@ const CreateOffer = () => {
           {
             itemId: "",
             quantity: "",
-            isRequired: "",
+            isRequired: false,
           },
         ],
 
@@ -68,6 +68,8 @@ const CreateOffer = () => {
           maxSubstitutions: 0,
         },
       },
+      maxUsage: 0,
+      maxUsesPerUser: 0,
     },
   });
 

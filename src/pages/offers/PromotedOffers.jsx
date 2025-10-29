@@ -61,7 +61,7 @@ const PromotedOffers = () => {
     const query = new URLSearchParams({
       promotionCategory,
       // priorityLevel: priorityLevel === "all" ? "" : priorityLevel,
-      city:city.toLocaleLowerCase(),
+      city:city,
       // sortBy,
       // sortOrder,
       page,

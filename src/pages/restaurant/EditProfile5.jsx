@@ -159,7 +159,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
               Save
             </Button>
           </div>
-          <div className="border border-[#C2CDD6] rounded-md px-8 py-6">
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6">
             <h3 className="text-lg font-bold text-[#4A5E6D]">
               Upload Legal Documents
             </h3>
@@ -233,7 +233,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
               )}
             </div>
           </div>
-          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
             <h3 className="text-lg font-bold text-[#4A5E6D]">
               FSSAI certificate
             </h3>
@@ -357,7 +357,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
             </div>
           </div>
 
-          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
             <h3 className="text-lg font-bold font-inter text-[#4A5E6D]">
               Account details
             </h3>
@@ -464,7 +464,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
             </div>
           </div>
 
-          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
             <h3 className="text-lg font-bold font-inter text-[#4A5E6D]">
               GST Details
             </h3>

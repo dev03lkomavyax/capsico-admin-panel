@@ -272,29 +272,29 @@ const Capsico = ({ setCapsicoOrderNo }) => {
       console.log("New order received:", response);
       const { order } = response;
       console.log("capsicoOrderData in handleNewOrder", capsicoOrderData);
-      const orderArray = [...capsicoOrderData];
+      // const orderArray = [...capsicoOrderData];
 
-      console.log("orderArray", orderArray);
-      orderArray.unshift({
-        ...order,
-        new: true,
-        // restaurant: order.restaurantId,
-        user: order.customer,
-      });
+      // console.log("orderArray", orderArray);
+      // orderArray.unshift({
+      //   ...order,
+      //   new: true,
+      //   restaurant: order.restaurantId,
+      //   user: order.userId || order.customer,
+      // });
 
-      console.log("orderArray-1", orderArray);
+      // console.log("orderArray-1", orderArray);
 
-      setCapsicoOrderData(orderArray);
+      // setCapsicoOrderData(orderArray);
 
-      // setCapsicoOrderData([
-      //   {
-      //     ...order,
-      //     new: true,
-      //     // restaurant: order.restaurantId,
-      //     // user: order.userId,
-      //   },
-      //   ...capsicoOrderData,
-      // ]);
+      setCapsicoOrderData((prev) => [
+        {
+          ...order,
+          new: true,
+          restaurant: order.restaurantId,
+          user: order.userId || order.customer,
+        },
+        ...prev
+      ]);
     };
 
     const handleOrderUpdate = (response) => {
@@ -351,7 +351,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
         setCapsicoOrderNo(pagination?.total || 0);
       }
     }
-  }, [res, setCapsicoOrderNo]);
+  }, [res]);
 
   const handleOnClick = (tab) => {
     setSelectOrderTab(tab);

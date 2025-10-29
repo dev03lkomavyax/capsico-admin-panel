@@ -159,7 +159,7 @@ const EditProfile3 = ({ setPage, restaurant: restaurantData }) => {
               Save
             </Button>
           </div>
-          <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
             <div className="w-full mt-4">
               <div>
                 <h3 className="text-xl font-bold text-[#4A5E6D]">

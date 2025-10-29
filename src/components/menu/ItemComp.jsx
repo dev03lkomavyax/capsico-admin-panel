@@ -187,7 +187,9 @@ const ItemComp = ({
   setCategoryId = () => {},
   handleSubcategoryClick,
   show,
+  setSelectedSubCategoryId,
 }) => {
+  
   const { name, id, subcategories, itemCount, isActive } = category;
   const [subCategories, setSubCategories] = useState([]);
 
@@ -222,10 +224,14 @@ const ItemComp = ({
   };
 
   useEffect(() => {
+    console.log("categoryId", categoryId);
     if (categoryId && isOpenb) {
+      console.log("isOpenb", isOpenb);
       getSubcategoriesFun();
     }
   }, [categoryId, isOpenb]);
+
+  
 
   useEffect(() => {
     if (subcategoriesRes?.status === 200 || subcategoriesRes?.status === 201) {
@@ -244,6 +250,7 @@ const ItemComp = ({
     if (res?.status === 200 || res?.status === 201) {
       getCategories();
       setCategoryId("");
+      setSelectedSubCategoryId("");
     }
   }, [res]);
 
@@ -252,6 +259,8 @@ const ItemComp = ({
   };
 
   const handleClick = () => {
+    console.log("handleClick clicked");
+    
     if (isActive) {
       setIsOpenb(!isOpenb);
       setCategoryId(id);
@@ -281,7 +290,8 @@ const ItemComp = ({
             isActive && "hover:text-blue-600 cursor-pointer"
           )}
         >
-          {name} ({itemCount})
+          {name}
+          {/* ({itemCount}) */}
         </h3>
         <div className="flex items-center gap-8">
           <div className="hidden group-hover:flex gap-4">
@@ -318,6 +328,7 @@ const ItemComp = ({
                 subcategory={subcategory}
                 handleSubcategoryClick={onSubcategoryClick}
                 getCategories={getCategories}
+                setSelectedSubCategoryId={setSelectedSubCategoryId}
               />
             );
           })}
