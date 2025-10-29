@@ -1,31 +1,39 @@
-import { Input } from '@/components/ui/input'
-import React, { useEffect, useState } from 'react'
-import { IoSearchOutline } from 'react-icons/io5'
-import ProductInventory from './ProductInventory'
-import Spinner from '../Spinner'
-import DataNotFound from '../DataNotFound'
-import useGetApiReq from '@/hooks/useGetApiReq'
-import ItemComp from './ItemComp'
-import { BsSearch } from 'react-icons/bs'
-import { useParams } from 'react-router-dom'
+import { Input } from "@/components/ui/input";
+import React, { useEffect, useState } from "react";
+import { IoSearchOutline } from "react-icons/io5";
+import ProductInventory from "./ProductInventory";
+import Spinner from "../Spinner";
+import DataNotFound from "../DataNotFound";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import ItemComp from "./ItemComp";
+import { BsSearch } from "react-icons/bs";
+import { useParams } from "react-router-dom";
 
 const ManageInventory = ({ allCategories, setSearchQuery, searchQuery }) => {
   const [foodItemsInfo, setFoodItemsInfo] = useState("");
   const [categoryId, setCategoryId] = useState(allCategories[0]?._id || "");
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState("");
   //   const [searchQuery, setSearchQuery] = useState("");
   const params = useParams();
+   const handleSubcategoryClick = (subcategoryId, isActive) => {
+     console.log("🔄 Subcategory clicked:", subcategoryId, "Active:", isActive);
+     if (isActive) {
+       setSelectedSubCategoryId(subcategoryId);
+       // setCategoryId(subcategoryId);
+     }
+   };
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getFoodItems = () => {
     fetchData(
-      `/admin/category/${categoryId}/food?restaurantId=${params?.restaurantId}`
+      `/admin/category/${selectedSubCategoryId}/food?restaurantId=${params?.restaurantId}`
     );
   };
 
   useEffect(() => {
-    categoryId && getFoodItems();
-  }, [categoryId]);
+    selectedSubCategoryId && getFoodItems();
+  }, [selectedSubCategoryId]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -41,7 +49,7 @@ const ManageInventory = ({ allCategories, setSearchQuery, searchQuery }) => {
     }
   }, [res]);
 
-  console.log("foodItems", foodItemsInfo);
+  // console.log("foodItems", foodItemsInfo);
 
   return (
     <div>
@@ -63,9 +71,13 @@ const ManageInventory = ({ allCategories, setSearchQuery, searchQuery }) => {
           <div className="overflow-y-auto h-full pb-[180px]">
             {allCategories?.map((category) => (
               <ItemComp
-                setCategoryId={setCategoryId}
                 key={category?._id}
                 category={category}
+                categoryId={categoryId}
+                setCategoryId={setCategoryId}
+                handleSubcategoryClick={handleSubcategoryClick}
+                show={true}
+                setSelectedSubCategoryId={setSelectedSubCategoryId}
               />
             ))}
 
@@ -76,7 +88,7 @@ const ManageInventory = ({ allCategories, setSearchQuery, searchQuery }) => {
             )}
           </div>
         </div>
-        {categoryId && (
+        {selectedSubCategoryId && (
           <div className="right-section w-2/3 bg-white h-full overflow-y-auto relative">
             {foodItemsInfo && (
               <h3 className=" class-base5 p-5 z-10 sticky top-0 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
@@ -94,4 +106,4 @@ const ManageInventory = ({ allCategories, setSearchQuery, searchQuery }) => {
   );
 };
 
-export default ManageInventory
+export default ManageInventory;

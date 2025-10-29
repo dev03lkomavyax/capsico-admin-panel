@@ -165,7 +165,7 @@ export const offerSchema = z
             z.object({
               itemId: z.string().optional(),
               quantity: z.coerce.number().optional(),
-              isRequired: z.boolean().default(false),
+              isRequired: z.coerce.boolean().optional().default(false),
             })
           )
           .optional(),

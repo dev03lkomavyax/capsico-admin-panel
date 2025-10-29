@@ -73,6 +73,16 @@ const ContentDetails = () => {
         isActive,
       });
     }
+    else{
+       reset({
+         type: watch("type"),
+         title: "",
+         content: "",
+         version: "1.0",
+         effectiveDate: new Date(),
+         isActive:false,
+       });
+    }
   }, [res]);
 
   useEffect(() => {

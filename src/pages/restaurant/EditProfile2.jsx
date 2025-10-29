@@ -163,17 +163,33 @@ const EditProfile2 = ({ setPage, restaurant }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full py-5">
           <div className="flex justify-between gap-2 mb-8">
-            <button onClick={() => setPage((page)=> page-1)} className='flex justify-start items-center'>
-              <MdKeyboardArrowLeft className='text-[#000000] text-2xl' />
-              <h2 className='text-[#000000] text-xl font-medium font-roboto'>{pathname.includes("/add-restaurant") ? "Add Restaurant" : "Edit Profile"}</h2>
+            <button
+              onClick={() => setPage((page) => page - 1)}
+              className="flex justify-start items-center"
+            >
+              <MdKeyboardArrowLeft className="text-[#000000] text-2xl" />
+              <h2 className="text-[#000000] text-xl font-medium font-roboto">
+                {pathname.includes("/add-restaurant")
+                  ? "Add Restaurant"
+                  : "Edit Profile"}
+              </h2>
             </button>
-            <Button disabled={isLoading} size="lg" className="w-20 bg-[#1064FD]" type="submit">Save</Button>
+            <Button
+              disabled={isLoading}
+              size="lg"
+              className="w-20 bg-[#1064FD]"
+              type="submit"
+            >
+              Save
+            </Button>
           </div>
 
-          <div className='border border-[#C2CDD6] rounded-md px-8 py-6'>
-            <h3 className='text-xl font-bold text-[#4A5E6D]'>Choose Restaurant Type</h3>
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6">
+            <h3 className="text-xl font-bold text-[#4A5E6D]">
+              Choose Restaurant Type
+            </h3>
             {/* <p className='text-[25px] font-normal text-[#92A5B5]'>Restaurant name. address. contact no., owner details</p> */}
-            <div className='mt-5'>
+            <div className="mt-5">
               <FormField
                 control={control}
                 name="restaurantType"
@@ -189,17 +205,13 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                           <FormControl>
                             <RadioGroupItem value="BOTH" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Both
-                          </FormLabel>
+                          <FormLabel className="font-normal">Both</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="VEG" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Veg
-                          </FormLabel>
+                          <FormLabel className="font-normal">Veg</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
@@ -217,7 +229,6 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                   </FormItem>
                 )}
               />
-
             </div>
             <div className="mt-5">
               <FormField
@@ -225,9 +236,15 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                 name="priceForOne"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className=" text-[#344054] font-inter">Price for one</FormLabel>
+                    <FormLabel className=" text-[#344054] font-inter">
+                      Price for one
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Rs 250" className="placeholder:text-[#667085] placeholder:font-inter border-[#E4E6EE]" {...field} />
+                      <Input
+                        placeholder="Rs 250"
+                        className="placeholder:text-[#667085] placeholder:font-inter border-[#E4E6EE]"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -236,54 +253,72 @@ const EditProfile2 = ({ setPage, restaurant }) => {
             </div>
           </div>
 
-          <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
-            <h3 className='text-xl font-bold text-[#4A5E6D]'>Choose options for your restaurant</h3>
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+            <h3 className="text-xl font-bold text-[#4A5E6D]">
+              Choose options for your restaurant
+            </h3>
             {/* <p className='text-[25px] font-normal text-[#92A5B5]'>Restaurant name. address. contact no., owner details</p> */}
-            <div className='mt-5'>
+            <div className="mt-5">
               <FormField
                 control={control}
                 name="restaurantOptions"
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-3 gap-3 items-center">
-                      {restaurantOptions.slice(0, showMoreRestaurantOptions ? restaurantOptions.length : 4).map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={control}
-                          name="restaurantOptions"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-center space-x-3 space-y-0"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    className="w-5 h-5"
-                                    checked={field.value?.includes(item.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...field.value, item.id])
-                                        : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        )
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal text-base text-[#667085]">
-                                  {item.label}
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      ))}
+                      {restaurantOptions
+                        .slice(
+                          0,
+                          showMoreRestaurantOptions
+                            ? restaurantOptions.length
+                            : 4
+                        )
+                        .map((item) => (
+                          <FormField
+                            key={item.id}
+                            control={control}
+                            name="restaurantOptions"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={item.id}
+                                  className="flex flex-row items-center space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      className="w-5 h-5"
+                                      checked={field.value?.includes(item.id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              item.id,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== item.id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal text-base text-[#667085]">
+                                    {item.label}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
 
                       <div>
-                        <button type='button' onClick={handleToggle} className="primary-color text-base font-normal">
-                          {showMoreRestaurantOptions ? '- View less' : '+ View more'}
+                        <button
+                          type="button"
+                          onClick={handleToggle}
+                          className="primary-color text-base font-normal"
+                        >
+                          {showMoreRestaurantOptions
+                            ? "- View less"
+                            : "+ View more"}
                         </button>
                       </div>
                     </div>
@@ -294,53 +329,66 @@ const EditProfile2 = ({ setPage, restaurant }) => {
             </div>
           </div>
 
-          <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
-            <h3 className='text-xl font-bold text-[#4A5E6D]'>Sorts of Cuisines</h3>
-            <p className='text-lg font-normal text-[#92A5B5]'>Pick options which best describe food you serve</p>
-            <div className='mt-5'>
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+            <h3 className="text-xl font-bold text-[#4A5E6D]">
+              Sorts of Cuisines
+            </h3>
+            <p className="text-lg font-normal text-[#92A5B5]">
+              Pick options which best describe food you serve
+            </p>
+            <div className="mt-5">
               <FormField
                 control={control}
                 name="cuisines"
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-3 gap-3 items-center">
-                      {cuisines.slice(0, showMoreCuisines ? cuisines.length : 4).map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={control}
-                          name="cuisines"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item._id}
-                                className="flex flex-row items-center space-x-3 space-y-0"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    className="w-5 h-5"
-                                    checked={field.value?.includes(item._id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...field.value, item._id])
-                                        : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item._id
-                                          )
-                                        )
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal text-base text-[#667085]">
-                                  {item.name}
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      ))}
+                      {cuisines
+                        .slice(0, showMoreCuisines ? cuisines.length : 4)
+                        .map((item) => (
+                          <FormField
+                            key={item.id}
+                            control={control}
+                            name="cuisines"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={item._id}
+                                  className="flex flex-row items-center space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      className="w-5 h-5"
+                                      checked={field.value?.includes(item._id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              item._id,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== item._id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal text-base text-[#667085]">
+                                    {item.name}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
                       <div>
-                        <button type='button' onClick={handleToggleCuisines} className="primary-color text-base font-normal">
-                          {showMoreCuisines ? '- View less' : '+ View more'}
+                        <button
+                          type="button"
+                          onClick={handleToggleCuisines}
+                          className="primary-color text-base font-normal"
+                        >
+                          {showMoreCuisines ? "- View less" : "+ View more"}
                         </button>
                       </div>
                     </div>
@@ -351,17 +399,23 @@ const EditProfile2 = ({ setPage, restaurant }) => {
             </div>
           </div>
 
-          <div className='border border-[#C2CDD6] rounded-md px-8 py-6 mt-6'>
-            <h3 className='text-xl font-bold text-[#4A5E6D]'>Restaurant Working Hours</h3>
-            <p className='text-lg font-normal text-[#92A5B5]'>Set restaurant opening and closing hours.</p>
+          <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+            <h3 className="text-xl font-bold text-[#4A5E6D]">
+              Restaurant Working Hours
+            </h3>
+            <p className="text-lg font-normal text-[#92A5B5]">
+              Set restaurant opening and closing hours.
+            </p>
 
-            <div className='mt-5 grid grid-cols-[47%_2%_47%] w-[60%] gap-5'>
+            <div className="mt-5 grid grid-cols-[47%_2%_47%] w-[60%] gap-5">
               <FormField
                 control={control}
                 name="openingTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className=" text-[#344054] font-inter">Opening Time</FormLabel>
+                    <FormLabel className=" text-[#344054] font-inter">
+                      Opening Time
+                    </FormLabel>
                     <FormControl>
                       <Select
                         {...field}
@@ -369,7 +423,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                           field.onChange(e);
                           // handleOnChange(i);
                         }}
-                      // disabled={fields.find((item) => item.index === i) ? false : true}
+                        // disabled={fields.find((item) => item.index === i) ? false : true}
                       >
                         <SelectTrigger className="">
                           <SelectValue placeholder="Opening Time" />
@@ -390,13 +444,15 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                 )}
               />
 
-              <div className='mt-auto mb-4 text-xl text-[#667085]'>to</div>
+              <div className="mt-auto mb-4 text-xl text-[#667085]">to</div>
               <FormField
                 control={control}
                 name="closingTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className=" text-[#344054] font-inter">Closing Time</FormLabel>
+                    <FormLabel className=" text-[#344054] font-inter">
+                      Closing Time
+                    </FormLabel>
                     <FormControl>
                       <Select
                         {...field}
@@ -404,7 +460,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                           field.onChange(e);
                           // handleOnChange(i);
                         }}
-                      // disabled={fields.find((item) => item.index === i) ? false : true}
+                        // disabled={fields.find((item) => item.index === i) ? false : true}
                       >
                         <SelectTrigger className="">
                           <SelectValue placeholder="Closing Time" />
@@ -426,7 +482,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
               />
             </div>
 
-            <div className='mt-5'>
+            <div className="mt-5">
               <FormField
                 control={control}
                 name="days"
@@ -450,12 +506,15 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                                     checked={field.value?.includes(item.id)}
                                     onCheckedChange={(checked) => {
                                       return checked
-                                        ? field.onChange([...field.value, item.id])
+                                        ? field.onChange([
+                                            ...field.value,
+                                            item.id,
+                                          ])
                                         : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        )
+                                            field.value?.filter(
+                                              (value) => value !== item.id
+                                            )
+                                          );
                                     }}
                                   />
                                 </FormControl>
@@ -463,7 +522,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
                                   {item.label}
                                 </FormLabel>
                               </FormItem>
-                            )
+                            );
                           }}
                         />
                       ))}
@@ -480,7 +539,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
         </form>
       </Form>
     </div>
-  )
+  );
 }
 
 export default EditProfile2

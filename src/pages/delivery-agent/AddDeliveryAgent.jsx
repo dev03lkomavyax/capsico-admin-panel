@@ -1,6 +1,7 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import DatePicker from "@/components/DatePicker";
 import SingleImageUpload from "@/components/SingleImageUpload";
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,16 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import usePostApiReq from "@/hooks/usePostApiReq";
 import { DeliveryPartnerSchema } from "@/schema/AddDeliveryAgentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AddDeliveryAgent = () => {
-  const [submitting, setSubmitting] = useState(false);
   const [previewFiles, setPreviewFiles] = useState({});
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(DeliveryPartnerSchema),
@@ -40,6 +42,7 @@ const AddDeliveryAgent = () => {
 
   const { handleSubmit, control, register, watch, setValue, formState } = form;
   const vehicleType = watch("vehicleType");
+   const { res, fetchData, isLoading } = usePostApiReq();
 
   const onFileChange = (fieldName) => (e) => {
     const file = e.target.files && e.target.files[0];
@@ -92,7 +95,16 @@ const AddDeliveryAgent = () => {
       formData.append("aadharBackImage", values.aadharBackImage);
     if (values.panCardImage)
       formData.append("panCardImage", values.panCardImage);
+
+    fetchData(`/deliveryExec/delivery-executive/add`,formData);
   };
+
+  useEffect(() => {
+      if (res?.status === 200 || res?.status === 201) {
+        console.log("add deliveryAgent res", res?.data);
+        navigate("/admin/delivery-agent");
+      }
+    }, [res]);
 
   const onError = (error) => {
     console.log("error", error);
@@ -497,8 +509,8 @@ const AddDeliveryAgent = () => {
             <div className="grid grid-cols-3">
               <div></div>
               <div></div>
-              <Button type="submit" disabled={submitting}>
-                {submitting ? "Submitting..." : "Add Delivery Agent"}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? <Spinner /> : "Add Delivery Agent"}
               </Button>
             </div>
           </form>

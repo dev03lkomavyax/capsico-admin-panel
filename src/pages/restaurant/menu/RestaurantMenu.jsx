@@ -166,15 +166,17 @@ const getCategories = () => {
                 <h3 className="class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
                   Categories
                 </h3>
-                
+
                 <button
                   className="flex w-full items-center gap-3 px-5 py-4 border-b"
                   onClick={() => setIsOpenCategoryModel(true)}
                 >
                   <FaPlus className="primary-color" />
-                  <span className="class-base1 primary-color">Add Category</span>
+                  <span className="class-base1 primary-color">
+                    Add Category
+                  </span>
                 </button>
-                
+
                 <div className="overflow-y-auto h-full pb-[180px]">
                   {isLoading ? (
                     <div className="flex justify-center items-center p-8">
@@ -190,6 +192,7 @@ const getCategories = () => {
                         getCategories={getCategories}
                         handleSubcategoryClick={handleSubcategoryClick}
                         show={true}
+                        setSelectedSubCategoryId={setSelectedSubCategoryId}
                       />
                     ))
                   ) : (
@@ -203,30 +206,34 @@ const getCategories = () => {
                   <div className="sticky top-0 bg-white">
                     {foodItemsInfo && (
                       <h3 className="class-base5 p-5 bg-[#F2F4F7] border-b border-b-[#CED7DE]">
-                        {foodItemsInfo?.categoryInfo?.name} ({foodItemsInfo?.totalItems})
+                        {foodItemsInfo?.categoryInfo?.name}
+                        {/* ({foodItemsInfo?.totalItems}) */}
                       </h3>
                     )}
-                    
+
                     <button
                       className="flex w-full items-center gap-3 p-5 border-b"
                       onClick={() =>
                         navigate(
                           `/admin/restaurant/${params?.restaurantId}/${selectedSubCategoryId}/addmenu`,
                           {
-                            state: { 
+                            state: {
                               restaurantId: params?.restaurantId,
                               subcategoryId: selectedSubCategoryId,
-                              categoryId: foodItemsInfo?.categoryInfo?.parentCategoryId 
+                              categoryId:
+                                foodItemsInfo?.categoryInfo?.parentCategoryId,
                             },
                           }
                         )
                       }
                     >
                       <FaPlus className="primary-color" />
-                      <span className="class-base1 primary-color">Add New Item</span>
+                      <span className="class-base1 primary-color">
+                        Add New Item
+                      </span>
                     </button>
                   </div>
-                  
+
                   <div className="">
                     {isFoodItemLoading ? (
                       <div className="flex justify-center items-center p-8">

@@ -579,7 +579,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
         </div>
 
         {/* General restaurant information section */}
-        <div className="border border-[#C2CDD6] rounded-md px-8 py-6">
+        <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6">
           <h3 className="text-lg font-bold text-[#4A5E6D]">
             General restaurant information
           </h3>
@@ -663,7 +663,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
         </div>
 
         {/* Menu images upload section */}
-        <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+        <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
           <h3 className="text-lg font-bold text-[#4A5E6D]">
             Upload online ordering menu photos
           </h3>
@@ -721,7 +721,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
         </div>
 
         {/* Priority contact numbers section */}
-        <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+        <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
           <h3 className="text-lg font-bold font-inter text-[#4A5E6D]">
             Priority contact numbers
           </h3>
@@ -804,7 +804,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
         </div>
 
         {/* Banking/Accounting notifications section */}
-        <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
+        <div className="border bg-white border-[#C2CDD6] rounded-md px-8 py-6 mt-7">
           <h3 className="text-lg font-bold font-inter text-[#4A5E6D]">
             Receiving banking / accounting notifications (invoices)
           </h3>

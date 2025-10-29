@@ -40,7 +40,7 @@ const SingleOrderDetails = ({ order }) => {
                 />
             </div>
             <div className='flex justify-center'>
-                <Button className="flex gap-2 h-8 capitalize bg-[#00A86B] hover:bg-[#00A86B] rounded text-xs items-center">
+                <Button className="flex gap-2 h-8 px-2 capitalize bg-[#00A86B] hover:bg-[#00A86B] rounded text-[10px] items-center">
                     {order?.status ? order.status.split("_").join(" ") : "N/A"}
                 </Button>
             </div>

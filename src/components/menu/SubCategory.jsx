@@ -105,6 +105,7 @@ const SubCategory = ({
   handleSubcategoryClick,
   categoryId,
   getCategories,
+  setSelectedSubCategoryId,
 }) => {
   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -134,6 +135,7 @@ const SubCategory = ({
     if (res?.status === 200 || res?.status === 201) {
       getCategories();
       handleSubcategoryClick("");
+      setSelectedSubCategoryId("");
     }
   }, [res]);
 
@@ -159,7 +161,8 @@ const SubCategory = ({
           subcategory?.isActive && "hover:text-blue-600 cursor-pointer"
         )}
       >
-        {subcategory.name} ({subcategory?.itemCount || 0})
+        {subcategory.name}
+        {/* ({subcategory?.itemCount || 0}) */}
       </h3>
 
       <div className="hidden items-center gap-8 group-hover:flex">

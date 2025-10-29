@@ -1160,7 +1160,7 @@ const EditProfile1 = ({
                 {isLoading || isLoading1 ? "Saving..." : "Save"}
               </Button>
             </div>
-            <div className="border border-[#C2CDD6] rounded-md px-8 py-6">
+            <div className="border border-[#C2CDD6] bg-white rounded-md px-8 py-6">
               <h3 className="text-xl font-bold text-[#4A5E6D]">
                 Restaurant Information
               </h3>
@@ -1401,7 +1401,7 @@ const EditProfile1 = ({
               </div>
             </div>
 
-            <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+            <div className="border border-[#C2CDD6] bg-white rounded-md px-8 py-6 mt-6">
               <h3 className="text-xl font-bold text-[#4A5E6D]">
                 Contact number at Restaurant
               </h3>
@@ -1466,7 +1466,7 @@ const EditProfile1 = ({
               </div>
             </div>
 
-            <div className="border border-[#C2CDD6] rounded-md px-8 py-6 mt-6">
+            <div className="border border-[#C2CDD6] bg-white rounded-md px-8 py-6 mt-6">
               <h3 className="text-xl font-bold text-[#4A5E6D]">
                 Restaurant Owner Details
               </h3>

@@ -114,7 +114,9 @@ const CreateSpotlight = () => {
   // Fetch categories on restaurant change
   useEffect(() => {
     if (watch("restaurantId")) {
-      categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`);
+      categoryFetchData(
+        `/admin/get-categories?restaurantId=${watch("restaurantId")}`
+      );
       setSelectedItems([]);
       setValue("spotlightFoodIds", []);
       setCategory("");
@@ -123,7 +125,9 @@ const CreateSpotlight = () => {
 
   useEffect(() => {
     if (categoryRes?.status === 200 || categoryRes?.status === 201) {
-      const modifiedCategories = categoryRes?.data?.data?.map((item) => ({
+      console.log("categoryRes", categoryRes);
+      
+      const modifiedCategories = categoryRes?.data?.categories?.map((item) => ({
         label: item?.name,
         value: item?.id,
       }));
