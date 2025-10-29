@@ -1435,7 +1435,7 @@ const EditProfile1 = ({
                             />
                           </div>
                           <div>
-                            {watch("phoneNumber")?.length === 10 &&
+                            {/* {watch("phoneNumber")?.length === 10 &&
                             isPhoneNumberVerified ? (
                               <Button
                                 type="button"
@@ -1455,7 +1455,7 @@ const EditProfile1 = ({
                               >
                                 Verify
                               </Button>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </FormControl>
@@ -1524,7 +1524,7 @@ const EditProfile1 = ({
                             />
                           </div>
                           <div>
-                            {!watch("samePhoneNumber") && (
+                            {/* {!watch("samePhoneNumber") && (
                               <>
                                 {watch("phoneNumber2")?.length === 10 &&
                                 isPhoneNumber2Verified ? (
@@ -1552,7 +1552,7 @@ const EditProfile1 = ({
                                   </Button>
                                 )}
                               </>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </FormControl>
