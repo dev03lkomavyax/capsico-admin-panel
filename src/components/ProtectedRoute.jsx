@@ -20,15 +20,17 @@ const ProtectedRoute = () => {
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
   const { pathname } = useLocation();
-  // console.log("userInfo", userInfo);
+  console.log("userInfo", userInfo);
 
   const perm = {
     dashboard: "dashboard",
     "sub-admin": "subAdmin",
     customer: "customer",
+    "available-cities": "availableCities",
     restaurant: "restaurant",
     vendor: "vendor",
     "delivery-agent": "deliveryAgent",
+    "delivery-charges": "deliveryCharges",
     order: "order",
     reviews: "review",
     offers: "offer",
@@ -37,6 +39,8 @@ const ProtectedRoute = () => {
     notifications: "notifications",
     tickets: "tickets",
     content: "content",
+    termsandPolicy: "termsandPolicy",
+    spotlight: "spotlight",
   };
 
   const value = pathname.split("/admin/").join("").split("/")[0];
@@ -49,8 +53,11 @@ const ProtectedRoute = () => {
   useEffect(() => {
     // Don’t do anything until userInfo is defined
     if (!userInfo) return;
-
+    
     const hasPermission = permissions?.[foundValue] !== "none";
+    console.log("hasPermission", hasPermission);
+    console.log(foundValue, permissions?.[foundValue]);
+    
 
     if (
       pathname.includes("/admin/") &&

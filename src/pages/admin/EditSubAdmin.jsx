@@ -42,18 +42,20 @@ const EditSubAdmin = () => {
         dashboard: "none",
         subAdmin: "none",
         customer: "none",
+        availableCities: "none",
         restaurant: "none",
         vendor: "none",
         deliveryAgent: "none",
+        deliveryCharges: "none",
         order: "none",
         review: "none",
         offer: "none",
         applicationRequest: "none",
-        deliveryCharges: "none",
-        zones: "none",
         notifications: "none",
-        tickets: "none",
         content: "none",
+        termsandPolicy: "none",
+        zones: "none",
+        tickets: "none",
         spotlight: "none",
       },
     },
@@ -64,7 +66,7 @@ const EditSubAdmin = () => {
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [toggleStatus, setToggleStatus] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
-  console.log("getValues", getValues());
+  // console.log("getValues", getValues());
   
 
   const { state } = useLocation();
@@ -124,6 +126,8 @@ const EditSubAdmin = () => {
   }, [toggleRes]);
 
   const onSubmit = (data) => {
+    console.log("data",data);
+    
     uploadAdminData(`/admin/update-subadmin/${state?.subadminId}`, {
       name: data.name,
       email: data.email,

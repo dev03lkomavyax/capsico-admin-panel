@@ -269,7 +269,10 @@ function App() {
             <Route path="/admin/vendor/products" element={<VendorProducts />} />
 
             <Route path="/admin/delivery-agent" element={<DeliveryAgent />} />
-            <Route path="/admin/delivery-agent/add" element={<AddDeliveryAgent />} />
+            <Route
+              path="/admin/delivery-agent/add"
+              element={<AddDeliveryAgent />}
+            />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId"
               element={<DeliveryAgentDetails />}
@@ -370,8 +373,11 @@ function App() {
               element={<SendPromotionalNotification />}
             />
 
-            <Route path="/admin/content" element={<Content />} />
-            <Route path="/admin/content/:slug" element={<ContentDetails />} />
+            <Route path="/admin/termsandPolicy" element={<Content />} />
+            <Route
+              path="/admin/termsandPolicy/:slug"
+              element={<ContentDetails />}
+            />
 
             <Route path="/admin/zones" element={<Zones />} />
             <Route path="/admin/zones/create" element={<CreateZone />} />
