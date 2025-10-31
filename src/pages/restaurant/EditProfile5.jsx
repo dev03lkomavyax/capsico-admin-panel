@@ -113,7 +113,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
 
     formData.append("fssaiLicenseNumber", FSSAICertificateNumber);
     formData.append("fssaiImage", fssaiImage[0]);
-    formData.append("fssaiLicenseExpiryDate", FSSAIExpiryDate);
+    FSSAIExpiryDate && formData.append("fssaiLicenseExpiryDate", FSSAIExpiryDate);
 
     formData.append("accountHolderName", accountHolderName);
     formData.append("accountNumber", bankAccountNumber);
