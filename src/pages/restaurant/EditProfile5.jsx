@@ -38,7 +38,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
       panNumber: "",
       panImage: "",
       FSSAICertificateNumber: "",
-      FSSAIExpiryDate: "",
+      FSSAIExpiryDate: null,
       fssaiImage: "",
       accountHolderName: "",
       bankAccountNumber: "",
@@ -53,6 +53,9 @@ const EditProfile5 = ({ setPage, restaurant }) => {
   const { pathname } = useLocation();
 
   const { register, control, watch, setValue, getValues, reset } = form;
+
+  console.log("getValues", getValues());
+  
 
   const panImageRef = register("panImage");
   const fssaiImageRef = register("fssaiImage");
@@ -79,7 +82,7 @@ const EditProfile5 = ({ setPage, restaurant }) => {
       FSSAICertificateNumber: fssai?.number,
       FSSAIExpiryDate: fssai?.expiryDate
         ? new Date(fssai?.expiryDate)
-        : new Date(),
+        : null,
       panNumber: idProof?.number,
       gstNo: gstNo,
       fssaiPreview: fssai?.image && viewDbImagePreview(fssai?.image),

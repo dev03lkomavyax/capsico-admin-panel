@@ -238,9 +238,9 @@ export const EditProfileSchema5 = z.object({
     .max(10, "PAN number must be 10 characters"),
   panImage: z.any(),
   FSSAICertificateNumber: z
-    .string()
-    .min(14, "FSSAI Certificate must be 14 digits"),
-  FSSAIExpiryDate: z.date(),
+    .string().optional(),
+    // .min(14, "FSSAI Certificate must be 14 digits"),
+  FSSAIExpiryDate: z.any(),
   fssaiImage: z.any(),
   accountHolderName: z.string().min(1, "Account Holder Name is required"),
   bankAccountNumber: z
@@ -259,10 +259,10 @@ export const EditProfileSchema5 = z.object({
     .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
   gstNo: z
     .string()
-    .regex(
-      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-      "Invalid GST Number format"
-    )
+    // .regex(
+    //   /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+    //   "Invalid GST Number format"
+    // )
     .optional(),
 });
 
@@ -275,12 +275,12 @@ export const AddProfileSchema5 = z.object({
     .any()
     .refine((file) => file && file.length > 0, "Pan Card is required"),
   FSSAICertificateNumber: z
-    .string()
-    .min(14, "FSSAI Certificate must be 14 digits"),
-  FSSAIExpiryDate: z.date(),
+    .string().optional(),
+    // .min(14, "FSSAI Certificate must be 14 digits"),
+  FSSAIExpiryDate: z.any(),
   fssaiImage: z
-    .any()
-    .refine((file) => file && file.length > 0, "FSSAI Certificate is required"),
+    .any(),
+    // .refine((file) => file && file.length > 0, "FSSAI Certificate is required"),
   accountHolderName: z.string().min(1, "Account Holder Name is required"),
   bankAccountNumber: z
     .string()
@@ -298,10 +298,10 @@ export const AddProfileSchema5 = z.object({
     .regex(/^[a-zA-Z\s]+$/, "Branch name must contain only letters and spaces"),
   gstNo: z
     .string()
-    .regex(
-      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-      "Invalid GST Number format"
-    )
+    // .regex(
+    //   /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+    //   "Invalid GST Number format"
+    // )
     .optional(),
 });
 
@@ -366,7 +366,8 @@ export const AddProfileSchema6 = z.object({
     .regex(/^\d+(\.\d+)?$/, "Enter valid amount"),
 
   costTag: z.string().min(1, "Cost tag is required"),
-  udyamNumber: z.string().min(1, "Udyam registration number is required"),
+  udyamNumber: z.string().optional(),
+  // .min(1, "Udyam registration number is required"),
 
   firmProof: z
     .any()
@@ -465,7 +466,8 @@ export const EditProfileSchema6 = z.object({
     })
     .min(1, "Cost tag must be greater than 0"),
 
-  udyamNumber: z.string().min(1, "Udyam registration number is required"),
+  udyamNumber: z.string().optional(),
+  // .min(1, "Udyam registration number is required"),
 
   firmProof: z
     .any()

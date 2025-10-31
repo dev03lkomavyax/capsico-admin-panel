@@ -20,7 +20,7 @@ const ProtectedRoute = () => {
   const userInfo = readCookie("userInfo");
   const permissions = userInfo?.permissions || "";
   const { pathname } = useLocation();
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   const perm = {
     dashboard: "dashboard",
@@ -55,8 +55,8 @@ const ProtectedRoute = () => {
     if (!userInfo) return;
     
     const hasPermission = permissions?.[foundValue] !== "none";
-    console.log("hasPermission", hasPermission);
-    console.log(foundValue, permissions?.[foundValue]);
+    // console.log("hasPermission", hasPermission);
+    // console.log(foundValue, permissions?.[foundValue]);
     
 
     if (
