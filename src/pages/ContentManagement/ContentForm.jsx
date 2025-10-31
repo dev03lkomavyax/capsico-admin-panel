@@ -418,11 +418,21 @@ const ContentForm = () => {
       submitData.append('images', image);
     });
 
-    await fetchData('/banner/create', submitData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    if (contentId){
+
+      await fetchData(`/banner/update/${contentId}`, submitData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    } else{
+
+      await fetchData('/banner/create', submitData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
   };
 
   useEffect(() => {
