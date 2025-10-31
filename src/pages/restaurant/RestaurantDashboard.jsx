@@ -3,6 +3,8 @@ import RecentOrders from "@/components/restaurant/RecentOrders";
 import RecentReviews from "@/components/restaurant/RecentReviews";
 import { SalesChart } from "@/components/restaurant/SalesChart";
 import SalesChart2 from "@/components/restaurant/SalesChart2";
+import UpdateBannerModal from "@/components/restaurant/UpdateBannerModal";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -18,7 +20,6 @@ import { PiShoppingCartSimple } from "react-icons/pi";
 import { RiQrScan2Line } from "react-icons/ri";
 // import { useNavigate, useParams } from "react-router-dom";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
 
 const data = [
   {
@@ -125,27 +126,29 @@ const data2 = [
 const RestaurantDashborad = () => {
   const [selectTab, setselectTab] = useState("All Time");
   const [menuData, setMenuData] = useState(data2);
-  const [capsicoOrderData, setCapsicoOrderData] = useState(data);
-  const [recentOrderPage, setRecentOrderPage] = useState();
-  const [recentOrderTotalPage, setRecentOrderTotalPage] = useState();
+  const [isUpdateBannerModalOpen, setIsUpdateBannerModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
 
-  const location = useLocation(); // 
-const isViewMode = location.state?.mode === "view"; 
+  const location = useLocation(); //
+  const isViewMode = location.state?.mode === "view";
 
   return (
     <AdminWrapper>
       <section className="px-0 py-0 w-full space-y-8">
         <div className="flex justify-between items-center mb-8">
-          <div className="flex justify-start items-center">
-            <h2 className="text-[#000000] text-xl font-medium font-roboto">
-              Restaurant
-            </h2>
-          </div>
-          <div className="flex justify-start items-center gap-4">
-            <button
+          <h2 className="text-[#000000] text-xl font-medium font-roboto">
+            Restaurant
+          </h2>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setIsUpdateBannerModalOpen(true)}
+              className="px-4"
+            >
+              Add/Update Banner
+            </Button>
+            <Button
               onClick={() =>
                 navigate(`/admin/restaurant/edit-profile`, {
                   state: { restaurantId: params?.restaurantId },
@@ -154,15 +157,15 @@ const isViewMode = location.state?.mode === "view";
               className="h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]"
             >
               Edit Profile
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() =>
                 navigate(`/admin/restaurant/${params?.restaurantId}/menu`)
               }
               className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2"
             >
               <span className="text-xl">+</span> Add Menu
-            </button>
+            </Button>
           </div>
         </div>
         <RecentOrders />
@@ -360,7 +363,12 @@ const isViewMode = location.state?.mode === "view";
             <RecentReviews />
           </div>
         </div>
-       
+        {isUpdateBannerModalOpen && (
+          <UpdateBannerModal
+            open={isUpdateBannerModalOpen}
+            setOpen={setIsUpdateBannerModalOpen}
+          />
+        )}
       </section>
     </AdminWrapper>
   );
