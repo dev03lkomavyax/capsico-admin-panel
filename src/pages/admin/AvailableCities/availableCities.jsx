@@ -793,9 +793,11 @@ const AvailableCitiesList = () => {
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
+      console.log("res", res);
+      
       const _cities = res?.data?.data?.cities || res?.data?.data || [];
       setCityList(_cities);
-      setTotalPage(res?.data?.pagination?.totalPages || 1);
+      setTotalPage(res?.data?.pagination?.pages || 1);
       setPage(res?.data?.pagination?.page || 1);
     }
   }, [res]);
