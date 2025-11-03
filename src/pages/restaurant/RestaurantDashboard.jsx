@@ -4,6 +4,7 @@ import RecentReviews from "@/components/restaurant/RecentReviews";
 import { SalesChart } from "@/components/restaurant/SalesChart";
 import SalesChart2 from "@/components/restaurant/SalesChart2";
 import UpdateBannerModal from "@/components/restaurant/UpdateBannerModal";
+import UpdateLogoModal from "@/components/restaurant/UpdateLogoModal";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -127,6 +128,7 @@ const RestaurantDashborad = () => {
   const [selectTab, setselectTab] = useState("All Time");
   const [menuData, setMenuData] = useState(data2);
   const [isUpdateBannerModalOpen, setIsUpdateBannerModalOpen] = useState(false);
+  const [isUpdateLogoModalOpen, setIsUpdateLogoModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -142,6 +144,12 @@ const RestaurantDashborad = () => {
             Restaurant
           </h2>
           <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setIsUpdateLogoModalOpen(true)}
+              className="px-4"
+            >
+              Add/Update Logo
+            </Button>
             <Button
               onClick={() => setIsUpdateBannerModalOpen(true)}
               className="px-4"
@@ -367,6 +375,12 @@ const RestaurantDashborad = () => {
           <UpdateBannerModal
             open={isUpdateBannerModalOpen}
             setOpen={setIsUpdateBannerModalOpen}
+          />
+        )}
+        {isUpdateLogoModalOpen && (
+          <UpdateLogoModal
+            open={isUpdateLogoModalOpen}
+            setOpen={setIsUpdateLogoModalOpen}
           />
         )}
       </section>
