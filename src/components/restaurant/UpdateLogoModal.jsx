@@ -96,7 +96,7 @@ const UpdateLogoModal = ({ open, setOpen, offerId }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Update Banner</DialogTitle>
+          <DialogTitle>Update Logo</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
