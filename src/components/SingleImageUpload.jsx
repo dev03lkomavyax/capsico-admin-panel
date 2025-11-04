@@ -8,6 +8,13 @@ import {
   FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import imageCompression from "browser-image-compression";
+import { cn } from "@/lib/utils";
+
+const calculateTargetSizeMB = (file, reducePercent = 70) => {
+  const originalMB = file.size / (1024 * 1024);
+  return (originalMB * (100 - reducePercent)) / 100;
+};
 
 export default function SingleImageUpload({
   control,
@@ -15,19 +22,21 @@ export default function SingleImageUpload({
   setValue,
   name,
   label, // 🆕 Label prop for image name/title
+  compress=false,
+  className="",
 }) {
   const preview = watch(`${name}Preview`);
   const fileInputRef = useRef(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
     // Validation: only images and max 2MB
-    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
     if (!validTypes.includes(file.type)) {
-      alert("Only PNG, JPG, and JPEG files are allowed");
+      alert("Only PNG, JPG, GIF and JPEG files are allowed");
       return;
     }
 
@@ -36,9 +45,26 @@ export default function SingleImageUpload({
       return;
     }
 
-    const previewUrl = URL.createObjectURL(file);
-    setValue(name, file);
-    setValue(`${name}Preview`, previewUrl);
+    if (compress) {
+      try {
+        const targetSizeMB = calculateTargetSizeMB(file, 70);
+        // Compress image (reduce quality + dimensions)
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: targetSizeMB, // target ~1MB
+          useWebWorker: true,
+        });
+
+        const previewUrl = URL.createObjectURL(compressedFile);
+        setValue(name, compressedFile); // Save compressed file to form
+        setValue(`${name}Preview`, previewUrl);
+      } catch (error) {
+        console.error("Image compression error:", error);
+      }
+    } else {
+      const previewUrl = URL.createObjectURL(file);
+      setValue(name, file);
+      setValue(`${name}Preview`, previewUrl);
+    }
   };
 
   const handleRemove = () => {
@@ -64,7 +90,10 @@ export default function SingleImageUpload({
 
             {/* <FormLabel className="cursor-pointer w-full"> */}
             <div
-              className="border-2 cursor-pointer border-dashed border-[#C2CDD6] mb-3 w-full aspect-square h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative"
+              className={cn(
+                "border-2 cursor-pointer border-dashed border-[#C2CDD6] mb-3 w-full aspect-square h-72 flex flex-col justify-center items-center rounded-md hover:border-[#1AA6F1]/70 transition relative",
+                className
+              )}
               onClick={() => fileInputRef.current?.click()}
             >
               {preview ? (
@@ -101,7 +130,7 @@ export default function SingleImageUpload({
               <Input
                 ref={fileInputRef}
                 type="file"
-                accept=".png,.jpeg,.jpg"
+                accept=".png,.jpeg,.jpg,.gif"
                 onChange={handleFileChange}
               />
             </FormControl>
