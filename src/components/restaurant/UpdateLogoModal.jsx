@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -32,12 +32,7 @@ import { useParams } from "react-router-dom";
 import useGetApiReq from "@/hooks/useGetApiReq";
 
 const formSchema = z.object({
-  logo: z
-    .any()
-    .refine(
-      (file) => file instanceof File,
-      "Logo is required"
-    ),
+  logo: z.any().refine((file) => file instanceof File, "Logo is required"),
 });
 
 const UpdateLogoModal = ({ open, setOpen, offerId }) => {
@@ -94,7 +89,7 @@ const UpdateLogoModal = ({ open, setOpen, offerId }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-xs">
         <DialogHeader>
           <DialogTitle>Update Logo</DialogTitle>
         </DialogHeader>
@@ -107,6 +102,8 @@ const UpdateLogoModal = ({ open, setOpen, offerId }) => {
               setValue={setValue}
               name="logo"
               label="Logo"
+              // compress
+              className="h-52"
             />
 
             {/* Buttons */}
