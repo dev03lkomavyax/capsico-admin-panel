@@ -221,7 +221,8 @@ const getCategories = () => {
                               restaurantId: params?.restaurantId,
                               subcategoryId: selectedSubCategoryId,
                               categoryId:
-                                foodItemsInfo?.categoryInfo?.parentCategoryId,
+                                foodItemsInfo?.categoryInfo?.hierarchy?.parent
+                                  ?.id,
                             },
                           }
                         )
@@ -245,6 +246,8 @@ const getCategories = () => {
                           key={foodItem.id || index}
                           foodItem={foodItem}
                           getFoodItems={getFoodItems}
+                          selectedSubCategoryId={selectedSubCategoryId}
+                          categoryId={categoryId}
                         />
                       ))
                     ) : (
