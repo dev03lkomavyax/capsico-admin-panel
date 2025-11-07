@@ -5,14 +5,40 @@ import NonVegIcon from "../customIcons/NonVegIcon";
 import AlertModal from "../AlertModal";
 import { useEffect, useState } from "react";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { EditIcon } from "lucide-react";
 
-const Product = ({ foodItem, getFoodItems }) => {
+
+const Product = ({
+  foodItem,
+  getFoodItems,
+  selectedSubCategoryId,
+  categoryId,
+}) => {
   const { name, price, isAvailable, veg } = foodItem;
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const params = useParams();
+  const navigate = useNavigate();
   console.log("foodItem", foodItem);
-  
+
+  const handleUpdate = () => {
+    console.log(
+      "in handleUpdate function",
+      `/admin/restaurant/${params?.restaurantId}/${selectedSubCategoryId}/updateMenu`
+    );
+    
+    navigate(
+      `/admin/restaurant/${params?.restaurantId}/${selectedSubCategoryId}/updateMenu`,
+      {
+        state: {
+          restaurantId: params?.restaurantId,
+          subcategoryId: selectedSubCategoryId,
+          categoryId,
+          foodItem,
+        },
+      }
+    );
+  };
 
   const { res, fetchData, isLoading } = useDeleteApiReq();
 
@@ -31,11 +57,7 @@ const Product = ({ foodItem, getFoodItems }) => {
   return (
     <div className="px-5 py-3 flex justify-between items-center group gap-2 border-b hover:bg-[#F7FAFF] cursor-pointer">
       <div className="flex gap-3 items-center">
-        <img
-          className="w-20 rounded"
-          src={`${foodItem?.image}`}
-          alt="item"
-        />
+        <img className="w-20 rounded" src={`${foodItem?.image}`} alt="item" />
         <div className="">
           {veg ? <VegIcon /> : <NonVegIcon />}
           {/* <EggIcon /> */}
@@ -45,10 +67,13 @@ const Product = ({ foodItem, getFoodItems }) => {
           <p className="class-base1">₹{price}</p>
         </div>
       </div>
-      <BiTrash
-        onClick={() => setIsAlertModalOpen(true)}
-        className="text-[#E4626F] text-xl cursor-pointer hidden group-hover:block"
-      />
+      <div className="flex gap-5 items-center">
+        <EditIcon className="hidden group-hover:block size-5" onClick={handleUpdate} />
+        <BiTrash
+          onClick={() => setIsAlertModalOpen(true)}
+          className="text-[#E4626F] text-xl cursor-pointer hidden group-hover:block"
+        />
+      </div>
 
       {isAlertModalOpen && (
         <AlertModal

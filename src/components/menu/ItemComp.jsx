@@ -264,7 +264,7 @@ const ItemComp = ({
     if (isActive) {
       setIsOpenb(!isOpenb);
       setCategoryId(id);
-      // handleSubcategoryClick(id, isActive);
+      handleSubcategoryClick(id, isActive);
     }
   };
 

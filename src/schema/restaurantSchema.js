@@ -30,11 +30,13 @@ export const uploadDocumentSchema = z.object({
 
 export const addItemSchema = z
   .object({
+    subCategory: z.string().optional(),
+    isRecommended: z.boolean().default(false),
     itemName: z.string().min(1, "Item Name is required"),
-    itemImage: z
-      .any()
-      .refine((file) => file && file.length > 0, "Item Image is required"),
-    itemDescription: z.string().min(1, "Item Description is required"),
+    itemImage: z.any(),
+    // .refine((file) => file && file.length > 0, "Item Image is required"),
+    itemDescription: z.string().optional(),
+    // .min(1, "Item Description is required"),
     cuisine: z.string().min(1, "Cuisine is required"),
     foodType: z.string().min(1, "Food Type is required"),
     // menuCategory: z.string().min(1, "Menu Category is required"),
@@ -323,9 +325,9 @@ export const subCategorySchema = z.object({
     .min(3, "Mininum 3 char is required")
     .max(50, "SubCategory Name should be less than 50 characters"),
   description: z
-    .string()
-    .min(3, "Mininum 3 char is required")
-    .max(50, "Description should be less than 50 characters"),
+    .string().optional(),
+    // .min(3, "Mininum 3 char is required")
+    // .max(50, "Description should be less than 50 characters"),
   isActive: z.coerce.boolean().default(true).optional(),
 });
 

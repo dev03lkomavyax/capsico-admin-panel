@@ -28,6 +28,8 @@ import CustomerWalletDetails from "./pages/customer/customer-wallet/CustomerWall
 import TransactionHistory from "./pages/customer/customer-wallet/TransactionHistory";
 import PromotedOffer from "./pages/offers/PromotedOffers";
 import AddDeliveryAgent from "./pages/delivery-agent/AddDeliveryAgent";
+import UpdateMenu from "./pages/restaurant/menu/UpdateMenu";
+import Menu from "./pages/restaurant/menu/Menu";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -227,11 +229,15 @@ function App() {
               path="/admin/restaurant/:restaurantId/:categoryId/addmenu"
               element={<AddMenu />}
             />
+            <Route
+              path="/admin/restaurant/:restaurantId/:categoryId/updateMenu"
+              element={<UpdateMenu />}
+            />
             <Route path="/admin/restaurant/reviews" element={<Review />} />
             <Route path="/admin/restaurant/revenue" element={<Revenue />} />
             <Route
               path="/admin/restaurant/:restaurantId/menu"
-              element={<RestaurantMenu />}
+              element={<Menu />}
             />
             <Route path="/admin/tags/create" element={<CreateTags />} />
             {/* <Route path="/admin/tags" element={<TagsList />} />

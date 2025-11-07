@@ -1,39 +1,52 @@
-
-
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { MdKeyboardArrowLeft } from 'react-icons/md'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FiPlus, FiUpload } from "react-icons/fi";
-import Variants from '@/components/restaurant/Variants'
-import ServingInfo from '@/components/restaurant/ServingInfo'
-import MapAddOn from '@/components/restaurant/MapAddOn'
-import AdditionalDetails from '@/components/restaurant/AdditionalDetails'
-import AdminWrapper from '@/components/admin-wrapper/AdminWrapper'
-import useGetApiReq from '@/hooks/useGetApiReq'
-import { updateMultiplePreview } from '@/utils/updatePreview'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addItemSchema } from '@/schema/restaurantSchema'
-import { Label } from '@/components/ui/label'
-import usePostApiReq from '@/hooks/usePostApiReq'
-import CreateVariantModel from '@/components/menu/CreateVariantModel'
-import MapAddOnModel from '@/components/menu/MapAddOnModel'
-import AddCustomizationModal from '@/components/menu/AddCustomizationModal'
-import AddCustomizationCategoryModal from '@/components/menu/AddCustomizationCategoryModal'
-import VegIcon from '@/components/customIcons/VegIcon'
-import NonVegIcon from '@/components/customIcons/NonVegIcon'
-import EggIcon from '@/components/customIcons/EggIcon'
-import { Button } from '@/components/ui/button'
-import { FaMinus, FaPlus, FaTimes } from 'react-icons/fa'
-import Spinner from '@/components/Spinner'
-import DataNotFound from '@/components/DataNotFound'
-import AvailabilityForFoodItem from '@/components/menu/AvailabilityForFoodItem'
-import MenuTagSelector from './menuTagSelector'
+import Variants from "@/components/restaurant/Variants";
+import ServingInfo from "@/components/restaurant/ServingInfo";
+import MapAddOn from "@/components/restaurant/MapAddOn";
+import AdditionalDetails from "@/components/restaurant/AdditionalDetails";
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { updateMultiplePreview } from "@/utils/updatePreview";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { addItemSchema } from "@/schema/restaurantSchema";
+import { Label } from "@/components/ui/label";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import CreateVariantModel from "@/components/menu/CreateVariantModel";
+import MapAddOnModel from "@/components/menu/MapAddOnModel";
+import AddCustomizationModal from "@/components/menu/AddCustomizationModal";
+import AddCustomizationCategoryModal from "@/components/menu/AddCustomizationCategoryModal";
+import VegIcon from "@/components/customIcons/VegIcon";
+import NonVegIcon from "@/components/customIcons/NonVegIcon";
+import EggIcon from "@/components/customIcons/EggIcon";
+import { Button } from "@/components/ui/button";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import Spinner from "@/components/Spinner";
+import DataNotFound from "@/components/DataNotFound";
+import AvailabilityForFoodItem from "@/components/menu/AvailabilityForFoodItem";
+import MenuTagSelector from "./menuTagSelector";
+import { Switch } from "@/components/ui/switch";
 
 // const AddMenu = () => {
 //   const navigate = useNavigate();
@@ -51,7 +64,7 @@ import MenuTagSelector from './menuTagSelector'
 //   const [currentIndex, setCurrentIndex] = useState(null);
 //   const [cuisines, setCuisines] = useState([]);
 //   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
 //   // Enhanced addon state
 //   const [availableTags, setAvailableTags] = useState([]);
 //   const [addons, setAddons] = useState([]);
@@ -66,7 +79,7 @@ import MenuTagSelector from './menuTagSelector'
 //     isDefault: false,
 //     tags: []
 //   });
-  
+
 //   const params = useParams();
 
 //   const form = useForm({
@@ -111,7 +124,7 @@ import MenuTagSelector from './menuTagSelector'
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (response.ok) {
 //         const data = await response.json();
 //         setAvailableTags(data.menuTags || []);
@@ -131,7 +144,7 @@ import MenuTagSelector from './menuTagSelector'
 //   // Handle tag selection for addon
 //   const handleTagSelect = (tag) => {
 //     const isAlreadySelected = newAddon.tags.some(selectedTag => selectedTag === (tag.id || tag._id));
-    
+
 //     if (!isAlreadySelected) {
 //       const updatedTags = [...newAddon.tags, tag.id || tag._id];
 //       setNewAddon(prev => ({ ...prev, tags: updatedTags }));
@@ -209,7 +222,6 @@ import MenuTagSelector from './menuTagSelector'
 //   }
 //   return `Tag Not Found`;  // Clean fallback message
 // };
-
 
 // const getTagColor = (tagId) => {
 //   const tag = availableTags.find(t => (t.id || t._id) === tagId);
@@ -547,7 +559,7 @@ import MenuTagSelector from './menuTagSelector'
 //                         <p className="text-gray-600 text-sm mb-4">
 //                           Add tags to help categorize and highlight your menu items
 //                         </p>
-                        
+
 //                         <MenuTagSelector
 //                           selectedTags={menuTags}
 //                           onTagsChange={handleMenuTagsChange}
@@ -595,15 +607,15 @@ import MenuTagSelector from './menuTagSelector'
 //                                             )}
 //                                           </div>
 //                                         </div>
-                                        
+
 //                                         {/* Tags for addon */}
 //                                       // ✅ ENHANCED: Tag display with proper names and colors
 //                                         {addon.tags.map((tagId) => {
 //                                           const tagName = getTagName(tagId);
 //                                           const tagColor = getTagColor(tagId);
-                                          
+
 //                                           return (
-//                                             <span 
+//                                             <span
 //                                               key={tagId}
 //                                               style={{ backgroundColor: tagColor }}
 //                                               className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -613,9 +625,8 @@ import MenuTagSelector from './menuTagSelector'
 //                                           );
 //                                         })}
 
-                                    
 //                                       </div>
-                                      
+
 //                                       <button
 //                                         onClick={() => handleRemoveAddon(addon.id)}
 //                                         className="text-red-500 hover:text-red-700 ml-4"
@@ -633,7 +644,7 @@ import MenuTagSelector from './menuTagSelector'
 //                           {showAddonForm && (
 //                             <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
 //                               <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">Add New Addon</h4>
-                              
+
 //                               {/* Addon Name */}
 //                               <div>
 //                                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -671,7 +682,7 @@ import MenuTagSelector from './menuTagSelector'
 //                                   />
 //                                   Available
 //                                 </label>
-                                
+
 //                                 <label className="flex items-center">
 //                                   <input
 //                                     type="checkbox"
@@ -694,14 +705,13 @@ import MenuTagSelector from './menuTagSelector'
 //                               </div>
 
 //                               {/* REPLACED: Tags Section with MenuTagSelector */}
-                         
+
 //                               <MenuTagSelector
 //                                 selectedTags={newAddon.tags}
 //                                 onTagsChange={(tags) => setNewAddon(prev => ({ ...prev, tags }))}
 //                                 tagType="addon"
 //                                 className="w-full"
 //                               />
-
 
 //                               {/* Form Actions */}
 //                               <div className="flex gap-3 pt-4">
@@ -741,8 +751,8 @@ import MenuTagSelector from './menuTagSelector'
 
 //                           {/* Enhanced Create Addon Button */}
 //                           {!showAddonForm && (
-//                             <button 
-//                               type="button" 
+//                             <button
+//                               type="button"
 //                               className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
 //                               onClick={() => setShowAddonForm(true)}
 //                             >
@@ -1016,11 +1026,6 @@ import MenuTagSelector from './menuTagSelector'
 
 // export default AddMenu
 
-
-
-
-
-
 // import React, { useState, useEffect } from 'react';
 // import { useNavigate, useParams, useLocation } from 'react-router-dom';
 // import { useForm } from 'react-hook-form';
@@ -1049,10 +1054,6 @@ import MenuTagSelector from './menuTagSelector'
 // import { updateMultiplePreview } from '@/utils/helperFunctions';
 // import { addItemSchema } from '@/schema';
 // import { useGetApiReq, usePostApiReq } from '@/hooks/useApiReq';
-
-
-
-
 
 // import React, { useState, useEffect } from 'react';
 // import { useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -1087,19 +1088,18 @@ import MenuTagSelector from './menuTagSelector'
 // import usePostApiReq from "@/hooks/usePostApiReq";
 // import { addItemSchema } from "@/schemas/addItemSchema";
 // import { updateMultiplePreview } from "@/lib/utils";
-// import { 
-//   FaPlus, 
-//   FaMinus, 
-//   FaTimes, 
+// import {
+//   FaPlus,
+//   FaMinus,
+//   FaTimes,
 //   FiUpload,
-//   MdKeyboardArrowLeft 
+//   MdKeyboardArrowLeft
 // } from "react-icons/all";
-
-
 
 const AddMenu = () => {
   const navigate = useNavigate();
-  const [isItemImageUploadModalOpen, setIsItemImageUploadModalOpen] = useState(false);
+  const [isItemImageUploadModalOpen, setIsItemImageUploadModalOpen] =
+    useState(false);
   const [isVariant, setIsVariant] = useState(false);
   const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
   const [isMapAddons, setIsMapAddons] = useState(false);
@@ -1107,13 +1107,16 @@ const AddMenu = () => {
   const [isAdditionalDetails, setIsAdditionalDetails] = useState(false);
   const [isServingInfo, setIsServingInfo] = useState(false);
   const [isCustomization, setIsCustomization] = useState(false);
-  const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false);
-  const [isCreateVariantModalOpen, setIsCreateVariantModalOpen] = useState(false);
-  const [isAddCustomizationModalOpen, setIsAddCustomizationModalOpen] = useState(false);
+  const [isCustomizationModalOpen, setIsCustomizationModalOpen] =
+    useState(false);
+  const [isCreateVariantModalOpen, setIsCreateVariantModalOpen] =
+    useState(false);
+  const [isAddCustomizationModalOpen, setIsAddCustomizationModalOpen] =
+    useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [cuisines, setCuisines] = useState([]);
   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
   // Enhanced state management for tags and addons
   const [availableTags, setAvailableTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
@@ -1123,21 +1126,26 @@ const AddMenu = () => {
   const [isTagsLoading, setIsTagsLoading] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
   const [newAddon, setNewAddon] = useState({
-    name: '',
-    price: '',
+    name: "",
+    price: "",
     isAvailable: true,
     isVeg: true,
     isDefault: false,
-    tags: []
+    tags: [],
   });
-  
+
   const params = useParams();
   const { state } = useLocation();
+
+  console.log("state", state);
+  
 
   const form = useForm({
     resolver: zodResolver(addItemSchema),
     defaultValues: {
+      subCategory: state.subcategoryId || "",
       itemName: "",
+      isRecommended: false,
       itemImage: "",
       itemImagePreview: "",
       itemDescription: "",
@@ -1156,55 +1164,102 @@ const AddMenu = () => {
       timingType: "sameAsRestaurant",
       openingTime: "",
       closingTime: "",
-      days: []
-    }
+      days: [],
+    },
   });
 
   const { register, control, watch, setValue, getValues } = form;
+  console.log("getValues", getValues());
+
+  // useEffect(() => {
+  //   setValue("subCategory", state.subcategoryId);
+  // }, [state.subcategoryId]);
+  const subCategory = watch("subCategory");
+
+  useEffect(() => {
+    if (subCategory) {
+      navigate(
+        `/admin/restaurant/${params?.restaurantId}/${subCategory}/addmenu`,
+        {
+          state: {
+            restaurantId: params?.restaurantId,
+            subcategoryId: subCategory,
+            categoryId: state.categoryId,
+          },
+        }
+      );
+    }
+  }, [subCategory]);
+  
+  
+
   const restaurantRef = register("restaurant");
   const itemImageRef = register("itemImage");
   const restaurant = watch("restaurant");
   const itemImage = watch("itemImage");
+  const [subCategories, setSubCategories] = useState([]);
+
+  const {
+    res: subcategoriesRes,
+    fetchData: getSubcategories,
+    isLoading: isSubcategoriesLoading,
+  } = useGetApiReq();
+
+  const getSubcategoriesFun = () => {
+    getSubcategories(
+      `/restaurant/${params?.restaurantId}/getSubCatByCat/${state?.categoryId}`
+    );
+  };
+
+  useEffect(() => {
+    getSubcategoriesFun();
+  }, [state?.categoryId]);
+
+  useEffect(() => {
+    if (subcategoriesRes?.status === 200 || subcategoriesRes?.status === 201) {
+      console.log("subcategoriesRes", subcategoriesRes);
+      setSubCategories(subcategoriesRes?.data?.data?.subcategories);
+    }
+  }, [subcategoriesRes]);
 
   // Enhanced Tag fetching
   const fetchAllTags = async () => {
     try {
       setIsTagsLoading(true);
-      console.log('🔄 Fetching all tags...');
-      
+      console.log("🔄 Fetching all tags...");
+
       const [menuTagsRes, addonTagsRes] = await Promise.all([
-        fetch('/capsicoTag/for-menu', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
+        fetch("/capsicoTag/for-menu", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
         }),
-        fetch('/capsicoTag/for-addon', {
-          method: 'GET', 
-          headers: { 'Content-Type': 'application/json' }
-        })
+        fetch("/capsicoTag/for-addon", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }),
       ]);
-      
+
       const [menuTagsData, addonTagsData] = await Promise.all([
         menuTagsRes.json(),
-        addonTagsRes.json()
+        addonTagsRes.json(),
       ]);
-      
-      console.log('📋 Menu tags response:', menuTagsData);
-      console.log('📋 Addon tags response:', addonTagsData);
-      
+
+      console.log("📋 Menu tags response:", menuTagsData);
+      console.log("📋 Addon tags response:", addonTagsData);
+
       const menuTags = menuTagsData.data || [];
       const addonTags = addonTagsData.data || [];
-      
+
       setAvailableTags(Array.isArray(addonTags) ? addonTags : []);
-      
+
       const combinedTags = [
         ...(Array.isArray(menuTags) ? menuTags : []),
-        ...(Array.isArray(addonTags) ? addonTags : [])
+        ...(Array.isArray(addonTags) ? addonTags : []),
       ];
-      
+
       setAllTags(combinedTags);
-      
     } catch (error) {
-      console.error('❌ Error fetching tags:', error);
+      console.error("❌ Error fetching tags:", error);
     } finally {
       setIsTagsLoading(false);
     }
@@ -1212,7 +1267,7 @@ const AddMenu = () => {
 
   const handleMenuTagsChange = (tags) => {
     setMenuTags(tags);
-    setValue('tags', tags);
+    setValue("tags", tags);
   };
 
   const handleTagsChange = (selectedTagIdsOrObjs = []) => {
@@ -1223,22 +1278,26 @@ const AddMenu = () => {
       }
       const tagId = String(t);
       const found =
-        availableTags.find(x => (x.id || x._id)?.toString() === tagId) ||
-        allTags.find(x => (x.id || x._id)?.toString() === tagId);
+        availableTags.find((x) => (x.id || x._id)?.toString() === tagId) ||
+        allTags.find((x) => (x.id || x._id)?.toString() === tagId);
       return found
-        ? { id: found.id || found._id, name: found.displayName || found.name, color: found.color }
+        ? {
+            id: found.id || found._id,
+            name: found.displayName || found.name,
+            color: found.color,
+          }
         : { id: tagId, name: "Tag" };
     });
-    setNewAddon(prev => ({ ...prev, tags: tagObjects }));
+    setNewAddon((prev) => ({ ...prev, tags: tagObjects }));
   };
 
   const handleInputChange = (field, value) => {
-    setNewAddon(prev => ({ ...prev, [field]: value }));
+    setNewAddon((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAddAddon = () => {
     if (!newAddon.name.trim() || !newAddon.price) {
-      alert('Please fill in addon name and price');
+      alert("Please fill in addon name and price");
       return;
     }
 
@@ -1249,28 +1308,28 @@ const AddMenu = () => {
       isAvailable: newAddon.isAvailable,
       isVeg: newAddon.isVeg,
       tags: newAddon.tags,
-      isDefault: newAddon.isDefault
+      isDefault: newAddon.isDefault,
     };
 
     const updatedAddons = [...addons, addon];
     setAddons(updatedAddons);
-    setValue('addOns', updatedAddons);
+    setValue("addOns", updatedAddons);
 
     setNewAddon({
-      name: '',
-      price: '',
+      name: "",
+      price: "",
       isAvailable: true,
       isVeg: true,
       isDefault: false,
-      tags: []
+      tags: [],
     });
     setShowAddonForm(false);
   };
 
   const handleRemoveAddon = (addonId) => {
-    const updatedAddons = addons.filter(addon => addon.id !== addonId);
+    const updatedAddons = addons.filter((addon) => addon.id !== addonId);
     setAddons(updatedAddons);
-    setValue('addOns', updatedAddons);
+    setValue("addOns", updatedAddons);
   };
 
   const getTagName = (tagData) => {
@@ -1279,7 +1338,7 @@ const AddMenu = () => {
     const found =
       availableTags.find((t) => t.id?.toString() === tagId) ||
       allTags.find((t) => t.id?.toString() === tagId);
-    return found ? (found.name || found.displayName) : "Tag";
+    return found ? found.name || found.displayName : "Tag";
   };
 
   const getTagColor = (tagData) => {
@@ -1291,36 +1350,56 @@ const AddMenu = () => {
     }
 
     const found =
-      availableTags.find(t => (t.id || t._id)?.toString() === String(tagId)) ||
-      allTags.find(t => (t.id || t._id)?.toString() === String(tagId));
+      availableTags.find(
+        (t) => (t.id || t._id)?.toString() === String(tagId)
+      ) || allTags.find((t) => (t.id || t._id)?.toString() === String(tagId));
 
     return found?.color || "#6b7280";
   };
 
   const displayExistingAddons = () => {
-    const existingAddons = getValues('addOns') || [];
-    
+    const existingAddons = getValues("addOns") || [];
+
     if (!Array.isArray(existingAddons) || existingAddons.length === 0) {
       return null;
     }
 
     return (
       <div className="mb-6">
-        <h4 className="font-inter text-[#969696] font-semibold mb-3">Existing Addons:</h4>
+        <h4 className="font-inter text-[#969696] font-semibold mb-3">
+          Existing Addons:
+        </h4>
         <div className="space-y-3">
           {existingAddons.map((addon, index) => (
-            <div key={addon.id || addon._id || index} className="bg-gray-50 p-4 rounded-lg border">
+            <div
+              key={addon.id || addon._id || index}
+              className="bg-gray-50 p-4 rounded-lg border"
+            >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h5 className="font-semibold text-lg">{addon.name}</h5>
-                    <span className="text-lg font-bold text-green-600">₹{addon.price}</span>
+                    <span className="text-lg font-bold text-green-600">
+                      ₹{addon.price}
+                    </span>
                     <div className="flex gap-2">
-                      <span className={`px-2 py-1 rounded-full text-xs ${addon.isVeg ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {addon.isVeg ? 'Veg' : 'Non-Veg'}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          addon.isVeg
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {addon.isVeg ? "Veg" : "Non-Veg"}
                       </span>
-                      <span className={`px-2 py-1 rounded-full text-xs ${addon.isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
-                        {addon.isAvailable ? 'Available' : 'Unavailable'}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          addon.isAvailable
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {addon.isAvailable ? "Available" : "Unavailable"}
                       </span>
                       {addon.isDefault && (
                         <span className="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">
@@ -1329,29 +1408,32 @@ const AddMenu = () => {
                       )}
                     </div>
                   </div>
-                  
-                  {addon.tags && Array.isArray(addon.tags) && addon.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {addon.tags.map((tagData, tagIndex) => {
-                        const tagName = getTagName(tagData);
-                        const tagColor = getTagColor(tagData);
-                        const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                        
-                        return (
-                          <span 
-                            key={tagId || tagIndex}
-                            style={{ backgroundColor: tagColor }}
-                            className="text-white px-2 py-1 rounded-full text-xs font-medium"
-                            title={`Tag: ${tagName} (ID: ${tagId})`}
-                          >
-                            {tagName}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
+
+                  {addon.tags &&
+                    Array.isArray(addon.tags) &&
+                    addon.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {addon.tags.map((tagData, tagIndex) => {
+                          const tagName = getTagName(tagData);
+                          const tagColor = getTagColor(tagData);
+                          const tagId =
+                            typeof tagData === "object" ? tagData.id : tagData;
+
+                          return (
+                            <span
+                              key={tagId || tagIndex}
+                              style={{ backgroundColor: tagColor }}
+                              className="text-white px-2 py-1 rounded-full text-xs font-medium"
+                              title={`Tag: ${tagName} (ID: ${tagId})`}
+                            >
+                              {tagName}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
                 </div>
-                
+
                 <button
                   onClick={() => handleRemoveAddon(addon.id)}
                   className="text-red-500 hover:text-red-700 ml-4"
@@ -1374,7 +1456,7 @@ const AddMenu = () => {
   useEffect(() => {
     if (isMapAddons) {
       fetchAllTags();
-      const existingAddons = getValues('addOns') || [];
+      const existingAddons = getValues("addOns") || [];
       setAddons(existingAddons);
     }
   }, [isMapAddons, getValues]);
@@ -1401,7 +1483,11 @@ const AddMenu = () => {
     }
   }, [res]);
 
-  const { res: addItemRes, fetchData: fetchAddItemData, isLoading: isAddItemLoading } = usePostApiReq();
+  const {
+    res: addItemRes,
+    fetchData: fetchAddItemData,
+    isLoading: isAddItemLoading,
+  } = usePostApiReq();
 
   // Updated onSubmit with latest API implementation
   const onSubmit = (data) => {
@@ -1418,13 +1504,15 @@ const AddMenu = () => {
       days: data.days,
     };
 
-    const modifiedCustomizations = getValues("customizations")?.map((customization) => {
-      return {
-        name: customization.categoryName,
-        type: customization.customizationType,
-        options: customization.customizationOptions,
-      };
-    });
+    const modifiedCustomizations = getValues("customizations")?.map(
+      (customization) => {
+        return {
+          name: customization.categoryName,
+          type: customization.customizationType,
+          options: customization.customizationOptions,
+        };
+      }
+    );
 
     // Enhanced addons with tags
     const modifiedAddOns = getValues("addOns")?.map((addon) => {
@@ -1435,17 +1523,17 @@ const AddMenu = () => {
         isAvailable: addon.isAvailable,
         isVeg: addon.isVeg,
         tags: addon.tags || [],
-        isDefault: addon.isDefault
+        isDefault: addon.isDefault,
       };
     });
 
-    console.log('📦 Prepared data:', {
+    console.log("📦 Prepared data:", {
       availableTimings,
       modifiedCustomizations: modifiedCustomizations?.length || 0,
       modifiedAddOns: modifiedAddOns?.length || 0,
       menuTags: menuTags?.length || 0,
       subcategoryId: state?.subcategoryId,
-      categoryId: state?.categoryId
+      categoryId: state?.categoryId,
     });
 
     // Create FormData for restaurant endpoint
@@ -1456,26 +1544,33 @@ const AddMenu = () => {
     formData.append("FoodType", data.foodType);
     formData.append("cuisine", data.cuisine);
     formData.append("preparationTime", data.preparationTime);
-    
+    formData.append("isRecommended", data.isRecommended);
+
     // Use subcategoryId for the new API structure
-    formData.append("subcategoryId", state?.subcategoryId || params?.subcategoryId);
+    formData.append(
+      "subcategoryId",
+      state?.subcategoryId || params?.subcategoryId
+    );
     formData.append("categoryId", state?.categoryId || params?.categoryId);
-    
+
     formData.append("availableTimings", JSON.stringify(availableTimings));
     formData.append("tags", JSON.stringify(menuTags));
     formData.append("variations", JSON.stringify(getValues("variations")));
     formData.append("addOns", JSON.stringify(modifiedAddOns));
     formData.append("customizations", JSON.stringify(modifiedCustomizations));
-    
+
     // Add images with field name "images" (matching multer config)
     Array.from(data.itemImage).forEach((image) => {
       formData.append("images", image);
     });
 
-    console.log('📦 FormData created, making API call...');
+    console.log("📦 FormData created, making API call...");
 
     // Use restaurant endpoint for adding menu items
-    fetchAddItemData(`/restaurant/add-menu-item/${state?.restaurantId}`, formData);
+    fetchAddItemData(
+      `/restaurant/add-menu-item/${state?.restaurantId}`,
+      formData
+    );
   };
 
   useEffect(() => {
@@ -1490,30 +1585,72 @@ const AddMenu = () => {
       alert("Session expired. Please log in again.");
     } else if (addItemRes?.status && addItemRes.status >= 400) {
       console.error("❌ API Error:", addItemRes);
-      alert(`Error: ${addItemRes?.data?.message || 'Failed to add menu item'}`);
+      alert(`Error: ${addItemRes?.data?.message || "Failed to add menu item"}`);
     }
   }, [addItemRes]);
 
   return (
     <AdminWrapper>
-      <section className='px-0 py-0 w-full h-full min-h-screen'>
-        <div className='flex justify-start items-center mb-4'>
-          <MdKeyboardArrowLeft onClick={() => navigate(-1)} className='text-[#000000] text-4xl cursor-pointer' />
-          <h2 className='text-[#000000] text-xl font-medium font-roboto'>Restaurant</h2>
+      <section className="px-0 py-0 w-full h-full min-h-screen">
+        <div className="flex justify-start items-center mb-4">
+          <MdKeyboardArrowLeft
+            onClick={() =>
+              navigate(`/admin/restaurant/${state.restaurantId}/menu`)
+            }
+            className="text-[#000000] text-4xl cursor-pointer"
+          />
+          <h2 className="text-[#000000] text-xl font-medium font-roboto">
+            Restaurant
+          </h2>
         </div>
-        <div className='bg-[#FFFFFF]'>
-          <div className='px-10 bg-[#FFFFFF] border-b-[1px] border-b-[#CDCDCD]'>
-            <h1 className='text-[#000000] text-2xl font-semibold font-inter py-8'>Add Item Details</h1>
+        <div className="bg-[#FFFFFF]">
+          <div className="px-10 bg-[#FFFFFF] border-b-[1px] border-b-[#CDCDCD]">
+            <h1 className="text-[#000000] text-2xl font-semibold font-inter py-8">
+              Add Item Details
+            </h1>
           </div>
-          <div className='mb-4 py-4'>
+          <div className="mb-4 py-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <div>
                   {/* Basic Details Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5">
-                      <h3 className='text-[#000000] text-xl font-semibold font-inter'>Basic Details</h3>
-                      
+                      <h3 className="text-[#000000] text-xl font-semibold font-inter">
+                        Basic Details
+                      </h3>
+
+                      <FormField
+                        control={control}
+                        name="subCategory"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Sub Category</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Sub Category" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {subCategories.map((subCategory) => (
+                                  <SelectItem
+                                    key={subCategory.subCategoryId}
+                                    value={subCategory.subCategoryId}
+                                  >
+                                    {subCategory.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
                       {/* Item Name */}
                       <div className="w-full mt-5">
                         <FormField
@@ -1523,7 +1660,10 @@ const AddMenu = () => {
                             <FormItem className="z-20">
                               <FormLabel>Item Name</FormLabel>
                               <FormControl>
-                                <Input placeholder="Enter Dish Name"  {...field} />
+                                <Input
+                                  placeholder="Enter Dish Name"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1540,7 +1680,11 @@ const AddMenu = () => {
                             <FormItem className="z-20">
                               <FormLabel>Item Description</FormLabel>
                               <FormControl>
-                                <Textarea className="resize-none" placeholder="Add a detailed description explaining the dish"  {...field} />
+                                <Textarea
+                                  className="resize-none"
+                                  placeholder="Add a detailed description explaining the dish"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1566,30 +1710,85 @@ const AddMenu = () => {
                                     <FormControl className="hidden">
                                       <RadioGroupItem value="veg" />
                                     </FormControl>
-                                    <FormLabel className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${getValues("foodType") === "veg" && "bg-[#EDF4FF] border border-[#3579F0]"}`}>
+                                    <FormLabel
+                                      className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${
+                                        getValues("foodType") === "veg" &&
+                                        "bg-[#EDF4FF] border border-[#3579F0]"
+                                      }`}
+                                    >
                                       <VegIcon />
-                                      <p className={`text-black group-hover:text-[#3579F0] ${getValues("foodType") === "veg" && "text-[#3579F0]"}`}>Veg</p>
+                                      <p
+                                        className={`text-black group-hover:text-[#3579F0] ${
+                                          getValues("foodType") === "veg" &&
+                                          "text-[#3579F0]"
+                                        }`}
+                                      >
+                                        Veg
+                                      </p>
                                     </FormLabel>
                                   </FormItem>
                                   <FormItem className="flex items-center space-y-0">
                                     <FormControl className="hidden">
                                       <RadioGroupItem value="non-veg" />
                                     </FormControl>
-                                    <FormLabel className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${getValues("foodType") === "non-veg" && "bg-[#EDF4FF] border border-[#3579F0]"}`}>
+                                    <FormLabel
+                                      className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${
+                                        getValues("foodType") === "non-veg" &&
+                                        "bg-[#EDF4FF] border border-[#3579F0]"
+                                      }`}
+                                    >
                                       <NonVegIcon />
-                                      <p className={`text-black group-hover:text-[#3579F0] ${getValues("foodType") === "non-veg" && "text-[#3579F0]"}`}>Non-Veg</p>
+                                      <p
+                                        className={`text-black group-hover:text-[#3579F0] ${
+                                          getValues("foodType") === "non-veg" &&
+                                          "text-[#3579F0]"
+                                        }`}
+                                      >
+                                        Non-Veg
+                                      </p>
                                     </FormLabel>
                                   </FormItem>
-                                  <FormItem className="flex items-center space-y-0">
+                                  {/* <FormItem className="flex items-center space-y-0">
                                     <FormControl className="hidden">
-                                      <RadioGroupItem value="egg" />
+                                      <RadioGroupItem value="Egg" />
                                     </FormControl>
-                                    <FormLabel className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${getValues("foodType") === "egg" && "bg-[#EDF4FF] border border-[#3579F0]"}`}>
+                                    <FormLabel
+                                      className={`border rounded p-4 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${
+                                        getValues("foodType") === "Egg" &&
+                                        "bg-[#EDF4FF] border border-[#3579F0]"
+                                      }`}
+                                    >
                                       <EggIcon />
-                                      <p className={`text-black group-hover:text-[#3579F0] ${getValues("foodType") === "egg" && "text-[#3579F0]"}`}>Egg</p>
+                                      <p
+                                        className={`text-black group-hover:text-[#3579F0] ${
+                                          getValues("foodType") === "Egg" &&
+                                          "text-[#3579F0]"
+                                        }`}
+                                      >
+                                        Egg
+                                      </p>
                                     </FormLabel>
-                                  </FormItem>
+                                  </FormItem> */}
                                 </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="wfull mt-5">
+                        <FormField
+                          control={form.control}
+                          name="isRecommended"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center justify-between">
+                              <FormLabel>Is Recommended?</FormLabel>
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1606,7 +1805,11 @@ const AddMenu = () => {
                             <FormItem className="z-20">
                               <FormLabel>Preparation Time</FormLabel>
                               <FormControl>
-                                <Input type="number" placeholder="Preparation Time (in minutes)"  {...field} />
+                                <Input
+                                  type="number"
+                                  placeholder="Preparation Time (in minutes)"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1623,23 +1826,38 @@ const AddMenu = () => {
                           render={({ field }) => (
                             <FormItem className="z-20">
                               <FormLabel className="cursor-pointer left-0 w-full h-full top-0">
-                                <span className="cursor-pointer absolute right-0 -top-7 text-xs p-1 border-dashed rounded-sm">Change</span>
-                                {!watch("itemImagePreview") &&
-                                  <div className='border-2 mt-2 flex flex-col bg-[#F7FAFF] items-center justify-center primary-color w-40 h-40 rounded-md px-5 py-4'>
+                                <span className="cursor-pointer absolute right-0 -top-7 text-xs p-1 border-dashed rounded-sm">
+                                  Change
+                                </span>
+                                {!watch("itemImagePreview") && (
+                                  <div className="border-2 mt-2 flex flex-col bg-[#F7FAFF] items-center justify-center primary-color w-40 h-40 rounded-md px-5 py-4">
                                     <FiUpload size={25} />
-                                    <p className='font-semibold text-center primary-color text-sm mt-2'>Upload</p>
+                                    <p className="font-semibold text-center primary-color text-sm mt-2">
+                                      Upload
+                                    </p>
                                   </div>
-                                }
+                                )}
                                 {watch("itemImagePreview")?.length > 0 && (
                                   <div className="flex gap-4 flex-wrap mt-5">
-                                    {watch("itemImagePreview").map((image, index) => (
-                                      <img key={index} className="w-40" src={image} alt={`Preview ${index + 1}`} />
-                                    ))}
+                                    {watch("itemImagePreview").map(
+                                      (image, index) => (
+                                        <img
+                                          key={index}
+                                          className="w-40"
+                                          src={image}
+                                          alt={`Preview ${index + 1}`}
+                                        />
+                                      )
+                                    )}
                                   </div>
                                 )}
                               </FormLabel>
                               <FormControl className="hidden">
-                                <Input multiple={true} type="file" {...itemImageRef} />
+                                <Input
+                                  multiple={true}
+                                  type="file"
+                                  {...itemImageRef}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1655,8 +1873,13 @@ const AddMenu = () => {
                       <h2 className="class-lg6 text-black">Item Pricing</h2>
 
                       <div className="bg-[#F7FAFF] py-4 px-6 rounded-lg mt-2">
-                        <h2 className="class-base6 text-black">Customers trust brands with fair pricing</h2>
-                        <p className="class-sm2 text-[#757575]">Keep same prices across menus offered for online ordering.</p>
+                        <h2 className="class-base6 text-black">
+                          Customers trust brands with fair pricing
+                        </h2>
+                        <p className="class-sm2 text-[#757575]">
+                          Keep same prices across menus offered for online
+                          ordering.
+                        </p>
                       </div>
 
                       <div className="w-full mt-5">
@@ -1667,7 +1890,11 @@ const AddMenu = () => {
                             <FormItem className="z-20">
                               <FormLabel>Base price</FormLabel>
                               <FormControl>
-                                <Input type="number" placeholder="Enter Base price of dish"  {...field} />
+                                <Input
+                                  type="number"
+                                  placeholder="Enter Base price of dish"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1683,7 +1910,11 @@ const AddMenu = () => {
                             <FormItem className="z-20">
                               <FormLabel>Packaging charges</FormLabel>
                               <FormControl>
-                                <Input type="number" placeholder="Enter packaging charges"  {...field} />
+                                <Input
+                                  type="number"
+                                  placeholder="Enter packaging charges"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1692,7 +1923,10 @@ const AddMenu = () => {
                       </div>
 
                       <div className="bg-[#F7FAFF] py-3 px-6 rounded-lg mt-5">
-                        <h2 className="class-base6 text-black">Please make sure that your offline and online prices match</h2>
+                        <h2 className="class-base6 text-black">
+                          Please make sure that your offline and online prices
+                          match
+                        </h2>
                       </div>
                     </div>
                   </div>
@@ -1700,46 +1934,77 @@ const AddMenu = () => {
                   {/* Variants Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setIsVariant(!isVariant)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() => setIsVariant(!isVariant)}
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
                           <h3 className="text-black class-lg6">Variants</h3>
-                          {isVariant ? <FaMinus className="text-black" size={20} />
-                            : <FaPlus className="text-black" size={20} />}
+                          {isVariant ? (
+                            <FaMinus className="text-black" size={20} />
+                          ) : (
+                            <FaPlus className="text-black" size={20} />
+                          )}
                         </div>
-                        <p>You can offer variations of a item, such as size/ base/ crust, etc. When customers place an order, they must choose at least one from the defined variants.</p>
+                        <p>
+                          You can offer variations of a item, such as size/
+                          base/ crust, etc. When customers place an order, they
+                          must choose at least one from the defined variants.
+                        </p>
                       </div>
-                      {isVariant &&
+                      {isVariant && (
                         <>
-                          <button onClick={() => setIsVariantModalOpen(true)} type="button" className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md">
+                          <button
+                            onClick={() => setIsVariantModalOpen(true)}
+                            type="button"
+                            className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md"
+                          >
                             <FaPlus className="text-base" />
-                            <p className="font-semibold text-lg">Create new Variant</p>
+                            <p className="font-semibold text-lg">
+                              Create new Variant
+                            </p>
                           </button>
-                          {watch("variations").length > 0 &&
+                          {watch("variations").length > 0 && (
                             <div className="mt-5">
                               <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                <h4 className="font-inter text-[#969696] font-semibold">Variant Name</h4>
-                                <h4 className="font-inter text-[#969696] font-semibold">Price (In Rs)</h4>
+                                <h4 className="font-inter text-[#969696] font-semibold">
+                                  Variant Name
+                                </h4>
+                                <h4 className="font-inter text-[#969696] font-semibold">
+                                  Price (In Rs)
+                                </h4>
                               </div>
                               {watch("variations")?.map((variation, i) => (
-                                <div key={i} className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2">
-                                  <h4 className="font-inter text-[#969696] font-semibold">{variation?.name}</h4>
-                                  <h4 className="font-inter text-[#969696] font-semibold">Rs {variation?.price}</h4>
-                                </div>))}
+                                <div
+                                  key={i}
+                                  className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
+                                >
+                                  <h4 className="font-inter text-[#969696] font-semibold">
+                                    {variation?.name}
+                                  </h4>
+                                  <h4 className="font-inter text-[#969696] font-semibold">
+                                    Rs {variation?.price}
+                                  </h4>
+                                </div>
+                              ))}
                             </div>
-                          }
+                          )}
                         </>
-                      }
+                      )}
                     </div>
                   </div>
 
                   {/* Menu Tags Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5">
-                      <h3 className='text-[#000000] text-xl font-semibold font-inter mb-4'>Menu Tags</h3>
+                      <h3 className="text-[#000000] text-xl font-semibold font-inter mb-4">
+                        Menu Tags
+                      </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        Add tags to help categorize and highlight your menu items
+                        Add tags to help categorize and highlight your menu
+                        items
                       </p>
-                      
+
                       <MenuTagSelector
                         selectedTags={menuTags}
                         onTagsChange={handleMenuTagsChange}
@@ -1752,36 +2017,68 @@ const AddMenu = () => {
                   {/* Map Addons Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setIsMapAddons(!isMapAddons)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() => setIsMapAddons(!isMapAddons)}
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
                           <h3 className="text-black class-lg6">Map Addons</h3>
-                          {isMapAddons ? <FaMinus className="text-black" size={20} />
-                            : <FaPlus className="text-black" size={20} />}
+                          {isMapAddons ? (
+                            <FaMinus className="text-black" size={20} />
+                          ) : (
+                            <FaPlus className="text-black" size={20} />
+                          )}
                         </div>
-                        <p>Add-ons enhance the customer experience by offering extra choices like toppings or desserts.</p>
+                        <p>
+                          Add-ons enhance the customer experience by offering
+                          extra choices like toppings or desserts.
+                        </p>
                       </div>
-                      {isMapAddons &&
+                      {isMapAddons && (
                         <div className="space-y-6">
                           {displayExistingAddons()}
-                          
+
                           {/* Enhanced Addons Display */}
                           {addons.length > 0 && (
                             <div>
-                              <h4 className="font-inter text-[#969696] font-semibold mb-3">Current Addons:</h4>
+                              <h4 className="font-inter text-[#969696] font-semibold mb-3">
+                                Current Addons:
+                              </h4>
                               <div className="space-y-3">
                                 {addons.map((addon) => (
-                                  <div key={addon.id} className="bg-gray-50 p-4 rounded-lg border">
+                                  <div
+                                    key={addon.id}
+                                    className="bg-gray-50 p-4 rounded-lg border"
+                                  >
                                     <div className="flex justify-between items-start">
                                       <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
-                                          <h5 className="font-semibold text-lg">{addon.name}</h5>
-                                          <span className="text-lg font-bold text-green-600">₹{addon.price}</span>
+                                          <h5 className="font-semibold text-lg">
+                                            {addon.name}
+                                          </h5>
+                                          <span className="text-lg font-bold text-green-600">
+                                            ₹{addon.price}
+                                          </span>
                                           <div className="flex gap-2">
-                                            <span className={`px-2 py-1 rounded-full text-xs ${addon.isVeg ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                              {addon.isVeg ? 'Veg' : 'Non-Veg'}
+                                            <span
+                                              className={`px-2 py-1 rounded-full text-xs ${
+                                                addon.isVeg
+                                                  ? "bg-green-100 text-green-700"
+                                                  : "bg-red-100 text-red-700"
+                                              }`}
+                                            >
+                                              {addon.isVeg ? "Veg" : "Non-Veg"}
                                             </span>
-                                            <span className={`px-2 py-1 rounded-full text-xs ${addon.isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
-                                              {addon.isAvailable ? 'Available' : 'Unavailable'}
+                                            <span
+                                              className={`px-2 py-1 rounded-full text-xs ${
+                                                addon.isAvailable
+                                                  ? "bg-blue-100 text-blue-700"
+                                                  : "bg-gray-100 text-gray-700"
+                                              }`}
+                                            >
+                                              {addon.isAvailable
+                                                ? "Available"
+                                                : "Unavailable"}
                                             </span>
                                             {addon.isDefault && (
                                               <span className="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">
@@ -1790,31 +2087,44 @@ const AddMenu = () => {
                                             )}
                                           </div>
                                         </div>
-                                        
+
                                         {/* Tags display with proper names */}
-                                        {addon.tags && addon.tags.length > 0 && (
-                                          <div className="flex flex-wrap gap-1 mb-2">
-                                            {addon.tags.map((tagData, tagIndex) => {
-                                              const tagName = getTagName(tagData);
-                                              const tagColor = getTagColor(tagData);
-                                              const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                                              
-                                              return (
-                                                <span 
-                                                  key={tagId || tagIndex}
-                                                  style={{ backgroundColor: tagColor }}
-                                                  className="text-white px-2 py-1 rounded-full text-xs font-medium"
-                                                >
-                                                  {tagName}
-                                                </span>
-                                              );
-                                            })}
-                                          </div>
-                                        )}
+                                        {addon.tags &&
+                                          addon.tags.length > 0 && (
+                                            <div className="flex flex-wrap gap-1 mb-2">
+                                              {addon.tags.map(
+                                                (tagData, tagIndex) => {
+                                                  const tagName =
+                                                    getTagName(tagData);
+                                                  const tagColor =
+                                                    getTagColor(tagData);
+                                                  const tagId =
+                                                    typeof tagData === "object"
+                                                      ? tagData.id
+                                                      : tagData;
+
+                                                  return (
+                                                    <span
+                                                      key={tagId || tagIndex}
+                                                      style={{
+                                                        backgroundColor:
+                                                          tagColor,
+                                                      }}
+                                                      className="text-white px-2 py-1 rounded-full text-xs font-medium"
+                                                    >
+                                                      {tagName}
+                                                    </span>
+                                                  );
+                                                }
+                                              )}
+                                            </div>
+                                          )}
                                       </div>
-                                      
+
                                       <button
-                                        onClick={() => handleRemoveAddon(addon.id)}
+                                        onClick={() =>
+                                          handleRemoveAddon(addon.id)
+                                        }
                                         className="text-red-500 hover:text-red-700 ml-4"
                                       >
                                         <FaTimes size={16} />
@@ -1829,15 +2139,21 @@ const AddMenu = () => {
                           {/* Add New Addon Form */}
                           {showAddonForm && (
                             <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
-                              <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">Add New Addon</h4>
-                              
+                              <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">
+                                Add New Addon
+                              </h4>
+
                               {/* Addon Name */}
                               <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Name
+                                </label>
                                 <input
                                   type="text"
                                   value={newAddon.name}
-                                  onChange={(e) => handleInputChange('name', e.target.value)}
+                                  onChange={(e) =>
+                                    handleInputChange("name", e.target.value)
+                                  }
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
                                   placeholder="e.g., Extra Paneer"
                                 />
@@ -1845,11 +2161,15 @@ const AddMenu = () => {
 
                               {/* Addon Price */}
                               <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Price (₹)
+                                </label>
                                 <input
                                   type="number"
                                   value={newAddon.price}
-                                  onChange={(e) => handleInputChange('price', e.target.value)}
+                                  onChange={(e) =>
+                                    handleInputChange("price", e.target.value)
+                                  }
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
                                   placeholder="50"
                                   min="0"
@@ -1863,17 +2183,27 @@ const AddMenu = () => {
                                   <input
                                     type="checkbox"
                                     checked={newAddon.isAvailable}
-                                    onChange={(e) => handleInputChange('isAvailable', e.target.checked)}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "isAvailable",
+                                        e.target.checked
+                                      )
+                                    }
                                     className="mr-2"
                                   />
                                   Available
                                 </label>
-                                
+
                                 <label className="flex items-center">
                                   <input
                                     type="checkbox"
                                     checked={newAddon.isVeg}
-                                    onChange={(e) => handleInputChange('isVeg', e.target.checked)}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "isVeg",
+                                        e.target.checked
+                                      )
+                                    }
                                     className="mr-2"
                                   />
                                   Vegetarian
@@ -1883,7 +2213,12 @@ const AddMenu = () => {
                                   <input
                                     type="checkbox"
                                     checked={newAddon.isDefault}
-                                    onChange={(e) => handleInputChange('isDefault', e.target.checked)}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        "isDefault",
+                                        e.target.checked
+                                      )
+                                    }
                                     className="mr-2"
                                   />
                                   Set as Default
@@ -1892,16 +2227,22 @@ const AddMenu = () => {
 
                               {/* Tags Section */}
                               <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                                
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Tags
+                                </label>
+
                                 {/* Show currently selected tags */}
                                 {newAddon.tags && newAddon.tags.length > 0 && (
                                   <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
-                                    <span className="text-xs text-gray-600">Selected:</span>
+                                    <span className="text-xs text-gray-600">
+                                      Selected:
+                                    </span>
                                     {newAddon.tags.map((tagObj, index) => (
                                       <span
                                         key={tagObj.id || index}
-                                        style={{ backgroundColor: getTagColor(tagObj) }}
+                                        style={{
+                                          backgroundColor: getTagColor(tagObj),
+                                        }}
                                         className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-white text-xs font-medium"
                                       >
                                         {tagObj.name}
@@ -1909,8 +2250,14 @@ const AddMenu = () => {
                                           type="button"
                                           onClick={(e) => {
                                             e.preventDefault();
-                                            const updatedTags = newAddon.tags.filter((_, i) => i !== index);
-                                            setNewAddon(prev => ({ ...prev, tags: updatedTags }));
+                                            const updatedTags =
+                                              newAddon.tags.filter(
+                                                (_, i) => i !== index
+                                              );
+                                            setNewAddon((prev) => ({
+                                              ...prev,
+                                              tags: updatedTags,
+                                            }));
                                           }}
                                           className="hover:bg-black/20 rounded-full p-0.5 ml-1"
                                         >
@@ -1920,10 +2267,12 @@ const AddMenu = () => {
                                     ))}
                                   </div>
                                 )}
-                                
+
                                 {/* MenuTagSelector */}
                                 <MenuTagSelector
-                                  selectedTags={newAddon.tags.map(tag => tag.id)}
+                                  selectedTags={newAddon.tags.map(
+                                    (tag) => tag.id
+                                  )}
                                   onTagsChange={handleTagsChange}
                                   tagType="addon"
                                   className="w-full"
@@ -1944,12 +2293,12 @@ const AddMenu = () => {
                                   onClick={() => {
                                     setShowAddonForm(false);
                                     setNewAddon({
-                                      name: '',
-                                      price: '',
+                                      name: "",
+                                      price: "",
                                       isAvailable: true,
                                       isVeg: true,
                                       isDefault: false,
-                                      tags: []
+                                      tags: [],
                                     });
                                   }}
                                   className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400"
@@ -1961,19 +2310,27 @@ const AddMenu = () => {
                           )}
 
                           {/* Create Addon Buttons */}
-                          <button onClick={() => setIsMapAddonsModalOpen(true)} type="button" className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF] mb-4">
+                          <button
+                            onClick={() => setIsMapAddonsModalOpen(true)}
+                            type="button"
+                            className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF] mb-4"
+                          >
                             <FaPlus className="text-base" />
-                            <p className="font-semibold text-lg">Create new Add on group (Modal)</p>
+                            <p className="font-semibold text-lg">
+                              Create new Add on group (Modal)
+                            </p>
                           </button>
 
                           {!showAddonForm && (
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
                               onClick={() => setShowAddonForm(true)}
                             >
                               <FaPlus className="text-base" />
-                              <p className="font-semibold text-lg">Create new Add on with Tags</p>
+                              <p className="font-semibold text-lg">
+                                Create new Add on with Tags
+                              </p>
                             </button>
                           )}
 
@@ -1981,46 +2338,65 @@ const AddMenu = () => {
                           {watch("addOns").length > 0 && (
                             <div className="mt-5">
                               <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                <h4 className="font-inter text-[#969696] font-semibold">AddOn Name</h4>
-                                <h4 className="font-inter text-[#969696] font-semibold">Price (In Rs)</h4>
+                                <h4 className="font-inter text-[#969696] font-semibold">
+                                  AddOn Name
+                                </h4>
+                                <h4 className="font-inter text-[#969696] font-semibold">
+                                  Price (In Rs)
+                                </h4>
                               </div>
                               {watch("addOns")?.map((addon, i) => (
-                                <div key={i} className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2">
-                                  <h4 className="font-inter text-[#969696] font-semibold">{addon?.name}</h4>
-                                  <h4 className="font-inter text-[#969696] font-semibold">Rs {addon?.price}</h4>
+                                <div
+                                  key={i}
+                                  className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
+                                >
+                                  <h4 className="font-inter text-[#969696] font-semibold">
+                                    {addon?.name}
+                                  </h4>
+                                  <h4 className="font-inter text-[#969696] font-semibold">
+                                    Rs {addon?.price}
+                                  </h4>
                                 </div>
                               ))}
                             </div>
                           )}
                         </div>
-                      }
+                      )}
                     </div>
                   </div>
 
                   {/* Additional Details Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setIsAdditionalDetails(!isAdditionalDetails)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() =>
+                          setIsAdditionalDetails(!isAdditionalDetails)
+                        }
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
-                          <h3 className="text-black class-lg6">Additional Details</h3>
-                          {isAdditionalDetails ? <FaMinus className="text-black" size={20} />
-                            : <FaPlus className="text-black" size={20} />}
+                          <h3 className="text-black class-lg6">
+                            Additional Details
+                          </h3>
+                          {isAdditionalDetails ? (
+                            <FaMinus className="text-black" size={20} />
+                          ) : (
+                            <FaPlus className="text-black" size={20} />
+                          )}
                         </div>
                         <p>Add Cuisine</p>
                       </div>
-                      {isAdditionalDetails &&
+                      {isAdditionalDetails && (
                         <div className="border border-[#A8A8A8] p-5 w-full rounded-md">
                           <h3 className="text-black class-lg6">Cuisine</h3>
 
-                          {cuisines.length === 0 && isLoading &&
-                            <Spinner />
-                          }
+                          {cuisines.length === 0 && isLoading && <Spinner />}
 
-                          {cuisines.length === 0 && !isLoading &&
+                          {cuisines.length === 0 && !isLoading && (
                             <DataNotFound name="Cuisines" />
-                          }
+                          )}
 
-                          {cuisines.length > 0 &&
+                          {cuisines.length > 0 && (
                             <div className="flex items-center gap-2">
                               <FormField
                                 control={control}
@@ -2035,11 +2411,22 @@ const AddMenu = () => {
                                         className="flex flex-wrap gap-3"
                                       >
                                         {cuisines?.map((cuisine) => (
-                                          <FormItem key={cuisine?._id} className="flex items-center space-y-0">
+                                          <FormItem
+                                            key={cuisine?._id}
+                                            className="flex items-center space-y-0"
+                                          >
                                             <FormControl className="hidden">
-                                              <RadioGroupItem value={cuisine?._id} />
+                                              <RadioGroupItem
+                                                value={cuisine?._id}
+                                              />
                                             </FormControl>
-                                            <FormLabel className={`border border-[#B6B6B6] rounded p-4 py-2 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${getValues("cuisine") === cuisine?._id && "bg-[#EDF4FF] border border-[#3579F0]"}`}>
+                                            <FormLabel
+                                              className={`border border-[#B6B6B6] rounded p-4 py-2 flex items-center gap-2 cursor-pointer group hover:bg-[#EDF4FF] ${
+                                                getValues("cuisine") ===
+                                                  cuisine?._id &&
+                                                "bg-[#EDF4FF] border border-[#3579F0]"
+                                              }`}
+                                            >
                                               <p>{cuisine?.name}</p>
                                             </FormLabel>
                                           </FormItem>
@@ -2051,24 +2438,30 @@ const AddMenu = () => {
                                 )}
                               />
                             </div>
-                          }
+                          )}
                         </div>
-                      }
+                      )}
                     </div>
                   </div>
 
                   {/* Serving Info Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setIsServingInfo(!isServingInfo)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() => setIsServingInfo(!isServingInfo)}
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
                           <h3 className="text-black class-lg6">Serving Info</h3>
-                          {isServingInfo ? <FaMinus className="text-black" size={20} />
-                            : <FaPlus className="text-black" size={20} />}
+                          {isServingInfo ? (
+                            <FaMinus className="text-black" size={20} />
+                          ) : (
+                            <FaPlus className="text-black" size={20} />
+                          )}
                         </div>
                         <p>Add serving sizes to improve customer experience.</p>
                       </div>
-                      {isServingInfo &&
+                      {isServingInfo && (
                         <div className="grid grid-cols-2 items-center gap-2 w-full">
                           <FormField
                             control={control}
@@ -2077,7 +2470,10 @@ const AddMenu = () => {
                               <FormItem>
                                 <FormLabel>Number of people</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Select appropriate serving info"  {...field} />
+                                  <Input
+                                    placeholder="Select appropriate serving info"
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -2090,92 +2486,148 @@ const AddMenu = () => {
                               <FormItem>
                                 <FormLabel>Dish size</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Enter quantity"  {...field} />
+                                  <Input
+                                    placeholder="Enter quantity"
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
                         </div>
-                      }
+                      )}
                     </div>
                   </div>
 
                   {/* Customization Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setIsCustomization(!isCustomization)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() => setIsCustomization(!isCustomization)}
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
-                          <h3 className="text-black class-lg6">Customization</h3>
+                          <h3 className="text-black class-lg6">
+                            Customization
+                          </h3>
                           <div className="flex items-center gap-3">
-                            <Button type="button" onClick={() => setIsCustomizationModalOpen(true)} variant="outline" className="flex gap-1 px-5 items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]">
+                            <Button
+                              type="button"
+                              onClick={() => setIsCustomizationModalOpen(true)}
+                              variant="outline"
+                              className="flex gap-1 px-5 items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]"
+                            >
                               <FaPlus />
                               Add More
                             </Button>
-                            {isCustomization ? <FaMinus className="text-black" size={20} />
-                              : <FaPlus className="text-black" size={20} />}
+                            {isCustomization ? (
+                              <FaMinus className="text-black" size={20} />
+                            ) : (
+                              <FaPlus className="text-black" size={20} />
+                            )}
                           </div>
                         </div>
                         <p>Customization for category</p>
                       </div>
-                      {isCustomization &&
+                      {isCustomization && (
                         <div className="w-full flex flex-col gap-4">
                           {watch("customizations")?.map((customization, i) => (
                             <div key={i} className="w-full">
                               <div className="flex justify-between items-center gap-4">
-                                <h3 className="font-inter text-lg text-[#969696] font-semibold">{customization?.categoryName}</h3>
-                                <Button type="button" onClick={() => handleCustomization(i)} variant="outline" className="flex gap-1 w-[200px] items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]">
+                                <h3 className="font-inter text-lg text-[#969696] font-semibold">
+                                  {customization?.categoryName}
+                                </h3>
+                                <Button
+                                  type="button"
+                                  onClick={() => handleCustomization(i)}
+                                  variant="outline"
+                                  className="flex gap-1 w-[200px] items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]"
+                                >
                                   <FaPlus />
                                   Add Customization
                                 </Button>
                               </div>
                               {customization?.customizationOptions &&
-                                customization?.customizationOptions.length > 0 &&
-                                <div className="px-4">
-                                  <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                    <h4 className="font-inter text-[#969696] font-semibold">Customization Name</h4>
-                                    <h4 className="font-inter text-[#969696] font-semibold">Price (In Rs)</h4>
+                                customization?.customizationOptions.length >
+                                  0 && (
+                                  <div className="px-4">
+                                    <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
+                                      <h4 className="font-inter text-[#969696] font-semibold">
+                                        Customization Name
+                                      </h4>
+                                      <h4 className="font-inter text-[#969696] font-semibold">
+                                        Price (In Rs)
+                                      </h4>
+                                    </div>
+                                    {customization?.customizationOptions?.map(
+                                      (option, i) => (
+                                        <div
+                                          key={i}
+                                          className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
+                                        >
+                                          <h4 className="font-inter text-[#969696] font-semibold">
+                                            {option?.name}
+                                          </h4>
+                                          <h4 className="font-inter text-[#969696] font-semibold">
+                                            Rs {option?.price}
+                                          </h4>
+                                        </div>
+                                      )
+                                    )}
                                   </div>
-                                  {customization?.customizationOptions?.map((option, i) => (
-                                    <div key={i} className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2">
-                                      <h4 className="font-inter text-[#969696] font-semibold">{option?.name}</h4>
-                                      <h4 className="font-inter text-[#969696] font-semibold">Rs {option?.price}</h4>
-                                    </div>))}
-                                </div>}
+                                )}
                             </div>
                           ))}
                         </div>
-                      }
+                      )}
                     </div>
                   </div>
 
                   {/* Availability for Food Item Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div onClick={() => setAvailabilityForFoodItem(!availabilityForFoodItem)} className="cursor-pointer pb-6">
+                      <div
+                        onClick={() =>
+                          setAvailabilityForFoodItem(!availabilityForFoodItem)
+                        }
+                        className="cursor-pointer pb-6"
+                      >
                         <div className="flex justify-between items-center">
-                          <h3 className="text-black class-lg6">Availability for food item</h3>
-                          {availabilityForFoodItem ? <FaMinus className="text-black" size={20} />
-                            : <FaPlus className="text-black" size={20} />}
+                          <h3 className="text-black class-lg6">
+                            Availability for food item
+                          </h3>
+                          {availabilityForFoodItem ? (
+                            <FaMinus className="text-black" size={20} />
+                          ) : (
+                            <FaPlus className="text-black" size={20} />
+                          )}
                         </div>
-                        <p>Availability for <b>food item</b></p>
+                        <p>
+                          Availability for <b>food item</b>
+                        </p>
                       </div>
-                      {availabilityForFoodItem &&
+                      {availabilityForFoodItem && (
                         <AvailabilityForFoodItem form={form} />
-                      }
+                      )}
                     </div>
                   </div>
                 </div>
 
                 {/* Form Submit Buttons */}
-                <div className='flex gap-5 bg-[#FFFFFF] w-full p-4'>
-                  <button type='button' className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
-                  <button 
+                <div className="flex gap-5 bg-[#FFFFFF] w-full p-4">
+                  <button
+                    type="button"
+                    className="h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]"
+                  >
+                    Discard
+                  </button>
+                  <button
                     type="submit"
                     disabled={isAddItemLoading}
-                    className='h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF] disabled:opacity-50'
+                    className="h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF] disabled:opacity-50"
                   >
-                    {isAddItemLoading ? 'Saving...' : 'Save changes'}
+                    {isAddItemLoading ? "Saving..." : "Save changes"}
                   </button>
                 </div>
               </form>
@@ -2183,25 +2635,25 @@ const AddMenu = () => {
           </div>
 
           {/* Modal Components */}
-          {isVariantModalOpen &&
+          {isVariantModalOpen && (
             <CreateVariantModel
               isVariantModalOpen={isVariantModalOpen}
               setIsVariantModalOpen={setIsVariantModalOpen}
               setValue={setValue}
               getValues={getValues}
             />
-          }
+          )}
 
-          {isMapAddonsModalOpen &&
+          {isMapAddonsModalOpen && (
             <MapAddOnModel
               isMapAddonsModalOpen={isMapAddonsModalOpen}
               setIsMapAddonsModalOpen={setIsMapAddonsModalOpen}
               setValue={setValue}
               getValues={getValues}
             />
-          }
+          )}
 
-          {isAddCustomizationModalOpen &&
+          {isAddCustomizationModalOpen && (
             <AddCustomizationModal
               isAddCustomizationModalOpen={isAddCustomizationModalOpen}
               setIsAddCustomizationModalOpen={setIsAddCustomizationModalOpen}
@@ -2209,16 +2661,16 @@ const AddMenu = () => {
               setValue1={setValue}
               getValues1={getValues}
             />
-          }
+          )}
 
-          {isCustomizationModalOpen &&
+          {isCustomizationModalOpen && (
             <AddCustomizationCategoryModal
               isCustomizationModalOpen={isCustomizationModalOpen}
               setIsCustomizationModalOpen={setIsCustomizationModalOpen}
               setValue={setValue}
               getValues={getValues}
             />
-          }
+          )}
         </div>
       </section>
     </AdminWrapper>
@@ -2226,7 +2678,6 @@ const AddMenu = () => {
 };
 
 export default AddMenu;
-
 
 //recent best
 // const AddMenu = () => {
@@ -2245,7 +2696,7 @@ export default AddMenu;
 //   const [currentIndex, setCurrentIndex] = useState(null);
 //   const [cuisines, setCuisines] = useState([]);
 //   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
 //   // 🔥 ENHANCED: Better state management for tags and addons
 //   const [availableTags, setAvailableTags] = useState([]);
 //   const [allTags, setAllTags] = useState([]);
@@ -2262,7 +2713,7 @@ export default AddMenu;
 //     isDefault: false,
 //     tags: []
 //   });
-  
+
 //   const params = useParams();
 //   const { state } = useLocation();
 
@@ -2303,38 +2754,38 @@ export default AddMenu;
 //     try {
 //       setIsTagsLoading(true);
 //       console.log('🔄 Fetching all tags...');
-      
+
 //       const [menuTagsRes, addonTagsRes] = await Promise.all([
 //         fetch('/capsicoTag/for-menu', {
 //           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         }),
 //         fetch('/capsicoTag/for-addon', {
-//           method: 'GET', 
+//           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         })
 //       ]);
-      
+
 //       const [menuTagsData, addonTagsData] = await Promise.all([
 //         menuTagsRes.json(),
 //         addonTagsRes.json()
 //       ]);
-      
+
 //       console.log('📋 Menu tags response:', menuTagsData);
 //       console.log('📋 Addon tags response:', addonTagsData);
-      
+
 //       const menuTags = menuTagsData.data || [];
 //       const addonTags = addonTagsData.data || [];
-      
+
 //       setAvailableTags(Array.isArray(addonTags) ? addonTags : []);
-      
+
 //       const combinedTags = [
 //         ...(Array.isArray(menuTags) ? menuTags : []),
 //         ...(Array.isArray(addonTags) ? addonTags : [])
 //       ];
-      
+
 //       setAllTags(combinedTags);
-      
+
 //     } catch (error) {
 //       console.error('❌ Error fetching tags:', error);
 //     } finally {
@@ -2431,7 +2882,7 @@ export default AddMenu;
 
 //   const displayExistingAddons = () => {
 //     const existingAddons = getValues('addOns') || [];
-    
+
 //     if (!Array.isArray(existingAddons) || existingAddons.length === 0) {
 //       return null;
 //     }
@@ -2461,16 +2912,16 @@ export default AddMenu;
 //                       )}
 //                     </div>
 //                   </div>
-                  
+
 //                   {addon.tags && Array.isArray(addon.tags) && addon.tags.length > 0 && (
 //                     <div className="flex flex-wrap gap-1 mb-2">
 //                       {addon.tags.map((tagData, tagIndex) => {
 //                         const tagName = getTagName(tagData);
 //                         const tagColor = getTagColor(tagData);
 //                         const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                        
+
 //                         return (
-//                           <span 
+//                           <span
 //                             key={tagId || tagIndex}
 //                             style={{ backgroundColor: tagColor }}
 //                             className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -2483,7 +2934,7 @@ export default AddMenu;
 //                     </div>
 //                   )}
 //                 </div>
-                
+
 //                 <button
 //                   onClick={() => handleRemoveAddon(addon.id)}
 //                   className="text-red-500 hover:text-red-700 ml-4"
@@ -2590,7 +3041,7 @@ export default AddMenu;
 //     formData.append("variations", JSON.stringify(getValues("variations")));
 //     formData.append("addOns", JSON.stringify(modifiedAddOns));
 //     formData.append("customizations", JSON.stringify(modifiedCustomizations));
-    
+
 //     // Add images with field name "images" (matching multer config)
 //     Array.from(data.itemImage).forEach((image) => {
 //       formData.append("images", image);
@@ -2637,7 +3088,7 @@ export default AddMenu;
 //                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
 //                     <div className="p-5">
 //                       <h3 className='text-[#000000] text-xl font-semibold font-inter'>Basic Details</h3>
-                      
+
 //                       {/* Item Name */}
 //                       <div className="w-full mt-5">
 //                         <FormField
@@ -2863,7 +3314,7 @@ export default AddMenu;
 //                       <p className="text-gray-600 text-sm mb-4">
 //                         Add tags to help categorize and highlight your menu items
 //                       </p>
-                      
+
 //                       <MenuTagSelector
 //                         selectedTags={menuTags}
 //                         onTagsChange={handleMenuTagsChange}
@@ -2887,7 +3338,7 @@ export default AddMenu;
 //                       {isMapAddons &&
 //                         <div className="space-y-6">
 //                           {displayExistingAddons()}
-                          
+
 //                           {/* Enhanced Addons Display */}
 //                           {addons.length > 0 && (
 //                             <div>
@@ -2914,7 +3365,7 @@ export default AddMenu;
 //                                             )}
 //                                           </div>
 //                                         </div>
-                                        
+
 //                                         {/* Tags display with proper names */}
 //                                         {addon.tags && addon.tags.length > 0 && (
 //                                           <div className="flex flex-wrap gap-1 mb-2">
@@ -2922,9 +3373,9 @@ export default AddMenu;
 //                                               const tagName = getTagName(tagData);
 //                                               const tagColor = getTagColor(tagData);
 //                                               const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                                              
+
 //                                               return (
-//                                                 <span 
+//                                                 <span
 //                                                   key={tagId || tagIndex}
 //                                                   style={{ backgroundColor: tagColor }}
 //                                                   className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -2936,7 +3387,7 @@ export default AddMenu;
 //                                           </div>
 //                                         )}
 //                                       </div>
-                                      
+
 //                                       <button
 //                                         onClick={() => handleRemoveAddon(addon.id)}
 //                                         className="text-red-500 hover:text-red-700 ml-4"
@@ -2954,7 +3405,7 @@ export default AddMenu;
 //                           {showAddonForm && (
 //                             <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
 //                               <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">Add New Addon</h4>
-                              
+
 //                               {/* Addon Name */}
 //                               <div>
 //                                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -2992,7 +3443,7 @@ export default AddMenu;
 //                                   />
 //                                   Available
 //                                 </label>
-                                
+
 //                                 <label className="flex items-center">
 //                                   <input
 //                                     type="checkbox"
@@ -3017,7 +3468,7 @@ export default AddMenu;
 //                               {/* Tags Section */}
 //                               <div className="mt-4">
 //                                 <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                                
+
 //                                 {/* Show currently selected tags */}
 //                                 {newAddon.tags && newAddon.tags.length > 0 && (
 //                                   <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
@@ -3044,7 +3495,7 @@ export default AddMenu;
 //                                     ))}
 //                                   </div>
 //                                 )}
-                                
+
 //                                 {/* MenuTagSelector */}
 //                                 <MenuTagSelector
 //                                   selectedTags={newAddon.tags.map(tag => tag.id)}
@@ -3091,8 +3542,8 @@ export default AddMenu;
 //                           </button>
 
 //                           {!showAddonForm && (
-//                             <button 
-//                               type="button" 
+//                             <button
+//                               type="button"
 //                               className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
 //                               onClick={() => setShowAddonForm(true)}
 //                             >
@@ -3294,7 +3745,7 @@ export default AddMenu;
 //                 {/* Form Submit Buttons */}
 //                 <div className='flex gap-5 bg-[#FFFFFF] w-full p-4'>
 //                   <button type='button' className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
-//                   <button 
+//                   <button
 //                     type="submit"
 //                     disabled={isAddItemLoading}
 //                     className='h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF] disabled:opacity-50'
@@ -3351,17 +3802,6 @@ export default AddMenu;
 
 // export default AddMenu;
 
-
-
-
-
-
-
-
-
-
-
-
 //best code
 
 // const AddMenu = () => {
@@ -3380,7 +3820,7 @@ export default AddMenu;
 //   const [currentIndex, setCurrentIndex] = useState(null);
 //   const [cuisines, setCuisines] = useState([]);
 //   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
 //   // 🔥 ENHANCED: Better state management for tags and addons
 //   const [availableTags, setAvailableTags] = useState([]);
 //   const [allTags, setAllTags] = useState([]);
@@ -3397,7 +3837,7 @@ export default AddMenu;
 //     isDefault: false,
 //     tags: []
 //   });
-  
+
 //   const params = useParams();
 //   const { state } = useLocation();
 
@@ -3438,38 +3878,38 @@ export default AddMenu;
 //     try {
 //       setIsTagsLoading(true);
 //       console.log('🔄 Fetching all tags...');
-      
+
 //       const [menuTagsRes, addonTagsRes] = await Promise.all([
 //         fetch('/capsicoTag/for-menu', {
 //           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         }),
 //         fetch('/capsicoTag/for-addon', {
-//           method: 'GET', 
+//           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         })
 //       ]);
-      
+
 //       const [menuTagsData, addonTagsData] = await Promise.all([
 //         menuTagsRes.json(),
 //         addonTagsRes.json()
 //       ]);
-      
+
 //       console.log('📋 Menu tags response:', menuTagsData);
 //       console.log('📋 Addon tags response:', addonTagsData);
-      
+
 //       const menuTags = menuTagsData.data || [];
 //       const addonTags = addonTagsData.data || [];
-      
+
 //       setAvailableTags(Array.isArray(addonTags) ? addonTags : []);
-      
+
 //       const combinedTags = [
 //         ...(Array.isArray(menuTags) ? menuTags : []),
 //         ...(Array.isArray(addonTags) ? addonTags : [])
 //       ];
-      
+
 //       setAllTags(combinedTags);
-      
+
 //     } catch (error) {
 //       console.error('❌ Error fetching tags:', error);
 //     } finally {
@@ -3566,7 +4006,7 @@ export default AddMenu;
 
 //   const displayExistingAddons = () => {
 //     const existingAddons = getValues('addOns') || [];
-    
+
 //     if (!Array.isArray(existingAddons) || existingAddons.length === 0) {
 //       return null;
 //     }
@@ -3596,16 +4036,16 @@ export default AddMenu;
 //                       )}
 //                     </div>
 //                   </div>
-                  
+
 //                   {addon.tags && Array.isArray(addon.tags) && addon.tags.length > 0 && (
 //                     <div className="flex flex-wrap gap-1 mb-2">
 //                       {addon.tags.map((tagData, tagIndex) => {
 //                         const tagName = getTagName(tagData);
 //                         const tagColor = getTagColor(tagData);
 //                         const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                        
+
 //                         return (
-//                           <span 
+//                           <span
 //                             key={tagId || tagIndex}
 //                             style={{ backgroundColor: tagColor }}
 //                             className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -3618,7 +4058,7 @@ export default AddMenu;
 //                     </div>
 //                   )}
 //                 </div>
-                
+
 //                 <button
 //                   onClick={() => handleRemoveAddon(addon.id)}
 //                   className="text-red-500 hover:text-red-700 ml-4"
@@ -3678,12 +4118,12 @@ export default AddMenu;
 
 //     try {
 //       // 🔥 STEP 1: Check authentication token
-//       const token = localStorage.getItem('token') || 
-//                     localStorage.getItem('authToken') || 
+//       const token = localStorage.getItem('token') ||
+//                     localStorage.getItem('authToken') ||
 //                     localStorage.getItem('accessToken') ||
 //                     sessionStorage.getItem('token') ||
 //                     sessionStorage.getItem('authToken');
-      
+
 //       if (!token) {
 //         alert('❌ No authentication token found. Please log in again.');
 //         console.error('❌ Authentication token missing');
@@ -3731,7 +4171,7 @@ export default AddMenu;
 
 //       // 🔥 STEP 3: Create FormData for multipart/form-data
 //       const formData = new FormData();
-      
+
 //       // Add required text fields
 //       formData.append("name", data.itemName || "");
 //       formData.append("description", data.itemDescription || "");
@@ -3740,19 +4180,19 @@ export default AddMenu;
 //       formData.append("cuisine", data.cuisine || "");
 //       formData.append("preparationTime", data.preparationTime || "15");
 //       formData.append("categoryId", params?.categoryId || "");
-      
+
 //       // Add complex objects as JSON strings
 //       formData.append("availableTimings", JSON.stringify(availableTimings));
 //       formData.append("tags", JSON.stringify(menuTags || []));
 //       formData.append("variations", JSON.stringify(getValues("variations") || []));
 //       formData.append("addOns", JSON.stringify(modifiedAddOns || []));
 //       formData.append("customizations", JSON.stringify(modifiedCustomizations || []));
-      
+
 //       // Add images with proper field name "images" (matching multer config)
 //       if (data.itemImage && data.itemImage.length > 0) {
 //         const imageFiles = Array.from(data.itemImage);
 //         console.log(`📸 Adding ${imageFiles.length} images:`, imageFiles.map(img => img.name));
-        
+
 //         imageFiles.forEach((image, index) => {
 //           formData.append("images", image);
 //           console.log(`  Image ${index + 1}: ${image.name} (${image.size} bytes)`);
@@ -3775,7 +4215,7 @@ export default AddMenu;
 //       const apiUrl = `/admin/add-menu-item/${state?.restaurantId}`;
 //       console.log('🌐 API URL:', apiUrl);
 //       console.log('🔑 Using Bearer token authentication');
-      
+
 //       const response = await fetch(apiUrl, {
 //         method: 'POST',
 //         headers: {
@@ -3791,7 +4231,7 @@ export default AddMenu;
 //       // 🔥 STEP 5: Handle response with detailed error reporting
 //       if (!response.ok) {
 //         let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-        
+
 //         try {
 //           const errorData = await response.json();
 //           console.error('❌ Server error response:', errorData);
@@ -3806,7 +4246,7 @@ export default AddMenu;
 //             console.error('❌ Could not parse error response:', textError);
 //           }
 //         }
-        
+
 //         // Handle specific status codes
 //         if (response.status === 403) {
 //           alert('❌ Access denied. Check your authentication token or permissions.');
@@ -3827,13 +4267,13 @@ export default AddMenu;
 //       // 🔥 STEP 6: Success handling
 //       const result = await response.json();
 //       console.log("✅ Success response:", result);
-      
+
 //       alert('✅ Menu item added successfully!');
 //       navigate(`/admin/restaurant/${state?.restaurantId}/menu`);
 
 //     } catch (error) {
 //       console.error('💥 Network or parsing error:', error);
-      
+
 //       if (error.name === 'TypeError' && error.message.includes('fetch')) {
 //         alert('❌ Network error. Please check your internet connection.');
 //       } else if (error.name === 'SyntaxError') {
@@ -3870,7 +4310,7 @@ export default AddMenu;
 //                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
 //                     <div className="p-5">
 //                       <h3 className='text-[#000000] text-xl font-semibold font-inter'>Basic Details</h3>
-                      
+
 //                       {/* Item Name */}
 //                       <div className="w-full mt-5">
 //                         <FormField
@@ -4096,7 +4536,7 @@ export default AddMenu;
 //                       <p className="text-gray-600 text-sm mb-4">
 //                         Add tags to help categorize and highlight your menu items
 //                       </p>
-                      
+
 //                       <MenuTagSelector
 //                         selectedTags={menuTags}
 //                         onTagsChange={handleMenuTagsChange}
@@ -4120,7 +4560,7 @@ export default AddMenu;
 //                       {isMapAddons &&
 //                         <div className="space-y-6">
 //                           {displayExistingAddons()}
-                          
+
 //                           {/* Enhanced Addons Display */}
 //                           {addons.length > 0 && (
 //                             <div>
@@ -4147,7 +4587,7 @@ export default AddMenu;
 //                                             )}
 //                                           </div>
 //                                         </div>
-                                        
+
 //                                         {/* Tags display with proper names */}
 //                                         {addon.tags && addon.tags.length > 0 && (
 //                                           <div className="flex flex-wrap gap-1 mb-2">
@@ -4155,9 +4595,9 @@ export default AddMenu;
 //                                               const tagName = getTagName(tagData);
 //                                               const tagColor = getTagColor(tagData);
 //                                               const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                                              
+
 //                                               return (
-//                                                 <span 
+//                                                 <span
 //                                                   key={tagId || tagIndex}
 //                                                   style={{ backgroundColor: tagColor }}
 //                                                   className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -4169,7 +4609,7 @@ export default AddMenu;
 //                                           </div>
 //                                         )}
 //                                       </div>
-                                      
+
 //                                       <button
 //                                         onClick={() => handleRemoveAddon(addon.id)}
 //                                         className="text-red-500 hover:text-red-700 ml-4"
@@ -4187,7 +4627,7 @@ export default AddMenu;
 //                           {showAddonForm && (
 //                             <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
 //                               <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">Add New Addon</h4>
-                              
+
 //                               {/* Addon Name */}
 //                               <div>
 //                                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -4225,7 +4665,7 @@ export default AddMenu;
 //                                   />
 //                                   Available
 //                                 </label>
-                                
+
 //                                 <label className="flex items-center">
 //                                   <input
 //                                     type="checkbox"
@@ -4250,7 +4690,7 @@ export default AddMenu;
 //                               {/* Tags Section */}
 //                               <div className="mt-4">
 //                                 <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                                
+
 //                                 {/* Show currently selected tags */}
 //                                 {newAddon.tags && newAddon.tags.length > 0 && (
 //                                   <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
@@ -4277,7 +4717,7 @@ export default AddMenu;
 //                                     ))}
 //                                   </div>
 //                                 )}
-                                
+
 //                                 {/* MenuTagSelector */}
 //                                 <MenuTagSelector
 //                                   selectedTags={newAddon.tags.map(tag => tag.id)}
@@ -4324,8 +4764,8 @@ export default AddMenu;
 //                           </button>
 
 //                           {!showAddonForm && (
-//                             <button 
-//                               type="button" 
+//                             <button
+//                               type="button"
 //                               className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
 //                               onClick={() => setShowAddonForm(true)}
 //                             >
@@ -4527,7 +4967,7 @@ export default AddMenu;
 //                 {/* Form Submit Buttons */}
 //                 <div className='flex gap-5 bg-[#FFFFFF] w-full p-4'>
 //                   <button type='button' className='h-[68px] w-full text-[#F97474] text-xl font-semibold font-inter bg-[#FFFFFF] rounded-lg border-[1px] border-[#256FEF]'>Discard</button>
-//                   <button 
+//                   <button
 //                     type="submit"
 //                     disabled={isAddItemLoading}
 //                     className='h-[68px] w-full text-[#FFFFFF] text-xl font-semibold font-inter bg-[#256FEF] rounded-lg border-[1px] border-[#256FEF] disabled:opacity-50'
@@ -4584,26 +5024,6 @@ export default AddMenu;
 
 // export default AddMenu;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // const AddMenu = () => {
 //   const navigate = useNavigate();
 //   const [isItemImageUploadModalOpen, setIsItemImageUploadModalOpen] = useState(false);
@@ -4620,7 +5040,7 @@ export default AddMenu;
 //   const [currentIndex, setCurrentIndex] = useState(null);
 //   const [cuisines, setCuisines] = useState([]);
 //   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
 //   // 🔥 ENHANCED: Better state management for tags and addons
 //   const [availableTags, setAvailableTags] = useState([]);
 //   const [allTags, setAllTags] = useState([]); // ✅ Store all tags (menu + addon)
@@ -4637,7 +5057,7 @@ export default AddMenu;
 //     isDefault: false,
 //     tags: [] // ✅ Will store [{id: '', name: ''}, ...]
 //   });
-  
+
 //   const params = useParams();
 //   const { state } = useLocation();
 
@@ -4678,46 +5098,46 @@ export default AddMenu;
 //     try {
 //       setIsTagsLoading(true);
 //       console.log('🔄 Fetching all tags...');
-      
+
 //       const [menuTagsRes, addonTagsRes] = await Promise.all([
 //         fetch('/capsicoTag/for-menu', {
 //           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         }),
 //         fetch('/capsicoTag/for-addon', {
-//           method: 'GET', 
+//           method: 'GET',
 //           headers: { 'Content-Type': 'application/json' }
 //         })
 //       ]);
-      
+
 //       const [menuTagsData, addonTagsData] = await Promise.all([
 //         menuTagsRes.json(),
 //         addonTagsRes.json()
 //       ]);
-      
+
 //       console.log('📋 Menu tags response:', menuTagsData);
 //       console.log('📋 Addon tags response:', addonTagsData);
-      
+
 //       // ✅ CRITICAL: Handle the exact structure from your API
 //       const menuTags = menuTagsData.data || [];
 //       const addonTags = addonTagsData.data || [];
-      
+
 //       console.log('✅ Processed menu tags:', menuTags);
 //       console.log('✅ Processed addon tags:', addonTags);
-      
+
 //       // Store addon tags separately for dropdown
 //       setAvailableTags(Array.isArray(addonTags) ? addonTags : []);
-      
+
 //       // ✅ CRITICAL: Combine ALL tags for comprehensive lookup
 //       const combinedTags = [
 //         ...(Array.isArray(menuTags) ? menuTags : []),
 //         ...(Array.isArray(addonTags) ? addonTags : [])
 //       ];
-      
+
 //       console.log('🔗 Combined tags for lookup:', combinedTags);
 //       console.log('🔗 Combined tag IDs:', combinedTags.map(t => ({ id: t.id || t._id, name: t.name })));
 //       setAllTags(combinedTags);
-      
+
 //     } catch (error) {
 //       console.error('❌ Error fetching tags:', error);
 //     } finally {
@@ -4733,23 +5153,23 @@ export default AddMenu;
 //   // 🔥 ENHANCED: Tag handling to store only {id, name} objects
 //   // const handleTagsChange = (selectedTagIds) => {
 //   //   console.log('🏷️ Selected tag IDs:', selectedTagIds);
-    
+
 //   //   // Convert tag IDs to simple {id, name} objects
 //   //   const tagObjects = selectedTagIds.map(tagId => {
 //   //     // Find the tag in availableTags or allTags
 //   //     let foundTag = availableTags.find(t => (t.id || t._id) === tagId);
-      
+
 //   //     if (!foundTag) {
 //   //       foundTag = allTags.find(t => (t.id || t._id) === tagId);
 //   //     }
-      
+
 //   //     if (foundTag) {
 //   //       return {
 //   //         id: foundTag.id || foundTag._id,
 //   //         name: foundTag.displayName || foundTag.name
 //   //       };
 //   //     }
-      
+
 //   //     // Fallback if tag not found
 //   //     console.warn('❌ Tag not found for ID:', tagId);
 //   //     return {
@@ -4757,9 +5177,9 @@ export default AddMenu;
 //   //       name: 'Unknown Tag'
 //   //     };
 //   //   });
-    
+
 //   //   console.log('🏷️ Tag objects (id + name only):', tagObjects);
-    
+
 //   //   setNewAddon(prev => ({
 //   //     ...prev,
 //   //     tags: tagObjects
@@ -4842,22 +5262,22 @@ export default AddMenu;
 //   //   if (typeof tagData === 'object' && tagData.name) {
 //   //     return tagData.name;
 //   //   }
-    
+
 //   //   // If tagData is just an ID string (legacy format)
 //   //   if (typeof tagData === 'string') {
 //   //     const tagId = tagData;
-      
+
 //   //     // Try to find in loaded tags
 //   //     let foundTag = availableTags.find(t => (t.id || t._id) === tagId);
 //   //     if (!foundTag) {
 //   //       foundTag = allTags.find(t => (t.id || t._id) === tagId);
 //   //     }
-      
+
 //   //     if (foundTag) {
 //   //       return foundTag.displayName || foundTag.name;
 //   //     }
 //   //   }
-    
+
 //   //   return 'Unknown Tag';
 //   // };
 // // 2) Display helpers
@@ -4875,20 +5295,20 @@ export default AddMenu;
 //   // 🔥 UPDATED: getTagColor function (still needed for display)
 //   // const getTagColor = (tagData) => {
 //   //   let tagId;
-    
+
 //   //   // Extract ID from different formats
 //   //   if (typeof tagData === 'object') {
 //   //     tagId = tagData.id;
 //   //   } else {
 //   //     tagId = tagData;
 //   //   }
-    
+
 //   //   // Find color from loaded tags
 //   //   let foundTag = availableTags.find(t => (t.id || t._id) === tagId);
 //   //   if (!foundTag) {
 //   //     foundTag = allTags.find(t => (t.id || t._id) === tagId);
 //   //   }
-    
+
 //   //   return foundTag ? foundTag.color : '#6b7280';
 //   // };
 // // Ensure consistent color lookup for both {id,name} and nested shapes
@@ -4910,11 +5330,10 @@ export default AddMenu;
 //   return found?.color || "#6b7280";
 // };
 
-
 //   // 🔥 UPDATED: displayExistingAddons to handle {id, name} format
 //   const displayExistingAddons = () => {
 //     const existingAddons = getValues('addOns') || [];
-    
+
 //     if (!Array.isArray(existingAddons) || existingAddons.length === 0) {
 //       return null;
 //     }
@@ -4944,7 +5363,7 @@ export default AddMenu;
 //                       )}
 //                     </div>
 //                   </div>
-                  
+
 //                   {/* ✅ ENHANCED: Handle both {id, name} objects and legacy ID strings */}
 //                   {addon.tags && Array.isArray(addon.tags) && addon.tags.length > 0 && (
 //                     <div className="flex flex-wrap gap-1 mb-2">
@@ -4952,16 +5371,16 @@ export default AddMenu;
 //                         const tagName = getTagName(tagData);
 //                         const tagColor = getTagColor(tagData);
 //                         const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                        
+
 //                         console.log(`🏷️ Processing tag for addon "${addon.name}":`, {
 //                           tagData,
 //                           tagName,
 //                           tagColor,
 //                           tagId
 //                         });
-                        
+
 //                         return (
-//                           <span 
+//                           <span
 //                             key={tagId || tagIndex}
 //                             style={{ backgroundColor: tagColor }}
 //                             className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -4981,7 +5400,7 @@ export default AddMenu;
 //                     </div>
 //                   )}
 //                 </div>
-                
+
 //                 <button
 //                   onClick={() => handleRemoveAddon(addon.id)}
 //                   className="text-red-500 hover:text-red-700 ml-4"
@@ -5005,7 +5424,7 @@ export default AddMenu;
 //   useEffect(() => {
 //     if (isMapAddons) {
 //       fetchAllTags(); // ✅ Fetch both menu and addon tags
-      
+
 //       // Initialize with existing addons if any
 //       const existingAddons = getValues('addOns') || [];
 //       setAddons(existingAddons);
@@ -5112,7 +5531,7 @@ export default AddMenu;
 //                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
 //                     <div className="p-5">
 //                       <h3 className='text-[#000000] text-xl font-semibold font-inter'>Basic Details</h3>
-                      
+
 //                       {/* Item Name */}
 //                       <div className="w-full mt-5">
 //                         <FormField
@@ -5338,7 +5757,7 @@ export default AddMenu;
 //                       <p className="text-gray-600 text-sm mb-4">
 //                         Add tags to help categorize and highlight your menu items
 //                       </p>
-                      
+
 //                       <MenuTagSelector
 //                         selectedTags={menuTags}
 //                         onTagsChange={handleMenuTagsChange}
@@ -5363,7 +5782,7 @@ export default AddMenu;
 //                         <div className="space-y-6">
 //                           {/* ✅ CRITICAL FIX: Display existing/fetched addons with proper tag names */}
 //                           {displayExistingAddons()}
-                          
+
 //                           {/* Enhanced Addons Display */}
 //                           {addons.length > 0 && (
 //                             <div>
@@ -5390,7 +5809,7 @@ export default AddMenu;
 //                                             )}
 //                                           </div>
 //                                         </div>
-                                        
+
 //                                         {/* ✅ ENHANCED: Tags display with proper names */}
 //                                         {addon.tags && addon.tags.length > 0 && (
 //                                           <div className="flex flex-wrap gap-1 mb-2">
@@ -5398,9 +5817,9 @@ export default AddMenu;
 //                                               const tagName = getTagName(tagData);
 //                                               const tagColor = getTagColor(tagData);
 //                                               const tagId = typeof tagData === 'object' ? tagData.id : tagData;
-                                              
+
 //                                               return (
-//                                                 <span 
+//                                                 <span
 //                                                   key={tagId || tagIndex}
 //                                                   style={{ backgroundColor: tagColor }}
 //                                                   className="text-white px-2 py-1 rounded-full text-xs font-medium"
@@ -5412,7 +5831,7 @@ export default AddMenu;
 //                                           </div>
 //                                         )}
 //                                       </div>
-                                      
+
 //                                       <button
 //                                         onClick={() => handleRemoveAddon(addon.id)}
 //                                         className="text-red-500 hover:text-red-700 ml-4"
@@ -5430,7 +5849,7 @@ export default AddMenu;
 //                           {showAddonForm && (
 //                             <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
 //                               <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">Add New Addon</h4>
-                              
+
 //                               {/* Addon Name */}
 //                               <div>
 //                                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -5468,7 +5887,7 @@ export default AddMenu;
 //                                   />
 //                                   Available
 //                                 </label>
-                                
+
 //                                 <label className="flex items-center">
 //                                   <input
 //                                     type="checkbox"
@@ -5493,7 +5912,7 @@ export default AddMenu;
 //                               {/* ✅ ENHANCED: Tags Section with {id, name} format */}
 //                               <div className="mt-4">
 //                                 <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                                
+
 //                                 {/* ✅ Show currently selected tags */}
 //                                 {newAddon.tags && newAddon.tags.length > 0 && (
 //                                   <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
@@ -5520,7 +5939,7 @@ export default AddMenu;
 //                                     ))}
 //                                   </div>
 //                                 )}
-                                
+
 //                                 {/* ✅ MenuTagSelector */}
 //                                 <MenuTagSelector
 //                                   selectedTags={newAddon.tags.map(tag => tag.id)} // Extract IDs for selector
@@ -5528,7 +5947,7 @@ export default AddMenu;
 //                                   tagType="addon"
 //                                   className="w-full"
 //                                 />
-                                
+
 //                                 {/* ✅ Debug info in development */}
 //                                 {process.env.NODE_ENV === 'development' && (
 //                                   <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
@@ -5577,8 +5996,8 @@ export default AddMenu;
 //                           </button>
 
 //                           {!showAddonForm && (
-//                             <button 
-//                               type="button" 
+//                             <button
+//                               type="button"
 //                               className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
 //                               onClick={() => setShowAddonForm(true)}
 //                             >
