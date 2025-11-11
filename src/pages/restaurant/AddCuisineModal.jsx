@@ -63,7 +63,7 @@ const AddCuisineModal = ({ open, setOpen, getCuisines }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Promote Offer</DialogTitle>
+          <DialogTitle>Add Cuisine</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
