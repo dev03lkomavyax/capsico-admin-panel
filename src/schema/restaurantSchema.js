@@ -30,6 +30,7 @@ export const uploadDocumentSchema = z.object({
 
 export const addItemSchema = z
   .object({
+    categoryId: z.string().min(1, "Selecte Category"),
     subCategory: z.string().optional(),
     isRecommended: z.boolean().default(false),
     itemName: z.string().min(1, "Item Name is required"),
@@ -40,12 +41,56 @@ export const addItemSchema = z
     cuisine: z.string().min(1, "Cuisine is required"),
     foodType: z.string().min(1, "Food Type is required"),
     // menuCategory: z.string().min(1, "Menu Category is required"),
-    basePrice: z.string().min(1, "Price cannot be 0"),
-    preparationTime: z.string().min(1, "Preparation Time is required"),
-    packagingCharges: z.string().min(1, "Packaging Charges is required"),
-    numberOfPeople: z.string().min(1, "Number of People is required"),
-    dishSize: z.string().min(1, "Dish Size is required"),
+    basePrice: z.coerce.number().min(1, "Price cannot be 0"),
+    preparationTime: z.coerce.number().min(1, "Preparation Time is required"),
+    packagingCharges: z.coerce.number().min(1, "Packaging Charges is required"),
+    numberOfPeople: z.coerce.number().min(1, "Number of People is required"),
+    dishSize: z.coerce.number().min(1, "Dish Size is required"),
     timingType: z.string().min(1, "Timing Type is required"),
+    openingTime: z.string().optional(),
+    closingTime: z.string().optional(),
+    days: z.array(z.string()).optional(),
+    restaurant: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.timingType === "custom") {
+        // Validate only when timingType is 'custom'
+        return (
+          !!data.openingTime && // Ensure openingTime exists
+          !!data.closingTime && // Ensure closingTime exists
+          Array.isArray(data.days) && // Ensure days is an array
+          data.days.length > 0 // Ensure days has at least one element
+        );
+      }
+      return true;
+    },
+    {
+      message:
+        "For custom timing, openingTime, closingTime, and at least one day are required.",
+      path: ["timingType"],
+    }
+  );
+
+export const UpdateItemSchema = z
+  .object({
+    categoryId: z.string().min(1, "Selecte Category"),
+    subCategory: z.string().optional(),
+    isRecommended: z.boolean().default(false),
+    itemName: z.string().min(1, "Item Name is required"),
+    itemImage: z.any(),
+    // .refine((file) => file && file.length > 0, "Item Image is required"),
+    itemDescription: z.string().optional(),
+    // .min(1, "Item Description is required"),
+    cuisine: z.string().optional(),
+    foodType: z.string().min(1, "Food Type is required"),
+    // menuCategory: z.string().min(1, "Menu Category is required"),
+    basePrice: z.coerce.number().min(1, "Price cannot be 0"),
+    preparationTime: z.coerce.number().min(1, "Preparation Time is required"),
+    packagingCharges: z.coerce.number().min(1, "Packaging Charges is required"),
+    numberOfPeople: z.coerce.number().optional(),
+    dishSize: z.coerce.number().optional(),
+    timingType: z.string().optional(),
     openingTime: z.string().optional(),
     closingTime: z.string().optional(),
     days: z.array(z.string()).optional(),
@@ -178,9 +223,8 @@ export const EditProfileSchema4 = z
   .object({
     isRefered: z.boolean().default(false),
     timing: z.string().min(1, "Required field"),
-    menuImages: z
-      .any(),
-      // .refine((file) => file && file.length > 0, "Menu Images are required"),
+    menuImages: z.any(),
+    // .refine((file) => file && file.length > 0, "Menu Images are required"),
     menuImagesPreview: z.array(z.string()).optional(),
     numberType: z
       .enum(["Mobile", "Landline", "Same as restaurant mobile no."])
@@ -239,9 +283,8 @@ export const EditProfileSchema5 = z.object({
     .min(10, "PAN number must be 10 characters")
     .max(10, "PAN number must be 10 characters"),
   panImage: z.any(),
-  FSSAICertificateNumber: z
-    .string().optional(),
-    // .min(14, "FSSAI Certificate must be 14 digits"),
+  FSSAICertificateNumber: z.string().optional(),
+  // .min(14, "FSSAI Certificate must be 14 digits"),
   FSSAIExpiryDate: z.any(),
   fssaiImage: z.any(),
   accountHolderName: z.string().min(1, "Account Holder Name is required"),
@@ -276,13 +319,11 @@ export const AddProfileSchema5 = z.object({
   panImage: z
     .any()
     .refine((file) => file && file.length > 0, "Pan Card is required"),
-  FSSAICertificateNumber: z
-    .string().optional(),
-    // .min(14, "FSSAI Certificate must be 14 digits"),
+  FSSAICertificateNumber: z.string().optional(),
+  // .min(14, "FSSAI Certificate must be 14 digits"),
   FSSAIExpiryDate: z.any(),
-  fssaiImage: z
-    .any(),
-    // .refine((file) => file && file.length > 0, "FSSAI Certificate is required"),
+  fssaiImage: z.any(),
+  // .refine((file) => file && file.length > 0, "FSSAI Certificate is required"),
   accountHolderName: z.string().min(1, "Account Holder Name is required"),
   bankAccountNumber: z
     .string()
@@ -324,10 +365,10 @@ export const subCategorySchema = z.object({
     .string()
     .min(3, "Mininum 3 char is required")
     .max(50, "SubCategory Name should be less than 50 characters"),
-  description: z
-    .string().optional(),
-    // .min(3, "Mininum 3 char is required")
-    // .max(50, "Description should be less than 50 characters"),
+  description: z.string().optional(),
+  categoryId: z.string().min(1, "Selecte Category"),
+  // .min(3, "Mininum 3 char is required")
+  // .max(50, "Description should be less than 50 characters"),
   isActive: z.coerce.boolean().default(true).optional(),
 });
 

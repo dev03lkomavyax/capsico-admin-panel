@@ -1,4 +1,3 @@
-
 // import React, { useState, useEffect } from 'react';
 // import { FiPlus, FiX } from 'react-icons/fi';
 // import { Button } from '@/components/ui/button';
@@ -8,39 +7,26 @@
 // import useGetApiReq from '@/hooks/useGetApiReq';
 // import usePostApiReq from '@/hooks/usePostApiReq';
 
+import React, { useState, useEffect } from "react";
+import { FiPlus, FiX } from "react-icons/fi";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useState, useEffect } from 'react';
-import { FiPlus, FiX } from 'react-icons/fi';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import useGetApiReq from '@/hooks/useGetApiReq';
-import usePostApiReq from '@/hooks/usePostApiReq';
-
-// const MenuTagSelector = ({ 
-//   selectedTags = [], 
-//   onTagsChange, 
+// const MenuTagSelector = ({
+//   selectedTags = [],
+//   onTagsChange,
 //   tagType = 'menu', // 'menu', 'addon', or 'both'
-//   className = '' 
+//   className = ''
 // }) => {
 //   const [availableTags, setAvailableTags] = useState([]);
 //   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -89,7 +75,7 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 //         description: '',
 //         priority: 10
 //       });
-      
+
 //       // Auto-select the newly created tag
 //       const newTagData = createRes.data?.data;
 //       if (newTagData && !selectedTags.includes(newTagData.id || newTagData._id)) {
@@ -104,7 +90,7 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 //     const tagId = tag.id || tag._id;
 //     console.log('Selecting tag:', tag, 'ID:', tagId);
 //     console.log('Current selected tags:', selectedTags);
-    
+
 //     if (!selectedTags.includes(tagId)) {
 //       const newSelectedTags = [...selectedTags, tagId];
 //       console.log('New selected tags:', newSelectedTags);
@@ -200,7 +186,7 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 //             selectedTags.map(tagId => {
 //               const tag = getTagById(tagId);
 //               const tagName = getTagDisplayName(tag);
-              
+
 //               return (
 //                 <span
 //                   key={tagId}
@@ -311,7 +297,7 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 //                 </span>
 //               )}
 //             </div>
-            
+
 //             <div className="grid grid-cols-2 gap-4">
 //               <div>
 //                 <Label htmlFor="tagName" className="text-sm font-medium">Tag Name</Label>
@@ -423,12 +409,6 @@ import usePostApiReq from '@/hooks/usePostApiReq';
 
 // export default MenuTagSelector;
 
-
-
-
-
-
-
 // import React, { useState, useEffect } from 'react';
 // import { FiPlus, FiX } from 'react-icons/fi';
 // import { Button } from '@/components/ui/button';
@@ -442,34 +422,46 @@ const MenuTagSelector = ({
   // For backward compatibility, selectedTags can be an array of IDs or minimal objects [{id,name}]
   selectedTags = [],
   onTagsChange,
-  tagType = 'menu', // 'menu', 'addon', or 'both'
-  className = '',
+  tagType = "menu", // 'menu', 'addon', or 'both'
+  className = "",
   // New: when true, emit [{ id, name }] on selection (default true for addon)
-  returnMinimalObjects
+  returnMinimalObjects,
 }) => {
   // Default behavior: addon returns minimal objects; menu keeps previous IDs
-  const shouldReturnObjects = typeof returnMinimalObjects === 'boolean'
-    ? returnMinimalObjects
-    : tagType === 'addon';
+  const [isEmpty, setIsEmpty] = useState(false)
+  const shouldReturnObjects =
+    typeof returnMinimalObjects === "boolean"
+      ? returnMinimalObjects
+      : tagType === "addon";
 
   const [availableTags, setAvailableTags] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newTag, setNewTag] = useState({
-    name: '',
-    color: '#ffd700',
-    tagType: tagType === 'menu' ? 'menu' : tagType === 'addon' ? 'addon' : 'both',
-    description: '',
-    priority: 10
+    name: "",
+    color: "#ffd700",
+    tagType:
+      tagType === "menu" ? "menu" : tagType === "addon" ? "addon" : "both",
+    description: "",
+    priority: 10,
   });
 
   // API hooks
-  const { res: tagsRes, fetchData: fetchTags, isLoading: isLoadingTags } = useGetApiReq();
-  const { res: createRes, fetchData: createTag, isLoading: isCreating } = usePostApiReq();
+  const {
+    res: tagsRes,
+    fetchData: fetchTags,
+    isLoading: isLoadingTags,
+  } = useGetApiReq();
+  const {
+    res: createRes,
+    fetchData: createTag,
+    isLoading: isCreating,
+  } = usePostApiReq();
 
   // Load tags for the given type
   const loadTags = () => {
-    const endpoint = tagType === 'addon' ? '/capsicoTag/for-addon' : '/capsicoTag/for-menu';
+    const endpoint =
+      tagType === "addon" ? "/capsicoTag/for-addon" : "/capsicoTag/for-menu";
     fetchTags(endpoint);
   };
 
@@ -489,11 +481,12 @@ const MenuTagSelector = ({
       loadTags();
       setShowCreateForm(false);
       setNewTag({
-        name: '',
-        color: '#ffd700',
-        tagType: tagType === 'menu' ? 'menu' : tagType === 'addon' ? 'addon' : 'both',
-        description: '',
-        priority: 10
+        name: "",
+        color: "#ffd700",
+        tagType:
+          tagType === "menu" ? "menu" : tagType === "addon" ? "addon" : "both",
+        description: "",
+        priority: 10,
       });
       const newTagData = createRes.data?.data;
       if (newTagData) {
@@ -501,9 +494,12 @@ const MenuTagSelector = ({
         // Respect output mode when auto-selecting
         if (shouldReturnObjects) {
           const minimal = makeMinimalTag(newTagId);
-          const exists = normalizeSelected(selectedTags, shouldReturnObjects)
-            .some(t => t.id === minimal.id);
-          if (!exists) onTagsChange([...normalizeSelected(selectedTags, true), minimal]);
+          const exists = normalizeSelected(
+            selectedTags,
+            shouldReturnObjects
+          ).some((t) => t.id === minimal.id);
+          if (!exists)
+            onTagsChange([...normalizeSelected(selectedTags, true), minimal]);
         } else {
           const ids = normalizeSelected(selectedTags, false);
           if (!ids.includes(newTagId)) onTagsChange([...ids, newTagId]);
@@ -514,22 +510,31 @@ const MenuTagSelector = ({
 
   // Build minimal object with Unknown fallback
   const makeMinimalTag = (id) => {
-    const found = availableTags.find(t => (t.id || t._id)?.toString() === id?.toString());
-    if (found) return { id: found.id || found._id, name: found.name || found.displayName || 'Unknown Tag' };
+    const found = availableTags.find(
+      (t) => (t.id || t._id)?.toString() === id?.toString()
+    );
+    if (found)
+      return {
+        id: found.id || found._id,
+        name: found.name || found.displayName || "Unknown Tag",
+      };
     // free/custom chip like "Extra" -> keep ID, set Unknown name
-    return { id, name: 'Unknown Tag' };
+    return { id, name: "Unknown Tag" };
   };
 
   // Normalize current selection into either array of ids or array of minimal objects
   const normalizeSelected = (value, toObjects) => {
     if (toObjects) {
-      return (value || []).map(v => {
-        if (v && typeof v === 'object' && v.id) return { id: v.id, name: v.name || 'Unknown Tag' };
+      return (value || []).map((v) => {
+        if (v && typeof v === "object" && v.id)
+          return { id: v.id, name: v.name || "Unknown Tag" };
         return makeMinimalTag(v);
       });
     }
     // to IDs
-    return (value || []).map(v => (typeof v === 'object' ? v.id : v)).filter(Boolean);
+    return (value || [])
+      .map((v) => (typeof v === "object" ? v.id : v))
+      .filter(Boolean);
   };
 
   // Selection handler
@@ -537,7 +542,7 @@ const MenuTagSelector = ({
     const tagId = tag.id || tag._id;
     if (shouldReturnObjects) {
       const current = normalizeSelected(selectedTags, true);
-      if (!current.some(t => t.id === tagId)) {
+      if (!current.some((t) => t.id === tagId)) {
         onTagsChange([...current, makeMinimalTag(tagId)]);
       }
     } else {
@@ -550,36 +555,42 @@ const MenuTagSelector = ({
   // Removal handler
   const handleTagRemove = (tagOrId) => {
     if (shouldReturnObjects) {
-      const current = normalizeSelected(selectedTags, true)
-        .filter(t => t.id !== (typeof tagOrId === 'object' ? tagOrId.id : tagOrId));
+      const current = normalizeSelected(selectedTags, true).filter(
+        (t) => t.id !== (typeof tagOrId === "object" ? tagOrId.id : tagOrId)
+      );
       onTagsChange(current);
     } else {
-      const ids = normalizeSelected(selectedTags, false)
-        .filter(id => id !== (typeof tagOrId === 'object' ? tagOrId.id : tagOrId));
+      const ids = normalizeSelected(selectedTags, false).filter(
+        (id) => id !== (typeof tagOrId === "object" ? tagOrId.id : tagOrId)
+      );
       onTagsChange(ids);
     }
   };
 
   // Find by id (for coloring in chips)
-  const getById = (id) => availableTags.find(t => (t.id || t._id)?.toString() === id?.toString());
+  const getById = (id) =>
+    availableTags.find((t) => (t.id || t._id)?.toString() === id?.toString());
 
   // Display helpers
   const getDisplayName = (objOrId) => {
-    if (objOrId && typeof objOrId === 'object' && objOrId.name) return objOrId.name;
-    const id = typeof objOrId === 'object' ? objOrId.id : objOrId;
+    if (objOrId && typeof objOrId === "object" && objOrId.name)
+      return objOrId.name;
+    const id = typeof objOrId === "object" ? objOrId.id : objOrId;
     const f = getById(id);
-    return f?.name || f?.displayName || 'Unknown Tag';
+    return f?.name || f?.displayName || "Unknown Tag";
   };
 
   const getColor = (objOrId) => {
-    const id = typeof objOrId === 'object' ? objOrId.id : objOrId;
+    const id = typeof objOrId === "object" ? objOrId.id : objOrId;
     const f = getById(id);
-    return f?.color || '#6b7280';
+    return f?.color || "#6b7280";
   };
 
   // Filter available list to exclude current selection (by id)
   const selectedIds = normalizeSelected(selectedTags, false);
-  const availableForSelection = availableTags.filter(t => !selectedIds.includes(t.id || t._id));
+  const availableForSelection = availableTags.filter(
+    (t) => !selectedIds.includes(t.id || t._id)
+  );
 
   // Dropdown toggle
   const handleDropdownToggle = (e) => {
@@ -591,22 +602,25 @@ const MenuTagSelector = ({
   // Click-outside close
   useEffect(() => {
     const onDocClick = (e) => {
-      if (isDropdownOpen && !e.target.closest('.tag-dropdown-container')) setIsDropdownOpen(false);
+      if (isDropdownOpen && !e.target.closest(".tag-dropdown-container"))
+        setIsDropdownOpen(false);
     };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
   }, [isDropdownOpen]);
 
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Selected Tags */}
       <div>
-        <Label className="text-sm font-medium text-gray-700">Selected Tags</Label>
+        <Label className="text-sm font-medium text-gray-700">
+          Selected Tags
+        </Label>
         <div className="flex flex-wrap gap-2 mt-2 min-h-[40px] p-2 border border-gray-200 rounded-md bg-gray-50">
           {selectedIds.length === 0 ? (
             <span className="text-gray-400 text-sm">No tags selected</span>
           ) : (
-            normalizeSelected(selectedTags, shouldReturnObjects).map(item => {
+            normalizeSelected(selectedTags, shouldReturnObjects).map((item) => {
               const id = item.id || item;
               const name = getDisplayName(item);
               return (
@@ -636,18 +650,26 @@ const MenuTagSelector = ({
         {/* Optional: plain text readout for debugging/preview: "Name (ID: ...)" */}
         {selectedIds.length > 0 && (
           <div className="mt-2 text-xs text-gray-600">
-            {normalizeSelected(selectedTags, shouldReturnObjects).map(item => {
-              const id = item.id || item;
-              const name = getDisplayName(item);
-              return <span key={id} className="mr-3">{name} (ID: {id})</span>;
-            })}
+            {normalizeSelected(selectedTags, shouldReturnObjects).map(
+              (item) => {
+                const id = item.id || item;
+                const name = getDisplayName(item);
+                return (
+                  <span key={id} className="mr-3">
+                    {name} (ID: {id})
+                  </span>
+                );
+              }
+            )}
           </div>
         )}
       </div>
 
       {/* Tags selector */}
       <div className="relative tag-dropdown-container">
-        <Label className="text-sm font-medium text-gray-700">Available Tags</Label>
+        <Label className="text-sm font-medium text-gray-700">
+          Available Tags
+        </Label>
         <div className="relative mt-2">
           <button
             type="button"
@@ -655,9 +677,9 @@ const MenuTagSelector = ({
             className="w-full px-3 py-2 text-left border border-gray-300 rounded-md bg-white hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             disabled={isLoadingTags}
           >
-            {isLoadingTags ? 'Loading tags...' : 'Click to select tags'}
+            {isLoadingTags ? "Loading tags..." : "Click to select tags"}
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              {isDropdownOpen ? '▲' : '▼'}
+              {isDropdownOpen ? "▲" : "▼"}
             </span>
           </button>
 
@@ -665,11 +687,34 @@ const MenuTagSelector = ({
             <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
               {availableForSelection.length === 0 ? (
                 <div className="px-4 py-3 text-gray-500 text-sm text-center">
-                  {availableTags.length === 0 ? 'No tags available' : 'All tags selected'}
+                  {availableTags.length === 0
+                    ? "No tags available"
+                    : "All tags selected"}
                 </div>
               ) : (
                 <div className="py-1">
-                  {availableForSelection.map(tag => (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsEmpty(true)
+                      onTagsChange([])
+                      setIsDropdownOpen(false);
+                      // handleTagSelect("");
+                    }}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none flex items-center gap-2 transition-colors"
+                  >
+                    <span
+                      className="inline-block w-4 h-4 rounded-full flex-shrink-0 border border-gray-200"
+                      style={{ backgroundColor: "gray" }}
+                    />
+                    <span className="flex-1 text-sm font-medium">NO TAG</span>
+                    <span className="text-xs text-gray-500 truncate max-w-[100px]">
+                      No Tag
+                    </span>
+                  </button>
+                  {availableForSelection.map((tag) => (
                     <button
                       key={tag.id || tag._id}
                       type="button"
@@ -684,9 +729,13 @@ const MenuTagSelector = ({
                         className="inline-block w-4 h-4 rounded-full flex-shrink-0 border border-gray-200"
                         style={{ backgroundColor: tag.color }}
                       />
-                      <span className="flex-1 text-sm font-medium">{tag.name || tag.displayName || 'Unknown Tag'}</span>
+                      <span className="flex-1 text-sm font-medium">
+                        {tag.name || tag.displayName || "Unknown Tag"}
+                      </span>
                       {tag.description && (
-                        <span className="text-xs text-gray-500 truncate max-w-[100px]">{tag.description}</span>
+                        <span className="text-xs text-gray-500 truncate max-w-[100px]">
+                          {tag.description}
+                        </span>
                       )}
                     </button>
                   ))}
@@ -729,29 +778,39 @@ const MenuTagSelector = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="tagName" className="text-sm font-medium">Tag Name</Label>
+                <Label htmlFor="tagName" className="text-sm font-medium">
+                  Tag Name
+                </Label>
                 <Input
                   id="tagName"
                   value={newTag.name}
-                  onChange={(e) => setNewTag(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setNewTag((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   placeholder="e.g., Bestseller"
                   className="mt-1"
                 />
               </div>
 
               <div>
-                <Label htmlFor="tagColor" className="text-sm font-medium">Color</Label>
+                <Label htmlFor="tagColor" className="text-sm font-medium">
+                  Color
+                </Label>
                 <div className="flex gap-2 mt-1">
                   <input
                     id="tagColor"
                     type="color"
                     value={newTag.color}
-                    onChange={(e) => setNewTag(prev => ({ ...prev, color: e.target.value }))}
+                    onChange={(e) =>
+                      setNewTag((prev) => ({ ...prev, color: e.target.value }))
+                    }
                     className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
                   />
                   <Input
                     value={newTag.color}
-                    onChange={(e) => setNewTag(prev => ({ ...prev, color: e.target.value }))}
+                    onChange={(e) =>
+                      setNewTag((prev) => ({ ...prev, color: e.target.value }))
+                    }
                     placeholder="#ffd700"
                     className="flex-1"
                     pattern="^#[0-9A-Fa-f]{6}$"
@@ -760,10 +819,14 @@ const MenuTagSelector = ({
               </div>
 
               <div>
-                <Label htmlFor="tagType" className="text-sm font-medium">Tag Type</Label>
+                <Label htmlFor="tagType" className="text-sm font-medium">
+                  Tag Type
+                </Label>
                 <Select
                   value={newTag.tagType}
-                  onValueChange={(value) => setNewTag(prev => ({ ...prev, tagType: value }))}
+                  onValueChange={(value) =>
+                    setNewTag((prev) => ({ ...prev, tagType: value }))
+                  }
                 >
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -777,12 +840,19 @@ const MenuTagSelector = ({
               </div>
 
               <div>
-                <Label htmlFor="priority" className="text-sm font-medium">Priority</Label>
+                <Label htmlFor="priority" className="text-sm font-medium">
+                  Priority
+                </Label>
                 <Input
                   id="priority"
                   type="number"
                   value={newTag.priority}
-                  onChange={(e) => setNewTag(prev => ({ ...prev, priority: parseInt(e.target.value) || 1 }))}
+                  onChange={(e) =>
+                    setNewTag((prev) => ({
+                      ...prev,
+                      priority: parseInt(e.target.value) || 1,
+                    }))
+                  }
                   placeholder="10"
                   min="1"
                   max="100"
@@ -792,11 +862,18 @@ const MenuTagSelector = ({
             </div>
 
             <div>
-              <Label htmlFor="description" className="text-sm font-medium">Description</Label>
+              <Label htmlFor="description" className="text-sm font-medium">
+                Description
+              </Label>
               <Input
                 id="description"
                 value={newTag.description}
-                onChange={(e) => setNewTag(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setNewTag((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Most popular items"
                 className="mt-1"
                 maxLength={200}
@@ -809,23 +886,27 @@ const MenuTagSelector = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  if (!newTag.name.trim()) return alert('Please enter tag name');
+                  if (!newTag.name.trim())
+                    return alert("Please enter tag name");
                   const colorRegex = /^#[0-9A-F]{6}$/i;
-                  if (!colorRegex.test(newTag.color)) return alert('Please enter a valid hex color (e.g., #ffd700)');
+                  if (!colorRegex.test(newTag.color))
+                    return alert(
+                      "Please enter a valid hex color (e.g., #ffd700)"
+                    );
                   const tagData = {
                     name: newTag.name.trim(),
                     color: newTag.color.toUpperCase(),
                     tagType: newTag.tagType,
                     description: newTag.description.trim(),
                     priority: parseInt(newTag.priority) || 10,
-                    isActive: true
+                    isActive: true,
                   };
-                  createTag('/capsicoTag/create', tagData);
+                  createTag("/capsicoTag/create", tagData);
                 }}
                 disabled={isCreating || !newTag.name.trim()}
                 className="flex-1 bg-blue-600 hover:bg-blue-700"
               >
-                {isCreating ? 'Creating...' : 'Create Tag'}
+                {isCreating ? "Creating..." : "Create Tag"}
               </Button>
               <Button
                 type="button"
@@ -848,12 +929,3 @@ const MenuTagSelector = ({
 };
 
 export default MenuTagSelector;
-
-
-
-
-
-
-
-
-

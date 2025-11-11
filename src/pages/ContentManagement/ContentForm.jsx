@@ -335,12 +335,14 @@ const ContentForm = () => {
 
   // Fetch available cities
   useEffect(() => {
-    fetchCities('/availableCities/getAllCities');
+    fetchCities("/availableCities/get-all");
   }, []);
 
   useEffect(() => {
     if (cityRes?.status === 200 || cityRes?.status === 201) {
-      const _cities = cityRes?.data?.data?.cities || cityRes?.data?.data || [];
+      console.log("cityRes", cityRes);
+      
+      const _cities = cityRes?.data?.cities || cityRes?.data?.data || [];
       setCities(_cities);
     }
   }, [cityRes]);

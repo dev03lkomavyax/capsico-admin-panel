@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { BiCheckShield } from "react-icons/bi";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { PiShoppingCartSimple } from "react-icons/pi";
 import { RiQrScan2Line } from "react-icons/ri";
 // import { useNavigate, useParams } from "react-router-dom";
@@ -140,9 +141,16 @@ const RestaurantDashborad = () => {
     <AdminWrapper>
       <section className="px-0 py-0 w-full space-y-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-[#000000] text-xl font-medium font-roboto">
-            Restaurant
-          </h2>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex justify-start items-center"
+          >
+            <MdKeyboardArrowLeft className="text-[#000000] text-3xl" />
+            <h2 className="text-[#000000] text-xl font-medium font-roboto">
+              Restaurant
+            </h2>
+          </button>
           <div className="flex items-center gap-4">
             <Button
               onClick={() => setIsUpdateLogoModalOpen(true)}
@@ -162,7 +170,7 @@ const RestaurantDashborad = () => {
                   state: { restaurantId: params?.restaurantId },
                 })
               }
-              className="h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] text-sm font-medium font-inter px-4 bg-[#FFFFFF]"
+              className="h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] hover:text-white text-sm font-medium font-inter px-4 bg-[#FFFFFF]"
             >
               Edit Profile
             </Button>

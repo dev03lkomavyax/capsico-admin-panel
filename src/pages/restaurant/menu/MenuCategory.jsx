@@ -9,40 +9,91 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Star, Plus, ChevronDown, Search } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import Food from "./Food";
+import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
+import CategoryEditModel from "@/components/menu/CategoryEditModel";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 
-export default function MenuSection({ categories }) {
+export default function MenuSection({ categories, getData }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Items");
+  const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
+  const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
+
+  const navigate = useNavigate();
+  const params = useParams();
 
   console.log("categories", categories);
-  
+
+  const handleAdd = () => {
+    navigate(`/admin/restaurant/${params?.restaurantId}/addmenu`, {
+      state: {
+        restaurantId: params?.restaurantId,
+      },
+    });
+  };
+
+  const handleCategoryAdd = () => {
+    setIsOpenCategoryModel((prev) => !prev);
+  };
+  const handleSubcategoryAdd = () => {
+    setIsOpenSubCategoryModel((prev) => !prev);
+  };
 
   return (
     <div className="p-6">
       {/* Header */}
       <header className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-black text-[#333333] dark:text-white leading-tight tracking-tight">
-            Menu
-          </h1>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex justify-start items-center"
+          >
+            <MdKeyboardArrowLeft className="text-[#000000] text-3xl" />
+
+            <h1 className="text-3xl font-black text-[#333333] dark:text-white leading-tight tracking-tight">
+              Menu
+            </h1>
+          </button>
           <p className="text-base font-normal text-[#6B7280] dark:text-gray-400">
             Manage your restaurant's menu items and categories.
           </p>
         </div>
-        <Button
-          variant="capsico"
-          className="flex items-center gap-2 w-auto px-4"
-        >
-          <Plus size={18} />
-          Add Item
-        </Button>
+        <div className="flex gap-3 items-center">
+          <Button
+            variant="capsico"
+            className="flex items-center gap-2 w-auto px-4"
+            onClick={handleAdd}
+          >
+            <Plus size={18} />
+            Add Item
+          </Button>
+          <Button
+            variant="capsico"
+            className="flex items-center gap-2 w-auto px-4"
+            onClick={handleCategoryAdd}
+          >
+            <Plus size={18} />
+            Add Category
+          </Button>
+          <Button
+            variant="capsico"
+            className="flex items-center gap-2 w-auto px-4"
+            onClick={handleSubcategoryAdd}
+          >
+            <Plus size={18} />
+            Add Sub Category
+          </Button>
+        </div>
       </header>
 
       {/* Search and Filter */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         {/* Search Input */}
         <div className="flex-grow min-w-[300px] max-w-lg">
-          <div className="flex w-full h-12 rounded-lg border border-[#E5E7EB] dark:border-gray-700 overflow-hidden">
+          {/* <div className="flex w-full h-12 rounded-lg border border-[#E5E7EB] dark:border-gray-700 overflow-hidden">
             <div className="flex items-center justify-center px-3 text-[#6B7280] dark:text-gray-400 bg-white dark:bg-background-dark/50 border-r border-[#E5E7EB] dark:border-gray-700">
               <Search size={18} />
             </div>
@@ -52,11 +103,11 @@ export default function MenuSection({ categories }) {
               onChange={(e) => setSearch(e.target.value)}
               className="flex-1 h-full border-0 focus-visible:ring-0 focus-visible:outline-none placeholder:text-[#6B7280] dark:placeholder:text-gray-400 text-base"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Tabs / Segmented Buttons */}
-        <div className="flex h-10 items-center rounded-lg bg-[#F7F9FC] dark:bg-background-dark/80 p-1 border border-[#E5E7EB] dark:border-gray-700">
+        {/* <div className="flex h-10 items-center rounded-lg bg-[#F7F9FC] dark:bg-background-dark/80 p-1 border border-[#E5E7EB] dark:border-gray-700">
           {["All Items", "Out of Stock"].map((label) => (
             <button
               key={label}
@@ -70,8 +121,15 @@ export default function MenuSection({ categories }) {
               {label}
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
+
+      {!categories ||
+        (categories.length === 0 && (
+          <div className="flex justify-center text-muted-foreground">
+            No menu found. Create menu by adding food items, category.
+          </div>
+        ))}
 
       {/* Categories Accordion */}
       <Accordion type="multiple" className="flex flex-col gap-4">
@@ -95,10 +153,10 @@ export default function MenuSection({ categories }) {
                   {/* <span className="text-sm font-medium text-[#6B7280] dark:text-gray-400 mr-2">
                     In Stock (All)
                   </span> */}
-                  <Switch
+                  {/* <Switch
                     className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
                     defaultChecked
-                  />
+                  /> */}
                 </div>
                 {/* <ChevronDown
                   size={20}
@@ -117,52 +175,8 @@ export default function MenuSection({ categories }) {
                 </div>
               ) : (
                 <div className="flex flex-col divide-y divide-[#E5E7EB] dark:divide-gray-700">
-                  {category?.foodItems?.map((item) => (
-                    <div
-                      key={item.id}
-                      className={`flex items-center gap-4 p-4 hover:bg-background-light dark:hover:bg-background-dark/80 ${
-                        !item.isAvailable ? "opacity-60" : ""
-                      }`}
-                    >
-                      {/* Item Image */}
-                      <div
-                        className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 flex-shrink-0"
-                        style={{ backgroundImage: `url(${item.image})` }}
-                      ></div>
-
-                      {/* Item Details */}
-                      <div className="flex-grow">
-                        <p className="font-bold text-[#333333] dark:text-white">
-                          {item.name}
-                        </p>
-                        <p className="text-sm text-[#6B7280] dark:text-gray-400">
-                          ₹{item.price.toFixed(2)}
-                        </p>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-4">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className={`flex items-center gap-2 ${
-                            item.isRecommended
-                              ? "bg-primary/10 text-primary"
-                              : "text-[#6B7280] hover:text-primary hover:bg-primary/10"
-                          }`}
-                        >
-                          <Star
-                            size={16}
-                            className={item.isRecommended ? "fill-current" : ""}
-                          />
-                          {item.isRecommended ? "Recommended" : "Recommend"}
-                        </Button>
-                        <Switch
-                          className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
-                          defaultChecked={item.isAvailable}
-                        />
-                      </div>
-                    </div>
+                  {category?.foodItems?.map((item, index) => (
+                    <Food key={index} item={item} />
                   ))}
                 </div>
               )}
@@ -170,6 +184,23 @@ export default function MenuSection({ categories }) {
           </AccordionItem>
         ))}
       </Accordion>
+
+      {isOpenCategoryModel && (
+        <CategoryEditModel
+          isOpenCategoryModel={isOpenCategoryModel}
+          setIsOpenCategoryModel={setIsOpenCategoryModel}
+          getCategories={getData}
+        />
+      )}
+
+      {isOpenSubCategoryModel && (
+        <SubCategoryEditModel
+          isOpenSubCategoryModel={isOpenSubCategoryModel}
+          setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
+          // categoryId={categoryId}
+          getCategories={getData}
+        />
+      )}
     </div>
   );
 }
