@@ -75,7 +75,7 @@ const Tickets = () => {
           </h2>
           <div className="flex gap-3 items-center">
             <div>
-              <Button onClick={getTickets} className="!size-10" size="icon">
+              <Button title="Refetch Tickets" onClick={getTickets} className="!size-10" size="icon">
                 <RefreshCcw
                   className={cn(
                     "size-5 transition-all",

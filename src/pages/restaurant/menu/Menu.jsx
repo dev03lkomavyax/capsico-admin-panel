@@ -69,7 +69,7 @@ const MenuPage = () => {
   return (
     <AdminWrapper>
       <div className="">
-        <MenuSection categories={menuData} />
+        <MenuSection categories={menuData} getData={getData} />
       </div>
     </AdminWrapper>
   );

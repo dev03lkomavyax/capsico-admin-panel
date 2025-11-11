@@ -30,6 +30,7 @@ import PromotedOffer from "./pages/offers/PromotedOffers";
 import AddDeliveryAgent from "./pages/delivery-agent/AddDeliveryAgent";
 import UpdateMenu from "./pages/restaurant/menu/UpdateMenu";
 import Menu from "./pages/restaurant/menu/Menu";
+import Cuisines from "./pages/restaurant/Cuisines";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -209,6 +210,7 @@ function App() {
             />
 
             <Route path="/admin/restaurant" element={<RestaurantList />} />
+            <Route path="/admin/restaurant/cuisines" element={<Cuisines />} />
             <Route
               path="/admin/restaurant/:restaurantId/dashboard"
               element={<RestaurantDashborad />}
@@ -226,11 +228,11 @@ function App() {
               element={<RestaurantEditProfile />}
             />
             <Route
-              path="/admin/restaurant/:restaurantId/:categoryId/addmenu"
+              path="/admin/restaurant/:restaurantId/addmenu"
               element={<AddMenu />}
             />
             <Route
-              path="/admin/restaurant/:restaurantId/:categoryId/updateMenu"
+              path="/admin/restaurant/:restaurantId/updateMenu"
               element={<UpdateMenu />}
             />
             <Route path="/admin/restaurant/reviews" element={<Review />} />

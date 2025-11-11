@@ -1,13 +1,25 @@
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import NonVegIcon from "@/components/customIcons/NonVegIcon";
+import VegIcon from "@/components/customIcons/VegIcon";
+import DataNotFound from "@/components/DataNotFound";
+import AddCustomizationCategoryModal from "@/components/menu/AddCustomizationCategoryModal";
+import AddCustomizationModal from "@/components/menu/AddCustomizationModal";
+import AvailabilityForFoodItem from "@/components/menu/AvailabilityForFoodItem";
+import CreateVariantModel from "@/components/menu/CreateVariantModel";
+import MapAddOnModel from "@/components/menu/MapAddOnModel";
+import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -15,46 +27,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import { UpdateItemSchema } from "@/schema/restaurantSchema";
+import { updateMultiplePreview } from "@/utils/updatePreview";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { Edit } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import { FiUpload } from "react-icons/fi";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { FiPlus, FiUpload } from "react-icons/fi";
-import Variants from "@/components/restaurant/Variants";
-import ServingInfo from "@/components/restaurant/ServingInfo";
-import MapAddOn from "@/components/restaurant/MapAddOn";
-import AdditionalDetails from "@/components/restaurant/AdditionalDetails";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import { updateMultiplePreview } from "@/utils/updatePreview";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { addItemSchema } from "@/schema/restaurantSchema";
-import { Label } from "@/components/ui/label";
-import usePostApiReq from "@/hooks/usePostApiReq";
-import CreateVariantModel from "@/components/menu/CreateVariantModel";
-import MapAddOnModel from "@/components/menu/MapAddOnModel";
-import AddCustomizationModal from "@/components/menu/AddCustomizationModal";
-import AddCustomizationCategoryModal from "@/components/menu/AddCustomizationCategoryModal";
-import VegIcon from "@/components/customIcons/VegIcon";
-import NonVegIcon from "@/components/customIcons/NonVegIcon";
-import EggIcon from "@/components/customIcons/EggIcon";
-import { Button } from "@/components/ui/button";
-import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
-import Spinner from "@/components/Spinner";
-import DataNotFound from "@/components/DataNotFound";
-import AvailabilityForFoodItem from "@/components/menu/AvailabilityForFoodItem";
+import AddonsManager from "./addons/AddonsManager";
 import MenuTagSelector from "./menuTagSelector";
-
-
+import { id } from "@/utils/Id-util";
 
 const UpdateMenu = () => {
   const navigate = useNavigate();
   const [isItemImageUploadModalOpen, setIsItemImageUploadModalOpen] =
-    useState(false);
+  useState(false);
   const [isVariant, setIsVariant] = useState(false);
   const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
+  const [index, setIndex] = useState(null);
+  const [isUpdate, setIsUpdate] = useState(false);
+  
   const [isMapAddons, setIsMapAddons] = useState(false);
   const [isMapAddonsModalOpen, setIsMapAddonsModalOpen] = useState(false);
   const [isAdditionalDetails, setIsAdditionalDetails] = useState(false);
@@ -69,13 +68,12 @@ const UpdateMenu = () => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [cuisines, setCuisines] = useState([]);
   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-
+  
   // Enhanced state management for tags and addons
   const [availableTags, setAvailableTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [addons, setAddons] = useState([]);
   const [addonGroups, setAddonGroups] = useState([]);
-  const [menuTags, setMenuTags] = useState([]);
   const [isTagsLoading, setIsTagsLoading] = useState(false);
   const [showAddonForm, setShowAddonForm] = useState(false);
   const [newAddon, setNewAddon] = useState({
@@ -86,34 +84,68 @@ const UpdateMenu = () => {
     isDefault: false,
     tags: [],
   });
-
+  
   const params = useParams();
   const { state } = useLocation();
-
   console.log("state", state);
   const foodItem = state.foodItem;
-  
+  const [groups, setGroups] = useState(
+    foodItem?.addOns.map((item) => ({ ...item, adonsGroup: item.addons })) || []
+  );
+
+  const [menuTags, setMenuTags] = useState(
+    foodItem?.menuTags.map((item) => item.id) || []
+  );
+  // console.log("menuTags", menuTags);
 
   const form = useForm({
-    resolver: zodResolver(addItemSchema),
+    resolver: zodResolver(UpdateItemSchema),
     defaultValues: {
+      categoryId: foodItem.category.id || "",
       subCategory: foodItem.subcategoryId || "",
       itemName: foodItem.name || "",
       itemDescription: foodItem.description || "",
       packagingCharges: foodItem.preparationTime || "",
       basePrice: foodItem.price || "",
+      foodType: foodItem.foodType || "",
+      preparationTime: foodItem.preparationTime || "",
       itemImage: "",
-      itemImagePreview: "",
+      itemImagePreview: foodItem.images || [],
+      isRecommended: foodItem.isRecommended || false,
       cuisine: "",
-      foodType: "",
       numberOfPeople: "",
       dishSize: "",
-      preparationTime: "",
       restaurant: "",
       tags: [],
-      variations: [],
-      addOns: [],
-      customizations: [],
+      variations: foodItem.variations || [],
+      addOns: foodItem?.addOns?.[0]?.addons || [],
+      // const modifiedAddOns = addOnsArray?.map((addon) => {
+      //   return {
+      //     id: addon.id,
+      //     name: addon.name,
+      //     price: addon.price,
+      //     isAvailable: addon.isAvailable,
+      //     isVeg: addon.isVeg,
+      //     tags: addon.tags.map((item) => item.id) || [],
+      //     isDefault: addon.isDefault,
+      //   };
+      // });
+      // const addOns = [
+      //   {
+      //     groupName: "Extra Proteins",
+      //     chooseMultiple: false,
+      //     maxSelection: 1,
+      //     adonsGroup: modifiedAddOns,
+      //   },
+      // ];
+      // customizations: foodItem.customizations || [],
+      customizations: [
+        {
+          categoryName: foodItem?.customizations?.category,
+          customizationType: foodItem?.customizations?.type,
+          customizationOptions: foodItem?.customizations?.options,
+        },
+      ],
       timingType: "sameAsRestaurant",
       openingTime: "",
       closingTime: "",
@@ -122,36 +154,66 @@ const UpdateMenu = () => {
   });
 
   const { register, control, watch, setValue, getValues } = form;
-//   console.log("getValues", getValues());
+  console.log("getValues", getValues());
 
   // useEffect(() => {
   //   setValue("subCategory", state.subcategoryId);
   // }, [state.subcategoryId]);
   const subCategory = watch("subCategory");
+  const categoryId = watch("categoryId");
 
-  useEffect(() => {
-    if (subCategory) {
-      navigate(
-        `/admin/restaurant/${params?.restaurantId}/${subCategory}/updateMenu`,
-        {
-          state: {
-            restaurantId: params?.restaurantId,
-            subcategoryId: subCategory,
-            categoryId: state.categoryId,
-            foodItem: state.foodItem,
-          },
-        }
-      );
-    }
-  }, [subCategory]);
-  
-  
+  // useEffect(() => {
+  //   if (subCategory) {
+  //     navigate(
+  //       `/admin/restaurant/${params?.restaurantId}/${subCategory}/updateMenu`,
+  //       {
+  //         state: {
+  //           restaurantId: params?.restaurantId,
+  //           subcategoryId: subCategory,
+  //           categoryId: state.categoryId,
+  //           foodItem: state.foodItem,
+  //         },
+  //       }
+  //     );
+  //   }
+  // }, [subCategory]);
 
   const restaurantRef = register("restaurant");
   const itemImageRef = register("itemImage");
   const restaurant = watch("restaurant");
   const itemImage = watch("itemImage");
   const [subCategories, setSubCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+
+  const {
+    res: getRes,
+    fetchData: getData,
+    isLoading: isGetLoading,
+  } = useGetApiReq();
+
+  const getCategories = () => {
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}`;
+    getData(url);
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  // Enhanced debug logging
+  useEffect(() => {
+    if (getRes?.status === 200 || getRes?.status === 201) {
+      console.log("✅ Full response data:", getRes?.data);
+
+      const categories = getRes?.data?.data?.categories || [];
+      console.log("✅ Extracted categories:", categories);
+      const modifiedCategories = categories?.map((item) => ({
+        label: item?.name,
+        value: item?.id,
+      }));
+      setAllCategories(modifiedCategories || []);
+    }
+  }, [getRes]);
 
   const {
     res: subcategoriesRes,
@@ -161,18 +223,21 @@ const UpdateMenu = () => {
 
   const getSubcategoriesFun = () => {
     getSubcategories(
-      `/restaurant/${params?.restaurantId}/getSubCatByCat/${state?.categoryId}`
+      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`
     );
   };
 
   useEffect(() => {
-    getSubcategoriesFun();
-  }, [state?.categoryId]);
+    categoryId && getSubcategoriesFun();
+  }, [categoryId]);
 
   useEffect(() => {
     if (subcategoriesRes?.status === 200 || subcategoriesRes?.status === 201) {
       console.log("subcategoriesRes", subcategoriesRes);
-      setSubCategories(subcategoriesRes?.data?.data?.subcategories);
+      const subcategories = subcategoriesRes?.data?.data?.subcategories;
+      setSubCategories(subcategories);
+      subcategories?.[0]?.subCategoryId &&
+        setValue("subCategory", subcategories?.[0]?.subCategoryId);
     }
   }, [subcategoriesRes]);
 
@@ -441,7 +506,11 @@ const UpdateMenu = () => {
     res: addItemRes,
     fetchData: fetchAddItemData,
     isLoading: isAddItemLoading,
-  } = usePostApiReq();
+  } = usePatchApiReq();
+
+  const onError = (error) => {
+    console.log("error", error);
+  };
 
   // Updated onSubmit with latest API implementation
   const onSubmit = (data) => {
@@ -451,38 +520,66 @@ const UpdateMenu = () => {
     console.log("📂 Subcategory ID:", state?.subcategoryId);
     console.log("📂 Category ID:", state?.categoryId);
 
-    const availableTimings = {
-      sameAsRestaurant: data.timingType === "sameAsRestaurant",
-      start: data.openingTime,
-      end: data.closingTime,
-      days: data.days,
-    };
+    // const availableTimings = {
+    //   sameAsRestaurant: data.timingType === "sameAsRestaurant",
+    //   start: data.openingTime,
+    //   end: data.closingTime,
+    //   days: data.days,
+    // };
 
-    const modifiedCustomizations = getValues("customizations")?.map(
-      (customization) => {
-        return {
-          name: customization.categoryName,
-          type: customization.customizationType,
-          options: customization.customizationOptions,
-        };
-      }
-    );
+    // const modifiedCustomizations = getValues("customizations")?.map(
+    //   (customization) => {
+    //     return {
+    //       categoryname: customization.categoryName,
+    //       customizationtype: customization.customizationType,
+    //       addeddata: customization.customizationOptions,
+    //     };
+    //   }
+    // );
+
+    const customizations = getValues("customizations");
+    const modifiedCustomizations = customizations?.[0]
+      ? {
+          categoryname: customizations[0].categoryName,
+          customizationtype: customizations[0].customizationType,
+          addeddata: customizations[0].customizationOptions,
+        }
+      : {};
+
+    console.log("modifiedCustomizations", modifiedCustomizations);
 
     // Enhanced addons with tags
-    const modifiedAddOns = getValues("addOns")?.map((addon) => {
+
+    const addOnsArray = getValues("addOns");
+
+    const modifiedAddOns = addOnsArray?.map((addon) => {
       return {
         id: addon.id,
         name: addon.name,
         price: addon.price,
         isAvailable: addon.isAvailable,
         isVeg: addon.isVeg,
-        tags: addon.tags || [],
+        tags:
+          addon.tags.map((item) =>
+            typeof item === "string" ? item : item.id
+          ) || [],
         isDefault: addon.isDefault,
       };
     });
 
+    const addOns = [
+      {
+        groupName: "Extra Proteins",
+        chooseMultiple: false,
+        maxSelection: 1,
+        adonsGroup: modifiedAddOns,
+      },
+    ];
+
+    console.log("addOns", addOns);
+
     console.log("📦 Prepared data:", {
-      availableTimings,
+      // availableTimings,
       modifiedCustomizations: modifiedCustomizations?.length || 0,
       modifiedAddOns: modifiedAddOns?.length || 0,
       menuTags: menuTags?.length || 0,
@@ -500,16 +597,14 @@ const UpdateMenu = () => {
     formData.append("preparationTime", data.preparationTime);
 
     // Use subcategoryId for the new API structure
-    formData.append(
-      "subcategoryId",
-      state?.subcategoryId || params?.subcategoryId
-    );
-    formData.append("categoryId", state?.categoryId || params?.categoryId);
+    formData.append("subcategoryId", subCategory);
+    formData.append("categoryId", categoryId);
+    console.log("menuTags", menuTags);
 
-    formData.append("availableTimings", JSON.stringify(availableTimings));
-    formData.append("tags", JSON.stringify(menuTags));
+    // formData.append("availableTimings", JSON.stringify(availableTimings));
+    formData.append("menuTagIds", JSON.stringify(menuTags));
     formData.append("variations", JSON.stringify(getValues("variations")));
-    formData.append("addOns", JSON.stringify(modifiedAddOns));
+    formData.append("addOns", JSON.stringify(groups));
     formData.append("customizations", JSON.stringify(modifiedCustomizations));
 
     // Add images with field name "images" (matching multer config)
@@ -520,10 +615,7 @@ const UpdateMenu = () => {
     console.log("📦 FormData created, making API call...");
 
     // Use restaurant endpoint for adding menu items
-    fetchAddItemData(
-      `/restaurant/add-menu-item/${state?.restaurantId}`,
-      formData
-    );
+    fetchAddItemData(`/restaurant/update-menu-item/${foodItem.id}`, formData);
   };
 
   useEffect(() => {
@@ -564,7 +656,10 @@ const UpdateMenu = () => {
           </div>
           <div className="mb-4 py-4">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+              <form
+                onSubmit={form.handleSubmit(onSubmit, onError)}
+                className="w-full"
+              >
                 <div>
                   {/* Basic Details Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
@@ -575,34 +670,74 @@ const UpdateMenu = () => {
 
                       <FormField
                         control={control}
-                        name="subCategory"
+                        name="categoryId"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Sub Category</FormLabel>
+                          <FormItem className="mt-5">
+                            <FormLabel>Category</FormLabel>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select Sub Category" />
+                                  <SelectValue placeholder="Select Category" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {subCategories.map((subCategory) => (
+                                {allCategories?.map((category) => (
                                   <SelectItem
-                                    key={subCategory.subCategoryId}
-                                    value={subCategory.subCategoryId}
+                                    key={category?.value}
+                                    value={category?.value}
                                   >
-                                    {subCategory.name}
+                                    {category?.label}
                                   </SelectItem>
                                 ))}
+
+                                {allCategories.length === 0 && (
+                                  <p>No categories found</p>
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+
+                      {categoryId && (
+                        <FormField
+                          control={control}
+                          name="subCategory"
+                          render={({ field }) => (
+                            <FormItem className="mt-5">
+                              <FormLabel>Sub Category</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Sub Category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {subCategories.map((subCategory) => (
+                                    <SelectItem
+                                      key={subCategory.subCategoryId}
+                                      value={subCategory.subCategoryId}
+                                    >
+                                      {subCategory.name}
+                                    </SelectItem>
+                                  ))}
+                                  {subCategories.length === 0 && (
+                                    <p>No subcategories found</p>
+                                  )}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                       {/* Item Name */}
                       <div className="w-full mt-5">
@@ -723,6 +858,25 @@ const UpdateMenu = () => {
                                     </FormLabel>
                                   </FormItem> */}
                                 </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="wfull mt-5">
+                        <FormField
+                          control={form.control}
+                          name="isRecommended"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center justify-between">
+                              <FormLabel>Is Recommended?</FormLabel>
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -889,7 +1043,10 @@ const UpdateMenu = () => {
                       {isVariant && (
                         <>
                           <button
-                            onClick={() => setIsVariantModalOpen(true)}
+                            onClick={() => {
+                              setIndex(() => null);
+                              setIsVariantModalOpen(true);
+                            }}
                             type="button"
                             className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md"
                           >
@@ -900,18 +1057,24 @@ const UpdateMenu = () => {
                           </button>
                           {watch("variations").length > 0 && (
                             <div className="mt-5">
-                              <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                <h4 className="font-inter text-[#969696] font-semibold">
+                              <div className="grid grid-cols-[60%_auto_auto_auto] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
+                                <h4 className="font-inter font-semibold">
                                   Variant Name
                                 </h4>
-                                <h4 className="font-inter text-[#969696] font-semibold">
+                                <h4 className="font-inter font-semibold">
                                   Price (In Rs)
+                                </h4>
+                                <h4 className="font-inter font-semibold">
+                                  Default
+                                </h4>
+                                <h4 className="font-inter font-semibold">
+                                  Actions
                                 </h4>
                               </div>
                               {watch("variations")?.map((variation, i) => (
                                 <div
                                   key={i}
-                                  className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
+                                  className="grid grid-cols-[60%_auto_auto_auto] gap-[2%] border-b border-[#DADADA] py-2"
                                 >
                                   <h4 className="font-inter text-[#969696] font-semibold">
                                     {variation?.name}
@@ -919,6 +1082,19 @@ const UpdateMenu = () => {
                                   <h4 className="font-inter text-[#969696] font-semibold">
                                     Rs {variation?.price}
                                   </h4>
+                                  <h4 className="font-inter text-[#969696] font-semibold">
+                                    {variation?.isDefault ? "Yes" : "No"}
+                                  </h4>
+                                  <div className="font-inter text-[#969696] font-semibold">
+                                    <Edit
+                                      className="cursor-pointer"
+                                      onClick={() => {
+                                        setIndex(() => i);
+                                        setIsUpdate(() => true);
+                                        setIsVariantModalOpen(() => true);
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               ))}
                             </div>
@@ -968,283 +1144,289 @@ const UpdateMenu = () => {
                           extra choices like toppings or desserts.
                         </p>
                       </div>
-                      {isMapAddons && (
-                        <div className="space-y-6">
-                          {displayExistingAddons()}
+                      <div className="hidden">
+                        {isMapAddons && (
+                          <div className="space-y-6">
+                            {/* {displayExistingAddons()} */}
 
-                          {/* Enhanced Addons Display */}
-                          {addons.length > 0 && (
-                            <div>
-                              <h4 className="font-inter text-[#969696] font-semibold mb-3">
-                                Current Addons:
-                              </h4>
-                              <div className="space-y-3">
-                                {addons.map((addon) => (
-                                  <div
-                                    key={addon.id}
-                                    className="bg-gray-50 p-4 rounded-lg border"
-                                  >
-                                    <div className="flex justify-between items-start">
-                                      <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                          <h5 className="font-semibold text-lg">
-                                            {addon.name}
-                                          </h5>
-                                          <span className="text-lg font-bold text-green-600">
-                                            ₹{addon.price}
-                                          </span>
-                                          <div className="flex gap-2">
-                                            <span
-                                              className={`px-2 py-1 rounded-full text-xs ${
-                                                addon.isVeg
-                                                  ? "bg-green-100 text-green-700"
-                                                  : "bg-red-100 text-red-700"
-                                              }`}
-                                            >
-                                              {addon.isVeg ? "Veg" : "Non-Veg"}
+                            {/* Enhanced Addons Display */}
+                            {addons.length > 0 && (
+                              <div>
+                                <h4 className="font-inter text-[#969696] font-semibold mb-3">
+                                  Current Addons:
+                                </h4>
+                                <div className="space-y-3">
+                                  {addons.map((addon) => (
+                                    <div
+                                      key={addon.id}
+                                      className="bg-gray-50 p-4 rounded-lg border"
+                                    >
+                                      <div className="flex justify-between items-start">
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-3 mb-2">
+                                            <h5 className="font-semibold text-lg">
+                                              {addon.name}
+                                            </h5>
+                                            <span className="text-lg font-bold text-green-600">
+                                              ₹{addon.price}
                                             </span>
-                                            <span
-                                              className={`px-2 py-1 rounded-full text-xs ${
-                                                addon.isAvailable
-                                                  ? "bg-blue-100 text-blue-700"
-                                                  : "bg-gray-100 text-gray-700"
-                                              }`}
-                                            >
-                                              {addon.isAvailable
-                                                ? "Available"
-                                                : "Unavailable"}
-                                            </span>
-                                            {addon.isDefault && (
-                                              <span className="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">
-                                                Default
+                                            <div className="flex gap-2">
+                                              <span
+                                                className={`px-2 py-1 rounded-full text-xs ${
+                                                  addon.isVeg
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-red-100 text-red-700"
+                                                }`}
+                                              >
+                                                {addon.isVeg
+                                                  ? "Veg"
+                                                  : "Non-Veg"}
                                               </span>
-                                            )}
-                                          </div>
-                                        </div>
-
-                                        {/* Tags display with proper names */}
-                                        {addon.tags &&
-                                          addon.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-1 mb-2">
-                                              {addon.tags.map(
-                                                (tagData, tagIndex) => {
-                                                  const tagName =
-                                                    getTagName(tagData);
-                                                  const tagColor =
-                                                    getTagColor(tagData);
-                                                  const tagId =
-                                                    typeof tagData === "object"
-                                                      ? tagData.id
-                                                      : tagData;
-
-                                                  return (
-                                                    <span
-                                                      key={tagId || tagIndex}
-                                                      style={{
-                                                        backgroundColor:
-                                                          tagColor,
-                                                      }}
-                                                      className="text-white px-2 py-1 rounded-full text-xs font-medium"
-                                                    >
-                                                      {tagName}
-                                                    </span>
-                                                  );
-                                                }
+                                              <span
+                                                className={`px-2 py-1 rounded-full text-xs ${
+                                                  addon.isAvailable
+                                                    ? "bg-blue-100 text-blue-700"
+                                                    : "bg-gray-100 text-gray-700"
+                                                }`}
+                                              >
+                                                {addon.isAvailable
+                                                  ? "Available"
+                                                  : "Unavailable"}
+                                              </span>
+                                              {addon.isDefault && (
+                                                <span className="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">
+                                                  Default
+                                                </span>
                                               )}
                                             </div>
-                                          )}
-                                      </div>
+                                          </div>
 
-                                      <button
-                                        onClick={() =>
-                                          handleRemoveAddon(addon.id)
-                                        }
-                                        className="text-red-500 hover:text-red-700 ml-4"
-                                      >
-                                        <FaTimes size={16} />
-                                      </button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                                          {/* Tags display with proper names */}
+                                          {addon.tags &&
+                                            addon.tags.length > 0 && (
+                                              <div className="flex flex-wrap gap-1 mb-2">
+                                                {addon.tags.map(
+                                                  (tagData, tagIndex) => {
+                                                    const tagName =
+                                                      getTagName(tagData);
+                                                    const tagColor =
+                                                      getTagColor(tagData);
+                                                    const tagId =
+                                                      typeof tagData ===
+                                                      "object"
+                                                        ? tagData.id
+                                                        : tagData;
 
-                          {/* Add New Addon Form */}
-                          {showAddonForm && (
-                            <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
-                              <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">
-                                Add New Addon
-                              </h4>
+                                                    return (
+                                                      <span
+                                                        key={tagId || tagIndex}
+                                                        style={{
+                                                          backgroundColor:
+                                                            tagColor,
+                                                        }}
+                                                        className="text-white px-2 py-1 rounded-full text-xs font-medium"
+                                                      >
+                                                        {tagName}
+                                                      </span>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            )}
+                                        </div>
 
-                              {/* Addon Name */}
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                  Name
-                                </label>
-                                <input
-                                  type="text"
-                                  value={newAddon.name}
-                                  onChange={(e) =>
-                                    handleInputChange("name", e.target.value)
-                                  }
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
-                                  placeholder="e.g., Extra Paneer"
-                                />
-                              </div>
-
-                              {/* Addon Price */}
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                  Price (₹)
-                                </label>
-                                <input
-                                  type="number"
-                                  value={newAddon.price}
-                                  onChange={(e) =>
-                                    handleInputChange("price", e.target.value)
-                                  }
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
-                                  placeholder="50"
-                                  min="0"
-                                  step="0.01"
-                                />
-                              </div>
-
-                              {/* Checkboxes */}
-                              <div className="flex gap-6">
-                                <label className="flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    checked={newAddon.isAvailable}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        "isAvailable",
-                                        e.target.checked
-                                      )
-                                    }
-                                    className="mr-2"
-                                  />
-                                  Available
-                                </label>
-
-                                <label className="flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    checked={newAddon.isVeg}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        "isVeg",
-                                        e.target.checked
-                                      )
-                                    }
-                                    className="mr-2"
-                                  />
-                                  Vegetarian
-                                </label>
-
-                                <label className="flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    checked={newAddon.isDefault}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        "isDefault",
-                                        e.target.checked
-                                      )
-                                    }
-                                    className="mr-2"
-                                  />
-                                  Set as Default
-                                </label>
-                              </div>
-
-                              {/* Tags Section */}
-                              <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Tags
-                                </label>
-
-                                {/* Show currently selected tags */}
-                                {newAddon.tags && newAddon.tags.length > 0 && (
-                                  <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
-                                    <span className="text-xs text-gray-600">
-                                      Selected:
-                                    </span>
-                                    {newAddon.tags.map((tagObj, index) => (
-                                      <span
-                                        key={tagObj.id || index}
-                                        style={{
-                                          backgroundColor: getTagColor(tagObj),
-                                        }}
-                                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-white text-xs font-medium"
-                                      >
-                                        {tagObj.name}
                                         <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            const updatedTags =
-                                              newAddon.tags.filter(
-                                                (_, i) => i !== index
-                                              );
-                                            setNewAddon((prev) => ({
-                                              ...prev,
-                                              tags: updatedTags,
-                                            }));
-                                          }}
-                                          className="hover:bg-black/20 rounded-full p-0.5 ml-1"
+                                          onClick={() =>
+                                            handleRemoveAddon(addon.id)
+                                          }
+                                          className="text-red-500 hover:text-red-700 ml-4"
                                         >
-                                          <FaTimes size={10} />
+                                          <FaTimes size={16} />
                                         </button>
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
-
-                                {/* MenuTagSelector */}
-                                <MenuTagSelector
-                                  selectedTags={newAddon.tags.map(
-                                    (tag) => tag.id
-                                  )}
-                                  onTagsChange={handleTagsChange}
-                                  tagType="addon"
-                                  className="w-full"
-                                />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
+                            )}
 
-                              {/* Form Actions */}
-                              <div className="flex gap-3 pt-4">
-                                <button
-                                  type="button"
-                                  onClick={handleAddAddon}
-                                  className="bg-[#4A67FF] text-white px-6 py-2 rounded-md hover:bg-[#3651E6] flex-1"
-                                >
-                                  Add Addon
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setShowAddonForm(false);
-                                    setNewAddon({
-                                      name: "",
-                                      price: "",
-                                      isAvailable: true,
-                                      isVeg: true,
-                                      isDefault: false,
-                                      tags: [],
-                                    });
-                                  }}
-                                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400"
-                                >
-                                  Cancel
-                                </button>
+                            {/* Add New Addon Form */}
+                            {showAddonForm && (
+                              <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
+                                <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">
+                                  Add New Addon
+                                </h4>
+
+                                {/* Addon Name */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Name
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={newAddon.name}
+                                    onChange={(e) =>
+                                      handleInputChange("name", e.target.value)
+                                    }
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
+                                    placeholder="e.g., Extra Paneer"
+                                  />
+                                </div>
+
+                                {/* Addon Price */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Price (₹)
+                                  </label>
+                                  <input
+                                    type="number"
+                                    value={newAddon.price}
+                                    onChange={(e) =>
+                                      handleInputChange("price", e.target.value)
+                                    }
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
+                                    placeholder="50"
+                                    min="0"
+                                    step="0.01"
+                                  />
+                                </div>
+
+                                {/* Checkboxes */}
+                                <div className="flex gap-6">
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={newAddon.isAvailable}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "isAvailable",
+                                          e.target.checked
+                                        )
+                                      }
+                                      className="mr-2"
+                                    />
+                                    Available
+                                  </label>
+
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={newAddon.isVeg}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "isVeg",
+                                          e.target.checked
+                                        )
+                                      }
+                                      className="mr-2"
+                                    />
+                                    Vegetarian
+                                  </label>
+
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={newAddon.isDefault}
+                                      onChange={(e) =>
+                                        handleInputChange(
+                                          "isDefault",
+                                          e.target.checked
+                                        )
+                                      }
+                                      className="mr-2"
+                                    />
+                                    Set as Default
+                                  </label>
+                                </div>
+
+                                {/* Tags Section */}
+                                <div className="mt-4">
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Tags
+                                  </label>
+
+                                  {/* Show currently selected tags */}
+                                  {newAddon.tags &&
+                                    newAddon.tags.length > 0 && (
+                                      <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
+                                        <span className="text-xs text-gray-600">
+                                          Selected:
+                                        </span>
+                                        {newAddon.tags.map((tagObj, index) => (
+                                          <span
+                                            key={tagObj.id || index}
+                                            style={{
+                                              backgroundColor:
+                                                getTagColor(tagObj),
+                                            }}
+                                            className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-white text-xs font-medium"
+                                          >
+                                            {tagObj.name}
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                const updatedTags =
+                                                  newAddon.tags.filter(
+                                                    (_, i) => i !== index
+                                                  );
+                                                setNewAddon((prev) => ({
+                                                  ...prev,
+                                                  tags: updatedTags,
+                                                }));
+                                              }}
+                                              className="hover:bg-black/20 rounded-full p-0.5 ml-1"
+                                            >
+                                              <FaTimes size={10} />
+                                            </button>
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+
+                                  {/* MenuTagSelector */}
+                                  <MenuTagSelector
+                                    selectedTags={newAddon.tags.map(
+                                      (tag) => tag.id
+                                    )}
+                                    onTagsChange={handleTagsChange}
+                                    tagType="addon"
+                                    className="w-full"
+                                  />
+                                </div>
+
+                                {/* Form Actions */}
+                                <div className="flex gap-3 pt-4">
+                                  <button
+                                    type="button"
+                                    onClick={handleAddAddon}
+                                    className="bg-[#4A67FF] text-white px-6 py-2 rounded-md hover:bg-[#3651E6] flex-1"
+                                  >
+                                    Add Addon
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setShowAddonForm(false);
+                                      setNewAddon({
+                                        name: "",
+                                        price: "",
+                                        isAvailable: true,
+                                        isVeg: true,
+                                        isDefault: false,
+                                        tags: [],
+                                      });
+                                    }}
+                                    className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
-                          {/* Create Addon Buttons */}
-                          <button
+                            {/* Create Addon Buttons */}
+                            {/* <button
                             onClick={() => setIsMapAddonsModalOpen(true)}
                             type="button"
                             className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF] mb-4"
@@ -1253,23 +1435,23 @@ const UpdateMenu = () => {
                             <p className="font-semibold text-lg">
                               Create new Add on group (Modal)
                             </p>
-                          </button>
+                          </button> */}
 
-                          {!showAddonForm && (
-                            <button
-                              type="button"
-                              className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
-                              onClick={() => setShowAddonForm(true)}
-                            >
-                              <FaPlus className="text-base" />
-                              <p className="font-semibold text-lg">
-                                Create new Add on with Tags
-                              </p>
-                            </button>
-                          )}
+                            {!showAddonForm && (
+                              <button
+                                type="button"
+                                className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
+                                onClick={() => setShowAddonForm(true)}
+                              >
+                                <FaPlus className="text-base" />
+                                <p className="font-semibold text-lg">
+                                  Create new Add on with Tags
+                                </p>
+                              </button>
+                            )}
 
-                          {/* Display Current Addons in List Format */}
-                          {watch("addOns").length > 0 && (
+                            {/* Display Current Addons in List Format */}
+                            {/* {watch("addOns").length > 0 && (
                             <div className="mt-5">
                               <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
                                 <h4 className="font-inter text-[#969696] font-semibold">
@@ -1293,14 +1475,16 @@ const UpdateMenu = () => {
                                 </div>
                               ))}
                             </div>
-                          )}
-                        </div>
-                      )}
+                          )} */}
+                          </div>
+                        )}
+                      </div>
+                      <AddonsManager groups={groups} setGroups={setGroups} />
                     </div>
                   </div>
 
                   {/* Additional Details Section */}
-                  <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
+                  <div className="pb-5 hidden border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
                       <div
                         onClick={() =>
@@ -1379,7 +1563,7 @@ const UpdateMenu = () => {
                   </div>
 
                   {/* Serving Info Section */}
-                  <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
+                  <div className="pb-5 hidden border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
                       <div
                         onClick={() => setIsServingInfo(!isServingInfo)}
@@ -1455,6 +1639,15 @@ const UpdateMenu = () => {
                               <FaPlus />
                               Add More
                             </Button>
+                            <Button
+                              type="button"
+                              className="px-4"
+                              onClick={() => {
+                                setValue("customizations", []);
+                              }}
+                            >
+                              Clear Customization
+                            </Button>
                             {isCustomization ? (
                               <FaMinus className="text-black" size={20} />
                             ) : (
@@ -1519,7 +1712,7 @@ const UpdateMenu = () => {
                   </div>
 
                   {/* Availability for Food Item Section */}
-                  <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
+                  <div className="pb-5 hidden border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
                       <div
                         onClick={() =>
@@ -1575,6 +1768,8 @@ const UpdateMenu = () => {
               setIsVariantModalOpen={setIsVariantModalOpen}
               setValue={setValue}
               getValues={getValues}
+              index={index}
+              isUpdate={isUpdate}
             />
           )}
 

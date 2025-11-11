@@ -239,17 +239,17 @@ import usePatchApiReq from "@/hooks/usePatchApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import { subCategorySchema } from "@/schema/restaurantSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import Spinner from "../Spinner";
+import useGetApiReq from "@/hooks/useGetApiReq";
 
 const SubCategoryEditModel = ({
   isOpenSubCategoryModel,
   setIsOpenSubCategoryModel,
   categoryId, // This is the parent category ID
-  getCategories,
   subCategory,
   subcategoryId,
 }) => {
@@ -259,6 +259,7 @@ const SubCategoryEditModel = ({
     isLoading: isLoading1,
     fetchData: fetchData1,
   } = usePatchApiReq();
+   const [allCategories, setAllCategories] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(subCategorySchema),
@@ -271,6 +272,32 @@ const SubCategoryEditModel = ({
 
   const params = useParams();
   const { control, reset } = form;
+
+  const { res:getRes, fetchData:getData, isLoading:isGetLoading } = useGetApiReq();
+
+  const getCategories = () => {
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}`;
+    getData(url);
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  // Enhanced debug logging
+  useEffect(() => {
+    if (getRes?.status === 200 || getRes?.status === 201) {
+      console.log("✅ Full response data:", getRes?.data);
+
+      const categories = getRes?.data?.data?.categories || [];
+      console.log("✅ Extracted categories:", categories);
+      const modifiedCategories = categories?.map((item) => ({
+        label: item?.name,
+        value: item?.id,
+      }));
+      setAllCategories(modifiedCategories || []);
+    }
+  }, [getRes]);
 
   const onSubmit = (data) => {
     console.log("data", data);
@@ -291,7 +318,7 @@ const SubCategoryEditModel = ({
       fetchData(`/restaurant/post-add-subcategory/${params.restaurantId}`, {
         name: data.subCategory,
         description: data.description,
-        categoryId,
+        categoryId:data.categoryId,
       });
     }
   };
@@ -329,6 +356,42 @@ const SubCategoryEditModel = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="w-full py-3"
             >
+              <div className="w-full mt-5">
+                <FormField
+                  control={control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {allCategories?.map((category) => (
+                            <SelectItem
+                              key={category?.value}
+                              value={category?.value}
+                            >
+                              {category?.label}
+                            </SelectItem>
+                          ))}
+
+                          {allCategories.length === 0 && (
+                            <p>No categories found</p>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="w-full mt-5">
                 <FormField
                   control={control}
