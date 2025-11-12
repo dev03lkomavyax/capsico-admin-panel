@@ -1,13 +1,25 @@
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import NonVegIcon from "@/components/customIcons/NonVegIcon";
+import VegIcon from "@/components/customIcons/VegIcon";
+import DataNotFound from "@/components/DataNotFound";
+import AddCustomizationCategoryModal from "@/components/menu/AddCustomizationCategoryModal";
+import AddCustomizationModal from "@/components/menu/AddCustomizationModal";
+import AvailabilityForFoodItem from "@/components/menu/AvailabilityForFoodItem";
+import CreateVariantModel from "@/components/menu/CreateVariantModel";
+import MapAddOnModel from "@/components/menu/MapAddOnModel";
+import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -15,40 +27,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import { addItemSchema } from "@/schema/restaurantSchema";
+import { updateMultiplePreview } from "@/utils/updatePreview";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { Edit } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import { FiUpload } from "react-icons/fi";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { FiPlus, FiUpload } from "react-icons/fi";
-import Variants from "@/components/restaurant/Variants";
-import ServingInfo from "@/components/restaurant/ServingInfo";
-import MapAddOn from "@/components/restaurant/MapAddOn";
-import AdditionalDetails from "@/components/restaurant/AdditionalDetails";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import { updateMultiplePreview } from "@/utils/updatePreview";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { addItemSchema } from "@/schema/restaurantSchema";
-import { Label } from "@/components/ui/label";
-import usePostApiReq from "@/hooks/usePostApiReq";
-import CreateVariantModel from "@/components/menu/CreateVariantModel";
-import MapAddOnModel from "@/components/menu/MapAddOnModel";
-import AddCustomizationModal from "@/components/menu/AddCustomizationModal";
-import AddCustomizationCategoryModal from "@/components/menu/AddCustomizationCategoryModal";
-import VegIcon from "@/components/customIcons/VegIcon";
-import NonVegIcon from "@/components/customIcons/NonVegIcon";
-import EggIcon from "@/components/customIcons/EggIcon";
-import { Button } from "@/components/ui/button";
-import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
-import Spinner from "@/components/Spinner";
-import DataNotFound from "@/components/DataNotFound";
-import AvailabilityForFoodItem from "@/components/menu/AvailabilityForFoodItem";
-import MenuTagSelector from "./menuTagSelector";
-import { Switch } from "@/components/ui/switch";
-import { Edit } from "lucide-react";
 import AddonsManager from "./addons/AddonsManager";
+import MenuTagSelector from "./menuTagSelector";
 
 // const AddMenu = () => {
 //   const navigate = useNavigate();
@@ -1169,6 +1163,7 @@ const AddMenu = () => {
       openingTime: "",
       closingTime: "",
       days: [],
+      variantGroupText: ""
     },
   });
 
@@ -2048,6 +2043,22 @@ const AddMenu = () => {
                       </div>
                       {isVariant && (
                         <>
+                          <FormField
+                            control={control}
+                            name="variantGroupText"
+                            render={({ field }) => (
+                              <FormItem className="mb-5">
+                                <FormLabel>Variant Group Text</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter Variant Group Text"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                           <button
                             onClick={() => {
                               setIndex(() => null);

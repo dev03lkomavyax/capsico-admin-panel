@@ -15,7 +15,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,12 +48,12 @@ import { id } from "@/utils/Id-util";
 const UpdateMenu = () => {
   const navigate = useNavigate();
   const [isItemImageUploadModalOpen, setIsItemImageUploadModalOpen] =
-  useState(false);
+    useState(false);
   const [isVariant, setIsVariant] = useState(false);
   const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
   const [index, setIndex] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
-  
+
   const [isMapAddons, setIsMapAddons] = useState(false);
   const [isMapAddonsModalOpen, setIsMapAddonsModalOpen] = useState(false);
   const [isAdditionalDetails, setIsAdditionalDetails] = useState(false);
@@ -68,7 +68,7 @@ const UpdateMenu = () => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [cuisines, setCuisines] = useState([]);
   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-  
+
   // Enhanced state management for tags and addons
   const [availableTags, setAvailableTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
@@ -84,7 +84,7 @@ const UpdateMenu = () => {
     isDefault: false,
     tags: [],
   });
-  
+
   const params = useParams();
   const { state } = useLocation();
   console.log("state", state);
@@ -150,6 +150,7 @@ const UpdateMenu = () => {
       openingTime: "",
       closingTime: "",
       days: [],
+      variantGroupText: "",
     },
   });
 
@@ -240,6 +241,10 @@ const UpdateMenu = () => {
         setValue("subCategory", subcategories?.[0]?.subCategoryId);
     }
   }, [subcategoriesRes]);
+
+  useEffect(() => {
+    setValue("subCategory", foodItem.subcategoryId);
+  }, [foodItem.subcategoryId]);
 
   // Enhanced Tag fetching
   const fetchAllTags = async () => {
@@ -1027,7 +1032,9 @@ const UpdateMenu = () => {
                         className="cursor-pointer pb-6"
                       >
                         <div className="flex justify-between items-center">
-                          <h3 className="text-black class-lg6">Variants</h3>
+                          <h3 className="text-black class-lg6">
+                            Variants (Optional)
+                          </h3>
                           {isVariant ? (
                             <FaMinus className="text-black" size={20} />
                           ) : (
@@ -1042,6 +1049,22 @@ const UpdateMenu = () => {
                       </div>
                       {isVariant && (
                         <>
+                          <FormField
+                            control={control}
+                            name="variantGroupText"
+                            render={({ field }) => (
+                              <FormItem className="mb-5">
+                                <FormLabel>Variant Group Text</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter Variant Group Text"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                           <button
                             onClick={() => {
                               setIndex(() => null);

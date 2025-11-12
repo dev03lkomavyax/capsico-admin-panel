@@ -51,6 +51,7 @@ export const addItemSchema = z
     closingTime: z.string().optional(),
     days: z.array(z.string()).optional(),
     restaurant: z.string().optional(),
+    variantGroupText: z.string().min(1, "Variant Group Text is required"),
   })
   .refine(
     (data) => {
@@ -95,6 +96,7 @@ export const UpdateItemSchema = z
     closingTime: z.string().optional(),
     days: z.array(z.string()).optional(),
     restaurant: z.string().optional(),
+    variantGroupText: z.string().min(1, "Variant Group Text is required"),
   })
   .refine(
     (data) => {
