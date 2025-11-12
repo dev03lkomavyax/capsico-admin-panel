@@ -47,7 +47,7 @@ const categories = [
 
 const MenuPage = () => {
   const params = useParams();
-  const [menuData, setMenuData] = useState([...categories]);
+  const [menuData, setMenuData] = useState([]);
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -62,14 +62,18 @@ const MenuPage = () => {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("getdata res", res);
-        setMenuData(res?.data?.data);
+      setMenuData(res?.data?.data);
     }
   }, [res]);
 
   return (
     <AdminWrapper>
       <div className="">
-        <MenuSection categories={menuData} getData={getData} />
+        <MenuSection
+          categories={menuData}
+          getData={getData}
+          isLoading={isLoading}
+        />
       </div>
     </AdminWrapper>
   );

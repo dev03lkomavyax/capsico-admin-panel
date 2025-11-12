@@ -14,10 +14,9 @@ import Food from "./Food";
 import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
 import CategoryEditModel from "@/components/menu/CategoryEditModel";
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import Spinner from "@/components/Spinner";
 
-export default function MenuSection({ categories, getData }) {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All Items");
+export default function MenuSection({ categories = [], getData, isLoading }) {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
 
@@ -124,12 +123,19 @@ export default function MenuSection({ categories, getData }) {
         </div> */}
       </div>
 
-      {!categories ||
-        (categories.length === 0 && (
-          <div className="flex justify-center text-muted-foreground">
-            No menu found. Create menu by adding food items, category.
+      {!isLoading && categories.length === 0 && (
+        <div className="flex justify-center text-muted-foreground">
+          No menu found. Create menu by adding food items, category.
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="flex justify-center text-muted-foreground mt-40">
+          <div>
+            <Spinner /> Loading menu...
           </div>
-        ))}
+        </div>
+      )}
 
       {/* Categories Accordion */}
       <Accordion type="multiple" className="flex flex-col gap-4">
