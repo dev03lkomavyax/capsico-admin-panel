@@ -36,6 +36,7 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
   const handleCategoryAdd = () => {
     setIsOpenCategoryModel((prev) => !prev);
   };
+  
   const handleSubcategoryAdd = () => {
     setIsOpenSubCategoryModel((prev) => !prev);
   };
