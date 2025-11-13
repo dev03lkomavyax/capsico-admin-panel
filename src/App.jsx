@@ -30,7 +30,7 @@ import PromotedOffer from "./pages/offers/PromotedOffers";
 import AddDeliveryAgent from "./pages/delivery-agent/AddDeliveryAgent";
 import UpdateMenu from "./pages/restaurant/menu/UpdateMenu";
 import Menu from "./pages/restaurant/menu/Menu";
-import Cuisines from "./pages/restaurant/Cuisines";
+import Cuisines from "./pages/restaurant/cuisine/Cuisines";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -107,9 +107,13 @@ const CityFormPage = lazy(() =>
   import("./pages/admin/AvailableCities/availableCityForm")
 );
 
-const ContentManagement = lazy(() => import('./pages/ContentManagement/ContentManagement'));
-const ContentForm = lazy(() => import('./pages/ContentManagement/ContentForm'));
-const CreateTags = lazy(() => import('./pages/restaurant/menu/menuTagSelector'));
+const ContentManagement = lazy(() =>
+  import("./pages/ContentManagement/ContentManagement")
+);
+const ContentForm = lazy(() => import("./pages/ContentManagement/ContentForm"));
+const CreateTags = lazy(() =>
+  import("./pages/restaurant/menu/menuTagSelector")
+);
 // const TagsList = lazy(() => import('./pages/admin/TagsList'));
 // const EditTag = lazy(() => import('./pages/admin/EditTag'));
 

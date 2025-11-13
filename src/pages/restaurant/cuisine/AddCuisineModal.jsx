@@ -22,24 +22,30 @@ import { z } from "zod";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/Spinner";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
 });
 
-const AddCuisineModal = ({ open, setOpen, getCuisines }) => {
+const AddCuisineModal = ({ open, setOpen, getCuisines, cuisine }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: cuisine?.label || "",
+      description: cuisine?.description || "",
     },
   });
 
   const { reset, getValues, control, handleSubmit } = form;
 
   const { res, fetchData, isLoading } = usePostApiReq();
+  const {
+    res: updateRes,
+    fetchData: updateCuisine,
+    isLoading: isCuisineLoadin,
+  } = usePatchApiReq();
 
   const onSubmit = (values) => {
     console.log("data:", values);
@@ -47,8 +53,11 @@ const AddCuisineModal = ({ open, setOpen, getCuisines }) => {
       name: values.title,
       description: values.description,
     };
-
-    fetchData(`/admin/cuisine/add`, payload);
+    if (cuisine) {
+      updateCuisine(`/admin/cuisine/update/${cuisine.value}`, payload);
+    } else {
+      fetchData(`/admin/cuisine/add`, payload);
+    }
   };
 
   useEffect(() => {
@@ -59,11 +68,19 @@ const AddCuisineModal = ({ open, setOpen, getCuisines }) => {
     }
   }, [res]);
 
+  useEffect(() => {
+    if (updateRes?.status === 200 || updateRes?.status === 201) {
+      console.log("update cuisine res", updateRes);
+      setOpen(false);
+      getCuisines();
+    }
+  }, [updateRes]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Cuisine</DialogTitle>
+          <DialogTitle>{cuisine ? "Update" : "Add"} Cuisine</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -101,11 +118,11 @@ const AddCuisineModal = ({ open, setOpen, getCuisines }) => {
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row-reverse sm:gap-4 pt-2">
               <Button
-                disabled={isLoading}
+                disabled={isLoading || isCuisineLoadin}
                 type="submit"
                 className="w-auto px-4"
               >
-                {isLoading ? <Spinner /> : "Submit"}
+                {isLoading || isCuisineLoadin ? <Spinner /> : "Submit"}
               </Button>
               <Button
                 type="button"

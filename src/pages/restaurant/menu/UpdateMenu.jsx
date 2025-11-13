@@ -34,7 +34,7 @@ import usePatchApiReq from "@/hooks/usePatchApiReq";
 import { UpdateItemSchema } from "@/schema/restaurantSchema";
 import { updateMultiplePreview } from "@/utils/updatePreview";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit } from "lucide-react";
+import { Edit, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
@@ -44,6 +44,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import AddonsManager from "./addons/AddonsManager";
 import MenuTagSelector from "./menuTagSelector";
 import { id } from "@/utils/Id-util";
+import ReactPagination from "@/components/pagination/ReactPagination";
+import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
 
 const UpdateMenu = () => {
   const navigate = useNavigate();
@@ -53,6 +55,8 @@ const UpdateMenu = () => {
   const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
   const [index, setIndex] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   const [isMapAddons, setIsMapAddons] = useState(false);
   const [isMapAddonsModalOpen, setIsMapAddonsModalOpen] = useState(false);
@@ -150,7 +154,7 @@ const UpdateMenu = () => {
       openingTime: "",
       closingTime: "",
       days: [],
-      variantGroupText: "",
+      variantGroupText: foodItem?.variantGroupText || "",
     },
   });
 
@@ -160,6 +164,11 @@ const UpdateMenu = () => {
   // useEffect(() => {
   //   setValue("subCategory", state.subcategoryId);
   // }, [state.subcategoryId]);
+  const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
+
+  const handleSubcategoryAdd = () => {
+    setIsOpenSubCategoryModel((prev) => !prev);
+  };
   const subCategory = watch("subCategory");
   const categoryId = watch("categoryId");
 
@@ -193,13 +202,13 @@ const UpdateMenu = () => {
   } = useGetApiReq();
 
   const getCategories = () => {
-    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}`;
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
     getData(url);
   };
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
   // Enhanced debug logging
   useEffect(() => {
@@ -213,6 +222,7 @@ const UpdateMenu = () => {
         value: item?.id,
       }));
       setAllCategories(modifiedCategories || []);
+      setTotalPage(getRes?.data?.pagination?.totalPages || 1);
     }
   }, [getRes]);
 
@@ -545,9 +555,9 @@ const UpdateMenu = () => {
     const customizations = getValues("customizations");
     const modifiedCustomizations = customizations?.[0]
       ? {
-          categoryname: customizations[0].categoryName,
-          customizationtype: customizations[0].customizationType,
-          addeddata: customizations[0].customizationOptions,
+          categoryname: customizations?.[0]?.categoryName,
+          customizationtype: customizations?.[0]?.customizationType,
+          addeddata: customizations?.[0]?.customizationOptions,
         }
       : {};
 
@@ -603,6 +613,7 @@ const UpdateMenu = () => {
 
     // Use subcategoryId for the new API structure
     formData.append("subcategoryId", subCategory);
+    formData.append("variantGroupText", data.variantGroupText);
     formData.append("categoryId", categoryId);
     console.log("menuTags", menuTags);
 
@@ -673,12 +684,18 @@ const UpdateMenu = () => {
                         Basic Details
                       </h3>
 
-                      <FormField
+                      {/* <FormField
                         control={control}
                         name="categoryId"
                         render={({ field }) => (
                           <FormItem className="mt-5">
-                            <FormLabel>Category</FormLabel>
+                            <div className="flex justify-between items-center gap-5">
+                              <FormLabel>Category</FormLabel>
+                              <ReactPagination
+                                totalPage={totalPage}
+                                setPage={setPage}
+                              />
+                            </div>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
@@ -706,7 +723,7 @@ const UpdateMenu = () => {
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
+                      /> */}
 
                       {categoryId && (
                         <FormField
@@ -714,7 +731,18 @@ const UpdateMenu = () => {
                           name="subCategory"
                           render={({ field }) => (
                             <FormItem className="mt-5">
-                              <FormLabel>Sub Category</FormLabel>
+                              <div className="flex justify-between items-center gap-5">
+                                <FormLabel>Sub Category</FormLabel>
+                                <Button
+                                  variant="capsico"
+                                  className="flex items-center gap-2 w-auto px-4"
+                                  onClick={handleSubcategoryAdd}
+                                  type="button"
+                                >
+                                  <PlusIcon size={18} />
+                                  Add Sub Category
+                                </Button>
+                              </div>
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value}
@@ -1784,6 +1812,14 @@ const UpdateMenu = () => {
             </Form>
           </div>
 
+          {isOpenSubCategoryModel && (
+            <SubCategoryEditModel
+              isOpenSubCategoryModel={isOpenSubCategoryModel}
+              setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
+              category={foodItem.category}
+              getSubcategoriesFun={getSubcategoriesFun}
+            />
+          )}
           {/* Modal Components */}
           {isVariantModalOpen && (
             <CreateVariantModel

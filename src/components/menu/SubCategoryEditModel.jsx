@@ -245,13 +245,15 @@ import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import Spinner from "../Spinner";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import ReactPagination from "../pagination/ReactPagination";
 
 const SubCategoryEditModel = ({
   isOpenSubCategoryModel,
   setIsOpenSubCategoryModel,
-  categoryId, // This is the parent category ID
+  category = "", // This is the parent category ID
   subCategory,
   subcategoryId,
+  getSubcategoriesFun=()=>{},
 }) => {
   const { res, isLoading, fetchData } = usePostApiReq();
   const {
@@ -259,7 +261,11 @@ const SubCategoryEditModel = ({
     isLoading: isLoading1,
     fetchData: fetchData1,
   } = usePatchApiReq();
-   const [allCategories, setAllCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
+
+  console.log("category", category);
 
   const form = useForm({
     resolver: zodResolver(subCategorySchema),
@@ -267,22 +273,27 @@ const SubCategoryEditModel = ({
       subCategory: subCategory?.name || "",
       description: subCategory?.description || "",
       isActive: subCategory?.isActive || false,
+      categoryId: category ? category?.id : "",
     },
   });
 
   const params = useParams();
   const { control, reset } = form;
 
-  const { res:getRes, fetchData:getData, isLoading:isGetLoading } = useGetApiReq();
+  const {
+    res: getRes,
+    fetchData: getData,
+    isLoading: isGetLoading,
+  } = useGetApiReq();
 
   const getCategories = () => {
-    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}`;
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
     getData(url);
   };
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
   // Enhanced debug logging
   useEffect(() => {
@@ -296,6 +307,7 @@ const SubCategoryEditModel = ({
         value: item?.id,
       }));
       setAllCategories(modifiedCategories || []);
+      setTotalPage(getRes?.data?.pagination?.totalPages || 1);
     }
   }, [getRes]);
 
@@ -318,7 +330,7 @@ const SubCategoryEditModel = ({
       fetchData(`/restaurant/post-add-subcategory/${params.restaurantId}`, {
         name: data.subCategory,
         description: data.description,
-        categoryId:data.categoryId,
+        categoryId: data.categoryId,
       });
     }
   };
@@ -328,6 +340,7 @@ const SubCategoryEditModel = ({
       console.log("Add sub-category res", res);
       toast.success(res?.data?.message || "Subcategory added successfully");
       getCategories();
+      getSubcategoriesFun();
       setIsOpenSubCategoryModel(false);
       reset();
     }
@@ -356,42 +369,55 @@ const SubCategoryEditModel = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="w-full py-3"
             >
-              <div className="w-full mt-5">
-                <FormField
-                  control={control}
-                  name="categoryId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {allCategories?.map((category) => (
-                            <SelectItem
-                              key={category?.value}
-                              value={category?.value}
-                            >
-                              {category?.label}
-                            </SelectItem>
-                          ))}
+              {category && (
+                <div className="">
+                  <h3>Category Name: {category?.name}</h3>
+                </div>
+              )}
+              {!category && (
+                <div className="w-full mt-5">
+                  <FormField
+                    control={control}
+                    name="categoryId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex justify-between items-center gap-5">
+                          <FormLabel>Category</FormLabel>
+                          <ReactPagination
+                            totalPage={totalPage}
+                            setPage={setPage}
+                          />
+                        </div>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Category" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {allCategories?.map((category) => (
+                              <SelectItem
+                                key={category?.value}
+                                value={category?.value}
+                              >
+                                {category?.label}
+                              </SelectItem>
+                            ))}
 
-                          {allCategories.length === 0 && (
-                            <p>No categories found</p>
-                          )}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                            {allCategories.length === 0 && (
+                              <p>No categories found</p>
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
               <div className="w-full mt-5">
                 <FormField
                   control={control}

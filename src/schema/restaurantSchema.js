@@ -38,7 +38,7 @@ export const addItemSchema = z
     // .refine((file) => file && file.length > 0, "Item Image is required"),
     itemDescription: z.string().optional(),
     // .min(1, "Item Description is required"),
-    cuisine: z.string().min(1, "Cuisine is required"),
+    cuisine: z.string().optional(),
     foodType: z.string().min(1, "Food Type is required"),
     // menuCategory: z.string().min(1, "Menu Category is required"),
     basePrice: z.coerce.number().min(1, "Price cannot be 0"),
@@ -51,7 +51,7 @@ export const addItemSchema = z
     closingTime: z.string().optional(),
     days: z.array(z.string()).optional(),
     restaurant: z.string().optional(),
-    variantGroupText: z.string().min(1, "Variant Group Text is required"),
+    variantGroupText: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -96,7 +96,7 @@ export const UpdateItemSchema = z
     closingTime: z.string().optional(),
     days: z.array(z.string()).optional(),
     restaurant: z.string().optional(),
-    variantGroupText: z.string().min(1, "Variant Group Text is required"),
+    variantGroupText: z.string().optional(),
   })
   .refine(
     (data) => {

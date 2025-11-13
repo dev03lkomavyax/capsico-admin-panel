@@ -1,12 +1,12 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AddCuisineModal from "./AddCuisineModal";
+import Cuisine from "./Cuisine";
 
 const Cuisines = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -47,7 +47,7 @@ const Cuisines = () => {
           >
             <MdKeyboardArrowLeft className="text-[#000000] text-2xl" />
             <h2 className="text-[#000000] text-xl font-medium font-roboto">
-              Cuisines
+              Cuisines (Food Type)
             </h2>
           </button>
           <Button
@@ -61,17 +61,7 @@ const Cuisines = () => {
 
         <div className="grid grid-cols-4 gap-5 mt-5">
           {cuisines.map((item) => (
-            <Card key={item.value}>
-              <CardContent className="pt-6">
-                <h3 className="text-xl font-medium">{item.label}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {item.customCuisineId}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {item.description}
-                </p>
-              </CardContent>
-            </Card>
+            <Cuisine key={item.value} item={item} getCuisines={getCuisines} />
           ))}
         </div>
         {isLoading && (

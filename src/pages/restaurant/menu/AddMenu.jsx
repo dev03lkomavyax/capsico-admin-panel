@@ -15,7 +15,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +34,7 @@ import usePostApiReq from "@/hooks/usePostApiReq";
 import { addItemSchema } from "@/schema/restaurantSchema";
 import { updateMultiplePreview } from "@/utils/updatePreview";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit } from "lucide-react";
+import { Edit, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
@@ -43,6 +43,8 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import AddonsManager from "./addons/AddonsManager";
 import MenuTagSelector from "./menuTagSelector";
+import ReactPagination from "@/components/pagination/ReactPagination";
+import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
 
 // const AddMenu = () => {
 //   const navigate = useNavigate();
@@ -1114,7 +1116,8 @@ const AddMenu = () => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [cuisines, setCuisines] = useState([]);
   const [availabilityForFoodItem, setAvailabilityForFoodItem] = useState(false);
-
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
   // Enhanced state management for tags and addons
   const [availableTags, setAvailableTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
@@ -1147,7 +1150,7 @@ const AddMenu = () => {
       itemImage: "",
       itemImagePreview: "",
       itemDescription: "",
-      cuisine: "",
+      cuisine: "", //TODO: If cuisine is not selected its mean its "All" type
       foodType: "",
       basePrice: "",
       packagingCharges: "",
@@ -1163,7 +1166,7 @@ const AddMenu = () => {
       openingTime: "",
       closingTime: "",
       days: [],
-      variantGroupText: ""
+      variantGroupText: "",
     },
   });
 
@@ -1173,6 +1176,12 @@ const AddMenu = () => {
   // useEffect(() => {
   //   setValue("subCategory", state.subcategoryId);
   // }, [state.subcategoryId]);
+   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
+  
+  const handleSubcategoryAdd = () => {
+    setIsOpenSubCategoryModel((prev) => !prev);
+  };
+
   const subCategory = watch("subCategory");
   const categoryId = watch("categoryId");
 
@@ -1211,13 +1220,13 @@ const AddMenu = () => {
   } = useGetApiReq();
 
   const getCategories = () => {
-    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}`;
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
     getData(url);
   };
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
   // Enhanced debug logging
   useEffect(() => {
@@ -1231,6 +1240,7 @@ const AddMenu = () => {
         value: item?.id,
       }));
       setAllCategories(modifiedCategories || []);
+      setTotalPage(getRes?.data?.pagination?.totalPages || 1);
     }
   }, [getRes]);
 
@@ -1544,9 +1554,9 @@ const AddMenu = () => {
     // );
     const customizations = getValues("customizations");
     const modifiedCustomizations = {
-      categoryname: customizations[0].categoryName,
-      customizationtype: customizations[0].customizationType,
-      addeddata: customizations[0].customizationOptions,
+      categoryname: customizations?.[0]?.categoryName,
+      customizationtype: customizations?.[0]?.customizationType,
+      addeddata: customizations?.[0]?.customizationOptions,
     };
 
     // Enhanced addons with tags
@@ -1606,6 +1616,7 @@ const AddMenu = () => {
     formData.append("isRecommended", data.isRecommended);
     // Use subcategoryId for the new API structure
     formData.append("subcategoryId", subCategory);
+    formData.append("variantGroupText", data.variantGroupText);
 
     // Add images with field name "images" (matching multer config)
     Array.from(data.itemImage).forEach((image) => {
@@ -1672,7 +1683,14 @@ const AddMenu = () => {
                         name="categoryId"
                         render={({ field }) => (
                           <FormItem className="mt-5">
-                            <FormLabel>Category</FormLabel>
+                            {/* <FormLabel>Category</FormLabel> */}
+                            <div className="flex justify-between items-center gap-5">
+                              <FormLabel>Category</FormLabel>
+                              <ReactPagination
+                                totalPage={totalPage}
+                                setPage={setPage}
+                              />
+                            </div>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
@@ -1708,7 +1726,18 @@ const AddMenu = () => {
                           name="subCategory"
                           render={({ field }) => (
                             <FormItem className="mt-5">
-                              <FormLabel>Sub Category</FormLabel>
+                              <div className="flex justify-between items-center gap-5">
+                                <FormLabel>Sub Category</FormLabel>
+                                <Button
+                                  variant="capsico"
+                                  className="flex items-center gap-2 w-auto px-4"
+                                  onClick={handleSubcategoryAdd}
+                                  type="button"
+                                >
+                                  <PlusIcon size={18} />
+                                  Add Sub Category
+                                </Button>
+                              </div>
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value}
@@ -2776,6 +2805,15 @@ const AddMenu = () => {
               </form>
             </Form>
           </div>
+
+          {isOpenSubCategoryModel && (
+            <SubCategoryEditModel
+              isOpenSubCategoryModel={isOpenSubCategoryModel}
+              setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
+              // categoryId={categoryId}
+              getSubcategoriesFun={getSubcategoriesFun}
+            />
+          )}
 
           {/* Modal Components */}
           {isVariantModalOpen && (
