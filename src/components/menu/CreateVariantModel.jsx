@@ -32,7 +32,7 @@ const CreateVariantModel = ({
       .string()
       .min(3, "Minium 3 char is required")
       .max(50, "Name cannot exceed 50 characters"),
-    price: z.number().min(0, "Price must be greater than or equal to 0"),
+    price: z.coerce.number().min(0, "Price must be greater than or equal to 0"),
     isDefault: z.boolean().optional(),
   });
 
