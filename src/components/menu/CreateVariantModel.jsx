@@ -32,12 +32,7 @@ const CreateVariantModel = ({
       .string()
       .min(3, "Minium 3 char is required")
       .max(50, "Name cannot exceed 50 characters"),
-    price: z
-      .string()
-      .refine(
-        (value) => !isNaN(parseFloat(value)) && parseFloat(value) >= 0,
-        "Price must be a valid number and greater than or equal to 0"
-      ),
+    price: z.number().min(0, "Price must be greater than or equal to 0"),
     isDefault: z.boolean().optional(),
   });
 
