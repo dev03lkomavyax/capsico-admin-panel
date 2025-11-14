@@ -1,18 +1,46 @@
+import AlertModal from "@/components/AlertModal";
 import NonVegIcon from "@/components/customIcons/NonVegIcon";
 import VegIcon from "@/components/customIcons/VegIcon";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
-import { EditIcon, ImageOffIcon, Star } from "lucide-react";
+import { EditIcon, ImageOffIcon, Star, TrashIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const Food = ({ item }) => {
+const Food = ({ item, getCategories }) => {
   const [isOn, setIsOn] = useState(item.isAvailable);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const { res, fetchData, isLoading } = usePostApiReq();
   const navigate = useNavigate();
   const params = useParams();
+
+  const {
+    res: deleteRes,
+    fetchData: deleteItem,
+    isLoading: isDeleteItemLoading,
+  } = useDeleteApiReq();
+
+  const deleteMenuItem = () => {
+    deleteItem(
+      `/admin/delete-menu-item/${params?.restaurantId}?menuItemId=${item?.id}`
+    );
+  };
+
+  useEffect(() => {
+    if (deleteRes?.status === 200 || deleteRes?.status === 201) {
+      getCategories();
+      setIsAlertModalOpen(false);
+    }
+  }, [deleteRes]);
 
   const toggleFoodAvailability = (value) => {
     console.log("value: ", value);
@@ -28,7 +56,7 @@ const Food = ({ item }) => {
       setIsOn(res?.data?.data?.isAvailable);
     }
   }, [res]);
-
+  
   const handleUpdate = () => {
     navigate(`/admin/restaurant/${params?.restaurantId}/updateMenu`, {
       state: {
@@ -37,7 +65,7 @@ const Food = ({ item }) => {
       },
     });
   };
-
+  
   return (
     <div
       className={`flex items-center gap-4 p-4 hover:bg-background-light dark:hover:bg-background-dark/80 ${
@@ -84,21 +112,59 @@ const Food = ({ item }) => {
             {item.isRecommended ? "Recommended" : "Recommend"}
           </Button>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="[&_svg]:size-6"
-          title="Edit Item"
-          onClick={handleUpdate}
-        >
-          <EditIcon className="size-6" />
-        </Button>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => setIsAlertModalOpen(true)}
+                className="size-8"
+              >
+                <TrashIcon className="text-destructive size-4 cursor-pointer" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete menu item</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={handleUpdate}
+                className="size-8"
+              >
+                <EditIcon className="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Update menu item</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <Switch
           className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
           checked={isOn}
           onCheckedChange={(value) => toggleFoodAvailability(value)}
         />
       </div>
+
+      {isAlertModalOpen && (
+        <AlertModal
+          isAlertModalOpen={isAlertModalOpen}
+          setIsAlertModalOpen={setIsAlertModalOpen}
+          header="Delete Menu Item"
+          description="Are you sure you want to delete this menu item?"
+          onConfirm={deleteMenuItem}
+          disabled={isDeleteItemLoading}
+        />
+      )}
     </div>
   );
 };

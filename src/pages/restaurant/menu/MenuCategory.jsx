@@ -8,17 +8,41 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { Star, Plus, ChevronDown, Search } from "lucide-react";
+import {
+  Star,
+  Plus,
+  ChevronDown,
+  Search,
+  Edit2Icon,
+  DeleteIcon,
+  EditIcon,
+  TrashIcon,
+  MoreHorizontalIcon,
+} from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Food from "./Food";
 import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
 import CategoryEditModel from "@/components/menu/CategoryEditModel";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import Spinner from "@/components/Spinner";
+import Category from "./Category";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import EditCategoryModal from "@/components/menu/EditCategoryModal";
+import EditSubCategoryModal from "@/components/menu/EditSubCategoryModal";
 
 export default function MenuSection({ categories = [], getData, isLoading }) {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [isEditSubCategoryModalOpen, setIsEditSubCategoryModalOpen] =
+    useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -36,7 +60,7 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
   const handleCategoryAdd = () => {
     setIsOpenCategoryModel((prev) => !prev);
   };
-  
+
   const handleSubcategoryAdd = () => {
     setIsOpenSubCategoryModel((prev) => !prev);
   };
@@ -58,7 +82,7 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
             </h1>
           </button>
           <p className="text-base font-normal text-[#6B7280] dark:text-gray-400">
-            Manage your restaurant's menu items and categories.
+            Manage your restaurant&apos;s menu items and categories.
           </p>
         </div>
         <div className="flex gap-3 items-center">
@@ -86,6 +110,30 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
             <Plus size={18} />
             Add Sub Category
           </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="size-10 p-0">
+                <MoreHorizontalIcon className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setIsEditCategoryModalOpen(true)}
+              >
+                Edit Category
+              </DropdownMenuItem>
+              <DropdownMenuItem>Delete Category</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setIsEditSubCategoryModalOpen(true)}
+              >
+                Edit Subcategory
+              </DropdownMenuItem>
+              <DropdownMenuItem>Delete Subcategory</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
@@ -141,54 +189,11 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
       {/* Categories Accordion */}
       <Accordion type="multiple" className="flex flex-col gap-4">
         {categories?.map((category) => (
-          <AccordionItem
+          <Category
             key={category.id}
-            value={category.name}
-            className="border border-[#E5E7EB] dark:border-gray-700 rounded-xl bg-white dark:bg-background-dark/50"
-          >
-            <AccordionTrigger className="flex items-center justify-between px-4 w-full py-3">
-              <div className="flex items-center gap-4 flex-1">
-                <p className="text-lg font-bold text-[#333333] dark:text-white">
-                  {category.name}
-                </p>
-                <span className="text-sm text-[#6B7280] dark:text-gray-400">
-                  ({category?.foodItems?.length} items)
-                </span>
-              </div>
-              <div className="flex items-center gap-4 justify-end pr-3">
-                <div className="flex items-center">
-                  {/* <span className="text-sm font-medium text-[#6B7280] dark:text-gray-400 mr-2">
-                    In Stock (All)
-                  </span> */}
-                  {/* <Switch
-                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
-                    defaultChecked
-                  /> */}
-                </div>
-                {/* <ChevronDown
-                  size={20}
-                  className="text-[#6B7280] dark:text-gray-400 transition-transform data-[state=open]:rotate-180"
-                /> */}
-              </div>
-            </AccordionTrigger>
-
-            <AccordionContent>
-              {category?.foodItems?.length === 0 ? (
-                <div className="p-6 text-center border-t border-[#E5E7EB] dark:border-gray-700">
-                  <p className="text-[#6B7280] dark:text-gray-400 text-sm">
-                    No {category.name.toLowerCase()} items have been added yet.
-                    Click “Add Item” to get started.
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-col divide-y divide-[#E5E7EB] dark:divide-gray-700">
-                  {category?.foodItems?.map((item, index) => (
-                    <Food key={index} item={item} />
-                  ))}
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
+            category={category}
+            getCategories={getData}
+          />
         ))}
       </Accordion>
 
@@ -197,6 +202,22 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
           isOpenCategoryModel={isOpenCategoryModel}
           setIsOpenCategoryModel={setIsOpenCategoryModel}
           getCategories={getData}
+        />
+      )}
+
+      {isEditCategoryModalOpen && (
+        <EditCategoryModal
+          isOpenCategoryModel={isEditCategoryModalOpen}
+          setIsOpenCategoryModel={setIsEditCategoryModalOpen}
+          getDataFun={getData}
+        />
+      )}
+
+      {isEditSubCategoryModalOpen && (
+        <EditSubCategoryModal
+          isOpenCategoryModel={isEditSubCategoryModalOpen}
+          setIsOpenCategoryModel={setIsEditSubCategoryModalOpen}
+          getDataFun={getData}
         />
       )}
 
