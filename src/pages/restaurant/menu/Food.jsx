@@ -14,10 +14,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import useGetApiReq from "@/hooks/useGetApiReq";
 
 const Food = ({ item, getCategories }) => {
   const [isOn, setIsOn] = useState(item.isAvailable);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isRecommended, setIsRecommended] = useState(item.isRecommended);
 
   const { res, fetchData, isLoading } = usePostApiReq();
   const navigate = useNavigate();
@@ -42,6 +44,25 @@ const Food = ({ item, getCategories }) => {
     }
   }, [deleteRes]);
 
+  const {
+    res: recommendRes,
+    fetchData: recommend,
+    isLoading: isDeleteRecommendLoading,
+  } = useGetApiReq();
+
+  const handleRecommend = () => {
+    setIsRecommended((prev) => !prev);
+    recommend(
+      `/restaurant/toggle-recommend/${item?.id}?restaurantId=${params?.restaurantId}`
+    );
+  };
+
+  useEffect(() => {
+    if (recommendRes?.status === 200 || recommendRes?.status === 201) {
+      getCategories();
+    }
+  }, [recommendRes]);
+
   const toggleFoodAvailability = (value) => {
     console.log("value: ", value);
     setIsOn(value);
@@ -56,7 +77,7 @@ const Food = ({ item, getCategories }) => {
       setIsOn(res?.data?.data?.isAvailable);
     }
   }, [res]);
-  
+
   const handleUpdate = () => {
     navigate(`/admin/restaurant/${params?.restaurantId}/updateMenu`, {
       state: {
@@ -65,7 +86,7 @@ const Food = ({ item, getCategories }) => {
       },
     });
   };
-  
+
   return (
     <div
       className={`flex items-center gap-4 p-4 hover:bg-background-light dark:hover:bg-background-dark/80 ${
@@ -95,23 +116,22 @@ const Food = ({ item, getCategories }) => {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        {item.isRecommended && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={`flex items-center gap-2 ${
-              item.isRecommended
-                ? "bg-primary/10 text-primary"
-                : "text-[#6B7280] hover:text-primary hover:bg-primary/10"
-            }`}
-          >
-            <Star
-              size={16}
-              className={item.isRecommended ? "fill-current" : ""}
-            />
-            {item.isRecommended ? "Recommended" : "Recommend"}
-          </Button>
-        )}
+        {/* {isRecommended && ( */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`flex items-center gap-2 ${
+            isRecommended
+              ? "bg-primary/10 text-primary"
+              : "text-[#6B7280] hover:text-primary hover:bg-primary/10"
+          }`}
+          onClick={handleRecommend}
+          disabled={isDeleteRecommendLoading}
+        >
+          <Star size={16} className={isRecommended ? "fill-current" : ""} />
+          {isRecommended ? "Recommended" : "Recommend"}
+        </Button>
+        {/* )} */}
 
         <TooltipProvider delayDuration={100}>
           <Tooltip>

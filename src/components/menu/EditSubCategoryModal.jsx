@@ -35,6 +35,7 @@ import Spinner from "../Spinner";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { Label } from "../ui/label";
 import usePatchApiReq from "@/hooks/usePatchApiReq";
+import ReactPagination from "../pagination/ReactPagination";
 
 const EditSubCategoryModal = ({
   isOpenCategoryModel,
@@ -64,7 +65,8 @@ const EditSubCategoryModal = ({
   const [categoryId, setCategoryId] = useState("");
   const [subcategoryId, setSubcategoryId] = useState("");
   const [subCategories, setSubCategories] = useState([]);
-  // const [category, setCategory] = useState("")
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (subcategoryId) {
@@ -93,15 +95,13 @@ const EditSubCategoryModal = ({
   } = useGetApiReq();
 
   const getCategories = () => {
-    const url = `/restaurant/get-categories?restaurantId=${
-      params?.restaurantId
-    }&page=${1}`;
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
     getData(url);
   };
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
   // Enhanced debug logging
   useEffect(() => {
@@ -117,7 +117,7 @@ const EditSubCategoryModal = ({
         isActive: item?.isActive,
       }));
       setAllCategories(modifiedCategories || []);
-      // setTotalPage(getRes?.data?.pagination?.totalPages || 1);
+      setTotalPage(getRes?.data?.pagination?.totalPages || 1);
     }
   }, [getRes]);
 
@@ -192,7 +192,10 @@ const EditSubCategoryModal = ({
               className="w-full py-3"
             >
               <div className="w-full mt-5 space-y-2">
-                <Label className="text-[#969696]">Select Category</Label>
+                <div className="flex justify-between items-center gap-5">
+                  <Label className="text-[#969696]">Select Category</Label>
+                  <ReactPagination totalPage={totalPage} setPage={setPage} />
+                </div>
                 <Select
                   onValueChange={(value) => setCategoryId(value)}
                   value={categoryId}
@@ -202,7 +205,7 @@ const EditSubCategoryModal = ({
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     {allCategories?.map((category) => (
                       <SelectItem key={category?.value} value={category?.value}>
                         {category?.label}
@@ -223,7 +226,7 @@ const EditSubCategoryModal = ({
                       <SelectValue placeholder="Select Sub Category" />
                     </SelectTrigger>
 
-                    <SelectContent>
+                    <SelectContent className="overflow-y-auto max-h-[10rem]">
                       {subCategories.map((subCategory) => (
                         <SelectItem
                           key={subCategory.subCategoryId}

@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 import Spinner from "../Spinner";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { Label } from "../ui/label";
+import ReactPagination from "../pagination/ReactPagination";
 
 const EditCategoryModal = ({
   isOpenCategoryModel,
@@ -61,6 +62,8 @@ const EditCategoryModal = ({
   const { register, control, watch, setValue, getValues, reset } = form;
   const [allCategories, setAllCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
   // const [category, setCategory] = useState("")
 
   useEffect(() => {
@@ -82,15 +85,13 @@ const EditCategoryModal = ({
   } = useGetApiReq();
 
   const getCategories = () => {
-    const url = `/restaurant/get-categories?restaurantId=${
-      params?.restaurantId
-    }&page=${1}`;
+    const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
     getData(url);
   };
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [page]);
 
   // Enhanced debug logging
   useEffect(() => {
@@ -106,7 +107,7 @@ const EditCategoryModal = ({
         isActive: item?.isActive,
       }));
       setAllCategories(modifiedCategories || []);
-      // setTotalPage(getRes?.data?.pagination?.totalPages || 1);
+      setTotalPage(getRes?.data?.pagination?.totalPages || 1);
     }
   }, [getRes]);
 
@@ -154,16 +155,17 @@ const EditCategoryModal = ({
               className="w-full py-3"
             >
               <div className="w-full mt-5 space-y-2">
-                <Label className="text-[#969696]">Select Category</Label>
+                <div className="flex justify-between items-center gap-5">
+                  <Label className="text-[#969696]">Select Category</Label>
+                  <ReactPagination totalPage={totalPage} setPage={setPage} />
+                </div>
                 <Select
                   onValueChange={(value) => setCategoryId(value)}
                   value={categoryId}
                 >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Category" />
-                    </SelectTrigger>
-                  </FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
                   <SelectContent>
                     {allCategories?.map((category) => (
                       <SelectItem key={category?.value} value={category?.value}>

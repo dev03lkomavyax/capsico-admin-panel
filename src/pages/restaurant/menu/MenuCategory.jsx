@@ -36,12 +36,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import EditCategoryModal from "@/components/menu/EditCategoryModal";
 import EditSubCategoryModal from "@/components/menu/EditSubCategoryModal";
+import DeleteCategoryModal from "@/components/menu/DeleteCategoryModal";
+import DeleteSubCategoryModal from "@/components/menu/DeleteSubCategoryModal";
 
 export default function MenuSection({ categories = [], getData, isLoading }) {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
   const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
   const [isEditSubCategoryModalOpen, setIsEditSubCategoryModalOpen] =
+    useState(false);
+  const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] =
+    useState(false);
+  const [isDeleteSubCategoryModalOpen, setIsDeleteSubCategoryModalOpen] =
     useState(false);
 
   const navigate = useNavigate();
@@ -111,7 +117,7 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
             Add Sub Category
           </Button>
 
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="size-10 p-0">
                 <MoreHorizontalIcon className="size-4" />
@@ -125,13 +131,21 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
               >
                 Edit Category
               </DropdownMenuItem>
-              <DropdownMenuItem>Delete Category</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setIsDeleteCategoryModalOpen(true)}
+              >
+                Delete Category
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setIsEditSubCategoryModalOpen(true)}
               >
                 Edit Subcategory
               </DropdownMenuItem>
-              <DropdownMenuItem>Delete Subcategory</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setIsDeleteSubCategoryModalOpen(true)}
+              >
+                Delete Subcategory
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -187,15 +201,17 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
       )}
 
       {/* Categories Accordion */}
-      <Accordion type="multiple" className="flex flex-col gap-4">
-        {categories?.map((category) => (
-          <Category
-            key={category.id}
-            category={category}
-            getCategories={getData}
-          />
-        ))}
-      </Accordion>
+      {!isLoading && (
+        <Accordion type="multiple" className="flex flex-col gap-4">
+          {categories?.map((category) => (
+            <Category
+              key={category.id}
+              category={category}
+              getCategories={getData}
+            />
+          ))}
+        </Accordion>
+      )}
 
       {isOpenCategoryModel && (
         <CategoryEditModel
@@ -221,11 +237,26 @@ export default function MenuSection({ categories = [], getData, isLoading }) {
         />
       )}
 
+      {isDeleteCategoryModalOpen && (
+        <DeleteCategoryModal
+          isOpenCategoryModel={isDeleteCategoryModalOpen}
+          setIsOpenCategoryModel={setIsDeleteCategoryModalOpen}
+          getDataFun={getData}
+        />
+      )}
+
+      {isDeleteSubCategoryModalOpen && (
+        <DeleteSubCategoryModal
+          isOpenCategoryModel={isDeleteSubCategoryModalOpen}
+          setIsOpenCategoryModel={setIsDeleteSubCategoryModalOpen}
+          getDataFun={getData}
+        />
+      )}
+
       {isOpenSubCategoryModel && (
         <SubCategoryEditModel
           isOpenSubCategoryModel={isOpenSubCategoryModel}
           setIsOpenSubCategoryModel={setIsOpenSubCategoryModel}
-          // categoryId={categoryId}
           getCategories={getData}
         />
       )}

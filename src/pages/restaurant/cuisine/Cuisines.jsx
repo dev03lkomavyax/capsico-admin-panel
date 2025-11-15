@@ -7,6 +7,7 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AddCuisineModal from "./AddCuisineModal";
 import Cuisine from "./Cuisine";
+import DataNotFound from "@/components/DataNotFound";
 
 const Cuisines = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -28,6 +29,7 @@ const Cuisines = () => {
 
       const modifiedCuisines = res?.data?.data?.cuisines?.map((cuisine) => ({
         label: cuisine?.name,
+        image: cuisine?.image,
         value: cuisine?._id,
         description: cuisine?.description,
         customCuisineId: cuisine?.customCuisineId || cuisine?._id,
@@ -68,6 +70,10 @@ const Cuisines = () => {
           <div className="mt-5 w-full">
             <Spinner />
           </div>
+        )}
+
+        {!isLoading && cuisines.length === 0 && (
+          <DataNotFound name="Cuisines" />
         )}
 
         {isAddModalOpen && (
