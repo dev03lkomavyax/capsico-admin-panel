@@ -261,13 +261,14 @@ const CategoryEditModel = ({
 
   const { register, control, watch, setValue, getValues, reset } = form;
 
+  console.log("category", category);
   const onSubmit = (data) => {
     console.log("data", data);
 
     if (category) {
       // Updated to use /restaurant/ endpoint for consistency
       fetchData1(
-        `/restaurant/restaurants/${params?.restaurantId}/update-category/${category?.id}`,
+        `/restaurant/restaurants/${params?.restaurantId}/update-category/${category?.id || category?._id}`,
         {
           name: data.category,
           description: data.description,

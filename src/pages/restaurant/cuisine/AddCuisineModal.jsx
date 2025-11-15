@@ -23,10 +23,12 @@ import usePostApiReq from "@/hooks/usePostApiReq";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/Spinner";
 import usePatchApiReq from "@/hooks/usePatchApiReq";
+import SingleImageUpload from "@/components/SingleImageUpload";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
+  image: z.any(),
 });
 
 const AddCuisineModal = ({ open, setOpen, getCuisines, cuisine }) => {
@@ -35,10 +37,15 @@ const AddCuisineModal = ({ open, setOpen, getCuisines, cuisine }) => {
     defaultValues: {
       title: cuisine?.label || "",
       description: cuisine?.description || "",
+      image: "",
+      imagePreview: cuisine?.image || "",
     },
   });
 
-  const { reset, getValues, control, handleSubmit } = form;
+  console.log("cuisine", cuisine);
+  
+
+  const { reset, getValues, control, handleSubmit, watch, setValue } = form;
 
   const { res, fetchData, isLoading } = usePostApiReq();
   const {
@@ -53,10 +60,18 @@ const AddCuisineModal = ({ open, setOpen, getCuisines, cuisine }) => {
       name: values.title,
       description: values.description,
     };
+
+    const formData = new FormData();
+    formData.append("name", values.title);
+    formData.append("description", values.description);
+    if (values.image) {
+      formData.append("image", values.image);
+    }
+
     if (cuisine) {
-      updateCuisine(`/admin/cuisine/update/${cuisine.value}`, payload);
+      updateCuisine(`/admin/cuisine/update/${cuisine.value}`, formData);
     } else {
-      fetchData(`/admin/cuisine/add`, payload);
+      fetchData(`/admin/cuisine/add`, formData);
     }
   };
 
@@ -78,13 +93,20 @@ const AddCuisineModal = ({ open, setOpen, getCuisines, cuisine }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{cuisine ? "Update" : "Add"} Cuisine</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <SingleImageUpload
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              name="image"
+              label="Image"
+            />
             {/* Title */}
             <FormField
               control={control}

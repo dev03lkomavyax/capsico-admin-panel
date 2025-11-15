@@ -1,10 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
-import React, { useEffect, useState } from "react";
-import AddCuisineModal from "./AddCuisineModal";
-import { EditIcon, TrashIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import AlertModal from "@/components/AlertModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
+import { EditIcon, ImageOffIcon, TrashIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import AddCuisineModal from "./AddCuisineModal";
 
 const Cuisine = ({ item, getCuisines }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,10 +48,21 @@ const Cuisine = ({ item, getCuisines }) => {
               </Button>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base font-medium text-muted-foreground">
             {item.customCuisineId}
           </p>
-          <p className="text-sm text-muted-foreground">{item.description}</p>
+          <p className="text-muted-foreground">{item.description}</p>
+          {item.image ? (
+            <img
+              className="aspect-square object-cover mt-5 rounded-md"
+              src={item.image}
+              alt={item.label}
+            />
+          ) : (
+            <div className="flex justify-center items-center aspect-square rounded-md bg-muted-foreground/10 mt-5">
+              <ImageOffIcon />
+            </div>
+          )}
         </CardContent>
       </Card>
 
