@@ -3,27 +3,35 @@ import NonVegIcon from "@/components/customIcons/NonVegIcon";
 import VegIcon from "@/components/customIcons/VegIcon";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import useDeleteApiReq from "@/hooks/useDeleteApiReq";
-import usePostApiReq from "@/hooks/usePostApiReq";
-import { EditIcon, ImageOffIcon, Star, TrashIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import { EditIcon, ImageOffIcon, Star, TrashIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import SoldOutDurationHoursModal from "./SoldOutDurationHoursModal";
 
 const Food = ({ item, getCategories }) => {
   const [isOn, setIsOn] = useState(item.isAvailable);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isRecommended, setIsRecommended] = useState(item.isRecommended);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { res, fetchData, isLoading } = usePostApiReq();
   const navigate = useNavigate();
   const params = useParams();
+
+  // useEffect(() => {
+  //   if(!isOn){
+  //     toast.error("This item is currently unavailable");
+  //   }
+  // }, [isOn]);
 
   const {
     res: deleteRes,
@@ -65,6 +73,10 @@ const Food = ({ item, getCategories }) => {
 
   const toggleFoodAvailability = (value) => {
     console.log("value: ", value);
+    if (!value) {
+      setIsModalOpen(true);
+      return
+    }
     setIsOn(value);
     fetchData(
       `/admin/food-availability/${item?.id}?restaurantId=${params?.restaurantId}`
@@ -116,6 +128,7 @@ const Food = ({ item, getCategories }) => {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
+        {item.soldOutDurationHours ? <p className="text-sm">Will come in stock after {item?.soldOutDurationHours} hours</p>:null}
         {/* {isRecommended && ( */}
         <Button
           variant="ghost"
@@ -168,11 +181,26 @@ const Food = ({ item, getCategories }) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        {/* <div>
+          <span className="text-muted-foreground text-sm">
+            If not sure send "0"
+          </span> */}
+        {/* <div className="flex gap-2 items-center px-3 py-1 border rounded-3xl"> */}
+        {/* <Input
+              className="w-16 h-9"
+              type="number"
+              value={soldOutDurationHours}
+              min={0}
+              placeholder="Hours"
+              onChange={(e) => setSoldOutDurationHours(e.target.value)}
+            /> */}
         <Switch
           className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
           checked={isOn}
           onCheckedChange={(value) => toggleFoodAvailability(value)}
         />
+        {/* </div> */}
+        {/* </div> */}
       </div>
 
       {isAlertModalOpen && (
@@ -183,6 +211,16 @@ const Food = ({ item, getCategories }) => {
           description="Are you sure you want to delete this menu item?"
           onConfirm={deleteMenuItem}
           disabled={isDeleteItemLoading}
+        />
+      )}
+
+      {isModalOpen && (
+        <SoldOutDurationHoursModal
+          isModal={isModalOpen}
+          setIsModal={setIsModalOpen}
+          isOn={isOn}
+          itemId={item?.id}
+          getCategories={getCategories}
         />
       )}
     </div>
