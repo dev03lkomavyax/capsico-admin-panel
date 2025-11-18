@@ -1,19 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { Checkbox } from "../ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { TableCell, TableRow } from "../ui/table";
+import useDeleteApiReq from "@/hooks/useDeleteApiReq";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import useDeleteApiReq from "@/hooks/useDeleteApiReq";
-import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 import AlertModal from "../AlertModal";
+import { Button } from "../ui/button";
+import { TableCell, TableRow } from "../ui/table";
 
 const SingleOrder = ({ data, getAllOrder }) => {
   const navigate = useNavigate();
@@ -74,7 +65,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
               {format(new Date(scheduleAt), "hh:mm:ss a")}
             </p>
           )}
-          {timing.orderedAt && (
+          {timing?.orderedAt && (
             <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
               OrderPlaced: {format(new Date(timing.orderedAt), "hh:mm:ss a")}
             </p>
@@ -91,7 +82,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
               {format(new Date(timing.restaurantrejectedAt), "hh:mm:ss a")}
             </p>
           )} */}
-          {timing.acceptedAt && (
+          {timing?.acceptedAt && (
             <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
               OrderAccepted(DeliveryBoy):{" "}
               {format(new Date(timing.acceptedAt), "hh:mm:ss a")}

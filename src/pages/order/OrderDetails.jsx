@@ -14,6 +14,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignDeliveryPartnerModal from "./AssignDeliveryPartnerModal";
 import { getSocket } from "@/socket";
+import { format } from "date-fns";
 
 const libraries = ["places", "marker"];
 
@@ -41,6 +42,8 @@ const OrderDetails = () => {
 
   const [minute, setMinute] = useState(1);
   const socket = getSocket();
+
+  const { timing, scheduleAt } = orderDetailsData || {};
 
   const form = useForm({
     resolver: zodResolver(OrderSchema),
@@ -197,11 +200,59 @@ const OrderDetails = () => {
             </div>
             <div className="flex flex-col mt-12">
               <h2 className="font-roboto text-sm mb-2">History</h2>
-              <History
+              {/* <History
                 status={orderDetailsData?.status}
                 history={orderDetailsData?.statusHistory}
                 timing={orderDetailsData?.timing && orderDetailsData?.timing}
-              />
+              /> */}
+
+              {scheduleAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderScheduleAt: {format(new Date(scheduleAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {timing?.orderedAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderPlaced:{" "}
+                  {format(new Date(timing.orderedAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {timing?.confirmedAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderAccepted(Resturant):{" "}
+                  {format(new Date(timing.confirmedAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {/* {timing?.restaurantrejectedAt && (
+                          <p className="text-xs text-black font-semibold">
+                            OrderAccepted(Resturant):{" "}
+                            {format(new Date(timing.restaurantrejectedAt), "hh:mm:ss a")}
+                          </p>
+                        )} */}
+              {timing?.acceptedAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderAccepted(DeliveryBoy):{" "}
+                  {format(new Date(timing.acceptedAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {timing?.readyAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderPrepared:{" "}
+                  {format(new Date(timing.readyAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {timing?.pickedUpAt && (
+                <p className="text-xs text-black font-semibold whitespace-nowrap">
+                  OrderPickedUp:{" "}
+                  {format(new Date(timing.pickedUpAt), "hh:mm:ss a")}
+                </p>
+              )}
+              {timing?.deliveredAt && (
+                <p className="text-xs text-black font-semibold">
+                  OrderDelivered:{" "}
+                  {format(new Date(timing.deliveredAt), "hh:mm:ss a")}
+                </p>
+              )}
             </div>
           </div>
           <div className="">

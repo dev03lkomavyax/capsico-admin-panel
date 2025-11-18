@@ -55,6 +55,7 @@ const RecentOrders = () => {
       setPage(pagination?.page);
     }
   }, [res]);
+  
   return (
     <div className="w-full rounded-lg border-[1px] border-[#E0E2E7] bg-[#FFFFFF]">
       <div className="flex justify-between items-center px-5 h-[76px]">
