@@ -75,12 +75,12 @@ const Food = ({ item, getCategories }) => {
     console.log("value: ", value);
     if (!value) {
       setIsModalOpen(true);
-      return
+      return;
     }
     setIsOn(value);
     fetchData(
       `/admin/food-availability/${item?.id}?restaurantId=${params?.restaurantId}`,
-      { isAvailable : value }
+      { isAvailable: value }
     );
   };
 
@@ -88,6 +88,7 @@ const Food = ({ item, getCategories }) => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("toggleFoodAvailability res", res);
       setIsOn(res?.data?.data?.isAvailable);
+      getCategories();
     }
   }, [res]);
 
@@ -129,7 +130,14 @@ const Food = ({ item, getCategories }) => {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        {item.soldOutDurationHours ? <p className="text-sm">Will come in stock after {item?.soldOutDurationHours} hours</p>:null}
+        {item.soldOutDurationHours ? (
+          <p className="text-sm">
+            Back in stock{" "}
+            {item.soldOutDurationHours === 1
+              ? "in 1 hour"
+              : `in ${item.soldOutDurationHours} hours`}
+          </p>
+        ) : null}
         {/* {isRecommended && ( */}
         <Button
           variant="ghost"
