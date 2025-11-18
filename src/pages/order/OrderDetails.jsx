@@ -140,15 +140,23 @@ const OrderDetails = () => {
           <div className="rounded-lg bg-white px-4 py-10">
             <div className="flex justify-center flex-col items-center">
               <img
-                className="w-32 h-32 rounded-full"
+                className="w-32 h-32 rounded-full cursor-pointer"
                 src={
                   orderDetailsData?.userId?.image
                     ? viewDbImagePreview(orderDetailsData?.userId?.image)
                     : avatar
                 }
+                onClick={() =>
+                  navigate(`/admin/customer/${orderDetailsData?.userId?._id}`)
+                }
                 alt="avatar"
               />
-              <h2 className="font-medium font-roboto mt-3 text-xl">
+              <h2
+                onClick={() =>
+                  navigate(`/admin/customer/${orderDetailsData?.userId?._id}`)
+                }
+                className="font-medium font-roboto mt-3 cursor-pointer hover:text-blue-500 text-xl"
+              >
                 {orderDetailsData?.userId?.name}
               </h2>
               <p className="font-roboto text-[#838383] text-sm">Customer</p>

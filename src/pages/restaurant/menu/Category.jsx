@@ -1,28 +1,56 @@
+import AlertModal from "@/components/AlertModal";
 import CategoryEditModel from "@/components/menu/CategoryEditModel";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { EditIcon, TrashIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import Food from "./Food";
-import { useParams } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
 import useDeleteApiReq from "@/hooks/useDeleteApiReq";
-import AlertModal from "@/components/AlertModal";
+import usePutApiReq from "@/hooks/usePutApiReq";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import CategorySoldOutDurationHoursModal from "./CategorySoldOutDurationHoursModal";
+import Food from "./Food";
 
 const Category = ({ category, getCategories }) => {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isOn, setIsOn] = useState(category?.isActive);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  console.log(`isOn=${category.name}`, isOn);
+
+  useEffect(() => {
+    setIsOn(category?.isActive);
+  }, [category?.isActive]);
+  
+  
   const params = useParams();
+  const { res, fetchData, isLoading } = usePutApiReq();
+
+  const toggleFoodAvailability = (value) => {
+    console.log("value: ", value);
+    if (!value) {
+      setIsModalOpen(true);
+      return;
+    }
+    setIsOn(value);
+    fetchData(
+      `/restaurant/restaurants/${params?.restaurantId}/update-category/${
+        category?.id || category?._id
+      }`,
+      { isActive: value }
+    );
+  };
+
+  useEffect(() => {
+    if (res?.status === 200 || res?.status === 201) {
+      console.log("toggleFoodAvailability res", res);
+      // setIsOn(res?.data?.data?.isAvailable);
+      getCategories();
+    }
+  }, [res]);
 
   const {
     res: deleteRes,
@@ -50,8 +78,22 @@ const Category = ({ category, getCategories }) => {
         className="border border-[#E5E7EB] dark:border-gray-700 rounded-xl bg-white dark:bg-background-dark/50"
       >
         <div className="relative">
-          <div className="absolute right-12 top-2.5 flex gap-1 hidden">
-            <TooltipProvider delayDuration={100}>
+          <div className="absolute right-12 top-2.5 flex gap-1">
+            <div className="flex gap-2 items-center">
+              {category.soldOutDurationHours ? (
+                <p className="text-xs mr-5">
+                  Will come in stock after {category?.soldOutDurationHours}{" "}
+                  hours
+                </p>
+              ) : null}
+            </div>
+            <Switch
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
+              checked={isOn}
+              key={isOn}
+              onCheckedChange={(value) => toggleFoodAvailability(value)}
+            />
+            {/* <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger>
                   <Button
@@ -75,7 +117,6 @@ const Category = ({ category, getCategories }) => {
                   <Button
                     size="icon"
                     variant="outline"
-                    // onClick={() => setIsAlertModalOpen(true)}
                     className="size-8"
                   >
                     <TrashIcon className="text-destructive size-4 cursor-pointer" />
@@ -85,7 +126,7 @@ const Category = ({ category, getCategories }) => {
                   <p>Delete category</p>
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
           </div>
           <AccordionTrigger className="flex items-center justify-between px-4 w-full py-3">
             <div className="flex items-center gap-4 flex-1">
@@ -150,6 +191,16 @@ const Category = ({ category, getCategories }) => {
           description="Are you sure you want to delete this category?"
           onConfirm={deleteMenuItem}
           disabled={isDeleteItemLoading}
+        />
+      )}
+
+      {isModalOpen && (
+        <CategorySoldOutDurationHoursModal
+          isModal={isModalOpen}
+          setIsModal={setIsModalOpen}
+          isOn={isOn}
+          categoryId={category?._id}
+          getCategories={getCategories}
         />
       )}
     </>
