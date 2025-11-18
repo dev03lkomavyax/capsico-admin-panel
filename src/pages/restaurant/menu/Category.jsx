@@ -24,8 +24,7 @@ const Category = ({ category, getCategories }) => {
   useEffect(() => {
     setIsOn(category?.isActive);
   }, [category?.isActive]);
-  
-  
+
   const params = useParams();
   const { res, fetchData, isLoading } = usePutApiReq();
 
@@ -81,9 +80,11 @@ const Category = ({ category, getCategories }) => {
           <div className="absolute right-12 top-2.5 flex gap-1">
             <div className="flex gap-2 items-center">
               {category.soldOutDurationHours ? (
-                <p className="text-xs mr-5">
-                  Will come in stock after {category?.soldOutDurationHours}{" "}
-                  hours
+                <p className="text-sm">
+                  Back in stock{" "}
+                  {category.soldOutDurationHours === 1
+                    ? "in 1 hour"
+                    : `in ${category.soldOutDurationHours} hours`}
                 </p>
               ) : null}
             </div>
