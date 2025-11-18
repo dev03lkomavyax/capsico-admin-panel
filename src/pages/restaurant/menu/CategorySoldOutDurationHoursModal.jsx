@@ -43,7 +43,7 @@ const CategorySoldOutDurationHoursModal = ({
     fetchData(
       `/restaurant/restaurants/${params?.restaurantId}/update-category/${categoryId}`,
       {
-        isCategoryToggleSoldOut: true,
+        isActive: false,
         soldOutDurationHours: data.duration,
       }
     );

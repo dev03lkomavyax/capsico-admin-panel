@@ -16,9 +16,16 @@ import Food from "./Food";
 const Category = ({ category, getCategories }) => {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  const [isOn, setIsOn] = useState(!category?.isCategoryToggleSoldOut);
+  const [isOn, setIsOn] = useState(category?.isActive);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  console.log(`isOn=${category.name}`, isOn);
+
+  useEffect(() => {
+    setIsOn(category?.isActive);
+  }, [category?.isActive]);
+  
+  
   const params = useParams();
   const { res, fetchData, isLoading } = usePutApiReq();
 
@@ -33,14 +40,14 @@ const Category = ({ category, getCategories }) => {
       `/restaurant/restaurants/${params?.restaurantId}/update-category/${
         category?.id || category?._id
       }`,
-      { isCategoryToggleSoldOut: !value }
+      { isActive: value }
     );
   };
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("toggleFoodAvailability res", res);
-      setIsOn(res?.data?.data?.isAvailable);
+      // setIsOn(res?.data?.data?.isAvailable);
       getCategories();
     }
   }, [res]);
@@ -83,6 +90,7 @@ const Category = ({ category, getCategories }) => {
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-orange-500"
               checked={isOn}
+              key={isOn}
               onCheckedChange={(value) => toggleFoodAvailability(value)}
             />
             {/* <TooltipProvider delayDuration={100}>

@@ -79,7 +79,8 @@ const Food = ({ item, getCategories }) => {
     }
     setIsOn(value);
     fetchData(
-      `/admin/food-availability/${item?.id}?restaurantId=${params?.restaurantId}`
+      `/admin/food-availability/${item?.id}?restaurantId=${params?.restaurantId}`,
+      { isAvailable : value }
     );
   };
 
