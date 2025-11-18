@@ -37,7 +37,7 @@ const CreateOffer = () => {
                     </div>
                 </div>
                 <Dialog>
-                    <DialogTrigger asChild>
+                    {/* <DialogTrigger asChild>
                         <div className='bg-[#FFFFFF] rounded-lg flex items-center gap-3 p-5 h-32 max-w-[540px] cursor-pointer'>
                             <div className="w-[70px] h-[70px] rounded-full bg-[#F4CBA4] flex justify-center items-center">
                                 <img src={promoIcon} alt="promoIcon" />
@@ -47,7 +47,7 @@ const CreateOffer = () => {
                                 <p className='text-[#7991A4] text-sm font-normal font-inter'>Thrill customers with complimentary discounts on every order.</p>
                             </div>
                         </div>
-                    </DialogTrigger>
+                    </DialogTrigger> */}
                     <DialogContent className="max-w-[1024px] w-full h-full overflow-y-scroll px-0">
                         <div className="">
                             <h2 className="text-[#000000] text-base font-semibold font-inter px-8 py-2">Deal of the day</h2>
