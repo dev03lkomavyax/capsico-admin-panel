@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SoldOutDurationHoursModal from "./SoldOutDurationHoursModal";
 
-const Food = ({ item, getCategories }) => {
+const Food = ({ item, getCategories, showActions }) => {
   const [isOn, setIsOn] = useState(item.isAvailable);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isRecommended, setIsRecommended] = useState(item.isRecommended);
@@ -139,7 +139,7 @@ const Food = ({ item, getCategories }) => {
           </p>
         ) : null}
         {/* {isRecommended && ( */}
-        <Button
+        {showActions && <Button
           variant="ghost"
           size="sm"
           className={`flex items-center gap-2 ${
@@ -152,10 +152,10 @@ const Food = ({ item, getCategories }) => {
         >
           <Star size={16} className={isRecommended ? "fill-current" : ""} />
           {isRecommended ? "Recommended" : "Recommend"}
-        </Button>
+        </Button>}
         {/* )} */}
 
-        <TooltipProvider delayDuration={100}>
+        {showActions && <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -171,9 +171,9 @@ const Food = ({ item, getCategories }) => {
               <p>Delete menu item</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider>}
 
-        <TooltipProvider delayDuration={100}>
+        {showActions && <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger>
               <Button
@@ -189,7 +189,7 @@ const Food = ({ item, getCategories }) => {
               <p>Update menu item</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider>}
         {/* <div>
           <span className="text-muted-foreground text-sm">
             If not sure send "0"

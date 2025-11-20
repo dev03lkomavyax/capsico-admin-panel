@@ -105,7 +105,7 @@ const Stats = () => {
             <span
               className={cn(
                 "text-xs font-semibold font-inter py-[2px] px-[6px] rounded-full",
-                statsData?.orderGrowth.includes("-")
+                statsData?.orderGrowth?.includes("-")
                   ? "text-[#F04438] bg-[#FEEDEC]"
                   : "text-[#0D894F] bg-[#E7F4EE]"
               )}

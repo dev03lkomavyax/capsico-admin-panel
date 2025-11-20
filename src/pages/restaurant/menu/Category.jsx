@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 import CategorySoldOutDurationHoursModal from "./CategorySoldOutDurationHoursModal";
 import Food from "./Food";
 
-const Category = ({ category, getCategories }) => {
+const Category = ({ category, getCategories, showActions = true }) => {
   const [isOpenCategoryModel, setIsOpenCategoryModel] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isOn, setIsOn] = useState(category?.isActive);
@@ -78,7 +78,7 @@ const Category = ({ category, getCategories }) => {
       >
         <div className="relative">
           <div className="absolute right-12 top-2.5 flex gap-1">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center mr-5">
               {category.soldOutDurationHours ? (
                 <p className="text-sm">
                   Back in stock{" "}
@@ -168,7 +168,12 @@ const Category = ({ category, getCategories }) => {
           ) : (
             <div className="flex flex-col divide-y divide-[#E5E7EB] dark:divide-gray-700">
               {category?.foodItems?.map((item, index) => (
-                <Food key={index} item={item} getCategories={getCategories} />
+                <Food
+                  key={index}
+                  item={item}
+                  getCategories={getCategories}
+                  showActions={showActions}
+                />
               ))}
             </div>
           )}

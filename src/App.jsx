@@ -31,6 +31,7 @@ import AddDeliveryAgent from "./pages/delivery-agent/AddDeliveryAgent";
 import UpdateMenu from "./pages/restaurant/menu/UpdateMenu";
 import Menu from "./pages/restaurant/menu/Menu";
 import Cuisines from "./pages/restaurant/cuisine/Cuisines";
+import Inventory from "./pages/restaurant/menu/inventory/Inventory";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -218,6 +219,10 @@ function App() {
             <Route
               path="/admin/restaurant/:restaurantId/dashboard"
               element={<RestaurantDashborad />}
+            />
+            <Route
+              path="/admin/restaurant/:restaurantId/inventory"
+              element={<Inventory />}
             />
             <Route
               path="/admin/restaurant/:restaurantId/dashboard/recent-orders"
