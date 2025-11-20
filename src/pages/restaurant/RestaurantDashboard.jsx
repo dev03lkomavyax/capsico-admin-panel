@@ -15,77 +15,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { BiCheckShield } from "react-icons/bi";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { PiShoppingCartSimple } from "react-icons/pi";
-import { RiQrScan2Line } from "react-icons/ri";
 // import { useNavigate, useParams } from "react-router-dom";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Stats from "./Stats";
-
-const data = [
-  {
-    orderID: "1264903",
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    date: "1 min ago",
-    customer: {
-      name: "Vivek",
-      email: "vivek8793@gmail.com",
-    },
-    total: "121.00",
-    payment: "Mastercard",
-    status: "Processing",
-  },
-  {
-    orderID: "1264903",
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    date: "22 min ago",
-    customer: {
-      name: "Vivek",
-      email: "vivek8793@gmail.com",
-    },
-    total: "121.00",
-    payment: "Visa",
-    status: "Preparing",
-  },
-  {
-    orderID: "1264903",
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    date: "2 days ago",
-    customer: {
-      name: "Vivek",
-      email: "vivek8793@gmail.com",
-    },
-    total: "121.00",
-    payment: "Paypall",
-    status: "Delivered",
-  },
-  {
-    orderID: "1264903",
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    date: "5 days ago",
-    customer: {
-      name: "Vivek",
-      email: "vivek8793@gmail.com",
-    },
-    total: "121.00",
-    payment: "Paypall",
-    status: "Cancelled",
-  },
-];
 
 const data2 = [
   {
@@ -174,6 +108,14 @@ const RestaurantDashborad = () => {
               className="h-10 border-[1px] border-[#E0E2E7] rounded-lg text-[#667085] hover:text-white text-sm font-medium font-inter px-4 bg-[#FFFFFF]"
             >
               Edit Profile
+            </Button>
+            <Button
+              onClick={() =>
+                navigate(`/admin/restaurant/${params?.restaurantId}/inventory`)
+              }
+              className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD] flex items-center gap-2"
+            >
+              Manage Inventory
             </Button>
             <Button
               onClick={() =>
