@@ -44,9 +44,19 @@ const Stats = () => {
             Total Revenue
           </p>
           <p className="text-[#333843] text-2xl font-medium font-inter flex items-center gap-2">
-            $75,500
-            <span className="text-[#0D894F] text-xs font-semibold font-inter bg-[#E7F4EE] py-[2px] px-[6px] rounded-full">
+            ₹{statsData?.totalRevenue || 0}
+            {/* <span className="text-[#0D894F] text-xs font-semibold font-inter bg-[#E7F4EE] py-[2px] px-[6px] rounded-full">
               +10%
+            </span> */}
+            <span
+              className={cn(
+                "text-xs font-semibold font-inter py-[2px] px-[6px] rounded-full",
+                statsData?.revenueGrowth?.includes("-")
+                  ? "text-[#F04438] bg-[#FEEDEC]"
+                  : "text-[#0D894F] bg-[#E7F4EE]"
+              )}
+            >
+              {statsData?.revenueGrowth || "0%"}
             </span>
           </p>
         </div>
@@ -63,9 +73,16 @@ const Stats = () => {
             Total Sales
           </p>
           <p className="text-[#333843] text-2xl font-medium font-inter flex items-center gap-2">
-            31,500
-            <span className="text-[#0D894F] text-xs font-semibold font-inter bg-[#E7F4EE] py-[2px] px-[6px] rounded-full">
-              +15%
+            {statsData?.totalSales || 0}
+            <span
+              className={cn(
+                "text-xs font-semibold font-inter py-[2px] px-[6px] rounded-full",
+                statsData?.salesGrowth?.includes("-")
+                  ? "text-[#F04438] bg-[#FEEDEC]"
+                  : "text-[#0D894F] bg-[#E7F4EE]"
+              )}
+            >
+              {statsData?.salesGrowth || "0%"}
             </span>
           </p>
         </div>
@@ -82,9 +99,16 @@ const Stats = () => {
             Menu
           </p>
           <p className="text-[#333843] text-2xl font-medium font-inter flex items-center gap-2">
-            247
-            <span className="text-[#667085] text-xs font-semibold font-inter bg-[#E7F4EE] py-[2px] px-[6px] rounded-full">
-              0%
+            {statsData?.menuCount || 0}
+            <span
+              className={cn(
+                "text-xs font-semibold font-inter py-[2px] px-[6px] rounded-full",
+                statsData?.menuGrowth?.includes("-")
+                  ? "text-[#F04438] bg-[#FEEDEC]"
+                  : "text-[#0D894F] bg-[#E7F4EE]"
+              )}
+            >
+              {statsData?.menuGrowth || "0%"}
             </span>
           </p>
         </div>

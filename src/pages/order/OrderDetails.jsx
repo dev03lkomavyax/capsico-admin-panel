@@ -114,27 +114,41 @@ const OrderDetails = () => {
               getDetails={getOrderDetails}
             />
           )}
-          <div className="flex gap-3">
+          <div className="flex gap-5 items-center">
             {(orderDetailsData?.status === "confirmed" ||
+              orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" ||
+              orderDetailsData?.status === "assigned_to_partner" ||
               orderDetailsData?.status === "reassigned_to_partner") && (
-              <Button onClick={() => setIsModalOpen(true)} className="px-3">
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="px-3 w-auto"
+              >
                 Assign Delivery Partner
               </Button>
             )}
-            <Button
-              className={`${
-                orderDetailsData?.status === "delivered"
-                  ? "text-[#167316] bg-[#CEFFCA]"
-                  : orderDetailsData?.status === "preparing" ||
-                    orderDetailsData?.status === "pending"
-                  ? "text-[#787A23] bg-[#F7FFCA]"
-                  : orderDetailsData?.status === "cancelled"
-                  ? "text-[#BF1010] bg-[#FFE7E7]"
-                  : "text-[#6223B5] bg-[#E1CAFF]"
-              } h-[54px] capitalize w-auto px-3 text-xl hover:text-[#167316] hover:bg-[#CEFFCA]`}
-            >
-              {orderDetailsData?.status}
-            </Button>
+            <div className="flex flex-col gap-1">
+              <Button
+                className={`${
+                  orderDetailsData?.status === "delivered"
+                    ? "text-[#167316] bg-[#CEFFCA]"
+                    : orderDetailsData?.status === "preparing" ||
+                      orderDetailsData?.status === "pending"
+                    ? "text-[#787A23] bg-[#F7FFCA]"
+                    : orderDetailsData?.status === "cancelled"
+                    ? "text-[#BF1010] bg-[#FFE7E7]"
+                    : "text-[#6223B5] bg-[#E1CAFF]"
+                } !h-10 capitalize w-auto px-3 text-sm hover:text-[#167316] hover:bg-[#CEFFCA]`}
+              >
+                {orderDetailsData.status}
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {orderDetailsData?.status === "assigned_to_partner"
+                  ? "Delivery partner assigned but not accepted yet"
+                  : orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED"
+                  ? "Order accepted by Delivery Partner"
+                  : ""}
+              </span>
+            </div>
           </div>
         </div>
 
