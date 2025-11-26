@@ -108,7 +108,7 @@ const Stats = () => {
                   : "text-[#0D894F] bg-[#E7F4EE]"
               )}
             >
-              {statsData?.menuGrowth || "0%"}
+              {statsData?.menuGrowth || "0"}
             </span>
           </p>
         </div>
