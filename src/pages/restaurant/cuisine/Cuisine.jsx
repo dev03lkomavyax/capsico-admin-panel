@@ -51,6 +51,38 @@ const Cuisine = ({ item, getCuisines }) => {
           <p className="text-base font-medium text-muted-foreground">
             {item.customCuisineId}
           </p>
+          <p className="text-base capitalize font-medium text-muted-foreground">
+            Priority Type: {item.priorityType}
+          </p>
+          {item.priorityType === "global" && (
+            <p className="text-base capitalize font-medium text-muted-foreground">
+              Priority: {item.globalPriority}
+            </p>
+          )}
+          {item.priorityType === "citywise" && (
+            <div className="flex flex-col gap-1 mb-5">
+              <div className="grid grid-cols-[1fr_auto] gap-3">
+                <p className="text-base capitalize font-medium text-muted-foreground">
+                  City
+                </p>
+                <p className="text-base capitalize font-medium text-muted-foreground">
+                  Priority
+                </p>
+              </div>
+              <div className="flex flex-col gap-1 max-h-[110px] overflow-y-auto">
+                {item?.cityPriority?.map((city, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_auto] gap-3">
+                    <p className="text-base capitalize font-medium text-muted-foreground">
+                      {city?.cityId?.city}
+                    </p>
+                    <p className="text-base capitalize font-medium text-muted-foreground">
+                      {city?.priority}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <p className="text-muted-foreground">{item.description}</p>
           {item.image ? (
             <img
