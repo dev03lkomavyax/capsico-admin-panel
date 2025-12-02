@@ -44,7 +44,7 @@ const formSchema = z.object({
   cityPriority: z
     .array(
       z.object({
-        cityId: z.string().min(1, "City is required"),
+        cityId: z.string().optional(),
         priority: z.coerce.number().min(1, "Priority must be >= 1"),
       })
     )
