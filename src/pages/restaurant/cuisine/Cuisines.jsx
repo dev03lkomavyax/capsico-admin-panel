@@ -33,6 +33,9 @@ const Cuisines = () => {
         value: cuisine?._id,
         description: cuisine?.description,
         customCuisineId: cuisine?.customCuisineId || cuisine?._id,
+        priorityType: cuisine?.priorityType,
+        globalPriority: cuisine?.globalPriority,
+        cityPriority: cuisine?.cityPriority,
       }));
       setCuisines(modifiedCuisines);
     }
