@@ -170,6 +170,14 @@ export const EditProfileSchema1 = z.object({
     .email({
       message: "Invalid email address",
     }),
+  // deliveryTime: z.string().optional(),
+  // deliveryTime: z
+  //   .enum(["10-20 min", "20-30 min", "30-40 min", "40-50 min"])
+  //   .optional(),
+  deliveryTime: z
+    .string()
+    .regex(/^\d{1,3}-\d{1,3}\smin$/, "Format must be like 20-30 min")
+    .optional(),
 });
 
 export const EditProfileSchema2 = z.object({

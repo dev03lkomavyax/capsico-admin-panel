@@ -819,8 +819,6 @@
 
 // export default EditProfile1;
 
-
-
 import { Button } from "@/components/ui/button";
 import { EditProfileSchema1 } from "@/schema/restaurantSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -837,6 +835,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -885,6 +884,7 @@ const EditProfile1 = ({
       landlineNumber: "",
       fullName: "",
       email: "",
+      deliveryTime: "",
       samePhoneNumber: false,
       receiveUpdate: false,
     },
@@ -916,13 +916,14 @@ const EditProfile1 = ({
     setIsPhoneNumber2Verified(false);
   }, [phoneNumber2]);
 
-  const { basicInfo, location, partnerDetails } = restaurant || {};
+  const { basicInfo, location, partnerDetails, deliveryTime } =
+    restaurant || {};
 
   // FIXED: Uncommented and improved the reset function
   useEffect(() => {
     if (restaurant && Object.keys(restaurant).length > 0) {
       console.log("Populating form with restaurant data:", restaurant);
-      
+
       reset({
         restaurantName: basicInfo?.name || "",
         restaurantEmail: basicInfo?.email || "",
@@ -940,13 +941,17 @@ const EditProfile1 = ({
         email: partnerDetails?.email || "",
         samePhoneNumber: false,
         receiveUpdate: false,
+        deliveryTime: deliveryTime || "",
       });
 
       // Set map center and marker position if coordinates exist
-      if (location?.coordinates || (location?.latitude && location?.longitude)) {
+      if (
+        location?.coordinates ||
+        (location?.latitude && location?.longitude)
+      ) {
         const lat = location?.coordinates?.[1] || location?.latitude;
         const lng = location?.coordinates?.[0] || location?.longitude;
-        
+
         if (lat && lng) {
           setCenter({ lat: parseFloat(lat), lng: parseFloat(lng) });
           setMarkerPosition({ lat: parseFloat(lat), lng: parseFloat(lng) });
@@ -1009,14 +1014,17 @@ const EditProfile1 = ({
     }
   };
 
-  const onMapClick = useCallback((e) => {
-    setValue("latitude", e.latLng.lat());
-    setValue("longitude", e.latLng.lng());
-    setMarkerPosition({
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-    });
-  }, [setValue]);
+  const onMapClick = useCallback(
+    (e) => {
+      setValue("latitude", e.latLng.lat());
+      setValue("longitude", e.latLng.lng());
+      setMarkerPosition({
+        lat: e.latLng.lat(),
+        lng: e.latLng.lng(),
+      });
+    },
+    [setValue]
+  );
 
   console.log("markerPosition", markerPosition);
 
@@ -1062,6 +1070,7 @@ const EditProfile1 = ({
         latitude: data.latitude,
         longitude: data.longitude,
       },
+      deliveryTime: data.deliveryTime,
       address: {
         addressLine: data.addressLine,
         city: data.city,
@@ -1398,6 +1407,64 @@ const EditProfile1 = ({
                     )}
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-5">
+                  {/* <FormField
+                    control={control}
+                    name="deliveryTime"
+                    render={({ field }) => (
+                      <FormItem className="mt-5 w-1/2">
+                        <FormLabel className="text-[#344054] font-inter">
+                          Delivery Time
+                        </FormLabel>
+
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select delivery time" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            <SelectItem value="10-20 min">10–20 min</SelectItem>
+                            <SelectItem value="20-30 min">20–30 min</SelectItem>
+                            <SelectItem value="30-40 min">30–40 min</SelectItem>
+                            <SelectItem value="40-50 min">40–50 min</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  /> */}
+                  <FormField
+                    control={control}
+                    name="deliveryTime"
+                    render={({ field }) => (
+                      <FormItem className="mt-5 w-1/2">
+                        <FormLabel className="text-[#344054] font-inter">
+                          Delivery Time (minutes)
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            placeholder="e.g. 20-30 min"
+                            className="placeholder:text-[#667085]"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormDescription className="text-xs text-muted-foreground">
+                          Enter estimated delivery time range
+                        </FormDescription>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
 
@@ -1654,4 +1721,3 @@ const EditProfile1 = ({
 };
 
 export default EditProfile1;
-
