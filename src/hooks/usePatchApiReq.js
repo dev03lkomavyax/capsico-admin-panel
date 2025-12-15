@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 const usePatchApiReq = () => {
   const [res, setRes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -22,7 +23,9 @@ const usePatchApiReq = () => {
         toast.success(response.data.message || "Saved");
         setRes(response);
       }
+      setError(null);
     } catch (error) {
+      setError(error);
       console.log("patch api error =>", error);
       if (error?.response?.status === 403) {
         // await dispatch(handleUnautorizedModalOpen({ isUnautorizedModalOpen: true }));
@@ -39,7 +42,7 @@ const usePatchApiReq = () => {
     }
   };
 
-  return { res, isLoading, fetchData };
+  return { res, error, isLoading, fetchData };
 };
 
 export default usePatchApiReq;

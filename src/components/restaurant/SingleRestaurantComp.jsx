@@ -1,89 +1,122 @@
-
-
-
-
 // export default SingleRestaurantComp
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { TableCell, TableRow } from '@/components/ui/table'
-import useDeleteApiReq from '@/hooks/useDeleteApiReq'
-import { format } from 'date-fns'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import AlertModal from '../AlertModal'
-import StatusToggleButton from '@/components/ui/statusButton'
-import { Eye, Edit, Trash2 } from "lucide-react"
-import { axiosInstance } from '@/utils/axiosInstance'
+import { Checkbox } from "@/components/ui/checkbox";
+import { TableCell, TableRow } from "@/components/ui/table";
+import useDeleteApiReq from "@/hooks/useDeleteApiReq";
+import { format, set } from "date-fns";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AlertModal from "../AlertModal";
+import StatusToggleButton from "@/components/ui/statusButton";
+import { Eye, Edit, Trash2 } from "lucide-react";
+import { axiosInstance } from "@/utils/axiosInstance";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
 
 const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
-  const navigate = useNavigate()
-  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false)
+  const navigate = useNavigate();
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   // Live status state from API
-  const [statusLoading, setStatusLoading] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const [timingDetail, setTimingDetail] = useState(null)
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(data?.operatingStatus?.isOpen || false);
+  const [timingDetail, setTimingDetail] = useState(null);
+
+  const {
+    res: updateRes,
+    fetchData: updateStatus,
+    isLoading: isUpdateLoading,
+    error,
+  } = usePatchApiReq();
+
+  const changeStatusOnServer = async () => {
+    await updateStatus(
+      `/restaurant/toggle-operating-status?restaurantId=${data?.id}`,
+      {
+        isOpen: !isOpen,
+        // reason: isOpen ? "Opened by admin" : "Closed by admin",
+        reason: !isOpen ? null : "Closed by admin",
+      }
+    );
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (updateRes?.status === 200 || updateRes?.status === 201) {
+      getAllRestaurant();
+    }
+  }, [updateRes]);
+
+  useEffect(() => {
+    if (error) {
+      setIsOpen(data?.operatingStatus?.isOpen || false);
+    }
+  }, [error]);
 
   // ✅ Fixed live status fetch (initial + every 60s)
-  useEffect(() => {
-    let mounted = true
+  // useEffect(() => {
+  //   let mounted = true
 
-    async function fetchStatus() {
-      try {
-        setStatusLoading(true)
+  //   async function fetchStatus() {
+  //     try {
+  //       setStatusLoading(true)
 
-        const url = `/restaurant/live-status/${data?.id}?t=${Date.now()}`
-        const res = await axiosInstance.get(url, {
-          credentials: 'include',
-          headers: { Accept: 'application/json' }
-        })
+  //       const url = `/restaurant/live-status/${data?.id}?t=${Date.now()}`
+  //       const res = await axiosInstance.get(url, {
+  //         credentials: 'include',
+  //         headers: { Accept: 'application/json' }
+  //       })
 
-        // axios handles JSON parsing already
-        const current = res?.data?.data || null
-        console.log(`res:${data.name}`, res);
-        console.log(`current:${data.name}`, current);
-        
+  //       // axios handles JSON parsing already
+  //       const current = res?.data?.data || null
+  //       console.log(`res:${data.name}`, res);
+  //       console.log(`current:${data.name}`, current);
 
-        if (mounted) {
-          setIsOpen(!!current?.isOpen)
-          setTimingDetail(current || null) // contains opensAt / closesAt
-        }
-      } catch (err) {
-        console.error('Error fetching timings:', err)
-        if (mounted) {
-          setIsOpen(false)
-          setTimingDetail(null)
-        }
-      } finally {
-        if (mounted) setStatusLoading(false)
-      }
-    }
+  //       if (mounted) {
+  //         setIsOpen(!!current?.isOpen)
+  //         setTimingDetail(current || null) // contains opensAt / closesAt
+  //       }
+  //     } catch (err) {
+  //       console.error('Error fetching timings:', err)
+  //       if (mounted) {
+  //         setIsOpen(false)
+  //         setTimingDetail(null)
+  //       }
+  //     } finally {
+  //       if (mounted) setStatusLoading(false)
+  //     }
+  //   }
 
-    if (data?.id) {
-      fetchStatus()
-      const id = setInterval(fetchStatus, 60000)
-      return () => { mounted = false; clearInterval(id) }
-    }
-    return () => { mounted = false }
-  }, [data?.id])
+  //   if (data?.id) {
+  //     fetchStatus()
+  //     const id = setInterval(fetchStatus, 60000)
+  //     return () => { mounted = false; clearInterval(id) }
+  //   }
+  //   return () => { mounted = false }
+  // }, [data?.id])
+
+  console.log("restaurant data", data);
 
   // Delete logic
-  const { res, fetchData, isLoading } = useDeleteApiReq()
+  const { res, fetchData, isLoading } = useDeleteApiReq();
   const deleteRestaurant = () => {
-    fetchData(`/admin/delete-restaurant?restaurantId=${data?.id}`)
-  }
+    fetchData(`/admin/delete-restaurant?restaurantId=${data?.id}`);
+  };
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-      getAllRestaurant()
+      getAllRestaurant();
     }
-  }, [res, getAllRestaurant])
+  }, [res, getAllRestaurant]);
 
   // Navigation handlers
   const handleView = () =>
-    navigate(`/admin/restaurant/${data?.id}/dashboard`, { state: { mode: 'view' } })
+    navigate(`/admin/restaurant/${data?.id}/dashboard`, {
+      state: { mode: "view" },
+    });
   const handleEdit = () =>
-    navigate(`/admin/restaurant/${data?.id}/dashboard`, { state: { mode: 'edit' } })
-  const handleRemove = () => setIsAlertModalOpen(true)
+    navigate(`/admin/restaurant/${data?.id}/dashboard`, {
+      state: { mode: "edit" },
+    });
+  const handleRemove = () => setIsAlertModalOpen(true);
 
   return (
     <>
@@ -122,7 +155,6 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
           }`}
         </TableCell>
 
-
         {/* <TableCell className="text-[#000000] text-xs font-semibold font-inter">
           {data?.sales?.total ? `₹${data?.sales?.total}` : "N/A"}
         </TableCell>
@@ -131,34 +163,31 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
           {data?.sales?.last ? `₹${data?.sales?.last}` : "N/A"}
         </TableCell> */}
 
-
         {/* EMAIL - Replaces Total Sale */}
-{/* EMAIL - Try both ownerDetails and partnerDetails */}
-          {/* RESTAURANT EMAIL */}
-<TableCell className="text-[#1D1929] text-xs font-normal font-roboto">
-  {data?.email || "N/A"}
-</TableCell>
+        {/* EMAIL - Try both ownerDetails and partnerDetails */}
+        {/* RESTAURANT EMAIL */}
+        <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">
+          {data?.email || "N/A"}
+        </TableCell>
 
-{/* RESTAURANT PHONE NUMBER */}
-{/* RESTAURANT PHONE NUMBER - Try multiple paths */}
-<TableCell className="text-[#1D1929] text-xs font-normal font-roboto">
-  {data?.contactDetails?.phoneNumber || 
-   data?.phone || 
-   data?.phoneNumber ||
-   data?.basicInfo?.phone ||
-   data?.contact?.phoneNumber ||
-   "N/A"}
-</TableCell>
-
-
-
+        {/* RESTAURANT PHONE NUMBER */}
+        {/* RESTAURANT PHONE NUMBER - Try multiple paths */}
+        <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">
+          {data?.contactDetails?.phoneNumber ||
+            data?.phone ||
+            data?.phoneNumber ||
+            data?.basicInfo?.phone ||
+            data?.contact?.phoneNumber ||
+            "N/A"}
+        </TableCell>
 
         <TableCell className="text-[#1D1929] text-xs font-bold font-sans">
           <span
             className={`${data?.status === "PENDING" && "text-[#FFC107]"} ${
-              data?.status === "APPROVED" && "text-[#28A745]"} ${
-              data?.status === "REJECTED" && "text-[#DC3545]"} ${
-              data?.status === "SUSPENDED" && "text-[#6C757D]"}`}
+              data?.status === "APPROVED" && "text-[#28A745]"
+            } ${data?.status === "REJECTED" && "text-[#DC3545]"} ${
+              data?.status === "SUSPENDED" && "text-[#6C757D]"
+            }`}
           >
             {data?.status}
           </span>
@@ -168,17 +197,22 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
         <TableCell className="font-sans">
           <StatusToggleButton
             active={isOpen}
-            loading={statusLoading}
+            loading={isUpdateLoading}
             disabled
             activeLabel="Open"
             inactiveLabel="Closed"
             className="mb-1"
+            onClick={changeStatusOnServer}
           />
           <div className="text-[10px] text-gray-500 mt-0.5">
-            {timingDetail && (isOpen
-              ? (timingDetail.closesAt ? `Closes at: ${timingDetail.closesAt}` : '')
-              : (timingDetail.opensAt ? `Opens at: ${timingDetail.opensAt}` : '')
-            )}
+            {timingDetail &&
+              (isOpen
+                ? timingDetail.closesAt
+                  ? `Closes at: ${timingDetail.closesAt}`
+                  : ""
+                : timingDetail.opensAt
+                ? `Opens at: ${timingDetail.opensAt}`
+                : "")}
           </div>
         </TableCell>
 
@@ -221,35 +255,10 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default SingleRestaurantComp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default SingleRestaurantComp;
 
 // import { Checkbox } from '@/components/ui/checkbox'
 // import { TableCell, TableRow } from '@/components/ui/table'
