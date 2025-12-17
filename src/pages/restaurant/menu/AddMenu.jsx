@@ -45,6 +45,7 @@ import AddonsManager from "./addons/AddonsManager";
 import MenuTagSelector from "./menuTagSelector";
 import ReactPagination from "@/components/pagination/ReactPagination";
 import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
+import VariantGroupsManager from "./variants/VariantGroupsManager";
 
 // const AddMenu = () => {
 //   const navigate = useNavigate();
@@ -1135,6 +1136,10 @@ const AddMenu = () => {
     tags: [],
   });
   const [groups, setGroups] = useState([]);
+  const [variantGroups, setVariantGroups] = useState([]);
+
+  console.log("variantGroups", variantGroups);
+  
 
   const params = useParams();
   const { state } = useLocation();
@@ -1176,8 +1181,8 @@ const AddMenu = () => {
   // useEffect(() => {
   //   setValue("subCategory", state.subcategoryId);
   // }, [state.subcategoryId]);
-   const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
-  
+  const [isOpenSubCategoryModel, setIsOpenSubCategoryModel] = useState(false);
+
   const handleSubcategoryAdd = () => {
     setIsOpenSubCategoryModel((prev) => !prev);
   };
@@ -1607,6 +1612,7 @@ const AddMenu = () => {
     // menuTagIds
     // addonTagIds
     formData.append("addOns", JSON.stringify(groups));
+    formData.append("variantGroups", JSON.stringify(variantGroups));
     formData.append("variations", JSON.stringify(getValues("variations")));
     formData.append("customizations", JSON.stringify(modifiedCustomizations));
     formData.append("availableTimings", JSON.stringify(availableTimings));
@@ -2070,7 +2076,7 @@ const AddMenu = () => {
                           must choose at least one from the defined variants.
                         </p>
                       </div>
-                      {isVariant && (
+                      {false && (
                         <>
                           <FormField
                             control={control}
@@ -2147,6 +2153,11 @@ const AddMenu = () => {
                           )}
                         </>
                       )}
+
+                      <VariantGroupsManager
+                        groups={variantGroups}
+                        setGroups={setVariantGroups}
+                      />
                     </div>
                   </div>
 
@@ -2173,357 +2184,14 @@ const AddMenu = () => {
                   {/* Map Addons Section */}
                   <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
-                      <div
-                        onClick={() => setIsMapAddons(!isMapAddons)}
-                        className="cursor-pointer pb-6"
-                      >
+                      <div className="cursor-pointer pb-6">
                         <div className="flex justify-between items-center">
                           <h3 className="text-black class-lg6">Map Addons</h3>
-                          {isMapAddons ? (
-                            <FaMinus className="text-black" size={20} />
-                          ) : (
-                            <FaPlus className="text-black" size={20} />
-                          )}
                         </div>
                         <p>
                           Add-ons enhance the customer experience by offering
                           extra choices like toppings or desserts.
                         </p>
-                      </div>
-                      <div className="hidden">
-                        {isMapAddons && (
-                          <div className="space-y-6">
-                            {displayExistingAddons()}
-
-                            {/* Enhanced Addons Display */}
-                            {addons.length > 0 && (
-                              <div>
-                                <h4 className="font-inter text-[#969696] font-semibold mb-3">
-                                  Current Addons:
-                                </h4>
-                                <div className="space-y-3">
-                                  {addons.map((addon) => (
-                                    <div
-                                      key={addon.id}
-                                      className="bg-gray-50 p-4 rounded-lg border"
-                                    >
-                                      <div className="flex justify-between items-start">
-                                        <div className="flex-1">
-                                          <div className="flex items-center gap-3 mb-2">
-                                            <h5 className="font-semibold text-lg">
-                                              {addon.name}
-                                            </h5>
-                                            <span className="text-lg font-bold text-green-600">
-                                              ₹{addon.price}
-                                            </span>
-                                            <div className="flex gap-2">
-                                              <span
-                                                className={`px-2 py-1 rounded-full text-xs ${
-                                                  addon.isVeg
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-red-100 text-red-700"
-                                                }`}
-                                              >
-                                                {addon.isVeg
-                                                  ? "Veg"
-                                                  : "Non-Veg"}
-                                              </span>
-                                              <span
-                                                className={`px-2 py-1 rounded-full text-xs ${
-                                                  addon.isAvailable
-                                                    ? "bg-blue-100 text-blue-700"
-                                                    : "bg-gray-100 text-gray-700"
-                                                }`}
-                                              >
-                                                {addon.isAvailable
-                                                  ? "Available"
-                                                  : "Unavailable"}
-                                              </span>
-                                              {addon.isDefault && (
-                                                <span className="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700">
-                                                  Default
-                                                </span>
-                                              )}
-                                            </div>
-                                          </div>
-
-                                          {/* Tags display with proper names */}
-                                          {addon.tags &&
-                                            addon.tags.length > 0 && (
-                                              <div className="flex flex-wrap gap-1 mb-2">
-                                                {addon.tags.map(
-                                                  (tagData, tagIndex) => {
-                                                    const tagName =
-                                                      getTagName(tagData);
-                                                    const tagColor =
-                                                      getTagColor(tagData);
-                                                    const tagId =
-                                                      typeof tagData ===
-                                                      "object"
-                                                        ? tagData.id
-                                                        : tagData;
-
-                                                    return (
-                                                      <span
-                                                        key={tagId || tagIndex}
-                                                        style={{
-                                                          backgroundColor:
-                                                            tagColor,
-                                                        }}
-                                                        className="text-white px-2 py-1 rounded-full text-xs font-medium"
-                                                      >
-                                                        {tagName}
-                                                      </span>
-                                                    );
-                                                  }
-                                                )}
-                                              </div>
-                                            )}
-                                        </div>
-
-                                        <button
-                                          onClick={() =>
-                                            handleRemoveAddon(addon.id)
-                                          }
-                                          className="text-red-500 hover:text-red-700 ml-4"
-                                        >
-                                          <FaTimes size={16} />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Add New Addon Form */}
-                            {showAddonForm && (
-                              <div className="bg-white border-2 border-dashed border-[#4A67FF] rounded-lg p-6 space-y-4">
-                                <h4 className="font-inter text-[#4A67FF] font-semibold text-lg mb-4">
-                                  Add New Addon
-                                </h4>
-
-                                {/* Addon Name */}
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Name
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={newAddon.name}
-                                    onChange={(e) =>
-                                      handleInputChange("name", e.target.value)
-                                    }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
-                                    placeholder="e.g., Extra Paneer"
-                                  />
-                                </div>
-
-                                {/* Addon Price */}
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Price (₹)
-                                  </label>
-                                  <input
-                                    type="number"
-                                    value={newAddon.price}
-                                    onChange={(e) =>
-                                      handleInputChange("price", e.target.value)
-                                    }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A67FF]"
-                                    placeholder="50"
-                                    min="0"
-                                    step="0.01"
-                                  />
-                                </div>
-
-                                {/* Checkboxes */}
-                                <div className="flex gap-6">
-                                  <label className="flex items-center">
-                                    <input
-                                      type="checkbox"
-                                      checked={newAddon.isAvailable}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          "isAvailable",
-                                          e.target.checked
-                                        )
-                                      }
-                                      className="mr-2"
-                                    />
-                                    Available
-                                  </label>
-
-                                  <label className="flex items-center">
-                                    <input
-                                      type="checkbox"
-                                      checked={newAddon.isVeg}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          "isVeg",
-                                          e.target.checked
-                                        )
-                                      }
-                                      className="mr-2"
-                                    />
-                                    Vegetarian
-                                  </label>
-
-                                  <label className="flex items-center">
-                                    <input
-                                      type="checkbox"
-                                      checked={newAddon.isDefault}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          "isDefault",
-                                          e.target.checked
-                                        )
-                                      }
-                                      className="mr-2"
-                                    />
-                                    Set as Default
-                                  </label>
-                                </div>
-
-                                {/* Tags Section */}
-                                <div className="mt-4">
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Tags
-                                  </label>
-
-                                  {/* Show currently selected tags */}
-                                  {newAddon.tags &&
-                                    newAddon.tags.length > 0 && (
-                                      <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded">
-                                        <span className="text-xs text-gray-600">
-                                          Selected:
-                                        </span>
-                                        {newAddon.tags.map((tagObj, index) => (
-                                          <span
-                                            key={tagObj.id || index}
-                                            style={{
-                                              backgroundColor:
-                                                getTagColor(tagObj),
-                                            }}
-                                            className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-white text-xs font-medium"
-                                          >
-                                            {tagObj.name}
-                                            <button
-                                              type="button"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                const updatedTags =
-                                                  newAddon.tags.filter(
-                                                    (_, i) => i !== index
-                                                  );
-                                                setNewAddon((prev) => ({
-                                                  ...prev,
-                                                  tags: updatedTags,
-                                                }));
-                                              }}
-                                              className="hover:bg-black/20 rounded-full p-0.5 ml-1"
-                                            >
-                                              <FaTimes size={10} />
-                                            </button>
-                                          </span>
-                                        ))}
-                                      </div>
-                                    )}
-
-                                  {/* MenuTagSelector */}
-                                  <MenuTagSelector
-                                    selectedTags={newAddon.tags.map(
-                                      (tag) => tag.id
-                                    )}
-                                    onTagsChange={handleTagsChange}
-                                    tagType="addon"
-                                    className="w-full"
-                                  />
-                                </div>
-
-                                {/* Form Actions */}
-                                <div className="flex gap-3 pt-4">
-                                  <button
-                                    type="button"
-                                    onClick={handleAddAddon}
-                                    className="bg-[#4A67FF] text-white px-6 py-2 rounded-md hover:bg-[#3651E6] flex-1"
-                                  >
-                                    Add Addon
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setShowAddonForm(false);
-                                      setNewAddon({
-                                        name: "",
-                                        price: "",
-                                        isAvailable: true,
-                                        isVeg: true,
-                                        isDefault: false,
-                                        tags: [],
-                                      });
-                                    }}
-                                    className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Create Addon Buttons */}
-                            <button
-                              onClick={() => setIsMapAddonsModalOpen(true)}
-                              type="button"
-                              className="bg-[#F8F9FC] text-[#4A67FF] p-5 w-full flex items-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF] mb-4"
-                            >
-                              <FaPlus className="text-base" />
-                              <p className="font-semibold text-lg">
-                                Create new Add on group (Modal)
-                              </p>
-                            </button>
-
-                            {!showAddonForm && (
-                              <button
-                                type="button"
-                                className="bg-[#F8F9FC] text-[#4A67FF] p-4 w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[#4A67FF]"
-                                onClick={() => setShowAddonForm(true)}
-                              >
-                                <FaPlus className="text-base" />
-                                <p className="font-semibold text-lg">
-                                  Create new Add on with Tags
-                                </p>
-                              </button>
-                            )}
-
-                            {/* Display Current Addons in List Format */}
-                            {watch("addOns").length > 0 && (
-                              <div className="mt-5">
-                                <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                  <h4 className="font-inter text-[#969696] font-semibold">
-                                    AddOn Name
-                                  </h4>
-                                  <h4 className="font-inter text-[#969696] font-semibold">
-                                    Price (In Rs)
-                                  </h4>
-                                </div>
-                                {watch("addOns")?.map((addon, i) => (
-                                  <div
-                                    key={i}
-                                    className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
-                                  >
-                                    <h4 className="font-inter text-[#969696] font-semibold">
-                                      {addon?.name}
-                                    </h4>
-                                    <h4 className="font-inter text-[#969696] font-semibold">
-                                      Rs {addon?.price}
-                                    </h4>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </div>
                       <AddonsManager groups={groups} setGroups={setGroups} />
                     </div>
@@ -2659,98 +2327,6 @@ const AddMenu = () => {
                               </FormItem>
                             )}
                           />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Customization Section */}
-                  <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
-                    <div className="p-5 border-b border-[#C8C8C8]">
-                      <div
-                        onClick={() => setIsCustomization(!isCustomization)}
-                        className="cursor-pointer pb-6"
-                      >
-                        <div className="flex justify-between items-center">
-                          <h3 className="text-black class-lg6">
-                            Customization
-                          </h3>
-                          <div className="flex items-center gap-3">
-                            <Button
-                              type="button"
-                              onClick={() => setIsCustomizationModalOpen(true)}
-                              variant="outline"
-                              className="flex gap-1 px-5 items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]"
-                            >
-                              <FaPlus />
-                              Add More
-                            </Button>
-                            <Button
-                              type="button"
-                              onClick={() => {
-                                setValue("customizations", []);
-                              }}
-                            >
-                              Clear Customization
-                            </Button>
-                            {isCustomization ? (
-                              <FaMinus className="text-black" size={20} />
-                            ) : (
-                              <FaPlus className="text-black" size={20} />
-                            )}
-                          </div>
-                        </div>
-                        <p>Customization for category</p>
-                      </div>
-                      {isCustomization && (
-                        <div className="w-full flex flex-col gap-4">
-                          {watch("customizations")?.map((customization, i) => (
-                            <div key={i} className="w-full">
-                              <div className="flex justify-between items-center gap-4">
-                                <h3 className="font-inter text-lg text-[#969696] font-semibold">
-                                  {customization?.categoryName}
-                                </h3>
-                                <Button
-                                  type="button"
-                                  onClick={() => handleCustomization(i)}
-                                  variant="outline"
-                                  className="flex gap-1 w-[200px] items-center border-[#4A67FF] text-[#4A67FF] hover:border-[#4A67FF] hover:bg-transparent hover:text-[#4A67FF]"
-                                >
-                                  <FaPlus />
-                                  Add Customization
-                                </Button>
-                              </div>
-                              {customization?.customizationOptions &&
-                                customization?.customizationOptions.length >
-                                  0 && (
-                                  <div className="px-4">
-                                    <div className="grid grid-cols-[70%_28%] gap-[2%] mt-5 border-b border-[#DADADA] pb-2">
-                                      <h4 className="font-inter text-[#969696] font-semibold">
-                                        Customization Name
-                                      </h4>
-                                      <h4 className="font-inter text-[#969696] font-semibold">
-                                        Price (In Rs)
-                                      </h4>
-                                    </div>
-                                    {customization?.customizationOptions?.map(
-                                      (option, i) => (
-                                        <div
-                                          key={i}
-                                          className="grid grid-cols-[70%_28%] gap-[2%] border-b border-[#DADADA] py-2"
-                                        >
-                                          <h4 className="font-inter text-[#969696] font-semibold">
-                                            {option?.name}
-                                          </h4>
-                                          <h4 className="font-inter text-[#969696] font-semibold">
-                                            Rs {option?.price}
-                                          </h4>
-                                        </div>
-                                      )
-                                    )}
-                                  </div>
-                                )}
-                            </div>
-                          ))}
                         </div>
                       )}
                     </div>

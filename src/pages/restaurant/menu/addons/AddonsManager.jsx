@@ -2,46 +2,14 @@ import { useState } from "react";
 
 // shadcn/ui component imports (adjust paths to your project)
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { id } from "@/utils/Id-util";
-import { AddonGroupForm } from "./AddonGroupForm";
-import { JSONPreview } from "./JSONPreview";
 import { GroupIcon, PlusIcon } from "lucide-react";
+import { AddonGroupForm } from "./AddonGroupForm";
 
 /* ======================
    AddonsManager (root) - Vite compatible
  ====================== */
 export default function AddonsManager({ groups, setGroups }) {
-  // const [groups, setGroups] = useState([
-  //   // pre-populated example group
-  //   {
-  //     id: id("group"),
-  //     groupName: "Pizza Toppings",
-  //     chooseMultiple: true,
-  //     maxSelection: 3,
-  //     adonsGroup: [
-  //       {
-  //         id: id("item"),
-  //         name: "Pepperoni",
-  //         price: 50,
-  //         isDefault: true,
-  //         isAvailable: true,
-  //         isVeg: false,
-  //         tags: ["Spicy"],
-  //       },
-  //       {
-  //         id: id("item"),
-  //         name: "Mushrooms",
-  //         price: 40,
-  //         isDefault: false,
-  //         isAvailable: true,
-  //         isVeg: true,
-  //         tags: ["Bestseller"],
-  //       },
-  //     ],
-  //   },
-  // ]);
-
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleAddGroup = () => {
@@ -68,12 +36,6 @@ export default function AddonsManager({ groups, setGroups }) {
     copy.splice(index, 1);
     setGroups(copy);
     setSelectedIndex((i) => Math.max(0, i - 1));
-  };
-
-  const handleSave = () => {
-    // In real app: send groups to backend. For now, log and show alert.
-    console.log("Saved groups:", groups);
-    alert("Groups saved — check console for JSON output.");
   };
 
   return (
@@ -130,7 +92,9 @@ export default function AddonsManager({ groups, setGroups }) {
                 </div>
               ))}
 
-              {groups.length === 0 && <div className="px-3">No Groups added</div>}
+              {groups.length === 0 && (
+                <div className="px-3">No Groups added</div>
+              )}
             </div>
           </div>
 
