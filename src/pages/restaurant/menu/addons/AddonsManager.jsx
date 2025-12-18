@@ -59,7 +59,8 @@ export default function AddonsManager({ groups, setGroups }) {
               </Button>
             </div>
 
-            <div className="p-2 grid grid-cols-4 gap-4">
+            {groups.length > 0 && <p className="px-4 text-sm">Select group</p>}
+            <div className="p-2 grid grid-cols-1 gap-4">
               {groups.map((g, i) => (
                 <div
                   key={g.id}

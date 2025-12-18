@@ -53,7 +53,8 @@ export default function VariantGroupsManager({ groups, setGroups }) {
           </Button>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 p-4">
+        {groups.length > 0 && <p className="px-4 pt-2 text-sm">Select group</p>}
+        <div className="grid grid-cols-1 gap-4 p-4">
           {groups.map((group, i) => (
             <div
               key={group.id}
