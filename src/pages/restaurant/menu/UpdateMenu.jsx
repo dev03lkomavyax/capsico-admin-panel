@@ -46,6 +46,7 @@ import MenuTagSelector from "./menuTagSelector";
 import { id } from "@/utils/Id-util";
 import ReactPagination from "@/components/pagination/ReactPagination";
 import SubCategoryEditModel from "@/components/menu/SubCategoryEditModel";
+import VariantGroupsManager from "./variants/VariantGroupsManager";
 
 const UpdateMenu = () => {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ const UpdateMenu = () => {
     isDefault: false,
     tags: [],
   });
-
+  
   const params = useParams();
   const { state } = useLocation();
   console.log("state", state);
@@ -96,6 +97,7 @@ const UpdateMenu = () => {
   const [groups, setGroups] = useState(
     foodItem?.addOns.map((item) => ({ ...item, adonsGroup: item.addons })) || []
   );
+  const [variantGroups, setVariantGroups] = useState(foodItem.variantGroups || []);
 
   const [menuTags, setMenuTags] = useState(
     foodItem?.menuTags.map((item) => item.id) || []
@@ -619,7 +621,8 @@ const UpdateMenu = () => {
 
     // formData.append("availableTimings", JSON.stringify(availableTimings));
     formData.append("menuTagIds", JSON.stringify(menuTags));
-    formData.append("variations", JSON.stringify(getValues("variations")));
+    // formData.append("variations", JSON.stringify(getValues("variations")));
+    formData.append("variantGroups", JSON.stringify(variantGroups));
     formData.append("addOns", JSON.stringify(groups));
     formData.append("customizations", JSON.stringify(modifiedCustomizations));
 
@@ -1075,7 +1078,7 @@ const UpdateMenu = () => {
                           must choose at least one from the defined variants.
                         </p>
                       </div>
-                      {isVariant && (
+                      {/* {isVariant && (
                         <>
                           <FormField
                             control={control}
@@ -1151,7 +1154,11 @@ const UpdateMenu = () => {
                             </div>
                           )}
                         </>
-                      )}
+                      )} */}
+                      <VariantGroupsManager
+                        groups={variantGroups}
+                        setGroups={setVariantGroups}
+                      />
                     </div>
                   </div>
 

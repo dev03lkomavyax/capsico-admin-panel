@@ -1612,8 +1612,8 @@ const AddMenu = () => {
     // menuTagIds
     // addonTagIds
     formData.append("addOns", JSON.stringify(groups));
+    // formData.append("variations", JSON.stringify(getValues("variations")));
     formData.append("variantGroups", JSON.stringify(variantGroups));
-    formData.append("variations", JSON.stringify(getValues("variations")));
     formData.append("customizations", JSON.stringify(modifiedCustomizations));
     formData.append("availableTimings", JSON.stringify(availableTimings));
 
