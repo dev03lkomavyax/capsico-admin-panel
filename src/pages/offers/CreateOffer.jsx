@@ -252,7 +252,7 @@ const CreateOffer = () => {
         bogoConfig: {
           buyQuantity: data.offerDetails.bogoConfig.buyQuantity,
           getQuantity: data.offerDetails.bogoConfig.getQuantity,
-          freeItemType: data.offerDetails.bogoConfig.freeItemType,
+          // freeItemType: data.offerDetails.bogoConfig.freeItemType,
         },
       };
     }
@@ -486,7 +486,7 @@ const CreateOffer = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                  {/* <FormField
                     control={control}
                     name="offerDetails.bogoConfig.freeItemType"
                     render={({ field }) => (
@@ -508,7 +508,7 @@ const CreateOffer = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </>
               )}
 
