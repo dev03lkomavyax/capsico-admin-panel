@@ -157,7 +157,7 @@ export const offerSchema = z
           .object({
             buyQuantity: z.coerce.number().optional(),
             getQuantity: z.coerce.number().optional(),
-            freeItemType: z.string().optional(),
+            // freeItemType: z.string().optional(),
           })
           .optional(),
         comboItems: z
@@ -275,13 +275,13 @@ export const offerSchema = z
       }
 
       // Free Item Type
-      if (!bogo?.freeItemType) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["offerDetails", "bogoConfig", "freeItemType"],
-          message: "Free Item Type is required",
-        });
-      }
+      // if (!bogo?.freeItemType) {
+      //   ctx.addIssue({
+      //     code: "custom",
+      //     path: ["offerDetails", "bogoConfig", "freeItemType"],
+      //     message: "Free Item Type is required",
+      //   });
+      // }
     }
     if (data.offerType === "comboDeals") {
       if (
