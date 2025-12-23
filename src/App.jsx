@@ -32,6 +32,8 @@ import UpdateMenu from "./pages/restaurant/menu/UpdateMenu";
 import Menu from "./pages/restaurant/menu/Menu";
 import Cuisines from "./pages/restaurant/cuisine/Cuisines";
 import Inventory from "./pages/restaurant/menu/inventory/Inventory";
+import Payment from "./pages/payment";
+import RazorpayPayment from "./pages/payment";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -406,6 +408,7 @@ function App() {
               path="/admin/spotlight/create"
               element={<CreateSpotlight />}
             />
+            <Route path="/admin/payment" element={<RazorpayPayment />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
