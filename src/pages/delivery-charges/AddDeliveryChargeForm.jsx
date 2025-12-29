@@ -30,8 +30,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DataNotFound from "@/components/DataNotFound";
+import ReactPagination from "@/components/pagination/ReactPagination";
 
 export default function AddDeliveryChargeForm() {
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [zones, setZones] = useState([]);
+
   const location = useLocation();
   const deliveryCharge = location?.state?.deliveryCharge || "";
   const modifiedPincodes = deliveryCharge?.pincodes?.map((pincode) => ({
@@ -42,6 +47,7 @@ export default function AddDeliveryChargeForm() {
     resolver: zodResolver(deliveryChargeSchema),
     defaultValues: {
       city: "",
+      zone: "",
       pincodes: modifiedPincodes || [],
       baseCharge: 20,
       perKmCharge: 5,
@@ -57,7 +63,7 @@ export default function AddDeliveryChargeForm() {
   const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
-  const { watch, handleSubmit, control, reset,getValues } = form;
+  const { watch, handleSubmit, control, reset, getValues } = form;
   const { res, fetchData, isLoading } = usePostApiReq();
   const {
     res: updateRes,
@@ -69,13 +75,17 @@ export default function AddDeliveryChargeForm() {
     fetchData: fetchCities,
     isLoading: isCitiesLoading,
   } = useGetApiReq();
+  const {
+    res: fetchZonesRes,
+    fetchData: fetchZones,
+    isLoading: isZonesLoading,
+  } = useGetApiReq();
 
   const getCities = () => {
     fetchCities("/availableCities/get-all");
   };
 
   console.log("getValues", getValues());
-  
 
   useEffect(() => {
     getCities();
@@ -88,36 +98,33 @@ export default function AddDeliveryChargeForm() {
     }
   }, [fetchCitiesRes]);
 
+  console.log("deliveryCharge", deliveryCharge?.zone);
+
   useEffect(() => {
     if (deliveryCharge) {
       reset({
         ...deliveryCharge,
         city: deliveryCharge?.city?._id,
-        pincodes: modifiedPincodes,
+        zone: deliveryCharge?.zone?._id,
       });
     }
   }, [deliveryCharge]);
 
-  const { fields, append, remove } = useFieldArray({
-    name: "pincodes",
-    control: control,
-  });
-
-  const handleAddPincode = () => {
-    const trimmed = newPincode.trim();
-
-    if (!/^\d{6}$/.test(trimmed)) {
-      return toast.error("Pincode must be exactly 6 digits.");
-    }
-
-    const isDuplicate = fields.some((f) => f.pincode === trimmed);
-    if (isDuplicate) {
-      return toast.error("Pincode already added.");
-    }
-
-    append({ pincode: trimmed }); // add to form array
-    setNewPincode(""); // clear input
+  const getZones = () => {
+    fetchZones(`/zones/get-all?page=${page}`);
   };
+
+  useEffect(() => {
+    getZones();
+  }, [page]);
+
+  useEffect(() => {
+    if (fetchZonesRes?.status === 200 || fetchZonesRes?.status === 201) {
+      setZones(fetchZonesRes?.data?.data);
+      setTotalPage(fetchZonesRes?.data?.pagination?.totalPages);
+      console.log("getZones res", fetchZonesRes);
+    }
+  }, [fetchZonesRes]);
 
   const onSubmit = (values) => {
     console.log(values);
@@ -126,13 +133,13 @@ export default function AddDeliveryChargeForm() {
         `/delivery-charges/update/${deliveryCharge._id}/${deliveryCharge?.city?._id}`,
         {
           ...values,
-          pincodes: values.pincodes.map((item) => item.pincode),
+          // pincodes: values.pincodes.map((item) => item.pincode),
         }
       );
     } else {
       fetchData("/delivery-charges/create", {
         ...values,
-        pincodes: values.pincodes.map((item) => item.pincode),
+        // pincodes: values.pincodes.map((item) => item.pincode),
       });
     }
   };
@@ -164,7 +171,7 @@ export default function AddDeliveryChargeForm() {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onSubmit, onError)}
-          className="space-y-6 max-w-5xl mx-auto bg-white mt-10 rounded-lg border p-5"
+          className="space-y-6 mx-auto bg-white mt-10 rounded-lg border p-5"
         >
           {/* City */}
           {/* <FormField
@@ -180,103 +187,95 @@ export default function AddDeliveryChargeForm() {
               </FormItem>
             )}
           /> */}
-          {!deliveryCharge && <FormField
-            control={form.control}
-            name="city"
+          {!deliveryCharge && (
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`text-[#111928] font-semibold font-inter opacity-80`}
+                  >
+                    City <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // const selectedCity = cities.find((c) => c._id === value);
+                        // if (selectedCity) {
+                        //   setValue("cityName", selectedCity.city || "");
+                        // }
+                      }}
+                      value={field.value}
+                    >
+                      <SelectTrigger disabled={isCitiesLoading}>
+                        <SelectValue placeholder="Select City" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {cities.map((city) => (
+                            <SelectItem
+                              key={city?._id}
+                              value={city?._id}
+                              className="capitalize"
+                            >
+                              {city.city}
+                            </SelectItem>
+                          ))}
+                          {cities.length === 0 && (
+                            <DataNotFound name="Cities" />
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          <FormField
+            control={control}
+            name="zone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  className={`text-[#111928] font-semibold font-inter opacity-80`}
-                >
-                  City <span className="text-destructive">*</span>
+                <FormLabel className="flex items-center justify-between gap-5">
+                  Zone
+                  <ReactPagination
+                    className="justify-end"
+                    totalPage={totalPage}
+                    setPage={setPage}
+                  />
                 </FormLabel>
                 <FormControl>
                   <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // const selectedCity = cities.find((c) => c._id === value);
-                      // if (selectedCity) {
-                      //   setValue("cityName", selectedCity.city || "");
-                      // }
-                    }}
+                    disabled={isZonesLoading}
+                    onValueChange={field.onChange}
                     value={field.value}
+                    key={field.value}
                   >
-                    <SelectTrigger disabled={isCitiesLoading}>
-                      <SelectValue placeholder="Select City" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {cities.map((city) => (
-                          <SelectItem
-                            key={city?._id}
-                            value={city?._id}
-                            className="capitalize"
-                          >
-                            {city.city}
-                          </SelectItem>
-                        ))}
-                        {cities.length === 0 && <DataNotFound name="Cities" />}
-                      </SelectGroup>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Zone" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="z-50">
+                      {zones?.map((zone) => (
+                        <SelectItem key={zone?._id} value={zone?._id}>
+                          {zone?.name}
+                        </SelectItem>
+                      ))}
+
+                      {zones.length === 0 && <p>No zones found</p>}
                     </SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          />}
-
-          {/* Pincodes (Single Input + List) */}
-          <div>
-            <FormLabel className="mt-3">
-              Pincodes <span className="text-destructive">*</span>
-            </FormLabel>
-
-            {/* Input to enter a new pincode */}
-            <div className="flex items-center gap-2 mt-2">
-              <Input
-                type="number"
-                maxLength={6}
-                pattern="\d{6}"
-                value={newPincode}
-                onChange={(e) => setNewPincode(e.target.value)}
-                placeholder="Enter 6-digit Pincode"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleAddPincode}
-              >
-                Add
-              </Button>
-            </div>
-
-            {/* Show Zod validation message */}
-            <FormMessage>
-              {form.formState.errors?.pincodes?.message}
-            </FormMessage>
-
-            {/* List of added pincodes */}
-            {fields.length > 0 && (
-              <div className="mt-4 space-y-2">
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="flex items-center justify-between px-3 py-2 border rounded-md"
-                  >
-                    <span>{field.pincode}</span>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => remove(index)}
-                    >
-                      <Trash />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          />
 
           {/* Charges */}
           <div className="grid grid-cols-2 gap-4">

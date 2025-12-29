@@ -26,7 +26,7 @@ const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
     baseCharge,
     isActive: status,
     perKmCharge,
-    pincodes,
+    zone,
     modifiers,
   } = deliveryCharge || {};
 
@@ -71,7 +71,7 @@ const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
           <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
         </TableCell> */}
         <TableCell>{city?.city || "NA"}</TableCell>
-        <TableCell>{pincodes.join(", ")}</TableCell>
+        <TableCell>{zone?.name || "No zone selected"}</TableCell>
         <TableCell>₹{baseCharge}</TableCell>
         <TableCell>₹{perKmCharge}</TableCell>
         <TableCell>₹{modifiers?.timeOfDay?.day}</TableCell>
