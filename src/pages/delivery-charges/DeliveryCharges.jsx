@@ -71,6 +71,9 @@ const DeliveryCharges = () => {
                   Zone
                 </TableHead>
                 <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
+                  Incentive ₹
+                </TableHead>
+                <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
                   Base ₹
                 </TableHead>
                 <TableHead className="whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">

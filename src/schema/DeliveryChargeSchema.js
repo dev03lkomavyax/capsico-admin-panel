@@ -14,6 +14,7 @@ export const deliveryChargeSchema = z.object({
   //   )
   //   .min(1, "At least one pincode is required"),
 
+  incentive: z.coerce.number().min(1),
   baseCharge: z.coerce.number().min(0),
   perKmCharge: z.coerce.number().min(0),
 

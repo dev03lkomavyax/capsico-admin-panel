@@ -1,4 +1,6 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import DataNotFound from "@/components/DataNotFound";
+import ReactPagination from "@/components/pagination/ReactPagination";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import usePatchApiReq from "@/hooks/usePatchApiReq";
-import usePostApiReq from "@/hooks/usePostApiReq";
-import { deliveryChargeSchema } from "@/schema/DeliveryChargeSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeftIcon, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useLocation, useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -29,8 +20,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import DataNotFound from "@/components/DataNotFound";
-import ReactPagination from "@/components/pagination/ReactPagination";
+import { Switch } from "@/components/ui/switch";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import { deliveryChargeSchema } from "@/schema/DeliveryChargeSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeftIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AddDeliveryChargeForm() {
   const [totalPage, setTotalPage] = useState(1);
@@ -49,6 +48,7 @@ export default function AddDeliveryChargeForm() {
       city: "",
       zone: "",
       pincodes: modifiedPincodes || [],
+      incentive: 0,
       baseCharge: 20,
       perKmCharge: 5,
       modifiers: {
@@ -59,7 +59,7 @@ export default function AddDeliveryChargeForm() {
       isActive: true,
     },
   });
-  const [newPincode, setNewPincode] = useState("");
+
   const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
@@ -236,46 +236,62 @@ export default function AddDeliveryChargeForm() {
             />
           )}
 
-          <FormField
-            control={control}
-            name="zone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center justify-between gap-5">
-                  Zone
-                  <ReactPagination
-                    className="justify-end"
-                    totalPage={totalPage}
-                    setPage={setPage}
-                  />
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    disabled={isZonesLoading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    key={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Zone" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="z-50">
-                      {zones?.map((zone) => (
-                        <SelectItem key={zone?._id} value={zone?._id}>
-                          {zone?.name}
-                        </SelectItem>
-                      ))}
+          <div className="grid grid-cols-2 gap-5 items-end">
+            <FormField
+              control={control}
+              name="zone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center justify-between gap-5">
+                    Zone
+                    <ReactPagination
+                      className="justify-end"
+                      totalPage={totalPage}
+                      setPage={setPage}
+                    />
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={isZonesLoading}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      key={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Zone" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="z-50">
+                        {zones?.map((zone) => (
+                          <SelectItem key={zone?._id} value={zone?._id}>
+                            {zone?.name}
+                          </SelectItem>
+                        ))}
 
-                      {zones.length === 0 && <p>No zones found</p>}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                        {zones.length === 0 && <p>No zones found</p>}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="incentive"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Incentive</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Charges */}
           <div className="grid grid-cols-2 gap-4">

@@ -34,6 +34,7 @@ import Cuisines from "./pages/restaurant/cuisine/Cuisines";
 import Inventory from "./pages/restaurant/menu/inventory/Inventory";
 import Payment from "./pages/payment";
 import RazorpayPayment from "./pages/payment";
+import DeliveryAgentPayoutDetails from "./pages/delivery-agent/DeliveryAgentPayoutDetails";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -298,7 +299,7 @@ function App() {
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/payout"
-              element={<DeliveryAgentPayout />}
+              element={<DeliveryAgentPayoutDetails />}
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/edit-profile"
