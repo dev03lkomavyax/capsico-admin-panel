@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Metric } from "./Metric";
 
 const PayoutSummary = ({ data }) => {
   const belowMinimum = data?.netEarnings < 500;
@@ -58,18 +59,4 @@ const PayoutSummary = ({ data }) => {
 
 export default PayoutSummary;
 
-function Metric({ label, value, negative = false }) {
-  const isNegative = negative && value !== 0;
-  return (
-    <div className="rounded-md border p-3">
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p
-        className={`font-medium ${
-          isNegative ? "text-destructive-foreground" : ""
-        }`}
-      >
-        {isNegative ? `- ₹ ${Math.abs(value)}` : `₹ ${value}`}
-      </p>
-    </div>
-  );
-}
+

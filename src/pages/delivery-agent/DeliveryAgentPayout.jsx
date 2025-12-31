@@ -3,7 +3,7 @@ import PayoutRules from "@/components/delivery-agent/PayoutRules";
 import PayoutSummary from "@/components/delivery-agent/PayoutSummary";
 import RecentPayouts from "@/components/delivery-agent/RecentPayouts";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 

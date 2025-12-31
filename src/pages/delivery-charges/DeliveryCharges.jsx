@@ -68,7 +68,10 @@ const DeliveryCharges = () => {
                   City
                 </TableHead>
                 <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
-                  Pincodes
+                  Zone
+                </TableHead>
+                <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
+                  Incentive ₹
                 </TableHead>
                 <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
                   Base ₹
