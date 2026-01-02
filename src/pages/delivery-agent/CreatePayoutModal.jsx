@@ -178,7 +178,7 @@ const CreatePayoutModal = ({
             />
 
             {/* Deduct From Earnings */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="deductFromEarnings"
               render={({ field }) => (
@@ -194,7 +194,7 @@ const CreatePayoutModal = ({
                   </FormLabel>
                 </FormItem>
               )}
-            />
+            /> */}
 
             <Button
               type="submit"

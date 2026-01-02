@@ -14,29 +14,53 @@ import useGetApiReq from "@/hooks/useGetApiReq";
 import { Payout } from "./Payout";
 import { Button } from "@/components/ui/button";
 import CreatePayoutModal from "./CreatePayoutModal";
+import { Label } from "@/components/ui/label";
+import DatePicker from "@/components/DatePicker";
 
-export default function PayoutTable({ getDeliveryPartnerEarnings }) {
+export default function PayoutTable({
+  getDeliveryPartnerEarnings,
+  type = "DELIVERY_PARTNER",
+  recipientId = "",
+}) {
   const { deliveryAgentId } = useParams();
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+  });
 
   const [payouts, setPayouts] = useState([]);
   const [isCreatePayoutModalOpen, setIsCreatePayoutModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getDeliveryPartnerPayouts = () => {
     fetchData(
-      `/payout/get-payouts?recipientType=DELIVERY_PARTNER&recipientId=${deliveryAgentId}`
+      `/payout/get-payouts?recipientType=${type}&recipientId=${
+        recipientId || deliveryAgentId
+      }`,
+      {
+        params: {
+          ...filters,
+          page,
+          limit: 10,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        },
+      }
     );
   };
 
   useEffect(() => {
     getDeliveryPartnerPayouts();
-  }, [deliveryAgentId]);
+  }, [deliveryAgentId, page, filters]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("getDeliveryPartnerPayoutDetails res", res);
       setPayouts(res?.data?.payouts);
+      setPageCount(res?.data?.meta?.totalPages);
     }
   }, [res]);
 
@@ -49,13 +73,52 @@ export default function PayoutTable({ getDeliveryPartnerEarnings }) {
           <CardTitle className="text-xl font-semibold">
             Payout History
           </CardTitle>
-          <Button
-            onClick={() => setIsCreatePayoutModalOpen(true)}
-            className="w-auto px-4"
-            variant="capsico"
-          >
-            Create Payout
-          </Button>
+          <div className="flex justify-end gap-3 mt-5">
+            {/* <Select
+                          onValueChange={(v) =>
+                            setFilters((f) => ({ ...f, referenceType: v }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Reference Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="ORDER">Order</SelectItem>
+                            <SelectItem value="PAYOUT">Payout</SelectItem>
+                          </SelectContent>
+                        </Select> */}
+
+            <div>
+              <Label>StartDate</Label>
+
+              <DatePicker
+                value={filters.startDate}
+                onChange={(value) => {
+                  console.log("value", value);
+
+                  setFilters((f) => ({ ...f, startDate: value }));
+                }}
+              />
+            </div>
+
+            <div>
+              <Label>EndDate</Label>
+
+              <DatePicker
+                value={filters.endDate}
+                onChange={(value) =>
+                  setFilters((f) => ({ ...f, endDate: value }))
+                }
+              />
+            </div>
+            <Button
+              onClick={() => setIsCreatePayoutModalOpen(true)}
+              className="w-auto px-4"
+              variant="capsico"
+            >
+              Create Payout
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent>

@@ -5,25 +5,25 @@ import { ArrowLeftIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import PayoutTable from "./PayoutTable";
 import { Button } from "@/components/ui/button";
+import PayoutTable from "../delivery-agent/PayoutTable";
 
-const DeliveryAgentPayoutDetails = () => {
+const RestaurantPayout = () => {
   const navigate = useNavigate();
-  const { deliveryAgentId } = useParams();
+  const { restaurantId } = useParams();
 
   const [earnings, setEarnings] = useState("");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getDeliveryPartnerEarnings = () => {
-    fetchData(`/payout/get-earnings/DELIVERY_PARTNER/${deliveryAgentId}`);
+    fetchData(`/payout/get-earnings/MERCHANT/${restaurantId}`);
   };
 
   useEffect(() => {
     // getDeliveryPartnerPayoutDetails();
     getDeliveryPartnerEarnings();
-  }, [deliveryAgentId]);
+  }, [restaurantId]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -45,7 +45,7 @@ const DeliveryAgentPayoutDetails = () => {
           </button>
           <Button className="w-auto px-4" variant="capsico">
             <Link
-              to={`/admin/delivery-agent/${deliveryAgentId}/payout/earnings-history`}
+              to={`/admin/restaurant/${restaurantId}/payout/earnings-history`}
             >
               Earnings History
             </Link>
@@ -68,10 +68,14 @@ const DeliveryAgentPayoutDetails = () => {
           </div>
         )}
 
-        <PayoutTable getDeliveryPartnerEarnings={getDeliveryPartnerEarnings} />
+        <PayoutTable
+          getDeliveryPartnerEarnings={getDeliveryPartnerEarnings}
+          recipientId={restaurantId}
+          type="MERCHANT"
+        />
       </div>
     </AdminWrapper>
   );
 };
 
-export default DeliveryAgentPayoutDetails;
+export default RestaurantPayout;
