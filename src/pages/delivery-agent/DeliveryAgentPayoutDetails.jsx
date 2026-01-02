@@ -58,7 +58,7 @@ const DeliveryAgentPayoutDetails = () => {
           </div>
         )}
 
-        <PayoutTable />
+        <PayoutTable getDeliveryPartnerEarnings={getDeliveryPartnerEarnings} />
       </div>
     </AdminWrapper>
   );

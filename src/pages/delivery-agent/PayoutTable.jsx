@@ -15,7 +15,7 @@ import { Payout } from "./Payout";
 import { Button } from "@/components/ui/button";
 import CreatePayoutModal from "./CreatePayoutModal";
 
-export default function PayoutTable() {
+export default function PayoutTable({ getDeliveryPartnerEarnings }) {
   const { deliveryAgentId } = useParams();
 
   const [payouts, setPayouts] = useState([]);
@@ -91,6 +91,7 @@ export default function PayoutTable() {
           isCreatePayoutModalOpen={isCreatePayoutModalOpen}
           setIsCreatePayoutModalOpen={setIsCreatePayoutModalOpen}
           getData={getDeliveryPartnerPayouts}
+          getDeliveryPartnerEarnings={getDeliveryPartnerEarnings}
         />
       )}
     </>

@@ -29,6 +29,7 @@ const CreatePayoutModal = ({
   isCreatePayoutModalOpen,
   setIsCreatePayoutModalOpen,
   getData,
+  getDeliveryPartnerEarnings,
 }) => {
   const { deliveryAgentId } = useParams();
 
@@ -52,6 +53,7 @@ const CreatePayoutModal = ({
       setIsCreatePayoutModalOpen(false);
       form.reset();
       getData();
+      getDeliveryPartnerEarnings();
     }
   }, [res]);
 
@@ -72,7 +74,11 @@ const CreatePayoutModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Recipient Type</FormLabel>
-                  <Select disabled onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    disabled
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select recipient type" />
