@@ -37,6 +37,7 @@ const CreatePayoutModal = ({
     defaultValues: {
       deductFromEarnings: true,
       recipientId: deliveryAgentId,
+      recipientType: "DELIVERY_PARTNER",
     },
   });
 
@@ -71,7 +72,7 @@ const CreatePayoutModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Recipient Type</FormLabel>
-                  <Select onValueChange={field.onChange}>
+                  <Select disabled onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select recipient type" />
@@ -90,7 +91,7 @@ const CreatePayoutModal = ({
             />
 
             {/* Recipient ID */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="recipientId"
               render={({ field }) => (
@@ -102,7 +103,7 @@ const CreatePayoutModal = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Amount */}
             <FormField
