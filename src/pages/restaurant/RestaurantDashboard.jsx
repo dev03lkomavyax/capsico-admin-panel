@@ -18,7 +18,7 @@ import { useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 // import { useNavigate, useParams } from "react-router-dom";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Stats from "./Stats";
 
 const data2 = [
@@ -87,6 +87,11 @@ const RestaurantDashborad = () => {
             </h2>
           </button>
           <div className="flex items-center gap-4">
+            <Button className="w-auto px-4">
+              <Link to={`/admin/restaurant/${params.restaurantId}/payout`}>
+                Payout Info
+              </Link>
+            </Button>
             <Button
               onClick={() => setIsUpdateLogoModalOpen(true)}
               className="px-4"

@@ -36,7 +36,7 @@ const DeliveryAgent = () => {
   const [deliveryAgentData, setDeliveryAgentData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [pageCount, setPageCount] = useState(5);
+  const [pageCount, setPageCount] = useState(0);
   const [status, setStatus] = useState("all");
   const [dateFilter, setDateFilter] = useState("today");
   const navigate = useNavigate();

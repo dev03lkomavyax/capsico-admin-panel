@@ -35,6 +35,9 @@ import Inventory from "./pages/restaurant/menu/inventory/Inventory";
 import Payment from "./pages/payment";
 import RazorpayPayment from "./pages/payment";
 import DeliveryAgentPayoutDetails from "./pages/delivery-agent/DeliveryAgentPayoutDetails";
+import DeliveryAgentEarningHistory from "./pages/delivery-agent/DeliveryAgentEarningHistory";
+import RestaurantPayout from "./pages/restaurant/RestaurantPayout";
+import RestaurantEarningHistory from "./pages/restaurant/RestaurantEarningHistory";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -224,6 +227,14 @@ function App() {
               element={<RestaurantDashborad />}
             />
             <Route
+              path="/admin/restaurant/:restaurantId/payout"
+              element={<RestaurantPayout />}
+            />
+            <Route
+              path="/admin/restaurant/:restaurantId/payout/earnings-history"
+              element={<RestaurantEarningHistory />}
+            />
+            <Route
               path="/admin/restaurant/:restaurantId/inventory"
               element={<Inventory />}
             />
@@ -300,6 +311,10 @@ function App() {
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/payout"
               element={<DeliveryAgentPayoutDetails />}
+            />
+            <Route
+              path="/admin/delivery-agent/:deliveryAgentId/payout/earnings-history"
+              element={<DeliveryAgentEarningHistory />}
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/edit-profile"
