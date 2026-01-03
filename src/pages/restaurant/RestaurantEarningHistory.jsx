@@ -15,7 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { EarningRow } from "./EarningRow";
 

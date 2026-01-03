@@ -1,11 +1,10 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { Metric } from "@/components/delivery-agent/Metric";
+import { Button } from "@/components/ui/button";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { ArrowLeftIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import PayoutTable from "../delivery-agent/PayoutTable";
 
 const RestaurantPayout = () => {

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import CreatePayoutModal from "./CreatePayoutModal";
 import { Label } from "@/components/ui/label";
 import DatePicker from "@/components/DatePicker";
+import ReactPagination from "@/components/pagination/ReactPagination";
 
 export default function PayoutTable({
   getDeliveryPartnerEarnings,
@@ -146,6 +147,8 @@ export default function PayoutTable({
               ))}
             </TableBody>
           </Table>
+
+          <ReactPagination setPage={setPage} totalPage={pageCount} />
         </CardContent>
       </Card>
 
