@@ -17,7 +17,7 @@ export const Payout = ({ payout }) => {
       </TableCell>
 
       <TableCell className="text-xs text-muted-foreground">
-        {payout?.recipientId?.personalInfo?.name}
+        {payout?.recipientId?.personalInfo?.name || payout?.recipientId?.name}
       </TableCell>
 
       <TableCell>
