@@ -124,6 +124,8 @@ const RestaurantEarningHistory = () => {
                   <TableHead>Owner Type</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Amount</TableHead>
+                  <TableHead>Commission Amount</TableHead>
+                  <TableHead>Subtotal</TableHead>
                   <TableHead>Reference</TableHead>
                   <TableHead>Remark</TableHead>
                 </TableRow>
