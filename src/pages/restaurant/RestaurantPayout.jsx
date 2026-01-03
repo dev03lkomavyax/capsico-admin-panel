@@ -1,11 +1,10 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { Metric } from "@/components/delivery-agent/Metric";
+import { Button } from "@/components/ui/button";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { ArrowLeftIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import PayoutTable from "../delivery-agent/PayoutTable";
 
 const RestaurantPayout = () => {
@@ -43,7 +42,7 @@ const RestaurantPayout = () => {
             <ArrowLeftIcon className="text-2xl" />
             <h1 className="text-2xl font-semibold text-left">Earning</h1>
           </button>
-          <Button className="w-auto px-4" variant="capsico">
+          <Button asChild className="w-auto px-4" variant="capsico">
             <Link
               to={`/admin/restaurant/${restaurantId}/payout/earnings-history`}
             >

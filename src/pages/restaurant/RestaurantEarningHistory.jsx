@@ -15,7 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { EarningRow } from "./EarningRow";
 
@@ -125,6 +124,8 @@ const RestaurantEarningHistory = () => {
                   <TableHead>Owner Type</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Amount</TableHead>
+                  <TableHead>Commission Amount</TableHead>
+                  <TableHead>Subtotal</TableHead>
                   <TableHead>Reference</TableHead>
                   <TableHead>Remark</TableHead>
                 </TableRow>
