@@ -17,7 +17,7 @@ import {
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { EarningRow } from "./EarningRow";
+import { EarningRow } from "./earning/EarningRow";
 
 const DeliveryAgentEarningHistory = () => {
   const navigate = useNavigate();

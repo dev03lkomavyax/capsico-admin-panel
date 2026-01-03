@@ -7,6 +7,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PayoutTable from "./PayoutTable";
 import { Button } from "@/components/ui/button";
+import EarningTable from "./earning/EarningTable";
 
 const DeliveryAgentPayoutDetails = () => {
   const navigate = useNavigate();
@@ -43,19 +44,19 @@ const DeliveryAgentPayoutDetails = () => {
             <ArrowLeftIcon className="text-2xl" />
             <h1 className="text-2xl font-semibold text-left">Earning</h1>
           </button>
-          <Button asChild className="w-auto px-4" variant="capsico">
+          {/* <Button asChild className="w-auto px-4" variant="capsico">
             <Link
               to={`/admin/delivery-agent/${deliveryAgentId}/payout/earnings-history`}
             >
               Earnings History
             </Link>
-          </Button>
+          </Button> */}
         </div>
         {isLoading ? (
-          <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
-            <div className="aspect-video rounded-md bg-muted animate-pulse" />
-            <div className="aspect-video rounded-md bg-muted animate-pulse" />
-            <div className="aspect-video rounded-md bg-muted animate-pulse" />
+          <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6 h-24">
+            <div className="rounded-md bg-muted animate-pulse h-full" />
+            <div className="rounded-md bg-muted animate-pulse h-full" />
+            <div className="rounded-md bg-muted animate-pulse h-full" />
           </div>
         ) : (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
@@ -67,6 +68,8 @@ const DeliveryAgentPayoutDetails = () => {
             />
           </div>
         )}
+
+        <EarningTable />
 
         <PayoutTable getDeliveryPartnerEarnings={getDeliveryPartnerEarnings} />
       </div>

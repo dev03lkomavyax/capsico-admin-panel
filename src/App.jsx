@@ -38,6 +38,7 @@ import DeliveryAgentPayoutDetails from "./pages/delivery-agent/DeliveryAgentPayo
 import DeliveryAgentEarningHistory from "./pages/delivery-agent/DeliveryAgentEarningHistory";
 import RestaurantPayout from "./pages/restaurant/RestaurantPayout";
 import RestaurantEarningHistory from "./pages/restaurant/RestaurantEarningHistory";
+import EarningDetails from "./pages/delivery-agent/earning/EarningDetails";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -311,6 +312,10 @@ function App() {
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/payout"
               element={<DeliveryAgentPayoutDetails />}
+            />
+            <Route
+              path="/admin/delivery-agent/:deliveryAgentId/payout/:payoutId"
+              element={<EarningDetails />}
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/payout/earnings-history"
