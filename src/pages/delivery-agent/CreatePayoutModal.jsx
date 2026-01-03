@@ -30,6 +30,8 @@ const CreatePayoutModal = ({
   setIsCreatePayoutModalOpen,
   getData,
   getDeliveryPartnerEarnings,
+  type,
+  recipientId,
 }) => {
   const { deliveryAgentId } = useParams();
 
@@ -37,8 +39,8 @@ const CreatePayoutModal = ({
     resolver: zodResolver(createPayoutSchema),
     defaultValues: {
       deductFromEarnings: true,
-      recipientId: deliveryAgentId,
-      recipientType: "DELIVERY_PARTNER",
+      recipientId: recipientId || deliveryAgentId,
+      recipientType: type || "DELIVERY_PARTNER",
     },
   });
 

@@ -155,6 +155,8 @@ export default function PayoutTable({
           setIsCreatePayoutModalOpen={setIsCreatePayoutModalOpen}
           getData={getDeliveryPartnerPayouts}
           getDeliveryPartnerEarnings={getDeliveryPartnerEarnings}
+          type={type}
+          recipientId={recipientId}
         />
       )}
     </>
