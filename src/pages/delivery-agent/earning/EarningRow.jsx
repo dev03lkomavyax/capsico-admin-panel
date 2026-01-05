@@ -11,7 +11,6 @@ export const EarningRow = ({ row }) => {
   return (
     <TableRow
       className={cn("", row.type === "CREDIT" ? "bg-green-100" : "bg-red-100")}
-      key={row._id}
     >
       <TableCell>{format(new Date(row.createdAt), "dd MMM, yyyy")}</TableCell>
       <TableCell>{row.ownerType}</TableCell>
