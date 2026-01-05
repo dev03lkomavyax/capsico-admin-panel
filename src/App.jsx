@@ -39,6 +39,8 @@ import DeliveryAgentEarningHistory from "./pages/delivery-agent/DeliveryAgentEar
 import RestaurantPayout from "./pages/restaurant/RestaurantPayout";
 import RestaurantEarningHistory from "./pages/restaurant/RestaurantEarningHistory";
 import EarningDetails from "./pages/delivery-agent/earning/EarningDetails";
+import Settings from "./pages/settings/Settings";
+import CrashDetailPage from "./pages/settings/CrashDetailPage";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -434,6 +436,9 @@ function App() {
               element={<CreateSpotlight />}
             />
             <Route path="/admin/payment" element={<RazorpayPayment />} />
+
+            <Route path="/admin/settings" element={<Settings />} />
+            <Route path="/admin/settings/:crashId" element={<CrashDetailPage />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

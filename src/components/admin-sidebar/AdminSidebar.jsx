@@ -8,7 +8,8 @@ import {
   Layers,
   MapPin,
   Ticket,
-  Search
+  Search,
+  SettingsIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IoNotifications } from "react-icons/io5";
@@ -740,6 +741,36 @@ const AdminSidebar = () => {
               </span>
             </Link>
           )}
+
+        {/* {permissions &&
+          permissions[perm["settings"]] &&
+          permissions[perm["settings"]] !== "none" && ( */}
+        <Link
+          to={`/admin/settings`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/settings")
+              ? "bg-[#F1F6FF]"
+              : "bg-[#FFFFFF]"
+          }`}
+        >
+          <SettingsIcon
+            className={
+              pathname.includes("/admin/settings")
+                ? "text-[#397FFE] size-5"
+                : "text-[#4A4A4A] size-5"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/settings")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Settings
+          </span>
+        </Link>
+        {/* )} */}
       </ul>
     </aside>
   );
