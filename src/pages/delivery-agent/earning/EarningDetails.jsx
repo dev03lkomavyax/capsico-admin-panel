@@ -110,7 +110,7 @@ const EarningDetails = () => {
               <CardHeader>
                 <CardTitle className="text-lg">Order Financials</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <SummaryItem
                   label="Items Total"
                   value={`₹${reference.amounts.itemsTotal}`}
@@ -127,6 +127,10 @@ const EarningDetails = () => {
                   label="Grand Total"
                   value={`₹${reference.amounts.total}`}
                   highlight
+                />
+                <SummaryItem
+                  label="Delivery Distance"
+                  value={`${reference?.deliveryMeta?.distanceKm} KM`}
                 />
               </CardContent>
             </Card>
