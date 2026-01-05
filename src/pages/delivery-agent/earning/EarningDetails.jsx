@@ -73,7 +73,7 @@ const EarningDetails = () => {
             <CardHeader>
               <CardTitle className="text-lg">Earning Summary</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <SummaryItem
                 label="Type"
                 value={ledger.type}
@@ -86,6 +86,18 @@ const EarningDetails = () => {
                 value={`₹${ledger.amount}`}
                 highlight={ledger.type === "CREDIT"}
               />
+              {ledger?.breakup?.incentive && (
+                <SummaryItem
+                  label="Incentive"
+                  value={`₹${ledger?.breakup?.incentive}`}
+                />
+              )}
+              {ledger?.breakup?.deliveryFee && (
+                <SummaryItem
+                  label="Delivery Fee"
+                  value={`₹${ledger?.breakup?.deliveryFee}`}
+                />
+              )}
               <SummaryItem
                 label="Date"
                 value={new Date(ledger.createdAt).toLocaleString()}

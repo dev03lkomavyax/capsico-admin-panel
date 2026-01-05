@@ -232,6 +232,10 @@ function App() {
               element={<RestaurantPayout />}
             />
             <Route
+              path="/admin/restaurant/:restaurantId/payout/:payoutId"
+              element={<EarningDetails />}
+            />
+            <Route
               path="/admin/restaurant/:restaurantId/payout/earnings-history"
               element={<RestaurantEarningHistory />}
             />

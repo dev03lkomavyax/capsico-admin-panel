@@ -1,19 +1,31 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { Metric } from "@/components/delivery-agent/Metric";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, FileOutputIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PayoutTable from "./PayoutTable";
 import { Button } from "@/components/ui/button";
 import EarningTable from "./earning/EarningTable";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import ExportDeliveryAgentPayout from "./earning/ExportDeliveryAgentPayout";
 
 const DeliveryAgentPayoutDetails = () => {
   const navigate = useNavigate();
   const { deliveryAgentId } = useParams();
 
   const [earnings, setEarnings] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleExort = () => {
+    setIsModalOpen(true);
+  };
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -44,13 +56,18 @@ const DeliveryAgentPayoutDetails = () => {
             <ArrowLeftIcon className="text-2xl" />
             <h1 className="text-2xl font-semibold text-left">Earning</h1>
           </button>
-          {/* <Button asChild className="w-auto px-4" variant="capsico">
-            <Link
-              to={`/admin/delivery-agent/${deliveryAgentId}/payout/earnings-history`}
-            >
-              Earnings History
-            </Link>
-          </Button> */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button className="w-auto px-4" variant="capsico" onClick={handleExort}>
+                  <FileOutputIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Export Data</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         {isLoading ? (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6 h-24">
@@ -72,6 +89,13 @@ const DeliveryAgentPayoutDetails = () => {
         <EarningTable />
 
         <PayoutTable getDeliveryPartnerEarnings={getDeliveryPartnerEarnings} />
+
+        {isModalOpen && (
+          <ExportDeliveryAgentPayout
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+          />
+        )}
       </div>
     </AdminWrapper>
   );

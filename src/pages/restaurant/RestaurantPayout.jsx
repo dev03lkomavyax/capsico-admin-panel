@@ -2,16 +2,29 @@ import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { Metric } from "@/components/delivery-agent/Metric";
 import { Button } from "@/components/ui/button";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, FileOutputIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PayoutTable from "../delivery-agent/PayoutTable";
+import EarningTable from "./earning/EarningTable";
+import ExportRestaurantPayout from "./earning/ExportRestaurantPayout";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const RestaurantPayout = () => {
   const navigate = useNavigate();
   const { restaurantId } = useParams();
 
   const [earnings, setEarnings] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleExort = () => {
+    setIsModalOpen(true);
+  };
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -20,7 +33,6 @@ const RestaurantPayout = () => {
   };
 
   useEffect(() => {
-    // getDeliveryPartnerPayoutDetails();
     getDeliveryPartnerEarnings();
   }, [restaurantId]);
 
@@ -42,13 +54,22 @@ const RestaurantPayout = () => {
             <ArrowLeftIcon className="text-2xl" />
             <h1 className="text-2xl font-semibold text-left">Earning</h1>
           </button>
-          <Button asChild className="w-auto px-4" variant="capsico">
-            <Link
-              to={`/admin/restaurant/${restaurantId}/payout/earnings-history`}
-            >
-              Earnings History
-            </Link>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className="w-auto px-4"
+                  variant="capsico"
+                  onClick={handleExort}
+                >
+                  <FileOutputIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Export Data</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         {isLoading ? (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
@@ -67,11 +88,20 @@ const RestaurantPayout = () => {
           </div>
         )}
 
+        <EarningTable />
+
         <PayoutTable
           getDeliveryPartnerEarnings={getDeliveryPartnerEarnings}
           recipientId={restaurantId}
           type="MERCHANT"
         />
+
+        {isModalOpen && (
+          <ExportRestaurantPayout
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+          />
+        )}
       </div>
     </AdminWrapper>
   );
