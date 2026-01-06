@@ -20,6 +20,7 @@ export function CrashTable({ crashes }) {
             <TableHead>User</TableHead>
             <TableHead>Time</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

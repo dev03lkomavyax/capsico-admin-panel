@@ -1,14 +1,15 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SeverityBadge } from "./SeverityBadge";
 import { useNavigate } from "react-router-dom";
+import { EyeIcon } from "lucide-react";
 
-export function CrashRow({ crash  }) {
-    const navigate = useNavigate();
+export function CrashRow({ crash }) {
+  const navigate = useNavigate();
 
   return (
     <TableRow
-      onClick={() => navigate(`/admin/settings/${crash.id}`, { state: crash })}
-      className="cursor-pointer hover:bg-muted/50"
+      // onClick={() => navigate(`/admin/settings/${crash.id}`, { state: crash })}
+      className=" hover:bg-muted/50"
     >
       <TableCell>
         <SeverityBadge severity={crash.severity} />
@@ -30,6 +31,14 @@ export function CrashRow({ crash  }) {
         <div className="text-xs text-muted-foreground">{crash.timestamp}</div>
       </TableCell>
       <TableCell>{crash.status}</TableCell>
+      <TableCell>
+        <EyeIcon
+          onClick={() =>
+            navigate(`/admin/settings/${crash.id}`, { state: crash })
+          }
+          className="size-6 cursor-pointer"
+        />
+      </TableCell>
     </TableRow>
   );
 }

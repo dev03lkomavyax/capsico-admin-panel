@@ -9,15 +9,17 @@ export function adaptCrashForList(crash) {
     errorName: crash.errorName,
     errorMessage: crash.errorMessage,
     stackTrace: crash.stackTrace,
+    screenName: crash.screenName,
+    userType: crash.userType,
     file: crash.stackTrace?.split(" ").pop() || "-",
 
     appName: crash.appName,
+    request: crash.request,
+    device: crash.device,
     platform: crash.device?.platform || "Unknown",
     version: crash.appVersion,
 
-    user: crash.userId
-      ? `${crash.userType} #${crash.userId.slice(-4)}`
-      : "Anonymous",
+    user: crash?.userId ? `${crash?.userType}` : "Anonymous",
 
     timeAgo: formatDistanceToNow(new Date(crash.crashAt), { addSuffix: true }),
     timestamp: format(new Date(crash.crashAt), "dd MMM yyyy, hh:mm a"),

@@ -3,6 +3,7 @@ import { CrashFilters } from "./CrashFilters";
 import { adaptCrashForList } from "./crashListAdapter";
 import { CrashTable } from "./CrashTable";
 import { useEffect, useState } from "react";
+import ReactPagination from "@/components/pagination/ReactPagination";
 
 const mockCrashes = [
   {
@@ -95,6 +96,8 @@ export function CrashReportsPage() {
   const [crashReports, setCrashReports] = useState([]);
   const [environment, setEnvironment] = useState("");
   const [severity, setSeverity] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -106,13 +109,14 @@ export function CrashReportsPage() {
 
   useEffect(() => {
     getCrashReport();
-  }, [environment, severity]);
+  }, [environment, severity, page]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("getCrashReport res", res?.data);
       const modifiedData = res?.data?.data?.map(adaptCrashForList);
       setCrashReports(modifiedData);
+      setPageCount(res?.data?.meta?.totalPages);
     }
   }, [res]);
 
@@ -121,7 +125,7 @@ export function CrashReportsPage() {
       <header>
         <h1 className="text-3xl font-bold">Crash Reports</h1>
         <p className="text-sm text-muted-foreground">
-          Total Crashes: <span className="font-mono">1,240</span>
+          Total Crashes: <span className="font-mono">{res?.data?.meta?.total || 0}</span>
         </p>
       </header>
 
@@ -133,6 +137,8 @@ export function CrashReportsPage() {
           setSeverity={setSeverity}
         />
         <CrashTable crashes={crashReports} />
+
+        <ReactPagination setPage={setPage} totalPage={pageCount} />
       </div>
     </div>
   );
