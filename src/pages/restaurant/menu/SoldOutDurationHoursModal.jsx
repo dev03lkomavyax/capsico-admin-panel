@@ -44,6 +44,10 @@ const SoldOutDurationHoursModal = ({
       {
         isAvailable: false,
         soldOutDurationHours: data.duration,
+      },
+      {
+        reportCrash: true,
+        screenName: "MENU_AVAILABILITY_UPDATE",
       }
     );
   };

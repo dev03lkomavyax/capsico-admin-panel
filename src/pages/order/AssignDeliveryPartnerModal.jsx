@@ -23,7 +23,10 @@ const AssignDeliveryPartnerModal = ({
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getPartnersInZoneByOrder = () => {
-    fetchData(`/zones/get-partners-in-zone-by-order/${params.orderId}`);
+    fetchData(`/zones/get-partners-in-zone-by-order/${params.orderId}`, {
+      reportCrash: true,
+      screenName: "ORDER_ZONE_PARTNERS_GET",
+    });
   };
 
   useEffect(() => {

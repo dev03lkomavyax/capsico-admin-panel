@@ -41,7 +41,8 @@ const Food = ({ item, getCategories, showActions }) => {
 
   const deleteMenuItem = () => {
     deleteItem(
-      `/admin/delete-menu-item/${params?.restaurantId}?menuItemId=${item?.id}`
+      `/admin/delete-menu-item/${params?.restaurantId}?menuItemId=${item?.id}`,
+      { reportCrash: true, screenName: "MENU_DELETE" }
     );
   };
 
@@ -80,7 +81,11 @@ const Food = ({ item, getCategories, showActions }) => {
     setIsOn(value);
     fetchData(
       `/admin/food-availability/${item?.id}?restaurantId=${params?.restaurantId}`,
-      { isAvailable: value }
+      { isAvailable: value },
+      {
+        reportCrash: true,
+        screenName: "MENU_AVAILABILITY_UPDATE",
+      }
     );
   };
 

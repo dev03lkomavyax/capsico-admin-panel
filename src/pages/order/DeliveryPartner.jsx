@@ -15,7 +15,14 @@ function DeliveryPartner({
   const params = useParams();
 
   const assignDeliveryAgent = () => {
-    fetchData(`/test/assign-order`, { orderId: params?.orderId, partnerId });
+    fetchData(
+      `/test/assign-order`,
+      { orderId: params?.orderId, partnerId },
+      {
+        reportCrash: true,
+        screenName: "ORDER_ZONE_PARTNER_ASSIGN",
+      }
+    );
   };
 
   useEffect(() => {

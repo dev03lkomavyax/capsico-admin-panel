@@ -228,7 +228,11 @@ const Capsico = ({ setCapsicoOrderNo }) => {
     fetchData(
       `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
         status === "all" ? "" : status
-      }`
+      }`,
+      {
+        reportCrash: true,
+        screenName: "ORDER_GET",
+      }
     );
   };
 

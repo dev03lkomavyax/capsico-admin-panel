@@ -43,7 +43,10 @@ const DeleteCategoryModal = ({
 
   const getCategories = () => {
     const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
-    getData(url);
+    getData(url, {
+      reportCrash: true,
+      screenName: "CATEGORY_GET",
+    });
   };
 
   useEffect(() => {
@@ -75,7 +78,11 @@ const DeleteCategoryModal = ({
     }
 
     fetchData(
-      `/restaurant/delete-category/${categoryId}?restaurantId=${params?.restaurantId}`
+      `/restaurant/delete-category/${categoryId}?restaurantId=${params?.restaurantId}`,
+      {
+        reportCrash: true,
+        screenName: "CATEGORY_DELETE",
+      }
     );
   };
 

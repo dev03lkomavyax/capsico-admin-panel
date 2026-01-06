@@ -1226,7 +1226,10 @@ const AddMenu = () => {
 
   const getCategories = () => {
     const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
-    getData(url);
+    getData(url, {
+      reportCrash: true,
+      screenName: "CATEGORY_GET",
+    });
   };
 
   useEffect(() => {
@@ -1251,7 +1254,11 @@ const AddMenu = () => {
 
   const getSubcategoriesFun = () => {
     getSubcategories(
-      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`
+      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`,
+      {
+        reportCrash: true,
+        screenName: "SUBCATEGORY_GET",
+      }
     );
   };
 
@@ -1513,7 +1520,10 @@ const AddMenu = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getCuisines = () => {
-    fetchData("/admin/get-cuisines");
+    fetchData("/admin/get-cuisines", {
+      reportCrash: true,
+      screenName: "CUISINE_GET",
+    });
   };
 
   useEffect(() => {
@@ -1634,7 +1644,8 @@ const AddMenu = () => {
     // Use restaurant endpoint for adding menu items
     fetchAddItemData(
       `/restaurant/add-menu-item/${state?.restaurantId}`,
-      formData
+      formData,
+      { reportCrash: true, screenName: "MENU_CREATE" }
     );
   };
 

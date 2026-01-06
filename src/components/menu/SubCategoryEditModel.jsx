@@ -288,7 +288,10 @@ const SubCategoryEditModel = ({
 
   const getCategories = () => {
     const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
-    getData(url);
+    getData(url, {
+      reportCrash: true,
+      screenName: "CATEGORY_GET",
+    });
   };
 
   useEffect(() => {
@@ -327,11 +330,18 @@ const SubCategoryEditModel = ({
       );
     } else {
       // Use your existing add subcategory API: /post-add-subcategory/:id
-      fetchData(`/restaurant/post-add-subcategory/${params.restaurantId}`, {
-        name: data.subCategory,
-        description: data.description,
-        categoryId: data.categoryId,
-      });
+      fetchData(
+        `/restaurant/post-add-subcategory/${params.restaurantId}`,
+        {
+          name: data.subCategory,
+          description: data.description,
+          categoryId: data.categoryId,
+        },
+        {
+          reportCrash: true,
+          screenName: "SUBCATEGORY_CREATE",
+        }
+      );
     }
   };
 
