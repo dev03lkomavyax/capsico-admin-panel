@@ -70,6 +70,7 @@
 import { createContext, useContext, useEffect, useMemo } from "react";
 import io from "socket.io-client";
 import useGetApiReq from "./hooks/useGetApiReq";
+import useCrashReporter from "./hooks/useCrashReporter";
 
 const server = import.meta.env.VITE_SOCKET_URL;
 const SocketContext = createContext();
@@ -78,33 +79,7 @@ export const getSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const token = localStorage.getItem("adminAccessToken");
-  const { res, fetchData, isLoading } = useGetApiReq();
-
-  const createCrashReport = (err) => {
-    fetchData(`/crash-report/create`, {
-      appName: "Admin Panel",
-      appVersion: "1.0.0",
-      environment: import.meta.env.MODE,
-
-      errorName: err?.name || "SOCKET_ERROR",
-      errorMessage: err?.message || "Unknown socket error",
-      stackTrace: err?.stack,
-
-      severity: "CRITICAL",
-      screenName: "SOCKET_CONNECTION_ERROR",
-
-      device: {
-        platform: "web",
-        browser: navigator.userAgent,
-      },
-
-      request: {
-        body: {
-          socketId: socket.id,
-        },
-      },
-    });
-  };
+  const { reportCrash } = useCrashReporter();
 
   const socket = useMemo(
     () =>
@@ -125,7 +100,17 @@ export const SocketProvider = ({ children }) => {
 
     socket.on("error", (err) => {
       console.error("❌ Socket connection error:", err.message);
-      createCrashReport(err);
+      reportCrash({
+        error: err,
+        screenName: "SOCKET_CONNECTION_ERROR",
+        severity: "CRITICAL",
+        request: {
+          body: {
+            socketId: socket.id,
+          },
+        },
+        userType: "Admin",
+      });
     });
 
     socket.on("disconnect", (reason) => {
@@ -135,7 +120,6 @@ export const SocketProvider = ({ children }) => {
         socket.connect();
       }
     });
-
 
     return () => {
       socket.disconnect();
