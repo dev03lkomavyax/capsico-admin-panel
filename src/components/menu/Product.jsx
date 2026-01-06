@@ -44,7 +44,8 @@ const Product = ({
 
   const deleteMenuItem = () => {
     fetchData(
-      `/admin/delete-menu-item/${params?.restaurantId}?menuItemId=${foodItem?.id}`
+      `/admin/delete-menu-item/${params?.restaurantId}?menuItemId=${foodItem?.id}`,
+      { reportCrash: true, screenName: "MENU_DELETE" }
     );
   };
 

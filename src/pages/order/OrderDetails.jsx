@@ -58,7 +58,10 @@ const OrderDetails = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getOrderDetails = () => {
-    fetchData(`/admin/get-order/${orderId}`);
+    fetchData(`/admin/get-order/${orderId}`, {
+      reportCrash: true,
+      screenName: "ORDER_DETAILS_GET",
+    });
   };
 
   useEffect(() => {

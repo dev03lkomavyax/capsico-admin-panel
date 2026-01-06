@@ -136,7 +136,7 @@ const UpdateOffer = () => {
   } = usePutApiReq();
 
   const getCategory = () => {
-    categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`);
+    categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`,);
   };
 
   useEffect(() => {

@@ -40,7 +40,10 @@ const getCategories = () => {
   const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&searchQuery=${searchQuery}`;
   console.log("🔍 Full API URL:", url);
   
-  fetchData(url);
+  fetchData(url, {
+    reportCrash: true,
+    screenName: "CATEGORY_GET",
+  });
 };
 
   useEffect(() => {

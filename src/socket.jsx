@@ -22,7 +22,6 @@
 
 // export { SocketProvider, getSocket };
 
-
 // import { createContext, useContext, useEffect, useMemo } from "react";
 // import io from "socket.io-client";
 
@@ -68,9 +67,10 @@
 
 // export { getSocket, SocketProvider };
 
-
 import { createContext, useContext, useEffect, useMemo } from "react";
 import io from "socket.io-client";
+import useGetApiReq from "./hooks/useGetApiReq";
+import useCrashReporter from "./hooks/useCrashReporter";
 
 const server = import.meta.env.VITE_SOCKET_URL;
 const SocketContext = createContext();
@@ -79,6 +79,7 @@ export const getSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const token = localStorage.getItem("adminAccessToken");
+  const { reportCrash } = useCrashReporter();
 
   const socket = useMemo(
     () =>
@@ -97,8 +98,27 @@ export const SocketProvider = ({ children }) => {
       socket.emit("join", { userId: "" });
     });
 
-    socket.on("connect_error", (err) => {
+    socket.on("error", (err) => {
       console.error("❌ Socket connection error:", err.message);
+      reportCrash({
+        error: err,
+        screenName: "SOCKET_CONNECTION_ERROR",
+        severity: "CRITICAL",
+        request: {
+          body: {
+            socketId: socket.id,
+          },
+        },
+        userType: "Admin",
+      });
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Disconnected:", reason);
+      if (reason === "io server disconnect") {
+        // Server disconnected, try reconnecting with new token
+        socket.connect();
+      }
     });
 
     return () => {

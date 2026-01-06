@@ -89,7 +89,7 @@ const UpdateMenu = () => {
     isDefault: false,
     tags: [],
   });
-  
+
   const params = useParams();
   const { state } = useLocation();
   console.log("state", state);
@@ -97,7 +97,9 @@ const UpdateMenu = () => {
   const [groups, setGroups] = useState(
     foodItem?.addOns.map((item) => ({ ...item, adonsGroup: item.addons })) || []
   );
-  const [variantGroups, setVariantGroups] = useState(foodItem.variantGroups || []);
+  const [variantGroups, setVariantGroups] = useState(
+    foodItem.variantGroups || []
+  );
 
   const [menuTags, setMenuTags] = useState(
     foodItem?.menuTags.map((item) => item.id) || []
@@ -205,7 +207,10 @@ const UpdateMenu = () => {
 
   const getCategories = () => {
     const url = `/restaurant/get-categories?restaurantId=${params?.restaurantId}&page=${page}`;
-    getData(url);
+    getData(url, {
+      reportCrash: true,
+      screenName: "CATEGORY_GET",
+    });
   };
 
   useEffect(() => {
@@ -236,7 +241,11 @@ const UpdateMenu = () => {
 
   const getSubcategoriesFun = () => {
     getSubcategories(
-      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`
+      `/restaurant/${params?.restaurantId}/getSubCatByCat/${categoryId}`,
+      {
+        reportCrash: true,
+        screenName: "SUBCATEGORY_GET",
+      }
     );
   };
 
@@ -505,7 +514,10 @@ const UpdateMenu = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getCuisines = () => {
-    fetchData("/admin/get-cuisines");
+    fetchData("/admin/get-cuisines", {
+      reportCrash: true,
+      screenName: "CUISINE_GET",
+    });
   };
 
   useEffect(() => {
@@ -634,7 +646,10 @@ const UpdateMenu = () => {
     console.log("📦 FormData created, making API call...");
 
     // Use restaurant endpoint for adding menu items
-    fetchAddItemData(`/restaurant/update-menu-item/${foodItem.id}`, formData);
+    fetchAddItemData(`/restaurant/update-menu-item/${foodItem.id}`, formData, {
+      reportCrash: true,
+      screenName: "MENU_UPDATE",
+    });
   };
 
   useEffect(() => {

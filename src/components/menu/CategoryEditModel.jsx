@@ -277,10 +277,17 @@ const CategoryEditModel = ({
       );
     } else {
       // Updated to use /restaurant/ endpoint (matches your API response)
-      fetchData(`/restaurant/post-add-category/${params?.restaurantId}`, {
-        name: data.category,
-        description: data.description,
-      });
+      fetchData(
+        `/restaurant/post-add-category/${params?.restaurantId}`,
+        {
+          name: data.category,
+          description: data.description,
+        },
+        {
+          reportCrash: true,
+          screenName: "CATEGORY_CREATE",
+        }
+      );
     }
   };
 
