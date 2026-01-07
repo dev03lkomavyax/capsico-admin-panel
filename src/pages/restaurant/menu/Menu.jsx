@@ -52,7 +52,7 @@ const MenuPage = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getData = () => {
-    fetchData(`/restaurant/get-restraunt-menud/${params?.restaurantId}`, {
+    fetchData(`/restaurant/get-restraunt-menu/${params?.restaurantId}`, {
       reportCrash: true,
       screenName: "MENU_GET",
     });
