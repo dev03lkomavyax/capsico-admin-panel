@@ -71,6 +71,7 @@ import { createContext, useContext, useEffect, useMemo } from "react";
 import io from "socket.io-client";
 import useGetApiReq from "./hooks/useGetApiReq";
 import useCrashReporter from "./hooks/useCrashReporter";
+import { readCookie } from "./utils/readCookie";
 
 const server = import.meta.env.VITE_SOCKET_URL;
 const SocketContext = createContext();
@@ -79,6 +80,7 @@ export const getSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const token = localStorage.getItem("adminAccessToken");
+  const userInfo = readCookie("userInfo");
   const { reportCrash } = useCrashReporter();
 
   const socket = useMemo(
@@ -110,6 +112,7 @@ export const SocketProvider = ({ children }) => {
           },
         },
         userType: "Admin",
+        userId: userInfo?.id || null,
       });
     });
 

@@ -73,7 +73,7 @@ const ExportRestaurantPayout = ({ isModalOpen, setIsModalOpen }) => {
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogContent className="sm:max-w-md w-full">
         <DialogHeader>
-          <DialogTitle>Export Delivery Partner Payouts</DialogTitle>
+          <DialogTitle>Export Restaurant Payouts</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

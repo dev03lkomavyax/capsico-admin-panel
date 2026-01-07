@@ -13,10 +13,13 @@ export function CrashFilters({
   setEnvironment,
   severity,
   setSeverity,
+  userType,
+  setUserType
 }) {
   const handleReset = () => {
     setEnvironment("");
     setSeverity("");
+    setUserType("");
   };
 
   return (
@@ -43,6 +46,17 @@ export function CrashFilters({
           <SelectItem value="MEDIUM">Medium</SelectItem>
           <SelectItem value="HIGH">High</SelectItem>
           <SelectItem value="CRITICAL">Critical</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={userType} onValueChange={setUserType}>
+        <SelectTrigger>
+          <SelectValue placeholder="User Type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="User">User</SelectItem>
+          <SelectItem value="DeliveryPartner">DeliveryPartner</SelectItem>
+          <SelectItem value="Restaurant">Restaurant</SelectItem>
+          <SelectItem value="Admin">Admin</SelectItem>
         </SelectContent>
       </Select>
 
