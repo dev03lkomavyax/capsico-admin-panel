@@ -62,7 +62,8 @@ const Food = ({ item, getCategories, showActions }) => {
   const handleRecommend = () => {
     setIsRecommended((prev) => !prev);
     recommend(
-      `/restaurant/toggle-recommend/${item?.id}?restaurantId=${params?.restaurantId}`
+      `/restaurant/toggle-recommend/${item?.id}?restaurantId=${params?.restaurantId}`,
+      { reportCrash: true, screenName: "MENU_RECOMMEND_TOGGLE" }
     );
   };
 

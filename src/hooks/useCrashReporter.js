@@ -1,6 +1,20 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
+const getOSInfo = () => {
+  const ua = navigator.userAgent;
+
+  if (/Windows NT/.test(ua)) return { os: "Windows" };
+  if (/Mac OS X/.test(ua)) return { os: "macOS" };
+  if (/Android/.test(ua)) return { os: "Android" };
+  if (/iPhone|iPad|iPod/.test(ua)) return { os: "iOS" };
+  if (/Linux/.test(ua)) return { os: "Linux" };
+
+  return { os: "Unknown" };
+};
+
 const useCrashReporter = () => {
+  const osInfo = getOSInfo();
+
   const reportCrash = async ({
     error,
     screenName,
@@ -29,6 +43,7 @@ const useCrashReporter = () => {
           device: {
             platform: "web",
             browser: navigator.userAgent,
+            os: osInfo.os,
             ...device,
           },
 

@@ -11,9 +11,9 @@ const useDeleteApiReq = () => {
   const [res, setRes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const userInfo = readCookie("userInfo");
+  const { reportCrash } = useCrashReporter();
 
   const dispatch = useDispatch();
-  const { reportCrash } = useCrashReporter();
 
   const fetchData = async (url, options = {}) => {
     const {

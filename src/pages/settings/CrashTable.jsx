@@ -6,8 +6,10 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { CrashRow } from "./CrashRow";
+import DataNotFound from "@/components/DataNotFound";
+import Spinner from "@/components/Spinner";
 
-export function CrashTable({ crashes }) {
+export function CrashTable({ crashes, isLoading }) {
   return (
     <div className="overflow-auto">
       <Table>
@@ -27,8 +29,16 @@ export function CrashTable({ crashes }) {
           {crashes.map((crash) => (
             <CrashRow key={crash.id} crash={crash} />
           ))}
+
         </TableBody>
       </Table>
+          {crashes.length === 0 && !isLoading && (
+            <DataNotFound name="Crash Reports" />
+          )}
+
+          {crashes.length === 0 && isLoading && (
+            <Spinner />
+          )}
     </div>
   );
 }
