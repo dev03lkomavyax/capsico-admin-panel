@@ -23,7 +23,8 @@ export default function PayoutTable({
   type = "DELIVERY_PARTNER",
   recipientId = "",
 }) {
-  const { deliveryAgentId } = useParams();
+  const { deliveryAgentId, restaurantId } = useParams();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -112,13 +113,25 @@ export default function PayoutTable({
                 }
               />
             </div>
-            <Button
-              onClick={() => setIsCreatePayoutModalOpen(true)}
-              className="w-auto px-4"
-              variant="capsico"
-            >
-              Create Payout
-            </Button>
+            {type === "DELIVERY_PARTNER" ? (
+              <Button
+                onClick={() =>setIsCreatePayoutModalOpen(true)}
+                className="w-auto px-4"
+                variant="capsico"
+              >
+                Create Payout
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  navigate(`/admin/restaurant/${restaurantId}/payout/create`)
+                }
+                className="w-auto px-4"
+                variant="capsico"
+              >
+                Create Payout
+              </Button>
+            )}
           </div>
         </CardHeader>
 

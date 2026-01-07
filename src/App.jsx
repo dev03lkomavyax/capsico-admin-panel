@@ -41,6 +41,7 @@ import RestaurantEarningHistory from "./pages/restaurant/RestaurantEarningHistor
 import EarningDetails from "./pages/delivery-agent/earning/EarningDetails";
 import Settings from "./pages/settings/Settings";
 import CrashDetailPage from "./pages/settings/CrashDetailPage";
+import CreatePayout from "./pages/restaurant/earning/CreatePayout";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -228,6 +229,10 @@ function App() {
             <Route
               path="/admin/restaurant/:restaurantId/dashboard"
               element={<RestaurantDashborad />}
+            />
+            <Route
+              path="/admin/restaurant/:restaurantId/payout/create"
+              element={<CreatePayout />}
             />
             <Route
               path="/admin/restaurant/:restaurantId/payout"
@@ -438,7 +443,10 @@ function App() {
             <Route path="/admin/payment" element={<RazorpayPayment />} />
 
             <Route path="/admin/settings" element={<Settings />} />
-            <Route path="/admin/settings/:crashId" element={<CrashDetailPage />} />
+            <Route
+              path="/admin/settings/:crashId"
+              element={<CrashDetailPage />}
+            />
           </Route>
 
           <Route path="*" element={<NotFound />} />
