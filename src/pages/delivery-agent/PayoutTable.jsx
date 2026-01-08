@@ -115,7 +115,7 @@ export default function PayoutTable({
             </div>
             {type === "DELIVERY_PARTNER" ? (
               <Button
-                onClick={() =>setIsCreatePayoutModalOpen(true)}
+                onClick={() => setIsCreatePayoutModalOpen(true)}
                 className="w-auto px-4"
                 variant="capsico"
               >
@@ -145,6 +145,7 @@ export default function PayoutTable({
                 <TableHead>Transaction</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
                 <TableHead>Status</TableHead>
+                {type === "MERCHANT" && <TableHead>Payout Report</TableHead>}
               </TableRow>
             </TableHeader>
 
