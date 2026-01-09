@@ -129,7 +129,11 @@ const EditProfile5 = ({ setPage, restaurant }) => {
       `/admin/restraunt-registration5/${
         restaurant?._id || restaurant?.id || "68550fa5acbd8e70333f11e0"
       }`,
-      formData
+      formData,
+      {
+        reportCrash: true,
+        screenName: "RESTAURANT_SIGNUP",
+      }
     );
   };
 

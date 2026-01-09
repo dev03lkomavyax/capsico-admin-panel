@@ -1,8 +1,15 @@
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -11,20 +18,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { OPTIONS } from '@/constants/constants';
-import days from '@/data/days.json';
-import restaurantOptions from '@/data/restaurantOptions.json';
-import useGetApiReq from '@/hooks/useGetApiReq';
-import usePostApiReq from '@/hooks/usePostApiReq';
-import { EditProfileSchema2 } from '@/schema/restaurantSchema';
-import { generateTimeOptions } from '@/utils/generateTimeOptions';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import { OPTIONS } from "@/constants/constants";
+import days from "@/data/days.json";
+import restaurantOptions from "@/data/restaurantOptions.json";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePostApiReq from "@/hooks/usePostApiReq";
+import { EditProfileSchema2 } from "@/schema/restaurantSchema";
+import { generateTimeOptions } from "@/utils/generateTimeOptions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const EditProfile2 = ({ setPage, restaurant }) => {
   const form = useForm({
@@ -40,8 +46,9 @@ const EditProfile2 = ({ setPage, restaurant }) => {
   });
 
   const { register, control, watch, setValue, getValues, reset } = form;
-  const [showMoreRestaurantOptions, setShowMoreRestaurantOptions] = useState(false)
-  const [showMoreCuisines, setShowMoreCuisines] = useState(false)
+  const [showMoreRestaurantOptions, setShowMoreRestaurantOptions] =
+    useState(false);
+  const [showMoreCuisines, setShowMoreCuisines] = useState(false);
   const navigate = useNavigate();
 
   const handleToggle = () => {
@@ -52,57 +59,71 @@ const EditProfile2 = ({ setPage, restaurant }) => {
     setShowMoreCuisines(!showMoreCuisines);
   };
 
-  const selectedCuisines = watch('cuisines');
-  const selectedRestaurantOptions = watch('restaurantOptions');
-  const selectedDays = watch('days');
+  const selectedCuisines = watch("cuisines");
+  const selectedRestaurantOptions = watch("restaurantOptions");
+  const selectedDays = watch("days");
 
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const timeOptions = generateTimeOptions();
 
   useEffect(() => {
-    console.log('Selected cuisines:', selectedCuisines);
-    console.log('Selected Days:', selectedDays);
-    console.log('Selected restaurantOptions:', selectedRestaurantOptions);
+    console.log("Selected cuisines:", selectedCuisines);
+    console.log("Selected Days:", selectedDays);
+    console.log("Selected restaurantOptions:", selectedRestaurantOptions);
   }, [selectedCuisines, selectedRestaurantOptions, selectedDays]);
 
   const { businessDetails, operatingHours, vegType } = restaurant || {};
 
   useEffect(() => {
-    const operatingHoursKeys = operatingHours ? Object.keys(operatingHours) : [];
-      const days = operatingHoursKeys
-      .map((key) => ({ day: key, isOpen: operatingHours[key].isOpen,open:operatingHours[key].open,close:operatingHours[key].close }))
+    const operatingHoursKeys = operatingHours
+      ? Object.keys(operatingHours)
+      : [];
+    const days = operatingHoursKeys
+      .map((key) => ({
+        day: key,
+        isOpen: operatingHours[key].isOpen,
+        open: operatingHours[key].open,
+        close: operatingHours[key].close,
+      }))
       .filter((day) => day.isOpen);
 
-          reset({
-        restaurantOptions: businessDetails?.restaurantTypes || [],
-        cuisines:businessDetails?.cuisines.map((cuisine) => cuisine.id) || [],
-        openingTime: days[0]?.open || "",
-        closingTime: days[0]?.close || "",
-        restaurantType: vegType || "",
-        priceForOne: businessDetails?.priceForOne || "",
-        days:days.map((day) => day.day) || [] ,
-      });
-    }, [restaurant]);
+    reset({
+      restaurantOptions: businessDetails?.restaurantTypes || [],
+      cuisines: businessDetails?.cuisines.map((cuisine) => cuisine.id) || [],
+      openingTime: days[0]?.open || "",
+      closingTime: days[0]?.close || "",
+      restaurantType: vegType || "",
+      priceForOne: businessDetails?.priceForOne || "",
+      days: days.map((day) => day.day) || [],
+    });
+  }, [restaurant]);
 
   const { res, fetchData, isLoading } = usePostApiReq();
-  const { res: cuisinesRes, fetchData: fetchCuisinesData, isLoading: isCuisinesLoading } = useGetApiReq();
+  const {
+    res: cuisinesRes,
+    fetchData: fetchCuisinesData,
+    isLoading: isCuisinesLoading,
+  } = useGetApiReq();
 
-  const [cuisines, setCuisines] = useState([])
+  const [cuisines, setCuisines] = useState([]);
 
   const getCuisines = () => {
-    fetchCuisinesData("/admin/get-cuisines");
-  }
+    fetchCuisinesData("/admin/get-cuisines", {
+      reportCrash: true,
+      screenName: "CUISINES_GET",
+    });
+  };
 
   useEffect(() => {
     getCuisines();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (cuisinesRes?.status === 200 || cuisinesRes?.status === 201) {
       console.log("cuisinesRes", cuisinesRes);
       setCuisines(cuisinesRes?.data?.data?.cuisines);
     }
-  }, [cuisinesRes])
+  }, [cuisinesRes]);
 
   const onSubmit = (data) => {
     // setIsRegisterSuccessModalOpen(true);
@@ -114,7 +135,7 @@ const EditProfile2 = ({ setPage, restaurant }) => {
       dessertShop: false,
       beverageShop: false,
       fastFood: false,
-      casualFoodStall: false
+      casualFoodStall: false,
     };
     const workingHours = {
       openingTime: data.openingTime,
@@ -126,37 +147,44 @@ const EditProfile2 = ({ setPage, restaurant }) => {
         thursday: false,
         friday: false,
         saturday: false,
-        sunday: false
-      }
-    }
+        sunday: false,
+      },
+    };
 
     data.restaurantOptions.forEach((opt) => {
       restaurantTypes[OPTIONS[opt]] = true;
     });
 
     data.days.forEach((day) => {
-      workingHours.weekDays[day] = true
+      workingHours.weekDays[day] = true;
     });
 
     console.log("restaurantTypes", restaurantTypes);
 
-
-    fetchData(`/admin/restraunt-registration2/${restaurant?._id || restaurant?.id || "68550fa5acbd8e70333f11e0"}`, {
-      priceForOne: data.priceForOne,
-      vegType: data.restaurantType,
-      restaurantTypes: restaurantTypes,
-      selectedCuisineIds: data.cuisines,
-      workingHours,
-    });
-  }
-
+    fetchData(
+      `/admin/restraunt-registration2/${
+        restaurant?._id || restaurant?.id || "68550fa5acbd8e70333f11e0"
+      }`,
+      {
+        priceForOne: data.priceForOne,
+        vegType: data.restaurantType,
+        restaurantTypes: restaurantTypes,
+        selectedCuisineIds: data.cuisines,
+        workingHours,
+      },
+      {
+        reportCrash: true,
+        screenName: "RESTAURANT_SIGNUP",
+      }
+    );
+  };
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       toast.success(res?.data.message);
       setPage(3);
     }
-  }, [res])
+  }, [res]);
 
   return (
     <div>
@@ -540,6 +568,6 @@ const EditProfile2 = ({ setPage, restaurant }) => {
       </Form>
     </div>
   );
-}
+};
 
-export default EditProfile2
+export default EditProfile2;

@@ -18,7 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PiCameraPlus } from "react-icons/pi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import usePostApiReq from '@/hooks/usePostApiReq';
+import usePostApiReq from "@/hooks/usePostApiReq";
 import { viewDbImagePreview } from "@/lib/utils";
 
 // const EditProfile4 = ({ setPage, restaurant }) => {
@@ -428,11 +428,6 @@ import { viewDbImagePreview } from "@/lib/utils";
 
 // export default EditProfile4;
 
-
-
-
-
-
 const EditProfile4 = ({ setPage, restaurant }) => {
   const form = useForm({
     resolver: zodResolver(EditProfileSchema4),
@@ -460,7 +455,6 @@ const EditProfile4 = ({ setPage, restaurant }) => {
   const menuImagesRef = register("menuImages");
 
   console.log("getValues", getValues());
-  
 
   const menuImages = watch("menuImages");
 
@@ -468,12 +462,12 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     updateMultiplePreview(menuImages, "menuImagesPreview", setValue);
   }, [form, menuImages, setValue]);
 
-  const { step4Data="", basicInfo="" } = restaurant || {};
+  const { step4Data = "", basicInfo = "" } = restaurant || {};
 
   useEffect(() => {
-     const menuImagesPreviews = basicInfo?.menuImages?.map((image) =>
-          viewDbImagePreview(image)
-        );
+    const menuImagesPreviews = basicInfo?.menuImages?.map((image) =>
+      viewDbImagePreview(image)
+    );
     // reset logic if needed for existing restaurant data
     reset({
       accountingNotificationsNumber: step4Data?.notificationNumber || "",
@@ -495,24 +489,23 @@ const EditProfile4 = ({ setPage, restaurant }) => {
       setPage((prev) => prev + 1);
     }
   }, [res, setPage]);
-  
 
   const onSubmit = async (data) => {
     console.log("Form data:", data);
-    
+
     // Create FormData for multipart/form-data submission
     const formData = new FormData();
-    
+
     // Add restaurant ID - required by backend
-    formData.append('restaurantId', restaurant?.id || restaurant?._id || '');
-    
+    formData.append("restaurantId", restaurant?.id || restaurant?._id || "");
+
     // Append form fields
     formData.append("didCapsicoReferYou", data.isRefered);
     formData.append("onlineOrderTiming", data.timing || "");
-    formData.append('numberType', data.numberType || '');
-    formData.append('number', data.number || '');
-    formData.append('isManually', data.isManually || '');
-    
+    formData.append("numberType", data.numberType || "");
+    formData.append("number", data.number || "");
+    formData.append("isManually", data.isManually || "");
+
     // Conditional fields for manual entry
     if (data.isManually === "Enter this information manually") {
       formData.append("notificationName", data.fullName || "");
@@ -522,7 +515,7 @@ const EditProfile4 = ({ setPage, restaurant }) => {
         data.accountingNotificationsNumber || ""
       );
     }
-    
+
     // Handle multiple file uploads for menu images
     if (data.menuImages && data.menuImages.length > 0) {
       // Append each file individually
@@ -538,10 +531,12 @@ const EditProfile4 = ({ setPage, restaurant }) => {
     }
 
     // Call your API endpoint
-    await fetchData('/restaurant/updateStep4', formData, {
+    await fetchData("/restaurant/updateStep4", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
+      reportCrash: true,
+      screenName: "RESTAURANT_SIGNUP",
     });
   };
 
@@ -913,4 +908,3 @@ const EditProfile4 = ({ setPage, restaurant }) => {
 };
 
 export default EditProfile4;
-

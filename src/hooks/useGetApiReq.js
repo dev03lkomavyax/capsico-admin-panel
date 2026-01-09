@@ -48,6 +48,7 @@ const useGetApiReq = () => {
           screenName,
           severity,
           request: {
+            method:"GET",
             url,
             query: params,
           },

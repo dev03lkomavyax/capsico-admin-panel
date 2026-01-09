@@ -96,7 +96,10 @@ const AddDeliveryAgent = () => {
     if (values.panCardImage)
       formData.append("panCardImage", values.panCardImage);
 
-    fetchData(`/deliveryExec/delivery-executive/add`,formData);
+    fetchData(`/deliveryExec/delivery-executive/add`, formData, {
+      reportCrash: true,
+      screenName: "DELIVERY_EXECUTIVE_SIGNUP",
+    });
   };
 
   useEffect(() => {

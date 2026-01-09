@@ -79,7 +79,10 @@ const EditProfile6 = ({ setPage, restaurant }) => {
   
 
   useEffect(() => {
-    fetchCities("/availableCities/get-all");
+    fetchCities("/availableCities/get-all", {
+      reportCrash: true,
+      screenName: "CITIES_GET",
+    });
   }, []);
 
   useEffect(() => {
@@ -177,7 +180,10 @@ const EditProfile6 = ({ setPage, restaurant }) => {
       formData.append("restaurantId", restaurant._id || restaurant.id);
     }
 
-    fetchData("/restaurant/onboardRestaurant", formData);
+    fetchData("/restaurant/onboardRestaurant", formData, {
+      reportCrash: true,
+      screenName: "RESTAURANT_SIGNUP",
+    });
   };
 
   useEffect(() => {

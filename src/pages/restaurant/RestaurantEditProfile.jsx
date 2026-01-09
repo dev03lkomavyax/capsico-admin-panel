@@ -18,7 +18,10 @@ const RestaurantEditProfile = () => {
   const { state } = useLocation();
 
   const getRestaurant = useCallback(() => {
-    fetchData(`/admin/get-restaurant/${state?.restaurantId}`);
+    fetchData(`/admin/get-restaurant/${state?.restaurantId}`, {
+      reportCrash: true,
+      screenName: "RESTAURANT_GET",
+    });
   }, [state?.restaurantId,page]);
 
   useEffect(() => {
