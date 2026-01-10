@@ -17,6 +17,8 @@ import { getSocket } from "@/socket";
 import { format } from "date-fns";
 import OrderUpdateModal from "./OrderUpdateModal";
 import CancelOrderModal from "./CancelOrderModal";
+import SanitizationModal from "./SanitizationModal";
+import InvoiceUploadModal from "./InvoiceUploadModal";
 
 const libraries = ["places", "marker"];
 
@@ -33,6 +35,8 @@ const OrderDetails = () => {
 
   const [isOrderUpdateModalOpen, setIsOrderUpdateModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isSanitizationModalOpen, setIsSanitizationModalOpen] = useState(false);
+  const [invoiceUploadModalOpen, setInvoiceUploadModalOpen] = useState(false);
 
   const [minute, setMinute] = useState(1);
   const socket = getSocket();
@@ -85,7 +89,7 @@ const OrderDetails = () => {
   };
 
   const handleOrderDelivered = () => {
-    socket.emit("order_delivered", {
+    socket.emit("delivered", {
       orderId,
     });
   };
@@ -108,8 +112,37 @@ const OrderDetails = () => {
       orderId,
     });
   };
-  const handleSanitization = () => {
-    socket.emit("sanitization_completed", {
+  
+  const handleVerifyItem = () => {
+    console.log("items_verified called");
+    const verifiedItems = orderDetailsData?.items?.map((item) => ({
+      itemId: item?.foodId?._id,
+      name: item?.name,
+      quantity: item?.quantity,
+      verified: true,
+    }));
+    console.log("verifiedItems", verifiedItems);
+    
+    socket.emit("items_verified", {
+      orderId,
+      verifiedItems,
+    });
+  };
+
+  const handleOrderCollection = () => {
+    socket.emit("order_collection_completed", {
+      orderId,
+    });
+  };
+
+  const handleArriving = () => {
+    socket.emit("arriving", {
+      orderId,
+    });
+  };
+
+  const handleReachedDeliveryLocation = () => {
+    socket.emit("reached_delivery_location", {
       orderId,
     });
   };
@@ -135,8 +168,8 @@ const OrderDetails = () => {
       getOrderDetails();
     });
 
-    socket.on("delivery_completed", (data) => {
-      console.log("delivery_completed", data);
+    socket.on("delivery_confirmed", (data) => {
+      console.log("delivery_confirmed", data);
       getOrderDetails();
     });
 
@@ -154,9 +187,29 @@ const OrderDetails = () => {
       console.log("collection_tasks", data);
       getOrderDetails();
     });
-    
-    socket.on("collection_tasks", (data) => {
-      console.log("collection_tasks", data);
+
+    socket.on("sanitization_confirmed", (data) => {
+      console.log("sanitization_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("items_verification_confirmed", (data) => {
+      console.log("items_verification_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("collection_completed", (data) => {
+      console.log("collection_completed", data);
+      getOrderDetails();
+    });
+
+    socket.on("arriving_confirmed", (data) => {
+      console.log("arriving_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("reached_location_confirmed", (data) => {
+      console.log("reached_location_confirmed", data);
       getOrderDetails();
     });
 
@@ -165,10 +218,14 @@ const OrderDetails = () => {
       socket.off("order-ready-response");
       socket.off("cancellation_confirmed");
       socket.off("pickup_confirmed");
-      socket.off("delivery_completed");
       socket.off("order_status_updated");
       socket.off("reached_restaurant_confirmed");
       socket.off("collection_tasks");
+      socket.off("sanitization_confirmed");
+      socket.off("collection_completed");
+      socket.off("arriving_confirmed");
+      socket.off("reached_location_confirmed");
+      socket.off("delivery_confirmed");
     };
   }, []);
 
@@ -245,23 +302,64 @@ const OrderDetails = () => {
               </Button>
             )}
 
-            {orderDetailsData?.status === "delivery_partner_at_restaurant" && (
-              <Button className="px-4" onClick={handleStartFoodCollection}>
-                Start Food Collection
-              </Button>
-            )}
+            {orderDetailsData?.status === "delivery_partner_at_restaurant" &&
+              !orderDetailsData?.deliveryPartner?.collectionStatus ===
+                "started" && (
+                <Button className="px-4" onClick={handleStartFoodCollection}>
+                  Start Food Collection
+                </Button>
+              )}
+
             {orderDetailsData?.deliveryPartner?.collectionStatus ===
-              "started" && (
-              <Button className="px-4" onClick={handleSanitization}>
-                Complete Sanitization
+              "started" &&
+              !orderDetailsData?.deliveryPartner?.sanitizationCheck
+                ?.completed && (
+                <Button
+                  className="px-4"
+                  onClick={() => setIsSanitizationModalOpen(true)}
+                >
+                  Complete Sanitization
+                </Button>
+              )}
+
+            {orderDetailsData?.deliveryPartner?.collectionStatus ===
+              "started" &&
+              !orderDetailsData?.deliveryPartner?.invoicePhoto && (
+                <Button
+                  className="px-4"
+                  onClick={() => setInvoiceUploadModalOpen(true)}
+                >
+                  Upload Invoice
+                </Button>
+              )}
+
+            {orderDetailsData?.deliveryPartner?.collectionStatus ===
+              "started" &&
+              !orderDetailsData?.deliveryPartner?.itemsVerification && (
+                <Button className="px-4" onClick={handleVerifyItem}>
+                  Verify Items
+                </Button>
+              )}
+
+            {orderDetailsData?.status !== "picked_up" &&
+              orderDetailsData?.deliveryPartner?.itemsVerification &&
+              !orderDetailsData?.timing?.pickedUpAt && (
+                <Button className="px-4" onClick={handleOrderCollection}>
+                  Complete Order Collection
+                </Button>
+              )}
+
+            {orderDetailsData?.status === "picked_up" && (
+              <Button className="px-4" onClick={handleArriving}>
+                Mark Arriving
               </Button>
             )}
-            {/* {orderDetailsData?.deliveryPartner?.collectionStatus ===
-              "started" && (
-              <Button className="px-4" onClick={handleVerifyItem}>
-                Verify Items
+
+            {orderDetailsData?.status === "arriving" && (
+              <Button className="px-4" onClick={handleReachedDeliveryLocation}>
+                Mark Reached Delivery Location
               </Button>
-            )} */}
+            )}
 
             {(orderDetailsData?.status === "confirmed" ||
               orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" ||
@@ -601,6 +699,23 @@ const OrderDetails = () => {
             open={open}
             onClose={() => setOpen(false)}
             orderId={orderId}
+          />
+        )}
+
+        {isSanitizationModalOpen && (
+          <SanitizationModal
+            open={isSanitizationModalOpen}
+            setOpen={setIsSanitizationModalOpen}
+            orderId={orderId}
+          />
+        )}
+
+        {invoiceUploadModalOpen && (
+          <InvoiceUploadModal
+            open={invoiceUploadModalOpen}
+            setOpen={setInvoiceUploadModalOpen}
+            orderId={orderId}
+            getOrderDetails={getOrderDetails}
           />
         )}
       </section>

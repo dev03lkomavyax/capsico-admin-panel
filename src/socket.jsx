@@ -103,7 +103,7 @@ export const SocketProvider = ({ children }) => {
     socket.on("error", (err) => {
       console.error("❌ Socket connection error:", err.message);
       reportCrash({
-        error: err,
+        error: { ...err, name: "Socket Error" },
         screenName: "SOCKET_CONNECTION_ERROR",
         severity: "CRITICAL",
         request: {
