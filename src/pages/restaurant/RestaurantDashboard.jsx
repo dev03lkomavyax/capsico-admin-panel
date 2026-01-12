@@ -20,6 +20,22 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 // import { useNavigate, useParams } from "react-router-dom";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Stats from "./Stats";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MenuIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import UpdateCustomCommissionModal from "./UpdateCustomCommissionModal";
 
 const data2 = [
   {
@@ -65,6 +81,8 @@ const RestaurantDashborad = () => {
   const [menuData, setMenuData] = useState(data2);
   const [isUpdateBannerModalOpen, setIsUpdateBannerModalOpen] = useState(false);
   const [isUpdateLogoModalOpen, setIsUpdateLogoModalOpen] = useState(false);
+  const [isAddCommissionModalOpen, setIsAddCommissionModalOpen] =
+    useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -86,7 +104,92 @@ const RestaurantDashborad = () => {
               Restaurant
             </h2>
           </button>
-          <div className="flex items-center gap-4">
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="icon" variant="capsico">
+                      <MenuIcon className="size-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>Restaurant Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    {/* Payout Info */}
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to={`/admin/restaurant/${params.restaurantId}/payout`}
+                      >
+                        Payout Info
+                      </Link>
+                    </DropdownMenuItem>
+
+                    {/* Update Logo */}
+                    <DropdownMenuItem
+                      onClick={() => setIsUpdateLogoModalOpen(true)}
+                    >
+                      Add / Update Logo
+                    </DropdownMenuItem>
+
+                    {/* Update Banner */}
+                    <DropdownMenuItem
+                      onClick={() => setIsUpdateBannerModalOpen(true)}
+                    >
+                      Add / Update Banner
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    {/* Edit Profile */}
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(`/admin/restaurant/edit-profile`, {
+                          state: { restaurantId: params?.restaurantId },
+                        })
+                      }
+                    >
+                      Edit Profile
+                    </DropdownMenuItem>
+
+                    {/* Inventory */}
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(
+                          `/admin/restaurant/${params?.restaurantId}/inventory`
+                        )
+                      }
+                    >
+                      Manage Inventory
+                    </DropdownMenuItem>
+
+                    {/* Add Menu */}
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(
+                          `/admin/restaurant/${params?.restaurantId}/menu`
+                        )
+                      }
+                    >
+                      + Add Menu
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setIsAddCommissionModalOpen(true)}
+                    >
+                      Update Custom Commission
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Restaurant Actions</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          {/* <div className="flex items-center gap-4">
             <Button className="w-auto px-4">
               <Link to={`/admin/restaurant/${params.restaurantId}/payout`}>
                 Payout Info
@@ -130,7 +233,7 @@ const RestaurantDashborad = () => {
             >
               <span className="text-xl">+</span> Add Menu
             </Button>
-          </div>
+          </div> */}
         </div>
         <RecentOrders />
         <Stats />
@@ -250,6 +353,14 @@ const RestaurantDashborad = () => {
             <RecentReviews />
           </div>
         </div>
+
+        {isAddCommissionModalOpen && (
+          <UpdateCustomCommissionModal
+            open={isAddCommissionModalOpen}
+            setOpen={setIsAddCommissionModalOpen}
+          />
+        )}
+
         {isUpdateBannerModalOpen && (
           <UpdateBannerModal
             open={isUpdateBannerModalOpen}

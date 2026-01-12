@@ -15,7 +15,7 @@ import {
 import useGetApiReq from "@/hooks/useGetApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
 
-const UpdateCommission = ({ open, onOpenChange }) => {
+const UpdateGlobalCommissionModal = ({ open, onOpenChange }) => {
   const [commission, setCommission] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -68,6 +68,7 @@ const UpdateCommission = ({ open, onOpenChange }) => {
       onOpenChange();
     }
   }, [updateRes]);
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -135,4 +136,4 @@ const UpdateCommission = ({ open, onOpenChange }) => {
   );
 };
 
-export default UpdateCommission;
+export default UpdateGlobalCommissionModal;
