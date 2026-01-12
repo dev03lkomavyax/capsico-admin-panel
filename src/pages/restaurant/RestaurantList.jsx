@@ -28,7 +28,7 @@ import { Plus, RefreshCcwIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import UpdateCommission from "./UpdateCommission";
+import UpdateGlobalCommissionModal from "./UpdateGlobalCommissionModal";
 
 const RestaurantList = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -101,7 +101,7 @@ const RestaurantList = () => {
           </div>
           <div className="flex gap-5 items-center justify-end">
             {isUpdateModalOpen && (
-              <UpdateCommission
+              <UpdateGlobalCommissionModal
                 open={isUpdateModalOpen}
                 onOpenChange={() => setIsUpdateModalOpen((prev) => !prev)}
               />
