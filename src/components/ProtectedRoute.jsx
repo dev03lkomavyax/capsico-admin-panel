@@ -102,7 +102,7 @@ const ProtectedRoute = () => {
           duration: 4000,
           // position: "top-right",
         });
-      } else {
+      } else if (order.status === "confirmed") {
         toast.success(
           `Order #${order.orderNumber} accepted by Resaturant! 🚀`,
           {

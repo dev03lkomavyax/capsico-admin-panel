@@ -26,7 +26,7 @@ const SanitizationModal = ({ open, setOpen, orderId }) => {
   const handleSubmit = () => {
     if (!temperature || sanitized === "") return;
 
-    socket.emit("invoice_photo_uploaded", {
+    socket.emit("sanitization_completed", {
       orderId,
       temperature: Number(temperature),
       sanitization: sanitized === "true",

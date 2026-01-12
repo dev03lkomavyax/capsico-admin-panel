@@ -112,7 +112,7 @@ const OrderDetails = () => {
       orderId,
     });
   };
-  
+
   const handleVerifyItem = () => {
     console.log("items_verified called");
     const verifiedItems = orderDetailsData?.items?.map((item) => ({
@@ -122,7 +122,7 @@ const OrderDetails = () => {
       verified: true,
     }));
     console.log("verifiedItems", verifiedItems);
-    
+
     socket.emit("items_verified", {
       orderId,
       verifiedItems,
@@ -173,8 +173,8 @@ const OrderDetails = () => {
       getOrderDetails();
     });
 
-    socket.on("order_status_updated", (data) => {
-      console.log("order_status_updated", data);
+    socket.on("order_status_update-completed", (data) => {
+      console.log("order_status_update-completed", data);
       getOrderDetails();
     });
 
@@ -218,7 +218,7 @@ const OrderDetails = () => {
       socket.off("order-ready-response");
       socket.off("cancellation_confirmed");
       socket.off("pickup_confirmed");
-      socket.off("order_status_updated");
+      socket.off("order_status_update-completed");
       socket.off("reached_restaurant_confirmed");
       socket.off("collection_tasks");
       socket.off("sanitization_confirmed");
@@ -271,15 +271,19 @@ const OrderDetails = () => {
             )} */}
 
             {orderDetailsData?.status === "confirmed" ||
-              (orderDetailsData?.status === "assigned_to_partner" && (
+              orderDetailsData?.status === "assigned_to_partner" ||
+              (orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" && (
                 <Button className="px-4" onClick={handleOrderReady}>
                   Mark Order Ready
                 </Button>
               ))}
 
             {orderDetailsData?.status === "ready_for_pickup" && (
-              <Button className="px-4" onClick={handleOrderPickedUp}>
-                Mark Order Picked Up
+              // <Button className="px-4" onClick={handleOrderPickedUp}>
+              //   Mark Order Picked Up
+              // </Button>
+              <Button className="px-4" onClick={handleReachedRestaurant}>
+                Mark Delivery Partner Reached Restaurant
               </Button>
             )}
 
@@ -289,21 +293,21 @@ const OrderDetails = () => {
               </Button>
             )}
 
-            {orderDetailsData?.status === "assigned_to_partner" ||
-              (orderDetailsData?.status === "reassigned_to_partner" && (
-                <Button className="px-4" onClick={handleOrderAccept}>
-                  Accept Order (Delivery Partner)
-                </Button>
-              ))}
-
-            {orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" && (
-              <Button className="px-4" onClick={handleReachedRestaurant}>
-                Mark Delivery Partner Reached Restaurant
+            {(orderDetailsData?.status === "assigned_to_partner" ||
+              orderDetailsData?.status === "reassigned_to_partner") && (
+              <Button className="px-4" onClick={handleOrderAccept}>
+                Accept Order (Delivery Partner)
               </Button>
             )}
 
+            {/* {orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" && (
+              <Button className="px-4" onClick={handleReachedRestaurant}>
+                Mark Delivery Partner Reached Restaurant
+              </Button>
+            )} */}
+
             {orderDetailsData?.status === "delivery_partner_at_restaurant" &&
-              !orderDetailsData?.deliveryPartner?.collectionStatus ===
+              orderDetailsData?.deliveryPartner?.collectionStatus !==
                 "started" && (
                 <Button className="px-4" onClick={handleStartFoodCollection}>
                   Start Food Collection
@@ -324,6 +328,7 @@ const OrderDetails = () => {
 
             {orderDetailsData?.deliveryPartner?.collectionStatus ===
               "started" &&
+              orderDetailsData?.deliveryPartner?.sanitizationCheck?.completed &&
               !orderDetailsData?.deliveryPartner?.invoicePhoto && (
                 <Button
                   className="px-4"
@@ -342,7 +347,11 @@ const OrderDetails = () => {
               )}
 
             {orderDetailsData?.status !== "picked_up" &&
+              orderDetailsData?.deliveryPartner?.collectionStatus ===
+                "started" &&
+              orderDetailsData?.deliveryPartner?.sanitizationCheck?.completed &&
               orderDetailsData?.deliveryPartner?.itemsVerification &&
+              orderDetailsData?.deliveryPartner?.invoicePhoto &&
               !orderDetailsData?.timing?.pickedUpAt && (
                 <Button className="px-4" onClick={handleOrderCollection}>
                   Complete Order Collection
@@ -544,7 +553,7 @@ const OrderDetails = () => {
                 </Button>
               </div>
             </div>
-            {orderDetailsData?.deliveryPartner && (
+            {orderDetailsData?.deliveryPartner?.partnerId && (
               <div className="rounded-lg bg-white p-4 px-6 mt-5 flex justify-between items-center">
                 <div>
                   <span className="text-sm font-roboto">

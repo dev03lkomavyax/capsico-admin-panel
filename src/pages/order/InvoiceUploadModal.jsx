@@ -23,9 +23,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "@/components/Spinner";
 import { fileToBase64 } from "@/utils/fileToBase64";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
-  image: z.any().refine((file) => file instanceof File, "Image is required"),
+  image: z.any()
+  // .refine((file) => file instanceof File, "Image is required"),
 });
 
 const InvoiceUploadModal = ({ open, setOpen, orderId, getOrderDetails }) => {
@@ -44,7 +46,11 @@ const InvoiceUploadModal = ({ open, setOpen, orderId, getOrderDetails }) => {
   const [sanitized, setSanitized] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  console.log("getValues", getValues());
   const onSubmit = async (values) => {
+
+    console.log("values", values);
+    
     try {
       setIsLoading(true);
 
@@ -52,15 +58,18 @@ const InvoiceUploadModal = ({ open, setOpen, orderId, getOrderDetails }) => {
 
       // ---- VALIDATION ----
       if (!file) {
-        throw new Error("Invoice image is required");
+        toast.error("Invoice image is required");
+        return;
       }
 
       if (!["image/jpeg", "image/png"].includes(file.type)) {
-        throw new Error("Only JPG and PNG images are allowed");
+        toast.error("Only JPG and PNG images are allowed");
+        return;
       }
-
+      
       if (file.size > 2 * 1024 * 1024) {
-        throw new Error("Max image size is 2MB");
+        toast.error("Max image size is 2MB");
+        return;
       }
 
       // ---- CONVERT TO BASE64 ----
