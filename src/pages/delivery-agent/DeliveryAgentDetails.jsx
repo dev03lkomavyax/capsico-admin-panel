@@ -34,7 +34,10 @@ const DeliveryAgentDetails = () => {
   } = useGetApiReq();
 
   const getDeliveryPartnerDetails = () => {
-    fetchData(`/admin/get-delivery-partner/${deliveryAgentId}`);
+    fetchData(`/admin/get-delivery-partner/${deliveryAgentId}`, {
+      reportCrash: true,
+      screenName: "DELIVERY_EXECUTIVE_DETAILS_GET",
+    });
   };
 
   useEffect(() => {
@@ -50,7 +53,11 @@ const DeliveryAgentDetails = () => {
 
   const getDeliveryHistory = () => {
     fetchData1(
-      `/admin/get-delivery-history/${deliveryAgentId}?page=${page}&limit=${LIMIT}`
+      `/admin/get-delivery-history/${deliveryAgentId}?page=${page}&limit=${LIMIT}`,
+      {
+        reportCrash: true,
+        screenName: "DELIVERY_EXECUTIVE_HISTORY_GET",
+      }
     );
   };
 

@@ -28,6 +28,7 @@ import { Plus, RefreshCcwIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import UpdateCommission from "./UpdateCommission";
 
 const RestaurantList = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -38,6 +39,7 @@ const RestaurantList = () => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("all");
   const [filterByDate, setFilterByDate] = useState("all");
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -68,14 +70,14 @@ const RestaurantList = () => {
     }
   }, [page, status, searchQuery, filterByDate]);
 
-   useEffect(() => {
-      const interval = setInterval(() => {
-        getAllRestaurant();
-      }, 120000); // 120000ms = 2 minutes
-  
-      // Cleanup interval on unmount or dependency change
-      return () => clearInterval(interval);
-    }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getAllRestaurant();
+    }, 120000); // 120000ms = 2 minutes
+
+    // Cleanup interval on unmount or dependency change
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -98,19 +100,21 @@ const RestaurantList = () => {
             </h2>
           </div>
           <div className="flex gap-5 items-center justify-end">
-            <Button
-              title="Refetch"
-              onClick={getAllRestaurant}
-              className="!size-10"
-              size="icon"
-            >
-              <RefreshCcwIcon
-                className={cn(
-                  "size-5 transition-all",
-                  isLoading && "animate-spin"
-                )}
+            {isUpdateModalOpen && (
+              <UpdateCommission
+                open={isUpdateModalOpen}
+                onOpenChange={() => setIsUpdateModalOpen((prev) => !prev)}
               />
+            )}
+
+            <Button
+              onClick={() => setIsUpdateModalOpen(true)}
+              variant="capsico"
+              className="px-4 w-auto"
+            >
+              Update Global Commission
             </Button>
+
             <Button
               className="bg-blue-600 w-40 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
               onClick={() => navigate("/admin/restaurant/cuisines")}
@@ -123,6 +127,19 @@ const RestaurantList = () => {
             >
               <Plus className="w-4 h-4" />
               Add Restaurant
+            </Button>
+            <Button
+              title="Refetch"
+              onClick={getAllRestaurant}
+              className="!size-10"
+              size="icon"
+            >
+              <RefreshCcwIcon
+                className={cn(
+                  "size-5 transition-all",
+                  isLoading && "animate-spin"
+                )}
+              />
             </Button>
           </div>
         </div>

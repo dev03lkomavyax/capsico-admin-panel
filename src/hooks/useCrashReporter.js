@@ -34,7 +34,7 @@ const useCrashReporter = () => {
 
           errorName: error?.name || "UNKNOWN_ERROR",
           errorMessage: error?.message || "Something went wrong",
-          stackTrace: error?.stack,
+          stackTrace: error?.stack || error.error,
 
           severity,
           screenName,

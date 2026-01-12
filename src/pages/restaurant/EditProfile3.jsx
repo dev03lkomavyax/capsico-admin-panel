@@ -113,16 +113,28 @@ const EditProfile3 = ({ setPage, restaurant: restaurantData }) => {
     if (restaurantData) {
       fetchData(
         `/admin/update-restraunt-registration-upload-images/${
-          restaurantData?._id || restaurantData?.id || "68550fa5acbd8e70333f11e0"
+          restaurantData?._id ||
+          restaurantData?.id ||
+          "68550fa5acbd8e70333f11e0"
         }`,
-        formData
+        formData,
+        {
+          reportCrash: true,
+          screenName: "RESTAURANT_SIGNUP",
+        }
       );
     } else {
       fetchData(
         `/admin/restraunt-registration-upload-images/${
-          restaurantData?._id || restaurantData?.id || "68550fa5acbd8e70333f11e0"
+          restaurantData?._id ||
+          restaurantData?.id ||
+          "68550fa5acbd8e70333f11e0"
         }`,
-        formData
+        formData,
+        {
+          reportCrash: true,
+          screenName: "RESTAURANT_SIGNUP",
+        }
       );
     }
   };

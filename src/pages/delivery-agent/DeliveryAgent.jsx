@@ -47,7 +47,11 @@ const DeliveryAgent = () => {
     fetchData(
       `/admin/get-all-deliveryPartners?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&status=${
         status === "all" ? "" : status
-      }`
+      }`,
+      {
+        reportCrash: true,
+        screenName: "DELIVERY_EXECUTIVE_GET",
+      }
     );
   };
 

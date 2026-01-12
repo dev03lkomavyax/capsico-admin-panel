@@ -1092,12 +1092,22 @@ const EditProfile1 = ({
     };
 
     if (restaurant) {
-      fetchData1("/admin/update-restaurant", {
-        ...apiData,
-        restaurantId: restaurant?._id || restaurant?.id,
-      });
+      fetchData1(
+        "/admin/update-restaurant",
+        {
+          ...apiData,
+          restaurantId: restaurant?._id || restaurant?.id,
+        },
+        {
+          reportCrash: true,
+          screenName: "RESTAURANT_UPDATE",
+        }
+      );
     } else {
-      fetchData("/admin/restaurant-signup", apiData);
+      fetchData("/admin/restaurant-signup", apiData, {
+        reportCrash: true,
+        screenName: "RESTAURANT_SIGNUP",
+      });
     }
   };
 
@@ -1121,7 +1131,10 @@ const EditProfile1 = ({
 
   const handlePhoneNumberVerify = () => {
     setIsPhone1(true);
-    fetchVerifyPhoneData(`/admin/get-otp?phone=${getValues("phoneNumber")}`);
+    fetchVerifyPhoneData(`/admin/get-otp?phone=${getValues("phoneNumber")}`, {
+      reportCrash: true,
+      screenName: "OTP_GET",
+    });
   };
 
   const handlePhoneNumber2Verify = () => {

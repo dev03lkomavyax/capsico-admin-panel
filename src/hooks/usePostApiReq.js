@@ -27,7 +27,7 @@ const usePostApiReq = () => {
       setIsLoading(true);
       dispatch(handleLoading(true));
 
-      const response = await axiosInstance.post(url, sendData, {
+      const response = await axiosInstance.post(url, sendData, {...options,
         withCredentials: true,
       });
 

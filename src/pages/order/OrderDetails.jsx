@@ -15,6 +15,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import AssignDeliveryPartnerModal from "./AssignDeliveryPartnerModal";
 import { getSocket } from "@/socket";
 import { format } from "date-fns";
+import OrderUpdateModal from "./OrderUpdateModal";
+import CancelOrderModal from "./CancelOrderModal";
+import SanitizationModal from "./SanitizationModal";
+import InvoiceUploadModal from "./InvoiceUploadModal";
 
 const libraries = ["places", "marker"];
 
@@ -25,35 +29,19 @@ const status = "Cancelled";
 
 const OrderDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const containerStyle = {
-    width: "100%",
-    height: "280px",
-  };
-  const [deliveryAgent, setDeliveryAgent] = useState("");
-  const [open, setOpen] = useState(false);
   const [orderDetailsData, setOrderDetailsData] = useState(false);
   const { orderId } = useParams();
   const navigate = useNavigate();
 
-  const [center, setCenter] = useState({
-    lat: 19.8429547,
-    lng: 75.2333128,
-  });
+  const [isOrderUpdateModalOpen, setIsOrderUpdateModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSanitizationModalOpen, setIsSanitizationModalOpen] = useState(false);
+  const [invoiceUploadModalOpen, setInvoiceUploadModalOpen] = useState(false);
 
   const [minute, setMinute] = useState(1);
   const socket = getSocket();
 
   const { timing, scheduleAt } = orderDetailsData || {};
-
-  const form = useForm({
-    resolver: zodResolver(OrderSchema),
-    defaultValues: {
-      otp: "",
-      temperature: "",
-    },
-  });
-
-  const { register, control, watch, setValue, getValues } = form;
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -88,9 +76,158 @@ const OrderDetails = () => {
     }
   }, [res]);
 
-  const onSubmit = (data) => {
-    console.log("data", data);
+  const handleOrderReady = () => {
+    socket.emit("mark-order-ready", {
+      orderId,
+    });
   };
+
+  const handleOrderPickedUp = () => {
+    socket.emit("order_picked_up", {
+      orderId,
+    });
+  };
+
+  const handleOrderDelivered = () => {
+    socket.emit("delivered", {
+      orderId,
+    });
+  };
+
+  const handleOrderAccept = () => {
+    socket.emit("order_status_update", {
+      orderId,
+      status: "DELIVERYPARTNER_ACCEPTED",
+    });
+  };
+
+  const handleReachedRestaurant = () => {
+    socket.emit("reached_restaurant", {
+      orderId,
+    });
+  };
+
+  const handleStartFoodCollection = () => {
+    socket.emit("start_food_collection", {
+      orderId,
+    });
+  };
+
+  const handleVerifyItem = () => {
+    console.log("items_verified called");
+    const verifiedItems = orderDetailsData?.items?.map((item) => ({
+      itemId: item?.foodId?._id,
+      name: item?.name,
+      quantity: item?.quantity,
+      verified: true,
+    }));
+    console.log("verifiedItems", verifiedItems);
+
+    socket.emit("items_verified", {
+      orderId,
+      verifiedItems,
+    });
+  };
+
+  const handleOrderCollection = () => {
+    socket.emit("order_collection_completed", {
+      orderId,
+    });
+  };
+
+  const handleArriving = () => {
+    socket.emit("arriving", {
+      orderId,
+    });
+  };
+
+  const handleReachedDeliveryLocation = () => {
+    socket.emit("reached_delivery_location", {
+      orderId,
+    });
+  };
+
+  useEffect(() => {
+    socket.on("order_status_updated", (data) => {
+      console.log("order_status_updated", data);
+      getOrderDetails();
+    });
+
+    socket.on("order-ready-response", (data) => {
+      console.log("order-ready-response", data);
+      getOrderDetails();
+    });
+
+    socket.on("cancellation_confirmed", (data) => {
+      console.log("cancellation_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("pickup_confirmed", (data) => {
+      console.log("pickup_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("delivery_confirmed", (data) => {
+      console.log("delivery_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("order_status_update-completed", (data) => {
+      console.log("order_status_update-completed", data);
+      getOrderDetails();
+    });
+
+    socket.on("reached_restaurant_confirmed", (data) => {
+      console.log("reached_restaurant_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("collection_tasks", (data) => {
+      console.log("collection_tasks", data);
+      getOrderDetails();
+    });
+
+    socket.on("sanitization_confirmed", (data) => {
+      console.log("sanitization_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("items_verification_confirmed", (data) => {
+      console.log("items_verification_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("collection_completed", (data) => {
+      console.log("collection_completed", data);
+      getOrderDetails();
+    });
+
+    socket.on("arriving_confirmed", (data) => {
+      console.log("arriving_confirmed", data);
+      getOrderDetails();
+    });
+
+    socket.on("reached_location_confirmed", (data) => {
+      console.log("reached_location_confirmed", data);
+      getOrderDetails();
+    });
+
+    return () => {
+      socket.off("order_status_updated");
+      socket.off("order-ready-response");
+      socket.off("cancellation_confirmed");
+      socket.off("pickup_confirmed");
+      socket.off("order_status_update-completed");
+      socket.off("reached_restaurant_confirmed");
+      socket.off("collection_tasks");
+      socket.off("sanitization_confirmed");
+      socket.off("collection_completed");
+      socket.off("arriving_confirmed");
+      socket.off("reached_location_confirmed");
+      socket.off("delivery_confirmed");
+    };
+  }, []);
 
   return (
     <AdminWrapper>
@@ -118,6 +255,121 @@ const OrderDetails = () => {
             />
           )}
           <div className="flex gap-5 items-center">
+            {orderDetailsData?.status === "pending" && (
+              <Button
+                className="px-4"
+                onClick={() => setIsOrderUpdateModalOpen(true)}
+              >
+                Accept Order
+              </Button>
+            )}
+
+            {/* {orderDetailsData?.status === "confirmed" && (
+              <Button className="px-4" onClick={() => setOpen(true)}>
+                Cancel Order
+              </Button>
+            )} */}
+
+            {orderDetailsData?.status === "confirmed" ||
+              orderDetailsData?.status === "assigned_to_partner" ||
+              (orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" && (
+                <Button className="px-4" onClick={handleOrderReady}>
+                  Mark Order Ready
+                </Button>
+              ))}
+
+            {orderDetailsData?.status === "ready_for_pickup" && (
+              // <Button className="px-4" onClick={handleOrderPickedUp}>
+              //   Mark Order Picked Up
+              // </Button>
+              <Button className="px-4" onClick={handleReachedRestaurant}>
+                Mark Delivery Partner Reached Restaurant
+              </Button>
+            )}
+
+            {orderDetailsData?.status === "reached_delivery_location" && (
+              <Button className="px-4" onClick={handleOrderDelivered}>
+                Mark Order Delivered
+              </Button>
+            )}
+
+            {(orderDetailsData?.status === "assigned_to_partner" ||
+              orderDetailsData?.status === "reassigned_to_partner") && (
+              <Button className="px-4" onClick={handleOrderAccept}>
+                Accept Order (Delivery Partner)
+              </Button>
+            )}
+
+            {/* {orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" && (
+              <Button className="px-4" onClick={handleReachedRestaurant}>
+                Mark Delivery Partner Reached Restaurant
+              </Button>
+            )} */}
+
+            {orderDetailsData?.status === "delivery_partner_at_restaurant" &&
+              orderDetailsData?.deliveryPartner?.collectionStatus !==
+                "started" && (
+                <Button className="px-4" onClick={handleStartFoodCollection}>
+                  Start Food Collection
+                </Button>
+              )}
+
+            {orderDetailsData?.deliveryPartner?.collectionStatus ===
+              "started" &&
+              !orderDetailsData?.deliveryPartner?.sanitizationCheck
+                ?.completed && (
+                <Button
+                  className="px-4"
+                  onClick={() => setIsSanitizationModalOpen(true)}
+                >
+                  Complete Sanitization
+                </Button>
+              )}
+
+            {orderDetailsData?.deliveryPartner?.collectionStatus ===
+              "started" &&
+              orderDetailsData?.deliveryPartner?.sanitizationCheck?.completed &&
+              !orderDetailsData?.deliveryPartner?.invoicePhoto && (
+                <Button
+                  className="px-4"
+                  onClick={() => setInvoiceUploadModalOpen(true)}
+                >
+                  Upload Invoice
+                </Button>
+              )}
+
+            {orderDetailsData?.deliveryPartner?.collectionStatus ===
+              "started" &&
+              !orderDetailsData?.deliveryPartner?.itemsVerification && (
+                <Button className="px-4" onClick={handleVerifyItem}>
+                  Verify Items
+                </Button>
+              )}
+
+            {orderDetailsData?.status !== "picked_up" &&
+              orderDetailsData?.deliveryPartner?.collectionStatus ===
+                "started" &&
+              orderDetailsData?.deliveryPartner?.sanitizationCheck?.completed &&
+              orderDetailsData?.deliveryPartner?.itemsVerification &&
+              orderDetailsData?.deliveryPartner?.invoicePhoto &&
+              !orderDetailsData?.timing?.pickedUpAt && (
+                <Button className="px-4" onClick={handleOrderCollection}>
+                  Complete Order Collection
+                </Button>
+              )}
+
+            {orderDetailsData?.status === "picked_up" && (
+              <Button className="px-4" onClick={handleArriving}>
+                Mark Arriving
+              </Button>
+            )}
+
+            {orderDetailsData?.status === "arriving" && (
+              <Button className="px-4" onClick={handleReachedDeliveryLocation}>
+                Mark Reached Delivery Location
+              </Button>
+            )}
+
             {(orderDetailsData?.status === "confirmed" ||
               orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED" ||
               orderDetailsData?.status === "assigned_to_partner" ||
@@ -154,7 +406,6 @@ const OrderDetails = () => {
             </div>
           </div>
         </div>
-
         {/* h-[calc(100vh-56px)] */}
         <div className="grid grid-cols-[26%_71%] gap-[3%] mt-5">
           <div className="rounded-lg bg-white px-4 py-10">
@@ -302,7 +553,7 @@ const OrderDetails = () => {
                 </Button>
               </div>
             </div>
-            {orderDetailsData?.deliveryPartner && (
+            {orderDetailsData?.deliveryPartner?.partnerId && (
               <div className="rounded-lg bg-white p-4 px-6 mt-5 flex justify-between items-center">
                 <div>
                   <span className="text-sm font-roboto">
@@ -444,6 +695,38 @@ const OrderDetails = () => {
             )}
           </div>
         </div>
+        {isOrderUpdateModalOpen && (
+          <OrderUpdateModal
+            open={isOrderUpdateModalOpen}
+            setOpen={setIsOrderUpdateModalOpen}
+            newOrder={orderDetailsData}
+          />
+        )}
+
+        {open && (
+          <CancelOrderModal
+            open={open}
+            onClose={() => setOpen(false)}
+            orderId={orderId}
+          />
+        )}
+
+        {isSanitizationModalOpen && (
+          <SanitizationModal
+            open={isSanitizationModalOpen}
+            setOpen={setIsSanitizationModalOpen}
+            orderId={orderId}
+          />
+        )}
+
+        {invoiceUploadModalOpen && (
+          <InvoiceUploadModal
+            open={invoiceUploadModalOpen}
+            setOpen={setInvoiceUploadModalOpen}
+            orderId={orderId}
+            getOrderDetails={getOrderDetails}
+          />
+        )}
       </section>
     </AdminWrapper>
   );
