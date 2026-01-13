@@ -29,6 +29,8 @@ const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
     zone,
     modifiers,
     incentive,
+    baseDistanceFromKm,
+    baseDistanceToKm,
   } = deliveryCharge || {};
 
   const [isActive, setIsActive] = useState(status || false);
@@ -75,6 +77,8 @@ const DeliveryChargeComp = ({ deliveryCharge, getDeliveryCharges }) => {
         <TableCell>{zone?.name || "No zone selected"}</TableCell>
         <TableCell>₹{incentive}</TableCell>
         <TableCell>₹{baseCharge}</TableCell>
+        <TableCell>{baseDistanceFromKm || 0}</TableCell>
+        <TableCell>{baseDistanceToKm || 0}</TableCell>
         <TableCell>₹{perKmCharge}</TableCell>
         <TableCell>₹{modifiers?.timeOfDay?.day}</TableCell>
         <TableCell>₹{modifiers?.timeOfDay?.night}</TableCell>

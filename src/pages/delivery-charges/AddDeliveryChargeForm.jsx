@@ -47,6 +47,8 @@ export default function AddDeliveryChargeForm() {
     defaultValues: {
       city: "",
       zone: "",
+      from: 0,
+      to: 0,
       pincodes: modifiedPincodes || [],
       incentive: 0,
       baseCharge: 20,
@@ -54,7 +56,7 @@ export default function AddDeliveryChargeForm() {
       modifiers: {
         timeOfDay: { day: 0, night: 10 },
         weather: { rain: 15, extreme: 20 },
-        demandSurge: { enabled: false, multiplier: 0 },
+        demandSurge: { enabled: false, multiplier: 1 },
       },
       isActive: true,
     },
@@ -106,6 +108,8 @@ export default function AddDeliveryChargeForm() {
         ...deliveryCharge,
         city: deliveryCharge?.city?._id,
         zone: deliveryCharge?.zone?._id,
+        from: deliveryCharge?.baseDistanceFromKm,
+        to: deliveryCharge?.baseDistanceToKm,
       });
     }
   }, [deliveryCharge]);
@@ -133,12 +137,16 @@ export default function AddDeliveryChargeForm() {
         `/delivery-charges/update/${deliveryCharge._id}/${deliveryCharge?.city?._id}`,
         {
           ...values,
+          baseDistanceFromKm:values.from,
+          baseDistanceToKm:values.to,
           // pincodes: values.pincodes.map((item) => item.pincode),
         }
       );
     } else {
       fetchData("/delivery-charges/create", {
         ...values,
+        baseDistanceFromKm: values.from,
+        baseDistanceToKm: values.to,
         // pincodes: values.pincodes.map((item) => item.pincode),
       });
     }
@@ -294,13 +302,39 @@ export default function AddDeliveryChargeForm() {
           </div>
 
           {/* Charges */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <FormField
               control={control}
               name="baseCharge"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Base Charge</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="from"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>From</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="to"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>To</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
@@ -419,6 +453,7 @@ export default function AddDeliveryChargeForm() {
                     disabled={!watch("modifiers.demandSurge.enabled")}
                     type="number"
                     step="0.1"
+                    min={1}
                     {...field}
                   />
                 </FormControl>

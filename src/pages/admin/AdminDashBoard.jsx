@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { BadgePercentIcon, IndianRupeeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -50,7 +51,7 @@ const AdminDashBoard = () => {
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-      // console.log("getStats res", res);
+      console.log("getStats res", res);
       const data = res?.data.data;
       setStatsData(data || "");
 
@@ -77,7 +78,7 @@ const AdminDashBoard = () => {
         <p className="text-sm text-[#4F4F4F] font-inter font-semibold">
           Welcome to capsico Admin!
         </p>
-        <div className="grid grid-cols-4 gap-6 mt-10">
+        <div className="grid grid-cols-5 gap-6 mt-10">
           <Infocard
             // img={adminDash1}
             value={formatter.format(statsData?.revenue?.total || 0)}
@@ -85,7 +86,7 @@ const AdminDashBoard = () => {
             // trendIcon={graphRed}
             // percentage="26% (30 days)"
             navigate={() => navigate("/admin/dashboard/reporting")}
-            icon
+            icon={IndianRupeeIcon}
           />
 
           <Infocard
@@ -110,6 +111,12 @@ const AdminDashBoard = () => {
             label="Total Customers"
             // trendIcon={graphGreen}
             // percentage="4% (30 days)"
+          />
+          <Infocard
+            // img={adminDash4}
+            value={formatter.format(statsData?.totalCommission || 0)}
+            label="Total Commission"
+            icon={BadgePercentIcon}
           />
         </div>
 

@@ -526,9 +526,7 @@ const OrderDetails = () => {
           <div className="">
             <div className="rounded-lg bg-white p-4 px-6 flex justify-between items-center">
               <div>
-                <span className="text-sm font-roboto">
-                  {true ? "Restaurant Details" : "Vendor Details"}
-                </span>
+                <span className="text-sm font-roboto">Restaurant Details</span>
                 <h2 className="font-inter text-xl capitalize font-medium mt-3">
                   {orderDetailsData?.restaurantId?.name}
                 </h2>
@@ -538,6 +536,13 @@ const OrderDetails = () => {
                   {orderDetailsData?.restaurantId?.address?.state},{" "}
                   {orderDetailsData?.restaurantId?.address?.pinCode}
                 </span>
+
+                <div className="grid grid-cols-3 mt-5">
+                  <h3 className="col-span-2 font-semibold">Commission: </h3>
+                  <p className="text-muted-foreground">
+                    ₹{orderDetailsData?.commission?.amount}
+                  </p>
+                </div>
               </div>
               <div>
                 <Button
