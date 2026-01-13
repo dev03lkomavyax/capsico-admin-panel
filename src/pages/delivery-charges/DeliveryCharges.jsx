@@ -76,6 +76,12 @@ const DeliveryCharges = () => {
                 <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
                   Base ₹
                 </TableHead>
+                <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
+                  From (Km)
+                </TableHead>
+                <TableHead className="text-[#ABABAB] whitespace-nowrap text-xs font-normal font-roboto">
+                  To (Km)
+                </TableHead>
                 <TableHead className="whitespace-nowrap text-[#ABABAB] text-xs font-normal font-roboto">
                   Per Km ₹
                 </TableHead>

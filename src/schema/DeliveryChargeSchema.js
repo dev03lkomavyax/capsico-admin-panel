@@ -17,6 +17,8 @@ export const deliveryChargeSchema = z.object({
   incentive: z.coerce.number().min(1),
   baseCharge: z.coerce.number().min(0),
   perKmCharge: z.coerce.number().min(0),
+  from: z.coerce.number().min(0),
+  to: z.coerce.number().min(1),
 
   modifiers: z.object({
     timeOfDay: z.object({
