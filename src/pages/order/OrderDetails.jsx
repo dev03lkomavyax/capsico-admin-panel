@@ -537,12 +537,14 @@ const OrderDetails = () => {
                   {orderDetailsData?.restaurantId?.address?.pinCode}
                 </span>
 
-                <div className="grid grid-cols-3 mt-5">
-                  <h3 className="col-span-2 font-semibold">Commission: </h3>
-                  <p className="text-muted-foreground">
-                    ₹{orderDetailsData?.commission?.amount}
-                  </p>
-                </div>
+                {orderDetailsData?.status === "delivered" && (
+                  <div className="grid grid-cols-3 mt-5">
+                    <h3 className="col-span-2 font-semibold">Commission: </h3>
+                    <p className="text-muted-foreground">
+                      ₹{orderDetailsData?.commission?.amount || 0}
+                    </p>
+                  </div>
+                )}
               </div>
               <div>
                 <Button
