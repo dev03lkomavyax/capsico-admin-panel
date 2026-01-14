@@ -19,3 +19,22 @@ export const commissionSchema = z
       path: ["customCommissionPercentage"],
     }
   );
+
+
+export const commissionGSTSchema = z
+  .object({
+    gstType: z.enum(["GLOBAL", "CUSTOM"]),
+    customPercentage: z
+      .number()
+      .min(0, "Must be at least 0%")
+      .max(100, "Cannot exceed 100%")
+      .optional()
+      .nullable(),
+  })
+  .refine(
+    (data) => data.gstType === "GLOBAL" || data.customPercentage !== null,
+    {
+      message: "Custom commission GST is required",
+      path: ["customPercentage"],
+    }
+  );

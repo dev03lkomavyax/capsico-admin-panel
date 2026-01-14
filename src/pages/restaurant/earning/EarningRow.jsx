@@ -18,7 +18,7 @@ export const EarningRow = ({ row }) => {
       >
         {row.type}
       </TableCell>
-      <TableCell>₹{row.amount || 0}</TableCell>
+      <TableCell>₹{row.amount?.toFixed(2) || 0}</TableCell>
       {/* <TableCell>₹{row.breakup?.commissionAmount || 0}</TableCell> */}
       {/* <TableCell>₹{row.breakup?.subtotal || 0}</TableCell> */}
       <TableCell>{row.referenceType || "-"}</TableCell>

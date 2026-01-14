@@ -19,6 +19,7 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
     restaurantGST: { enabled: true, percentage: 0 },
     platformFeeGST: { enabled: true, percentage: 0 },
     deliveryFeeGST: { enabled: true, percentage: 0 },
+    commissionGST: { enabled: true, percentage: 0 },
   });
 
   const [error, setError] = useState(null);
@@ -55,7 +56,9 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
       gst.platformFeeGST.percentage < 0 ||
       gst.platformFeeGST.percentage > 28 ||
       gst.deliveryFeeGST.percentage < 0 ||
-      gst.deliveryFeeGST.percentage > 28;
+      gst.deliveryFeeGST.percentage > 28 ||
+      gst.commissionGST.percentage < 0 ||
+      gst.commissionGST.percentage > 28;
 
     if (isInvalid) {
       setError("GST percentage must be between 0 and 28");
@@ -113,6 +116,7 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
                 {renderGSTInput("Restaurant GST (Food)", "restaurantGST")}
                 {renderGSTInput("Platform Fee GST", "platformFeeGST")}
                 {renderGSTInput("Delivery Fee GST", "deliveryFeeGST")}
+                {renderGSTInput("Restaurant Commission  GST", "commissionGST")}
 
                 {error && <p className="text-sm text-red-600">{error}</p>}
               </>
