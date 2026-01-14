@@ -16,9 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { BadgePercentIcon, IndianRupeeIcon } from "lucide-react";
+import { BadgePercentIcon, Building2Icon, ClipboardCheckIcon, ClockIcon, IndianRupeeIcon, StoreIcon, TrendingUpIcon, TruckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const AdminDashBoard = () => {
   const [totlaIncome, setTotlaIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const navigate = useNavigate();
+  const { res, fetchData, isLoading } = useGetApiReq();
 
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
@@ -37,37 +39,54 @@ const AdminDashBoard = () => {
   //   console.log("connection", socket);
   // });
 
-  const { res, fetchData, isLoading } = useGetApiReq();
+  // const { res, fetchData, isLoading } = useGetApiReq();
 
-  const getStats = () => {
-    fetchData(
-      `/admin/get-stats?range=${dayFilter2}&revenueGraphRange=${dayFilter}`
-    );
-  };
+  // const getStats = () => {
+  //   fetchData(
+  //     `/admin/get-stats?range=${dayFilter2}&revenueGraphRange=${dayFilter}`
+  //   );
+  // };
 
-  useEffect(() => {
-    getStats();
-  }, [dayFilter, dayFilter2]);
+  // useEffect(() => {
+  //   getStats();
+  // }, [dayFilter, dayFilter2]);
 
-  useEffect(() => {
-    if (res?.status === 200 || res?.status === 201) {
+  // useEffect(() => {
+  //   if (res?.status === 200 || res?.status === 201) {
+  //     console.log("getStats res", res);
+  //     const data = res?.data.data;
+  //     setStatsData(data || "");
+
+  //     const incomeSum = data?.revenueGraph.reduce(
+  //       (acc, item) => acc + item.income,
+  //       0
+  //     );
+  //     const expenseSum = data?.revenueGraph.reduce(
+  //       (acc, item) => acc + item.expense,
+  //       0
+  //     );
+
+  //     setTotlaIncome(incomeSum.toFixed());
+  //     setTotalExpense(expenseSum.toFixed());
+  //   }
+  // }, [res]);
+
+
+   const revenueGraphRange = "yearly";
+   const range = "monthly";
+
+   useEffect(() => {
+     fetchData(
+       `/admin/dashboard-summary?range=${range}&revenueGraphRange=${revenueGraphRange}`
+     );
+   }, [revenueGraphRange, range]);
+
+   useEffect(() => {
+     if (res?.status === 200) {
       console.log("getStats res", res);
-      const data = res?.data.data;
-      setStatsData(data || "");
-
-      const incomeSum = data?.revenueGraph.reduce(
-        (acc, item) => acc + item.income,
-        0
-      );
-      const expenseSum = data?.revenueGraph.reduce(
-        (acc, item) => acc + item.expense,
-        0
-      );
-
-      setTotlaIncome(incomeSum.toFixed());
-      setTotalExpense(expenseSum.toFixed());
-    }
-  }, [res]);
+       setStatsData(res.data.data);
+     }
+   }, [res]);
 
   return (
     <AdminWrapper>
@@ -78,13 +97,10 @@ const AdminDashBoard = () => {
         <p className="text-sm text-[#4F4F4F] font-inter font-semibold">
           Welcome to capsico Admin!
         </p>
-        <div className="grid grid-cols-5 gap-6 mt-10">
+        <div className="grid hidden grid-cols-5 gap-6 mt-10">
           <Infocard
-            // img={adminDash1}
             value={formatter.format(statsData?.revenue?.total || 0)}
             label="Total Revenue"
-            // trendIcon={graphRed}
-            // percentage="26% (30 days)"
             navigate={() => navigate("/admin/dashboard/reporting")}
             icon={IndianRupeeIcon}
           />
@@ -93,32 +109,90 @@ const AdminDashBoard = () => {
             img={adminDash2}
             value={formatter.format(statsData?.signups?.total || 0)}
             label="Total signups"
-            // trendIcon={graphGreen}
-            // percentage="4% (30 days)"
           />
 
           <Infocard
             img={adminDash3}
             value={formatter.format(statsData?.orders?.total || 0)}
             label="Total Orders"
-            // trendIcon={graphGreen}
-            // percentage="4% (30 days)"
           />
 
           <Infocard
             img={adminDash4}
             value={formatter.format(statsData?.customers?.total || 0)}
             label="Total Customers"
-            // trendIcon={graphGreen}
-            // percentage="4% (30 days)"
           />
           <Infocard
-            // img={adminDash4}
             value={formatter.format(statsData?.totalCommission || 0)}
             label="Total Commission"
             icon={BadgePercentIcon}
           />
         </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="p-4 rounded-md bg-white">
+                <div className="flex gap-4 items-center justify-between">
+                  <Skeleton className="w-[60%] h-8" />
+                  <Skeleton className="w-[20%] h-8" />
+                </div>
+                <Skeleton className="w-[90%] h-8 mt-4" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            <Infocard
+              label="Total Orders Today"
+              value={statsData?.totalOrdersToday || 0}
+              icon={ClipboardCheckIcon}
+            />
+
+            <Infocard
+              label="Revenue (Today)"
+              value={formatter.format(statsData?.revenueToday || 0)}
+              icon={IndianRupeeIcon}
+              navigate={() => navigate("/admin/dashboard/reporting")}
+            />
+
+            <Infocard
+              label="Average Order Value"
+              value={formatter.format(statsData?.averageOrderValue || 0)}
+              icon={TrendingUpIcon}
+            />
+
+            <Infocard
+              label="Commission Earned"
+              value={formatter.format(statsData?.commissionEarnedToday || 0)}
+              icon={BadgePercentIcon}
+            />
+
+            <Infocard
+              label="Active Restaurants"
+              value={statsData?.activeRestaurants || 0}
+              icon={StoreIcon}
+            />
+
+            <Infocard
+              label="Active Delivery Partners"
+              value={statsData?.activeDeliveryPartners || 0}
+              icon={TruckIcon}
+            />
+
+            <Infocard
+              label="On-time Delivery %"
+              value={`${statsData?.onTimeDeliveryPercentage || 0}%`}
+              icon={ClockIcon}
+            />
+
+            <Infocard
+              label="City Count"
+              value={statsData?.cityCount || 0}
+              icon={Building2Icon}
+            />
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-10 mt-10">
           <div className="bg-[#FEFEFE] p-6 py-8 rounded-md">
