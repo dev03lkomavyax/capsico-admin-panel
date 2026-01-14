@@ -83,7 +83,7 @@ const EarningDetails = () => {
               />
               <SummaryItem
                 label="Amount"
-                value={`₹${ledger.amount}`}
+                value={`₹${ledger.amount?.toFixed(2)}`}
                 highlight={ledger.type === "CREDIT"}
               />
               {ledger?.breakup?.incentive && (
@@ -131,6 +131,14 @@ const EarningDetails = () => {
                 <SummaryItem
                   label="Delivery Distance"
                   value={`${reference?.deliveryMeta?.distanceKm} KM`}
+                />
+                <SummaryItem
+                  label="Commission GST Percent"
+                  value={`${ledger?.breakup?.commissionGSTPercent || 0}%`}
+                />
+                <SummaryItem
+                  label="Commission GST Amount"
+                  value={`₹${ledger?.breakup?.commissionGSTAmount?.toFixed(2) || 0}`}
                 />
               </CardContent>
             </Card>

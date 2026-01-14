@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/tooltip";
 import UpdateCustomCommissionModal from "./UpdateCustomCommissionModal";
 import UpdateRestaurantGSTModal from "./UpdateRestaurantGSTModal";
+import UpdateCustomRestaurantCommissionModal from "./UpdateCustomRestaurantCommissionModal";
 
 const data2 = [
   {
@@ -84,7 +85,9 @@ const RestaurantDashborad = () => {
   const [isUpdateLogoModalOpen, setIsUpdateLogoModalOpen] = useState(false);
   const [isAddCommissionModalOpen, setIsAddCommissionModalOpen] =
     useState(false);
-    const [isUpdateGstModalOpen, setIsUpdateGstModalOpen] = useState(false);
+  const [isAddCommissionGstModalOpen, setIsAddCommissionGstModalOpen] =
+    useState(false);
+  const [isUpdateGstModalOpen, setIsUpdateGstModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -175,7 +178,7 @@ const RestaurantDashborad = () => {
                         )
                       }
                     >
-                      + Add Menu
+                      Add Menu
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => setIsAddCommissionModalOpen(true)}
@@ -186,6 +189,11 @@ const RestaurantDashborad = () => {
                       onClick={() => setIsUpdateGstModalOpen(true)}
                     >
                       Update Custom/Restaurant GST
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setIsAddCommissionGstModalOpen(true)}
+                    >
+                      Update Commission Gst
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -372,6 +380,13 @@ const RestaurantDashborad = () => {
           <UpdateCustomCommissionModal
             open={isAddCommissionModalOpen}
             setOpen={setIsAddCommissionModalOpen}
+          />
+        )}
+
+        {isAddCommissionGstModalOpen && (
+          <UpdateCustomRestaurantCommissionModal
+            open={isAddCommissionGstModalOpen}
+            setOpen={setIsAddCommissionGstModalOpen}
           />
         )}
 

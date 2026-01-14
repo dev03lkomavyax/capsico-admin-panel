@@ -80,7 +80,7 @@ const RestaurantPayout = () => {
         ) : (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
             <Metric label="Total Earned" value={earnings?.totalEarned || 0} />
-            <Metric label="Balance" value={earnings?.balance || 0} />
+            <Metric label="Balance" value={earnings?.balance?.toFixed(2) || 0} />
             <Metric
               label="Total Paid Out"
               value={earnings?.totalPaidOut || 0}
