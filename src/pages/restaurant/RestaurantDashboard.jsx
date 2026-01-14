@@ -36,6 +36,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UpdateCustomCommissionModal from "./UpdateCustomCommissionModal";
+import UpdateRestaurantGSTModal from "./UpdateRestaurantGSTModal";
 
 const data2 = [
   {
@@ -83,6 +84,7 @@ const RestaurantDashborad = () => {
   const [isUpdateLogoModalOpen, setIsUpdateLogoModalOpen] = useState(false);
   const [isAddCommissionModalOpen, setIsAddCommissionModalOpen] =
     useState(false);
+    const [isUpdateGstModalOpen, setIsUpdateGstModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -178,7 +180,12 @@ const RestaurantDashborad = () => {
                     <DropdownMenuItem
                       onClick={() => setIsAddCommissionModalOpen(true)}
                     >
-                      Update Custom Commission
+                      Update Custom/Restaurant Commission
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setIsUpdateGstModalOpen(true)}
+                    >
+                      Update Custom/Restaurant GST
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -353,6 +360,13 @@ const RestaurantDashborad = () => {
             <RecentReviews />
           </div>
         </div>
+
+        {isUpdateGstModalOpen && (
+          <UpdateRestaurantGSTModal
+            open={isUpdateGstModalOpen}
+            onOpenChange={() => setIsUpdateGstModalOpen((prev) => !prev)}
+          />
+        )}
 
         {isAddCommissionModalOpen && (
           <UpdateCustomCommissionModal

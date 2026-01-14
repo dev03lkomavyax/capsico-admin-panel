@@ -29,6 +29,7 @@ import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import UpdateGlobalCommissionModal from "./UpdateGlobalCommissionModal";
+import UpdateGlobalGSTModal from "./UpdateGlobalGSTModal";
 
 const RestaurantList = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
@@ -40,6 +41,7 @@ const RestaurantList = () => {
   const [status, setStatus] = useState("all");
   const [filterByDate, setFilterByDate] = useState("all");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isGstUpdateModalOpen, setIsGstUpdateModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -106,6 +108,21 @@ const RestaurantList = () => {
                 onOpenChange={() => setIsUpdateModalOpen((prev) => !prev)}
               />
             )}
+
+            {isGstUpdateModalOpen && (
+              <UpdateGlobalGSTModal
+                open={isGstUpdateModalOpen}
+                onOpenChange={() => setIsGstUpdateModalOpen((prev) => !prev)}
+              />
+            )}
+
+            <Button
+              onClick={() => setIsGstUpdateModalOpen(true)}
+              variant="capsico"
+              className="px-4 w-auto"
+            >
+              Update Global Gst
+            </Button>
 
             <Button
               onClick={() => setIsUpdateModalOpen(true)}
