@@ -11,7 +11,7 @@ const Stats = () => {
   const params = useParams();
   const [statsData, setStatsData] = useState("");
 
-  const { res, fetchData,firstading } = useGetApiReq();
+  const { res, fetchData } = useGetApiReq();
 
   const getAllOrder = () => {
     fetchData(
@@ -70,10 +70,10 @@ const Stats = () => {
         </div>
         <div>
           <p className="text-[#667085] text-base font-medium font-inter mb-2 text-start">
-            Total Sales
+            Total Earning
           </p>
           <p className="text-[#333843] text-2xl font-medium font-inter flex items-center gap-2">
-            {statsData?.totalSales || 0}
+            {statsData?.totalRestaurantEarning || 0}
             <span
               className={cn(
                 "text-xs font-semibold font-inter py-[2px] px-[6px] rounded-full",

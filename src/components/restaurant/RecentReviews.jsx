@@ -33,7 +33,7 @@ const RecentReviews = () => {
   console.log("reveiwData", reveiwData);
 
   return (
-    <div className="w-[30%] border-[1px] border-[#E0E2E7] rounded-lg p-6 bg-[#FFFFFF] space-y-4">
+    <div className="w-full border-[1px] border-[#E0E2E7] rounded-lg p-6 bg-[#FFFFFF] space-y-4">
       <div className="flex justify-between items-center w-full">
         <p className="text-[#333843] text-lg font-medium font-inter">
           Recent Reviews
