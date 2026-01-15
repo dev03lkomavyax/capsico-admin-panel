@@ -83,7 +83,7 @@ export const Payout = ({ payout }) => {
       <TableCell>
         <Badge variant={statusVariant[payout.status]}>{payout.status}</Badge>
       </TableCell>
-      {payout.recipientType === "MERCHANT" && (
+      {payout.recipientType === "MERCHANT" && payout?.settlementPdfUrl && (
         <TableCell>
           <TooltipProvider>
             <Tooltip>
@@ -93,7 +93,7 @@ export const Payout = ({ payout }) => {
                   variant="capsico"
                   onClick={downloadPdf}
                 >
-                  <DownloadIcon />
+                  <DownloadIcon className="size-5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
