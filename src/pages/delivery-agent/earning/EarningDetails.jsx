@@ -106,46 +106,184 @@ const EarningDetails = () => {
           </Card>
 
           {isOrder && (
+            // <Card>
+            //   <CardHeader>
+            //     <CardTitle className="text-lg">Order Financials</CardTitle>
+            //   </CardHeader>
+            //   <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            //     <SummaryItem
+            //       label="Items Total"
+            //       value={`₹${reference.amounts.itemsTotal}`}
+            //     />
+            //     <SummaryItem
+            //       label="Tax"
+            //       value={`₹${reference.amounts.taxes.total}`}
+            //     />
+            //     <SummaryItem
+            //       label="Delivery Fee"
+            //       value={`₹${reference.amounts.deliveryFee}`}
+            //     />
+            //     <SummaryItem
+            //       label="Grand Total"
+            //       value={`₹${reference.amounts.total}`}
+            //       highlight
+            //     />
+            //     <SummaryItem
+            //       label="Delivery Distance"
+            //       value={`${reference?.deliveryMeta?.distanceKm} KM`}
+            //     />
+            //     <SummaryItem
+            //       label="Commission GST Percent"
+            //       value={`${ledger?.breakup?.commissionGSTPercent || 0}%`}
+            //     />
+            //     <SummaryItem
+            //       label="Commission GST Amount"
+            //       value={`₹${ledger?.breakup?.commissionGSTAmount?.toFixed(2) || 0}`}
+            //     />
+            //   </CardContent>
+            // </Card>
+
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Order Financials</CardTitle>
+                <CardTitle className="text-lg">
+                  Order Financial Breakdown
+                </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <SummaryItem
-                  label="Items Total"
-                  value={`₹${reference.amounts.itemsTotal}`}
-                />
-                <SummaryItem
-                  label="Tax"
-                  value={`₹${reference.amounts.taxes.total}`}
-                />
-                <SummaryItem
-                  label="Delivery Fee"
-                  value={`₹${reference.amounts.deliveryFee}`}
-                />
-                <SummaryItem
-                  label="Grand Total"
-                  value={`₹${reference.amounts.total}`}
-                  highlight
-                />
-                <SummaryItem
-                  label="Delivery Distance"
-                  value={`${reference?.deliveryMeta?.distanceKm} KM`}
-                />
-                <SummaryItem
-                  label="Commission GST Percent"
-                  value={`${ledger?.breakup?.commissionGSTPercent || 0}%`}
-                />
-                <SummaryItem
-                  label="Commission GST Amount"
-                  value={`₹${ledger?.breakup?.commissionGSTAmount?.toFixed(2) || 0}`}
-                />
+
+              <CardContent className="space-y-4 text-sm">
+                {reference.items.map((item, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="font-medium">
+                          {item.name} (₹{item.basePrice})
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Qty: {item.quantity}
+                        </p>
+
+                        {item.addOns?.length > 0 && (
+                          <div>
+                            <h3>Addd Ons</h3>
+                            <ul className="text-xs text-muted-foreground list-disc ml-4 mt-1">
+                              {item.addOns.map((addon, i) => (
+                                <li key={i}>
+                                  {addon.name} × {addon.quantity} (₹
+                                  {addon.price})
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {item.variation?.selectedVariations?.length > 0 && (
+                          <div>
+                            <h3>Variants</h3>
+                            <ul className="text-xs text-muted-foreground list-disc ml-4 mt-1">
+                              {item.variation?.selectedVariations.map(
+                                (variation, i) => (
+                                  <li key={i}>
+                                    {variation.name} (₹{variation.price})
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+
+                      <p className="font-medium">₹{item.itemTotal}</p>
+                    </div>
+                    {reference.items.length - 1 !== idx && (
+                      <Separator className="my-3" />
+                    )}
+                  </div>
+                ))}
+
+                <Separator className="h-1" />
+
+                {/* Item Value */}
+                <div className="flex justify-between">
+                  <span>Items Total</span>
+                  <span>₹{reference.amounts.itemsTotal}</span>
+                </div>
+
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Tax on Items</span>
+                  <span>
+                    ₹{reference.amounts.taxes.restaurantGST?.amount || 0}
+                  </span>
+                </div>
+
+                <Separator />
+
+                {/* Delivery */}
+                <div className="flex justify-between">
+                  <span>Delivery Charge</span>
+                  <span>₹{reference.amounts.deliveryFee}</span>
+                </div>
+
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Tax on Delivery</span>
+                  <span>
+                    ₹{reference.amounts.taxes.deliveryFeeGST?.amount || 0}
+                  </span>
+                </div>
+
+                <Separator />
+
+                {/* Platform Fee */}
+                <div className="flex justify-between">
+                  <span>Platform Fee</span>
+                  <span>₹{reference.amounts.platformFee?.amount || 0}</span>
+                </div>
+
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Tax on Platform Fee</span>
+                  <span>
+                    ₹{reference.amounts.taxes.platformFeeGST?.amount || 0}
+                    {/* {ledger?.breakup?.platformFeeGST?.toFixed(2) || 0} */}
+                  </span>
+                </div>
+
+                <Separator />
+
+                {/* Commission */}
+                <div className="flex justify-between">
+                  <span>Commission (Capsico)</span>
+                  <span>
+                    ₹{ledger?.breakup?.commissionAmount?.toFixed(2) || 0}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-muted-foreground">
+                  <span>
+                    Tax on Commission (
+                    {ledger?.breakup?.commissionGSTPercent || 0}%)
+                  </span>
+                  <span>
+                    ₹{ledger?.breakup?.commissionGSTAmount?.toFixed(2) || 0}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Restaurant Earning</span>
+                  <span>₹{ledger?.amount || 0}</span>
+                </div>
+
+                <Separator />
+
+                {/* Final */}
+                <div className="flex justify-between font-semibold text-base">
+                  <span>Customer Order Value</span>
+                  <span>₹{reference.amounts.total}</span>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {/* Items */}
-          {isOrder && (
+          {/* {isOrder && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Items</CardTitle>
@@ -178,7 +316,7 @@ const EarningDetails = () => {
                 ))}
               </CardContent>
             </Card>
-          )}
+          )} */}
 
           {isPayout && (
             <Card>
