@@ -1,7 +1,14 @@
 import DatePicker from "@/components/DatePicker";
+import ReactPagination from "@/components/pagination/ReactPagination";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import React, { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -10,20 +17,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EarningRow } from "./EarningRow";
-import ReactPagination from "@/components/pagination/ReactPagination";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { EarningRow } from "./EarningRow";
 
 const EarningTable = () => {
-  const navigate = useNavigate();
   const params = useParams();
   const [data, setData] = useState([]);
 

@@ -8,10 +8,12 @@ import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Infocard from "@/components/admin/Infocard";
 import LeftChart from "@/components/admin/LeftChart";
 import RightChart from "@/components/admin/RightChart";
+import DataNotFound from "@/components/DataNotFound";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -19,7 +21,16 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import { BadgePercentIcon, Building2Icon, ClipboardCheckIcon, ClockIcon, IndianRupeeIcon, StoreIcon, TrendingUpIcon, TruckIcon } from "lucide-react";
+import {
+  BadgePercentIcon,
+  Building2Icon,
+  ClipboardCheckIcon,
+  ClockIcon,
+  IndianRupeeIcon,
+  StoreIcon,
+  TrendingUpIcon,
+  TruckIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -28,10 +39,35 @@ const AdminDashBoard = () => {
   const [dayFilter, setDayFilter] = useState("today");
   const [dayFilter2, setDayFilter2] = useState("today");
   const [statsData, setStatsData] = useState("");
+  const [statsData1, setStatsData1] = useState("");
+  const [cities, setCities] = useState([]);
   const [totlaIncome, setTotlaIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const navigate = useNavigate();
+  const [city, setCity] = useState("");
+
   const { res, fetchData, isLoading } = useGetApiReq();
+
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+    }
+  }, [fetchCitiesRes]);
 
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
@@ -39,64 +75,91 @@ const AdminDashBoard = () => {
   //   console.log("connection", socket);
   // });
 
-  // const { res, fetchData, isLoading } = useGetApiReq();
+  const {
+    res: res1,
+    fetchData: fetchData1,
+    isLoading: isLoading1,
+  } = useGetApiReq();
 
-  // const getStats = () => {
-  //   fetchData(
-  //     `/admin/get-stats?range=${dayFilter2}&revenueGraphRange=${dayFilter}`
-  //   );
-  // };
+  const getStats = () => {
+    fetchData1(
+      `/admin/get-stats?range=${dayFilter2}&revenueGraphRange=${dayFilter}&cityId=${city}`
+    );
+  };
 
-  // useEffect(() => {
-  //   getStats();
-  // }, [dayFilter, dayFilter2]);
+  useEffect(() => {
+    getStats();
+  }, [dayFilter, dayFilter2,city]);
 
-  // useEffect(() => {
-  //   if (res?.status === 200 || res?.status === 201) {
-  //     console.log("getStats res", res);
-  //     const data = res?.data.data;
-  //     setStatsData(data || "");
+  useEffect(() => {
+    if (res1?.status === 200 || res1?.status === 201) {
+      console.log("getStats res1", res1);
+      const data = res1?.data.data;
+      setStatsData1(data || "");
 
-  //     const incomeSum = data?.revenueGraph.reduce(
-  //       (acc, item) => acc + item.income,
-  //       0
-  //     );
-  //     const expenseSum = data?.revenueGraph.reduce(
-  //       (acc, item) => acc + item.expense,
-  //       0
-  //     );
+      const incomeSum = data?.revenueGraph.reduce(
+        (acc, item) => acc + item.income,
+        0
+      );
+      const expenseSum = data?.revenueGraph.reduce(
+        (acc, item) => acc + item.expense,
+        0
+      );
 
-  //     setTotlaIncome(incomeSum.toFixed());
-  //     setTotalExpense(expenseSum.toFixed());
-  //   }
-  // }, [res]);
+      setTotlaIncome(incomeSum.toFixed());
+      setTotalExpense(expenseSum.toFixed());
+    }
+  }, [res1]);
 
+  const revenueGraphRange = "yearly";
+  const range = "monthly";
 
-   const revenueGraphRange = "yearly";
-   const range = "monthly";
+  useEffect(() => {
+    fetchData(
+      `/admin/dashboard-summary?range=${range}&revenueGraphRange=${revenueGraphRange}&cityId=${city}`
+    );
+  }, [revenueGraphRange, range, city]);
 
-   useEffect(() => {
-     fetchData(
-       `/admin/dashboard-summary?range=${range}&revenueGraphRange=${revenueGraphRange}`
-     );
-   }, [revenueGraphRange, range]);
-
-   useEffect(() => {
-     if (res?.status === 200) {
-      console.log("getStats res", res);
-       setStatsData(res.data.data);
-     }
-   }, [res]);
+  useEffect(() => {
+    if (res?.status === 200) {
+      // console.log("getStats res", res);
+      setStatsData(res.data.data);
+    }
+  }, [res]);
 
   return (
     <AdminWrapper>
       <section className="px-0 py-0 w-full">
-        <h1 className="font-inter text-2xl font-bold text-[#353535]">
-          Dashboard
-        </h1>
-        <p className="text-sm text-[#4F4F4F] font-inter font-semibold">
-          Welcome to capsico Admin!
-        </p>
+        <div className="flex gap-5 justify-between items-center">
+          <div>
+            <h1 className="font-inter text-2xl font-bold text-[#353535]">
+              Dashboard
+            </h1>
+            <p className="text-sm text-[#4F4F4F] font-inter font-semibold">
+              Welcome to capsico Admin!
+            </p>
+          </div>
+          <Select onValueChange={setCity} value={city}>
+            <SelectTrigger className="w-auto" disabled={isCitiesLoading}>
+              <SelectValue placeholder="Select City" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {cities.map((city) => (
+                  <SelectItem
+                    key={city?._id}
+                    value={city?._id}
+                    className="capitalize"
+                  >
+                    {city.city}
+                  </SelectItem>
+                ))}
+                {cities.length === 0 && <DataNotFound name="Cities" />}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="grid hidden grid-cols-5 gap-6 mt-10">
           <Infocard
             value={formatter.format(statsData?.revenue?.total || 0)}
@@ -258,7 +321,7 @@ const AdminDashBoard = () => {
 
             <LeftChart
               range={dayFilter}
-              revenueGraph={statsData?.revenueGraph}
+              revenueGraph={statsData1?.revenueGraph}
             />
           </div>
           <div className="bg-[#FEFEFE] p-6 py-8 rounded-md">
@@ -286,7 +349,7 @@ const AdminDashBoard = () => {
             <div className="bg-[#e9fff0] px-10 flex justify-between items-center py-5 mt-8">
               <div className="flex gap-3 items-center">
                 <div className="bg-[#2AC055] w-20 h-10 rounded-lg text-xl font-inter font-semibold flex justify-center items-center text-[#BFECCB]">
-                  {formatter.format(statsData?.ordersSummary?.newOrders || 0)}
+                  {formatter.format(statsData1?.ordersSummary?.newOrders || 0)}
                 </div>
                 <p className="text-[#4E5650] font-inter font-semibold">
                   New Orders
@@ -304,67 +367,68 @@ const AdminDashBoard = () => {
             <div className="grid grid-cols-3 gap-6 mt-8">
               <div className="border rounded-lg p-5">
                 <h2 className="font-inter font-semibold text-3xl text-[#616A72] mt-2">
-                  {formatter.format(statsData?.ordersSummary?.onDelivery || 0)}
+                  {formatter.format(statsData1?.ordersSummary?.onDelivery || 0)}
                 </h2>
                 <p className="font-inter text-lg text-[#B5B9BC]">On Delivery</p>
               </div>
               <div className="border rounded-lg p-5">
                 <h2 className="font-inter font-semibold text-3xl text-[#616A72] mt-2">
-                  {formatter.format(statsData?.ordersSummary?.delivered || 0)}
+                  {formatter.format(statsData1?.ordersSummary?.delivered || 0)}
                 </h2>
                 <p className="font-inter text-lg text-[#B5B9BC]">Delivered</p>
               </div>
               <div className="border rounded-lg p-5">
                 <h2 className="font-inter font-semibold text-3xl text-[#616A72] mt-2">
-                  {formatter.format(statsData?.ordersSummary?.cancelled || 0)}
+                  {formatter.format(statsData1?.ordersSummary?.cancelled || 0)}
                 </h2>
                 <p className="font-inter text-lg text-[#B5B9BC]">Canceled</p>
               </div>
             </div>
             <div className="grid grid-cols-[40%_58%] items-center gap-[2%] mt-10">
               <RightChart
-                onDelivery={statsData?.ordersSummary?.onDelivery}
-                delivered={statsData?.ordersSummary?.delivered}
-                cancelled={statsData?.ordersSummary?.cancelled}
+                onDelivery={statsData1?.ordersSummary?.onDelivery}
+                delivered={statsData1?.ordersSummary?.delivered}
+                cancelled={statsData1?.ordersSummary?.cancelled}
               />
               <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
                   <p className="font-inter text-sm text-[#8A9097]">
-                    On Delivery ({statsData?.ordersSummary?.onDeliveryPercent}%)
+                    On Delivery ({statsData1?.ordersSummary?.onDeliveryPercent}
+                    %)
                   </p>
                   <Progress
                     className="w-full h-3"
                     indicatorClassName="bg-[#fe6d4c]"
-                    value={statsData?.ordersSummary?.onDelivery || 0}
+                    value={statsData1?.ordersSummary?.onDelivery || 0}
                   />
                   <p className="font-inter font-semibold text-xs text-[#B1B5B8]">
-                    {statsData?.ordersSummary?.onDelivery || 0}
+                    {statsData1?.ordersSummary?.onDelivery || 0}
                   </p>
                 </div>
                 <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
                   <p className="font-inter text-sm text-[#8A9097]">
-                    Delivered ({statsData?.ordersSummary?.deliveredPercent}%)
+                    Delivered ({statsData1?.ordersSummary?.deliveredPercent}%)
                   </p>
                   <Progress
                     className="w-full h-3"
                     indicatorClassName="bg-[#2bc154]"
-                    value={statsData?.ordersSummary?.delivered || 0}
+                    value={statsData1?.ordersSummary?.delivered || 0}
                   />
                   <p className="font-inter font-semibold text-xs text-[#B1B5B8]">
-                    {statsData?.ordersSummary?.delivered || 0}
+                    {statsData1?.ordersSummary?.delivered || 0}
                   </p>
                 </div>
                 <div className="grid grid-cols-[20%_60%_10%] items-center gap-2">
                   <p className="font-inter text-sm text-[#8A9097]">
-                    Canceled ({statsData?.ordersSummary?.cancelledPercent}%)
+                    Canceled ({statsData1?.ordersSummary?.cancelledPercent}%)
                   </p>
                   <Progress
                     className="w-full h-3"
                     indicatorClassName="bg-[#3f4953]"
-                    value={statsData?.ordersSummary?.cancelled || 0}
+                    value={statsData1?.ordersSummary?.cancelled || 0}
                   />
                   <p className="font-inter font-semibold text-xs text-[#B1B5B8]">
-                    {statsData?.ordersSummary?.cancelled || 0}
+                    {statsData1?.ordersSummary?.cancelled || 0}
                   </p>
                 </div>
               </div>
