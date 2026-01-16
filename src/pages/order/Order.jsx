@@ -1,9 +1,7 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import Capsico from "@/components/order/Capsico";
 import Quickly from "@/components/order/Quickly";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import PlatformFeeModal from "./PlatformFeeModal";
 
 const data = [
   {
@@ -91,7 +89,7 @@ const Order = () => {
               </p>
             </button>
           </div>
-          <div>
+          {/* <div>
             <Button
               variant="capsico"
               className="px-4"
@@ -99,15 +97,10 @@ const Order = () => {
             >
               Update Platform Fee
             </Button>
-          </div>
+          </div> */}
         </div>
 
-        {isModalOpen && (
-          <PlatformFeeModal
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-          />
-        )}
+      
 
         {selectTab === "capsico" && (
           <Capsico setCapsicoOrderNo={setCapsicoOrderNo} />

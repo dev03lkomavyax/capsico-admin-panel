@@ -9,6 +9,7 @@ import Infocard from "@/components/admin/Infocard";
 import LeftChart from "@/components/admin/LeftChart";
 import RightChart from "@/components/admin/RightChart";
 import DataNotFound from "@/components/DataNotFound";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
@@ -45,6 +46,10 @@ const AdminDashBoard = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const navigate = useNavigate();
   const [city, setCity] = useState("");
+
+  const handleReset = () => {
+    setCity("");
+  };
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -89,7 +94,7 @@ const AdminDashBoard = () => {
 
   useEffect(() => {
     getStats();
-  }, [dayFilter, dayFilter2,city]);
+  }, [dayFilter, dayFilter2, city]);
 
   useEffect(() => {
     if (res1?.status === 200 || res1?.status === 201) {
@@ -139,32 +144,37 @@ const AdminDashBoard = () => {
               Welcome to capsico Admin!
             </p>
           </div>
-          <Select onValueChange={setCity} value={city}>
-            <SelectTrigger className="w-auto" disabled={isCitiesLoading}>
-              <SelectValue placeholder="Select City" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {cities.map((city) => (
-                  <SelectItem
-                    key={city?._id}
-                    value={city?._id}
-                    className="capitalize"
-                  >
-                    {city.city}
-                  </SelectItem>
-                ))}
-                {cities.length === 0 && <DataNotFound name="Cities" />}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-5 items-center">
+            <Select onValueChange={setCity} value={city}>
+              <SelectTrigger className="w-40" disabled={isCitiesLoading}>
+                <SelectValue placeholder="Select City" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {cities.map((city) => (
+                    <SelectItem
+                      key={city?._id}
+                      value={city?._id}
+                      className="capitalize"
+                    >
+                      {city.city}
+                    </SelectItem>
+                  ))}
+                  {cities.length === 0 && <DataNotFound name="Cities" />}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Button className="w-auto px-4" onClick={handleReset}>
+              Reset
+            </Button>
+          </div>
         </div>
 
         <div className="grid hidden grid-cols-5 gap-6 mt-10">
           <Infocard
             value={formatter.format(statsData?.revenue?.total || 0)}
             label="Total Revenue"
-            navigate={() => navigate("/admin/dashboard/reporting")}
             icon={IndianRupeeIcon}
           />
 
@@ -216,7 +226,6 @@ const AdminDashBoard = () => {
               label="Revenue (Today)"
               value={formatter.format(statsData?.revenueToday || 0)}
               icon={IndianRupeeIcon}
-              navigate={() => navigate("/admin/dashboard/reporting")}
             />
 
             <Infocard
