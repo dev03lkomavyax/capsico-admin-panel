@@ -9,7 +9,11 @@ import {
   MapPin,
   Ticket,
   Search,
-  SettingsIcon
+  SettingsIcon,
+  BarChartIcon,
+  GlobeIcon,
+  Globe2Icon,
+  IndianRupeeIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IoNotifications } from "react-icons/io5";
@@ -771,6 +775,81 @@ const AdminSidebar = () => {
           </span>
         </Link>
         {/* )} */}
+
+        <Link
+          to={`/admin/globals`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/globals")
+              ? "bg-[#F1F6FF]"
+              : "bg-[#FFFFFF]"
+          }`}
+        >
+          <Globe2Icon
+            className={
+              pathname.includes("/admin/globals")
+                ? "text-[#397FFE] size-5"
+                : "text-[#4A4A4A] size-5"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/globals")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Globals
+          </span>
+        </Link>
+        <Link
+          to={`/admin/metric`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/metric") ? "bg-[#F1F6FF]" : "bg-[#FFFFFF]"
+          }`}
+        >
+          <BarChartIcon
+            className={
+              pathname.includes("/admin/metric")
+                ? "text-[#397FFE] size-5"
+                : "text-[#4A4A4A] size-5"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/metric")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Metrics
+          </span>
+        </Link>
+
+        <Link
+          to={`/admin/earnings`}
+          className={`flex items-center gap-3 px-4 py-3 ${
+            pathname.includes("/admin/earnings")
+              ? "bg-[#F1F6FF]"
+              : "bg-[#FFFFFF]"
+          }`}
+        >
+          <IndianRupeeIcon
+            className={
+              pathname.includes("/admin/earnings")
+                ? "text-[#397FFE] size-5"
+                : "text-[#4A4A4A] size-5"
+            }
+          />
+          <span
+            className={`text-lg font-normal font-sans group-hover:inline ${
+              pathname.includes("/admin/earnings")
+                ? "text-[#397FFE]"
+                : "text-[#4A4A4A]"
+            }`}
+          >
+            Earnings
+          </span>
+        </Link>
       </ul>
     </aside>
   );

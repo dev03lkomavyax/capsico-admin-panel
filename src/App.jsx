@@ -40,6 +40,9 @@ import Zones from "./pages/zones/Zones";
 import { SocketProvider } from "./socket";
 import { initFirebaseNotifications } from "./utils/firebaseNotifications";
 import { readCookie } from "./utils/readCookie";
+import Globals from "./pages/admin/Globals";
+import Metric from "./pages/admin/Metric/Metric";
+import GlobalEarning from "./pages/global-earnings/GlobalEarning";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -199,10 +202,12 @@ function App() {
             }
           >
             <Route path="/admin/dashboard" element={<AdminDashBoard />} />
-            <Route
+            <Route path="/admin/metric" element={<Metric />} />
+            <Route path="/admin/earnings" element={<GlobalEarning />} />
+            {/* <Route
               path="/admin/dashboard/reporting"
               element={<SalesReport />}
-            />
+            /> */}
 
             <Route path="/admin/order" element={<Order />} />
             <Route
@@ -445,6 +450,8 @@ function App() {
               path="/admin/settings/:crashId"
               element={<CrashDetailPage />}
             />
+
+            <Route path="/admin/globals" element={<Globals />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

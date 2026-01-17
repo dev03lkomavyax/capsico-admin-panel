@@ -1,20 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
 
-const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
+const UpdateGlobalGSTCard = () => {
   const [gst, setGst] = useState({
     restaurantGST: { enabled: true, percentage: 0 },
     platformFeeGST: { enabled: true, percentage: 0 },
@@ -35,10 +28,8 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
      Fetch existing GST config
   =============================== */
   useEffect(() => {
-    if (open) {
-      fetchData(`/commission/get-global-gst`);
-    }
-  }, [open]);
+    fetchData("/commission/get-global-gst");
+  }, []);
 
   useEffect(() => {
     if (res?.status === 200) {
@@ -66,14 +57,8 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
     }
 
     setError(null);
-    updateGST(`/commission/update-global-gst`, gst);
+    updateGST("/commission/update-global-gst", gst);
   };
-
-  useEffect(() => {
-    if (updateRes?.status === 200 || updateRes?.status === 201) {
-      onOpenChange(false);
-    }
-  }, [updateRes]);
 
   const renderGSTInput = (label, path) => (
     <div className="space-y-2">
@@ -98,59 +83,47 @@ const UpdateGlobalGSTModal = ({ open, onOpenChange }) => {
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Global GST Settings</DialogTitle>
-        </DialogHeader>
+    <Card className="max-w-md">
+      <CardHeader>
+        <CardTitle>Global GST</CardTitle>
+      </CardHeader>
 
-        <Card className="border-none shadow-none">
-          <CardContent className="space-y-4 p-0">
-            {isLoading ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading GST configuration...
-              </div>
-            ) : (
-              <>
-                {renderGSTInput("Restaurant GST (Food)", "restaurantGST")}
-                {renderGSTInput("Platform Fee GST", "platformFeeGST")}
-                {renderGSTInput("Delivery Fee GST", "deliveryFeeGST")}
-                {renderGSTInput("Restaurant Commission  GST", "commissionGST")}
+      <CardContent className="space-y-4">
+        {isLoading ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Loading GST configuration...
+          </div>
+        ) : (
+          <>
+            {renderGSTInput("Restaurant GST (Food)", "restaurantGST")}
+            {renderGSTInput("Platform Fee GST", "platformFeeGST")}
+            {renderGSTInput("Delivery Fee GST", "deliveryFeeGST")}
+            {renderGSTInput("Restaurant Commission GST", "commissionGST")}
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
-              </>
-            )}
-          </CardContent>
-        </Card>
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isUpdateLoading}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            variant="capsico"
-            onClick={handleUpdate}
-            disabled={isUpdateLoading}
-          >
-            {isUpdateLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
-              </>
-            ) : (
-              "Update GST"
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            <div className="flex justify-end pt-2">
+              <Button
+                variant="capsico"
+                onClick={handleUpdate}
+                disabled={isUpdateLoading}
+              >
+                {isUpdateLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update GST"
+                )}
+              </Button>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
-export default UpdateGlobalGSTModal;
+export default UpdateGlobalGSTCard;
