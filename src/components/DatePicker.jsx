@@ -14,6 +14,7 @@ export default function DatePicker({
   value,
   onChange,
   placeholder = "Select a date",
+  disabled=null
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +32,7 @@ export default function DatePicker({
           variant="outline"
           className={cn(
             "w-full flex h-10 px-2.5 gap-2 justify-between text-black/80 rounded-md",
-            !value && "text-muted-foreground"
+            !value && "text-muted-foreground",
           )}
         >
           {value ? (
@@ -51,6 +52,7 @@ export default function DatePicker({
           mode="single"
           selected={value}
           onSelect={handleDateSelect}
+          disabled={disabled}
           initialFocus
         />
       </PopoverContent>

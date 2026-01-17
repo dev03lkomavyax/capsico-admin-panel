@@ -15,6 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ExportDeliveryAgentPayout from "./earning/ExportDeliveryAgentPayout";
+import toast from "react-hot-toast";
+import DatePicker from "@/components/DatePicker";
 
 const DeliveryAgentPayoutDetails = () => {
   const navigate = useNavigate();
@@ -22,6 +24,12 @@ const DeliveryAgentPayoutDetails = () => {
 
   const [earnings, setEarnings] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [range, setRange] = useState("Monthly");
+  const [period, setPeriod] = useState(null);
+
+  // Optional (for Custom)
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const handleExort = () => {
     setIsModalOpen(true);
@@ -30,13 +38,28 @@ const DeliveryAgentPayoutDetails = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getDeliveryPartnerEarnings = () => {
-    fetchData(`/payout/get-earnings/DELIVERY_PARTNER/${deliveryAgentId}`);
+    if (range === "Custom" && (!startDate || !endDate)) {
+      toast.error("Please select both start and end dates");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      range,
+      ...(range === "Custom" && {
+        startDate,
+        endDate,
+      }),
+    });
+
+    fetchData(
+      `/payout/get-earnings/DELIVERY_PARTNER/${deliveryAgentId}?${params.toString()}`,
+    );
   };
 
   useEffect(() => {
     // getDeliveryPartnerPayoutDetails();
     getDeliveryPartnerEarnings();
-  }, [deliveryAgentId]);
+  }, [deliveryAgentId, range, startDate, endDate]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -59,7 +82,11 @@ const DeliveryAgentPayoutDetails = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="w-auto px-4" variant="capsico" onClick={handleExort}>
+                <Button
+                  className="w-auto px-4"
+                  variant="capsico"
+                  onClick={handleExort}
+                >
                   <FileOutputIcon />
                 </Button>
               </TooltipTrigger>
@@ -69,6 +96,40 @@ const DeliveryAgentPayoutDetails = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
+
+        <div className="flex gap-2 mt-4">
+          {["Daily", "Weekly", "Monthly", "Custom"].map((r) => (
+            <Button
+              key={r}
+              variant={range === r ? "capsico" : "outline"}
+              size="sm"
+              onClick={() => setRange(r)}
+            >
+              {r}
+            </Button>
+          ))}
+
+          {range === "Custom" && (
+            <div className="flex gap-3 max-w-md">
+              <DatePicker
+                value={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setEndDate(null); // reset end date if start changes
+                }}
+                placeholder="From date"
+              />
+
+              <DatePicker
+                value={endDate}
+                onChange={setEndDate}
+                placeholder="To date"
+                disabled={(date) => date > new Date()}
+              />
+            </div>
+          )}
+        </div>
+
         {isLoading ? (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6 h-24">
             <div className="rounded-md bg-muted animate-pulse h-full" />
