@@ -43,6 +43,7 @@ import { readCookie } from "./utils/readCookie";
 import Globals from "./pages/admin/Globals";
 import Metric from "./pages/admin/Metric/Metric";
 import GlobalEarning from "./pages/global-earnings/GlobalEarning";
+import CashSubmission from "./pages/delivery-agent/cash-submission/CashSubmission";
 
 const Notifications = lazy(() => import("./pages/Notifications"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -322,6 +323,10 @@ function App() {
             <Route
               path="/admin/delivery-agent/:deliveryAgentId"
               element={<DeliveryAgentDetails />}
+            />
+            <Route
+              path="/admin/delivery-agent/:deliveryAgentId/cash-submission"
+              element={<CashSubmission />}
             />
             <Route
               path="/admin/delivery-agent/:deliveryAgentId/payout"
