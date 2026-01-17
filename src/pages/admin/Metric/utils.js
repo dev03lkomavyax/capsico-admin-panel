@@ -20,3 +20,5 @@ export const fillMissingBuckets = (data = [], range, valueKey = "value") => {
     return item ? item : { label, [valueKey]: 0 };
   });
 };
+
+export const round2 = (value) => Number((Number(value) || 0).toFixed(2));

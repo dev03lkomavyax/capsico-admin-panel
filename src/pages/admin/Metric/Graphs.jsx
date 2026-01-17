@@ -50,6 +50,22 @@ const formatLabel = (label, range) => {
   return label;
 };
 
+const getXAxisLabel = (range) => {
+  if (range === "today") return "Hour of Day";
+  if (range === "month") return "Week";
+  if (range === "year") return "Month";
+  return "";
+};
+
+const getYAxisLabel = (title) => {
+  if (title.includes("Order")) return "Number of Orders";
+  if (title.includes("Revenue")) return "Amount (₹)";
+  if (title.includes("Earning")) return "Amount (₹)";
+  if (title.includes("Average")) return "Amount (₹)";
+  return "";
+};
+
+
 /* =======================
    REUSABLE SWITCH
 ======================= */
@@ -150,6 +166,7 @@ const Graphs = () => {
           chartType={chartType}
           toggleChart={toggleChart}
           isLoading={isLoading}
+          range={range}
         />
 
         {/* REVENUE */}
@@ -160,6 +177,7 @@ const Graphs = () => {
           chartType={chartType}
           toggleChart={toggleChart}
           isLoading={isLoading}
+          range={range}
         />
 
         {/* AVG ORDER VALUE */}
@@ -170,6 +188,7 @@ const Graphs = () => {
           chartType={chartType}
           toggleChart={toggleChart}
           isLoading={isLoading}
+          range={range}
         />
 
         {/* COMMISSION */}
@@ -180,6 +199,7 @@ const Graphs = () => {
           chartType={chartType}
           toggleChart={toggleChart}
           isLoading={isLoading}
+          range={range}
         />
 
         {/* ON-TIME DELIVERY */}
@@ -192,6 +212,7 @@ const Graphs = () => {
           isLoading={isLoading}
           valueKey="onTimePercentage"
           yDomain={[0, 100]}
+          range={range}
           //   colSpan
         />
 
@@ -222,7 +243,8 @@ const Graphs = () => {
                   <Bar dataKey="value" radius={[6, 6, 0, 0]} fill={GREEN}>
                     {transformedGraphs.cityPerformance.map((entry, index) => {
                       let color = "#ef4444"; // red
-                      if (entry.value > 400) color = "#22c55e"; // green
+                      if (entry.value > 400)
+                        color = "#22c55e"; // green
                       else if (entry.value > 300) color = "#eab308"; // yellow
 
                       return <Cell key={index} fill={color} />;
@@ -268,7 +290,15 @@ const MetricCard = ({
           {chartType[chartKey] === "bar" ? (
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
+              {/* <XAxis dataKey="label" /> */}
+              <XAxis
+                dataKey="label"
+                interval={0} // 👈 force show all labels
+                angle={-30} // 👈 rotate
+                textAnchor="end"
+                height={70}
+              />
+
               <YAxis domain={yDomain} />
               <Tooltip />
               <Bar dataKey={valueKey} fill={GREEN} />
@@ -276,7 +306,15 @@ const MetricCard = ({
           ) : (
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
+              {/* <XAxis dataKey="label" /> */}
+              <XAxis
+                dataKey="label"
+                interval={0} // 👈 force show all labels
+                angle={-30} // 👈 rotate
+                textAnchor="end"
+                height={70}
+              />
+
               <YAxis domain={yDomain} />
               <Tooltip />
               <Line

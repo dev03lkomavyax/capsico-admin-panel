@@ -14,6 +14,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import DatePicker from "@/components/DatePicker";
+import toast from "react-hot-toast";
 
 const RestaurantPayout = () => {
   const navigate = useNavigate();
@@ -22,19 +24,41 @@ const RestaurantPayout = () => {
   const [earnings, setEarnings] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [range, setRange] = useState("Monthly");
+  const [period, setPeriod] = useState(null);
+
+  // Optional (for Custom)
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
   const handleExort = () => {
     setIsModalOpen(true);
   };
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
-  const getDeliveryPartnerEarnings = () => {
-    fetchData(`/payout/get-earnings/MERCHANT/${restaurantId}`);
+  const getRestaurantEarnings = () => {
+    if (range === "Custom" && (!startDate || !endDate)) {
+      toast.error("Please select both start and end dates");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      range,
+      ...(range === "Custom" && {
+        startDate,
+        endDate,
+      }),
+    });
+
+    fetchData(
+      `/payout/get-earnings/MERCHANT/${restaurantId}?${params.toString()}`,
+    );
   };
 
   useEffect(() => {
-    getDeliveryPartnerEarnings();
-  }, [restaurantId]);
+    getRestaurantEarnings();
+  }, [restaurantId, range, startDate, endDate]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -71,6 +95,40 @@ const RestaurantPayout = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
+
+        <div className="flex gap-2 mt-4">
+          {["Daily", "Weekly", "Monthly", "Custom"].map((r) => (
+            <Button
+              key={r}
+              variant={range === r ? "capsico" : "outline"}
+              size="sm"
+              onClick={() => setRange(r)}
+            >
+              {r}
+            </Button>
+          ))}
+
+          {range === "Custom" && (
+            <div className="flex gap-3 max-w-md">
+              <DatePicker
+                value={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setEndDate(null); // reset end date if start changes
+                }}
+                placeholder="From date"
+              />
+
+              <DatePicker
+                value={endDate}
+                onChange={setEndDate}
+                placeholder="To date"
+                disabled={(date) => date > new Date()}
+              />
+            </div>
+          )}
+        </div>
+
         {isLoading ? (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
             <div className="aspect-video rounded-md bg-muted animate-pulse" />
@@ -80,7 +138,10 @@ const RestaurantPayout = () => {
         ) : (
           <div className="grid grid-cols-3 bg-white rounded-md gap-4 p-4 mt-6">
             <Metric label="Total Earned" value={earnings?.totalEarned || 0} />
-            <Metric label="Balance" value={earnings?.balance?.toFixed(2) || 0} />
+            <Metric
+              label="Balance"
+              value={earnings?.balance?.toFixed(2) || 0}
+            />
             <Metric
               label="Total Paid Out"
               value={earnings?.totalPaidOut || 0}
@@ -91,7 +152,7 @@ const RestaurantPayout = () => {
         <EarningTable />
 
         <PayoutTable
-          getDeliveryPartnerEarnings={getDeliveryPartnerEarnings}
+          getDeliveryPartnerEarnings={getRestaurantEarnings}
           recipientId={restaurantId}
           type="MERCHANT"
         />

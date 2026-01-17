@@ -20,11 +20,14 @@ import {
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { SingleEarning } from "./SingleEarning";
+import ReactPagination from "@/components/pagination/ReactPagination";
 
 const GlobalEarning = () => {
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState("");
   const [earnings, setEarnings] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -54,17 +57,18 @@ const GlobalEarning = () => {
   }, [fetchCitiesRes]);
 
   const getEarnings = () => {
-    fetchData(`/payout/admin/earnings`);
+    fetchData(`/payout/admin/earnings?cityId=${city}`);
   };
 
   useEffect(() => {
     getEarnings();
-  }, []);
+  }, [city]);
 
   useEffect(() => {
     if (res?.status === 200) {
       console.log("earnings res", res);
-    //   setEarnings(res.data.data);
+      setEarnings(res.data.data);
+      setPageCount(res.data?.pagination?.totalPages || 1);
     }
   }, [res]);
 
@@ -104,16 +108,11 @@ const GlobalEarning = () => {
 
         <div className="bg-white mt-10 shadow-sm">
           <Table>
-            <TableHeader className="bg-slate-100">
+            <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Owner Type</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Amount</TableHead>
-                {/* <TableHead>Delivery Fee</TableHead>
-                <TableHead>Incentive</TableHead> */}
-                <TableHead>Reference</TableHead>
-                <TableHead>Remark</TableHead>
+                <TableHead>SR No.</TableHead>
+                <TableHead>Restaurant Info</TableHead>
+                <TableHead>Balance</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -126,12 +125,18 @@ const GlobalEarning = () => {
                   <TableCell colSpan={6}>No records found</TableCell>
                 </TableRow>
               ) : (
-                earnings.map((earning) => (
-                  <SingleEarning key={earning._id} earning={earning} />
+                earnings.map((earning, index) => (
+                  <SingleEarning
+                    key={earning._id}
+                    earning={earning}
+                    index={index}
+                  />
                 ))
               )}
             </TableBody>
           </Table>
+
+          <ReactPagination setPage={setPage} totalPage={pageCount} />
         </div>
       </div>
     </AdminWrapper>
