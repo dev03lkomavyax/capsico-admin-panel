@@ -29,6 +29,7 @@ export default function CashSubmissionTable({
             <TableHead>Status</TableHead>
             <TableHead className="whitespace-nowrap">Submitted On</TableHead>
             <TableHead>Remarks</TableHead>
+            <TableHead>Admin Remarks</TableHead>
             <TableHead>Verified By</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>

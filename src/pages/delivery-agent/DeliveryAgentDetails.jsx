@@ -88,17 +88,23 @@ const DeliveryAgentDetails = () => {
             </span>
           </button>
           <div className="flex gap-5 items-center">
-
-          <Button className="w-auto px-4">
-            <Link to={`/admin/delivery-agent/${deliveryAgentId}/payout`}>
-              Payout Info
-            </Link>
-          </Button>
-          <Button variant="capsico" className="w-auto px-4">
-            <Link to={`/admin/delivery-agent/${deliveryAgentId}/cash-submission`}>
-              Cash Submissions
-            </Link>
-          </Button>
+            <Button className="w-auto px-4">
+              <Link to={`/admin/delivery-agent/${deliveryAgentId}/payout`}>
+                Payout Info
+              </Link>
+            </Button>
+            <Button variant="capsico" className="w-auto px-4">
+              <Link
+                to={`/admin/delivery-agent/${deliveryAgentId}/cash-submission`}
+                state={{
+                  zoneId: deliveryPartnerDetailsData?.assignedZone?.zoneId?._id,
+                  cityId:
+                    deliveryPartnerDetailsData?.assignedZone?.zoneId?.city,
+                }}
+              >
+                Cash Submissions
+              </Link>
+            </Button>
           </div>
         </div>
         <div className="grid grid-cols-[60%_38%] gap-[2%]">
@@ -108,7 +114,7 @@ const DeliveryAgentDetails = () => {
               src={
                 deliveryPartnerDetailsData?.personalInfo?.profileImage
                   ? viewDbImagePreview(
-                      deliveryPartnerDetailsData?.personalInfo?.profileImage
+                      deliveryPartnerDetailsData?.personalInfo?.profileImage,
                     )
                   : avatar
               }
@@ -122,7 +128,7 @@ const DeliveryAgentDetails = () => {
                 <img
                   onClick={() =>
                     navigate(
-                      `/admin/delivery-agent/${deliveryAgentId}/edit-profile`
+                      `/admin/delivery-agent/${deliveryAgentId}/edit-profile`,
                     )
                   }
                   className="w-5 h-5 cursor-pointer"

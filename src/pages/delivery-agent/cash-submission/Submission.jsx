@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useState } from "react";
 import VerifyCashSubmissionModal from "./CashSubmissionVerifyModal";
+import { format } from "date-fns";
 
 const statusColor = (status) => {
   if (status === "verified")
@@ -30,11 +31,16 @@ const Submission = ({ submission, getData }) => {
         </TableCell>
 
         <TableCell>
-          {new Date(submission.submissionDate).toLocaleString()}
+          {submission.submissionDate &&
+            format(new Date(submission.submissionDate), "dd MMM, yyyy hh:mm a")}
         </TableCell>
 
         <TableCell>
-          <div className="w-80">{submission.remarks}</div>
+          <div className="w-80">{submission.remarks || "-"}</div>
+        </TableCell>
+
+        <TableCell>
+          <div className="w-80">{submission.adminRemarks || "-"}</div>
         </TableCell>
 
         <TableCell>
