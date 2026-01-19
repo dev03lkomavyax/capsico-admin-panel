@@ -87,11 +87,19 @@ const DeliveryAgentDetails = () => {
               Delivery agent detail
             </span>
           </button>
+          <div className="flex gap-5 items-center">
+
           <Button className="w-auto px-4">
             <Link to={`/admin/delivery-agent/${deliveryAgentId}/payout`}>
               Payout Info
             </Link>
           </Button>
+          <Button variant="capsico" className="w-auto px-4">
+            <Link to={`/admin/delivery-agent/${deliveryAgentId}/cash-submission`}>
+              Cash Submissions
+            </Link>
+          </Button>
+          </div>
         </div>
         <div className="grid grid-cols-[60%_38%] gap-[2%]">
           <div className="bg-white p-5 rounded-lg flex gap-10">

@@ -157,7 +157,7 @@ const Graphs = () => {
         </Select>
       </div>
 
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 gap-5">
         {/* TOTAL ORDERS */}
         <MetricCard
           title="Total Orders"
@@ -275,7 +275,7 @@ const MetricCard = ({
   yDomain,
   colSpan,
 }) => (
-  <Card className={`rounded-2xl ${colSpan ? "col-span-2" : ""}`}>
+  <Card className={`rounded-2xl ${colSpan ? "col-span-2" : "col-span-2"}`}>
     <CardHeader className="flex flex-row items-center justify-between">
       <CardTitle>{title}</CardTitle>
       <ChartSwitch
