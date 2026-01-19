@@ -365,7 +365,7 @@ const AdminDashBoard = () => {
                 </p>
                 <div className="w-3 h-3 rounded-full ml-2 bg-[#2AC055]"></div>
               </div>
-              <button className="flex gap-2 items-center">
+              <button onClick={()=> navigate("/admin/order")} className="flex gap-2 items-center">
                 <span className="font-inter font-semibold text-[#738DE3]">
                   Manage orders
                 </span>
