@@ -37,7 +37,17 @@ const Submission = ({ submission, getData }) => {
           <div className="w-80">{submission.remarks}</div>
         </TableCell>
 
-        <TableCell>{submission.verifiedBy || "-"}</TableCell>
+        <TableCell>
+          {submission.verifiedBy?.name ? (
+            <div>
+              <p>{submission.verifiedBy?.name}</p>
+              <p>{submission.verifiedBy?.email}</p>
+              <p>{submission.verifiedBy?.phone}</p>
+            </div>
+          ) : (
+            "-"
+          )}
+        </TableCell>
         <TableCell>
           {submission.verificationStatus === "pending" ? (
             <Button
