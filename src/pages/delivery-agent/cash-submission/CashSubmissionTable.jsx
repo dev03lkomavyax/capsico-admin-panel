@@ -1,23 +1,24 @@
+import DataNotFound from "@/components/DataNotFound";
+import Spinner from "@/components/Spinner";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import Submission from "./Submission";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Spinner from "@/components/Spinner";
-import DataNotFound from "@/components/DataNotFound";
+import ReactPagination from "@/components/pagination/ReactPagination";
 
 
 
-export default function CashSubmissionTable({ submissions ,isLoading,getCashSubmissions}) {
+export default function CashSubmissionTable({
+  submissions,
+  isLoading,
+  getCashSubmissions,
+  setPage,
+  pageCount,
+}) {
   return (
     <div className=" border bg-white mt-10">
       <Table>
@@ -51,6 +52,8 @@ export default function CashSubmissionTable({ submissions ,isLoading,getCashSubm
       {!isLoading && submissions.length === 0 && (
         <DataNotFound name="Submissions" />
       )}
+
+      <ReactPagination setPage={setPage} totalPage={pageCount} />
     </div>
   );
 }
