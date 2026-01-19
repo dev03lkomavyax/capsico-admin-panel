@@ -10,6 +10,8 @@ const CashSubmission = () => {
   const navigate = useNavigate();
   const [submissions, setSubmissions] = useState([]);
   const [submissionSummary, setSubmissionSummary] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const { deliveryAgentId } = useParams();
@@ -27,6 +29,7 @@ const CashSubmission = () => {
       console.log("getCashSubmissions res", res?.data);
       setSubmissions(res?.data?.data?.submissions);
       setSubmissionSummary(res?.data?.data?.summary);
+      setPageCount(res?.data?.pagination?.totalPages);
     }
   }, [res]);
 
@@ -75,6 +78,8 @@ const CashSubmission = () => {
           submissions={submissions}
           getCashSubmissions={getCashSubmissions}
           isLoading={isLoading}
+          setPage={setPage}
+          pageCount={pageCount}
         />
       </div>
     </AdminWrapper>

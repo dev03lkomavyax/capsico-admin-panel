@@ -1,22 +1,21 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import DatePicker from "@/components/DatePicker";
 import { Metric } from "@/components/delivery-agent/Metric";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import { ArrowLeftIcon, FileOutputIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import PayoutTable from "./PayoutTable";
 import { Button } from "@/components/ui/button";
-import EarningTable from "./earning/EarningTable";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import ExportDeliveryAgentPayout from "./earning/ExportDeliveryAgentPayout";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { ArrowLeftIcon, FileOutputIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import DatePicker from "@/components/DatePicker";
+import { useNavigate, useParams } from "react-router-dom";
+import EarningTable from "./earning/EarningTable";
+import ExportDeliveryAgentPayout from "./earning/ExportDeliveryAgentPayout";
+import PayoutTable from "./PayoutTable";
 
 const DeliveryAgentPayoutDetails = () => {
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ const DeliveryAgentPayoutDetails = () => {
   const [earnings, setEarnings] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [range, setRange] = useState("Monthly");
-  const [period, setPeriod] = useState(null);
 
   // Optional (for Custom)
   const [startDate, setStartDate] = useState(null);
