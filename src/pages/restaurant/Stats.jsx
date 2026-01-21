@@ -33,7 +33,7 @@ const Stats = () => {
   return (
     <div className="flex justify-between items-center gap-6 w-full mb-8">
       <button
-        onClick={() => navigate("/admin/restaurant/revenue")}
+        // onClick={() => navigate("/admin/restaurant/revenue")}
         className="bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1"
       >
         <div className="flex justify-center items-center h-10 w-10 rounded-full border-4 border-[#EFEFFD] bg-[#DEDEFA]">
@@ -62,7 +62,7 @@ const Stats = () => {
         </div>
       </button>
       <button
-        onClick={() => navigate("/admin/restaurant/menu")}
+        // onClick={() => navigate("/admin/restaurant/menu")}
         className="bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1"
       >
         <div className="flex justify-center items-center h-10 w-10 rounded-full border-4 border-[#E7F4EE] bg-[#CFE7DC]">
@@ -88,7 +88,7 @@ const Stats = () => {
         </div>
       </button>
       <button
-        onClick={() => navigate("/admin/restaurant/menu")}
+        // onClick={() => navigate("/admin/restaurant/menu")}
         className="bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1"
       >
         <div className="flex justify-center items-center h-10 w-10 rounded-full border-4 border-[#FEEDEC] bg-[#FCDAD7]">
@@ -114,7 +114,7 @@ const Stats = () => {
         </div>
       </button>
       <button
-        onClick={() => navigate("/admin/restaurant/menu")}
+        // onClick={() => navigate("/admin/restaurant/menu")}
         className="bg-[#FFFFFF] flex flex-col items-start gap-4 w-full border-[1px] border-[#E0E2E7] rounded-lg p-5 shadow-custom1"
       >
         <div className="flex justify-center items-center h-10 w-10 rounded-full border-4 border-[#FDF1E8] bg-[#FAE1CF]">
