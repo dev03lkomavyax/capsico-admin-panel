@@ -8,11 +8,11 @@ const Review = ({ review }) => {
 
   return (
     <div
-      onClick={() => navigate(`/admin/reviews/${review?._id}`)}
+      onClick={() => navigate(`/admin/reviews/${review?.orderId}`)}
       className="grid grid-cols-[48px_1fr] gap-4 border-b pb-6 cursor-pointer"
     >
       <img
-        src={review?.user?.image || img}
+        src={review?.user?.image || review?.userId?.image || img}
         className="w-12 h-12 rounded-full object-cover bg-red-300"
       />
       <div>
@@ -21,7 +21,7 @@ const Review = ({ review }) => {
             <div>
               <div className="">
                 <h2 className="font-inter font-semibold text-[#7B8289]">
-                  {review?.user?.name}
+                  {review?.user?.name || review?.userId?.name}
                 </h2>
                 <p className="font-inter text-xs font-semibold text-[#CBCDD0]">
                   {review?.createdAt &&
@@ -40,11 +40,11 @@ const Review = ({ review }) => {
           </div>
           <div className="flex flex-col items-center">
             <h3 className="font-inter text-2xl font-semibold text-[#747B83]">
-              {review?.rating}
+              {review?.overallRating}
             </h3>
             <ReactStars
               count={5}
-              value={review?.rating || 0}
+              value={review?.overallRating || 0}
               size={28}
               edit={false}
               color1={"#d3d6e4"}

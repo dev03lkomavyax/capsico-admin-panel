@@ -11,7 +11,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import usePatchApiReq from "@/hooks/usePatchApiReq";
 import { UpdateCustomerSchema } from "@/schema/UpdateCustomerSchema";
 import { updatePreview } from "@/utils/updatePreview";
@@ -74,11 +81,11 @@ const UpdateCustomer = ({
     formData.append("phone", data.phone);
     formData.append(
       "dateOfBirth",
-      data.dateOfBirth ? format(data.dateOfBirth, "dd/MM/yyyy") : ""
+      data.dateOfBirth ? format(data.dateOfBirth, "dd/MM/yyyy") : "",
     );
     formData.append(
       "anniversary",
-      data.anniversary ? format(data.anniversary, "dd/MM/yyyy") : ""
+      data.anniversary ? format(data.anniversary, "dd/MM/yyyy") : "",
     );
     formData.append("gender", data.gender);
     formData.append("userId", customer?._id);
@@ -90,7 +97,7 @@ const UpdateCustomer = ({
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       setIsUpdateCustomerModalOpen(false);
-      getCustomerDetails()
+      getCustomerDetails();
     }
   }, [res, setIsUpdateCustomerModalOpen]);
 

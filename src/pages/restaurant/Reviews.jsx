@@ -7,19 +7,16 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import ReactStars from "react-stars";
+import { useNavigate, useParams } from "react-router-dom";
 
 const reviews = [
   {
@@ -70,11 +67,10 @@ function Reviews() {
   const [page, setPage] = useState(1);
 
   const { res, fetchData, isLoading } = useGetApiReq();
+  const { restaurantId } = useParams();
 
   const getAllReviews = () => {
-    fetchData(
-      `/admin/get-reviews?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&sortBy=${ratingSort}&ratingType=restaurant`
-    );
+    fetchData(`/restaurant/reviews/${restaurantId}`);
   };
 
   useEffect(() => {
@@ -84,9 +80,9 @@ function Reviews() {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("reviews res", res);
-      setReviewData(res?.data?.reviews);
-      setTotalPage(res?.data?.pagination?.totalPages);
-      setPage(res?.data?.pagination?.page);
+      setReviewData(res?.data?.data?.reviews);
+      setTotalPage(res?.data?.data?.pagination?.totalPages);
+      // setPage(res?.data?.pagination?.page);
     }
   }, [res]);
 
@@ -102,7 +98,7 @@ function Reviews() {
             Reviews
           </h2>
         </button>
-        <div className="flex justify-between items-center w-full my-5">
+        <div className="flex justify-between items-center w-full my-5 hidden">
           <div className="flex justify-start items-center -ml-4">
             <BsSearch className="relative left-8 text-[#1D1929]" />
             <Input
@@ -113,7 +109,7 @@ function Reviews() {
               className="w-[475px] bg-[#FFFFFF] pl-12 placeholder:text-[#1D1929] text-sm font-normal font-roboto"
             />
           </div>
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <Select
               value={dateFilter}
               onValueChange={(value) => setDateFilter(value)}
@@ -128,19 +124,19 @@ function Reviews() {
                 <SelectItem value="month">This Month</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
         </div>
-        <div className="bg-[#FFFFFF] w-full px-9 rounded-lg">
+        <div className="bg-[#FFFFFF] w-full px-9 rounded-lg mt-5">
           <div className="flex justify-between items-start pt-5 w-full">
             <div>
               <h3 className="text-[#2E2E2E] text-2xl font-semibold font-inter">
                 Others review
               </h3>
-              <p className="text-[#5A5A5A] text-base font-normal font-inter">
+              {/* <p className="text-[#5A5A5A] text-base font-normal font-inter">
                 Here is customer review about restaurants
-              </p>
+              </p> */}
             </div>
-            <Select
+            {/* <Select
               value={ratingSort}
               onValueChange={(value) => setRatingSort(value)}
             >
@@ -151,7 +147,7 @@ function Reviews() {
                 <SelectItem value="latest">Latest</SelectItem>
                 <SelectItem value="oldest">Oldest</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
 
           <div className="flex flex-col gap-6 mt-5">

@@ -274,7 +274,10 @@ function App() {
               path="/admin/restaurant/:restaurantId/updateMenu"
               element={<UpdateMenu />}
             />
-            <Route path="/admin/restaurant/reviews" element={<Review />} />
+            <Route
+              path="/admin/restaurant/:restaurantId/reviews"
+              element={<Review />}
+            />
             <Route path="/admin/restaurant/revenue" element={<Revenue />} />
             <Route
               path="/admin/restaurant/:restaurantId/menu"

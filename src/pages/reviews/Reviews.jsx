@@ -7,22 +7,21 @@ import Review from "@/components/reviews/Review"
 import Spinner from "@/components/Spinner"
 import { Input } from "@/components/ui/input"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select"
 import { LIMIT } from "@/constants/constants"
 import useGetApiReq from "@/hooks/useGetApiReq"
 import { useEffect, useState } from "react"
 import { BsSearch } from "react-icons/bs"
-import { IoIosArrowBack } from 'react-icons/io'
 
 const Reviews = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [status, setStatus] = useState("all");
-    const [dateFilter, setDateFilter] = useState("today");
+    const [dateFilter, setDateFilter] = useState("month");
     const [ratingSort, setRatingSort] = useState("latest");
     const [reviews, setReviews] = useState([]);
     const [totalPage, setTotalPage] = useState(0);
@@ -43,8 +42,8 @@ const Reviews = () => {
       useEffect(() => {
         if (res?.status === 200 || res?.status === 201) {
           console.log("reviews res", res);
-          setReviews(res?.data?.reviews);
-          setTotalPage(res?.data?.pagination?.totalPages);
+          setReviews(res?.data?.data?.reviews);
+          setTotalPage(res?.data?.data?.pagination?.totalPages);
           // setPage(res?.data?.pagination?.page);
         }
       }, [res]);
@@ -55,7 +54,7 @@ const Reviews = () => {
           <div className="flex gap-2 items-center">
             <h1 className="text-xl font-medium font-roboto">Reviews</h1>
           </div>
-          <div className="grid grid-cols-2 gap-8 mt-5">
+          <div className="grid grid-cols-2 gap-8 mt-5 hidden">
             <PositiveReviewsChart />
             <NegativeReviewsChart />
           </div>
@@ -72,7 +71,7 @@ const Reviews = () => {
               />
             </div>
             <div className="flex items-center gap-5">
-              <Select
+              {/* <Select
                 value={status}
                 onValueChange={(value) => setStatus(value)}
               >
@@ -85,7 +84,7 @@ const Reviews = () => {
                   <SelectItem value="deliveryAgent">Delivery Agent</SelectItem>
                   <SelectItem value="food">food</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
               <Select
                 value={dateFilter}
                 onValueChange={(value) => setDateFilter(value)}
