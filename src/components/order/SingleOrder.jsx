@@ -61,8 +61,7 @@ const SingleOrder = ({ data, getAllOrder }) => {
         <TableCell>
           {scheduleAt && (
             <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
-              OrderScheduleAt:{" "}
-              {format(new Date(scheduleAt), "hh:mm:ss a")}
+              OrderScheduleAt: {format(new Date(scheduleAt), "hh:mm:ss a")}
             </p>
           )}
           {timing?.orderedAt && (
@@ -82,10 +81,16 @@ const SingleOrder = ({ data, getAllOrder }) => {
               {format(new Date(timing.restaurantrejectedAt), "hh:mm:ss a")}
             </p>
           )} */}
-          {timing?.acceptedAt && (
+          {timing?.deliveryAcceptedAt && (
             <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
-              OrderAccepted(DeliveryBoy):{" "}
-              {format(new Date(timing.acceptedAt), "hh:mm:ss a")}
+              Order Accepted(DeliveryBoy):{" "}
+              {format(new Date(timing.deliveryAcceptedAt), "hh:mm:ss a")}
+            </p>
+          )}
+          {timing?.deliveryRejectedAt && (
+            <p className="text-xs text-muted-foreground font-semibold whitespace-nowrap">
+              Order Rejected(DeliveryBoy):{" "}
+              {format(new Date(timing.deliveryRejectedAt), "hh:mm:ss a")}
             </p>
           )}
           {timing?.readyAt && (
