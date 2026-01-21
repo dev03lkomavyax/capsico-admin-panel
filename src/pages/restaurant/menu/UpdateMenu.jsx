@@ -1692,7 +1692,7 @@ const UpdateMenu = () => {
                   </div>
 
                   {/* Customization Section */}
-                  <div className="pb-5 border-b-2 border-dashed border-[#D3D3D3]">
+                  <div className="pb-5 hidden border-b-2 border-dashed border-[#D3D3D3]">
                     <div className="p-5 border-b border-[#C8C8C8]">
                       <div
                         onClick={() => setIsCustomization(!isCustomization)}

@@ -78,7 +78,7 @@ const EarningDetails = () => {
                 label="Type"
                 value={ledger.type}
                 className={cn(
-                  ledger.type === "CREDIT" ? "text-green-600" : "text-red-600"
+                  ledger.type === "CREDIT" ? "text-green-600" : "text-red-600",
                 )}
               />
               <SummaryItem
@@ -185,7 +185,7 @@ const EarningDetails = () => {
                                   <li key={i}>
                                     {variation.name} (₹{variation.price})
                                   </li>
-                                )
+                                ),
                               )}
                             </ul>
                           </div>
@@ -251,24 +251,22 @@ const EarningDetails = () => {
                 {/* Commission */}
                 <div className="flex justify-between">
                   <span>Commission (Capsico)</span>
-                  <span>
-                    ₹{ledger?.breakup?.commissionAmount?.toFixed(2) || 0}
-                  </span>
+                  <span>₹{reference?.commission?.amount?.toFixed(2) || 0}</span>
                 </div>
 
                 <div className="flex justify-between text-muted-foreground">
                   <span>
-                    Tax on Commission (
-                    {ledger?.breakup?.commissionGSTPercent || 0}%)
+                    Tax on Commission ({reference?.commission?.gstPercent || 0}
+                    %)
                   </span>
                   <span>
-                    ₹{ledger?.breakup?.commissionGSTAmount?.toFixed(2) || 0}
+                    ₹{reference?.commission?.gstAmount?.toFixed(2) || 0}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-muted-foreground">
                   <span>Restaurant Earning</span>
-                  <span>₹{ledger?.amount || 0}</span>
+                  <span>₹{reference?.restaurantEarning || 0}</span>
                 </div>
 
                 <Separator />
@@ -377,7 +375,7 @@ const EarningDetails = () => {
                 <SummaryItem
                   label="Delivered At"
                   value={new Date(
-                    reference.timing.deliveredAt
+                    reference.timing.deliveredAt,
                   ).toLocaleString()}
                 />
               </CardContent>

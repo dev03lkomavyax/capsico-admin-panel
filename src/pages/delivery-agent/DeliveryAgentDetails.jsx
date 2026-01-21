@@ -1,4 +1,4 @@
-import pocket from "@/assets/3dicons.png";
+
 import call from "@/assets/call.png";
 import edit from "@/assets/edit.png";
 import avatar from "@/assets/Image-198.png";
@@ -16,6 +16,7 @@ import { viewDbImagePreview } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import PayoutBasicDetailsCard from "./PayoutBasicDetailsCard";
 
 const DeliveryAgentDetails = () => {
   const navigate = useNavigate();
@@ -158,33 +159,7 @@ const DeliveryAgentDetails = () => {
               </div>
             </div>
           </div>
-          <div
-            onClick={() =>
-              navigate("/admin/delivery-agent/123/available-balance")
-            }
-            className="flex flex-col cursor-pointer justify-between rounded-lg bg-[#7FADFF]"
-          >
-            <div className="px-10 py-6 flex justify-between items-center">
-              <div>
-                <span className="font-inter font-medium text-white">
-                  Available Balance
-                </span>
-                <h2 className="text-white font-inter font-bold text-4xl mt-2">
-                  ₹ 2500
-                </h2>
-              </div>
-              <img className="w-24" src={pocket} alt="pocket" />
-            </div>
-            <div className="py-4 px-6 bg-[#A8C7FF] rounded-b-lg flex justify-between items-end">
-              <div>
-                <p className="font-inter text-[#707070]">
-                  Previous transaction
-                </p>
-                <p className="font-inter text-[#707070]">20 June,2024</p>
-              </div>
-              <p className="font-inter text-[#FF0000] font-semibold">Rs 200</p>
-            </div>
-          </div>
+         <PayoutBasicDetailsCard />
         </div>
 
         <div className="rounded-lg mt-7 p-5 bg-white">

@@ -174,6 +174,7 @@ const Spotlight = () => {
                 <TableHead>End Date</TableHead>
                 <TableHead>Created On</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -186,7 +187,11 @@ const Spotlight = () => {
                 </TableRow>
               ) : spotlights.length > 0 ? (
                 spotlights.map((spotlight) => (
-                  <SpotlightComp key={spotlight._id} spotlight={spotlight} />
+                  <SpotlightComp
+                    key={spotlight._id}
+                    spotlight={spotlight}
+                    getData={getSpotlights}
+                  />
                 ))
               ) : (
                 <TableRow>
