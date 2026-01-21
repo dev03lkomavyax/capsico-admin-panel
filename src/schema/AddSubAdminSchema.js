@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const AddSubAdminSchema = z.object({
   position: z.string().min(1, "Position is required"),
   name: z.string().min(1, "Name is required"),
-  cityName: z.string().min(1, "CityName is required"),
+  // cityName: z.string().min(1, "CityName is required"),
+  city: z.string().min(1, "City is required"),
   phoneNumber: z
     .string()
     .length(10, "Phone number must be exactly 10 digits")
@@ -78,6 +79,7 @@ export const EditSubAdminSchema = z.object({
   position: z.string().min(1, "Position is required"),
   name: z.string().min(1, "Name is required"),
   cityName: z.string().min(1, "CityName is required"),
+  city: z.string().min(1, "City is required"),
   phoneNumber: z
     .string()
     .length(10, "Phone number must be exactly 10 digits")

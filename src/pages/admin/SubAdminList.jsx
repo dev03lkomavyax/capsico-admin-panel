@@ -70,7 +70,7 @@ const SubAdminList = () => {
                 <TableHead className="w-[100px]">Position</TableHead>
                 <TableHead className="w-[200px]">Email Address</TableHead>
                 <TableHead className="w-[100px]">Mobile Number</TableHead>
-                <TableHead className="w-[100px]">CityName</TableHead>
+                <TableHead className="w-[100px]">City</TableHead>
                 <TableHead className="w-[100px]">Status</TableHead>
                 <TableHead className="w-[100px]">Action</TableHead>
               </TableRow>

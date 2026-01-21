@@ -79,7 +79,7 @@ const Subadmin = ({ subadmin, getAllSubadmins }) => {
         <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.email}</TableCell>
         <TableCell className="text-[#252525] text-sm font-medium font-roboto">{subadmin.phone}</TableCell>
         <TableCell className="text-[#252525] text-sm font-medium font-roboto">
-          {subadmin.cityName || subadmin.city || "N/A"}
+          {subadmin?.city?.city || "N/A"}
         </TableCell>
         {/* Live Status Toggle */}
         <TableCell>
