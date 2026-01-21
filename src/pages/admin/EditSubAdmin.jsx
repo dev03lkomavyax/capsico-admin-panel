@@ -1,5 +1,6 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import ChangePassword from "@/components/admin/ChangePassword";
+import DataNotFound from "@/components/DataNotFound";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -38,6 +39,7 @@ const EditSubAdmin = () => {
       phoneNumber: "",
       email: "",
       cityName: "",
+      city: "",
       permissions: {
         dashboard: "none",
         subAdmin: "none",
@@ -61,16 +63,24 @@ const EditSubAdmin = () => {
     },
   });
 
-  const { control, reset, handleSubmit, setValue,getValues } = form;
+  const { control, reset, handleSubmit, setValue, getValues } = form;
+  console.log("getValues",getValues());
+  
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [toggleStatus, setToggleStatus] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
   // console.log("getValues", getValues());
-  
 
   const { state } = useLocation();
   const navigate = useNavigate();
+  const [cities, setCities] = useState([]);
+
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
   const { res, fetchData, isLoading } = useGetApiReq();
   const {
     res: updateAdminRes,
@@ -78,6 +88,27 @@ const EditSubAdmin = () => {
     isLoading: isAdminLoading,
   } = usePatchApiReq();
   const { res: toggleRes, fetchData: toggleStatusAPI } = usePatchApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+      console.log(
+        "res?.data?.data?.subAdmin?.city",
+        res?.data?.data?.subAdmin?.city,
+      );
+       res?.data?.data?.subAdmin?.city &&
+         setValue("city", res?.data?.data?.subAdmin.city);
+    }
+  }, [fetchCitiesRes]);
 
   const getSubadminDetails = () => {
     fetchData(`/admin/get-subadmin-details/${state?.subadminId}`);
@@ -97,6 +128,7 @@ const EditSubAdmin = () => {
       subAdmin?.name && setValue("name", subAdmin.name);
       subAdmin?.phone && setValue("phoneNumber", subAdmin.phone);
       subAdmin?.cityName && setValue("cityName", subAdmin.cityName);
+      subAdmin?.city && setValue("city", subAdmin.city);
       subAdmin?.permissions && setValue("permissions", subAdmin.permissions);
       setToggleStatus(subAdmin?.status === "active");
     }
@@ -126,27 +158,30 @@ const EditSubAdmin = () => {
   }, [toggleRes]);
 
   const onSubmit = (data) => {
-    console.log("data",data);
-    
+    console.log("data", data);
+
     uploadAdminData(`/admin/update-subadmin/${state?.subadminId}`, {
       name: data.name,
       email: data.email,
       position: data.position,
       phone: data.phoneNumber,
       cityName: data.cityName,
+      city: data.city,
       permissions: data.permissions,
     });
   };
 
   const onError = (errors) => {
     console.log("Form errors:", errors);
-  }
+  };
 
   useEffect(() => {
     if (updateAdminRes?.status === 200 || updateAdminRes?.status === 201) {
       getSubadminDetails();
     }
   }, [updateAdminRes]);
+
+  
 
   return (
     <AdminWrapper>
@@ -184,8 +219,8 @@ const EditSubAdmin = () => {
                     {statusLoading
                       ? "Updating..."
                       : toggleStatus
-                      ? "Active"
-                      : "Inactive"}
+                        ? "Active"
+                        : "Inactive"}
                   </span>
                 </div>
               </div>
@@ -204,6 +239,7 @@ const EditSubAdmin = () => {
                       <FormControl>
                         <Select
                           value={field.value}
+                          key={field.value}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger className="flex justify-between bg-[#F9FAFB] items-center h-10 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
@@ -292,21 +328,40 @@ const EditSubAdmin = () => {
                 {/* City Name field */}
                 <FormField
                   control={control}
-                  name="cityName"
+                  name="city"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel
                         className={`text-[#111928] font-semibold font-nunito opacity-80`}
                       >
-                        City Name
+                        City
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="City Name"
-                          className={`placeholder:text-[#A6A6A6] bg-[#F9FAFB] rounded-lg mt-4`}
-                          {...field}
-                        />
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          key={field.value}
+                        >
+                          <SelectTrigger disabled={isCitiesLoading}>
+                            <SelectValue placeholder="Select City" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {cities.map((city) => (
+                                <SelectItem
+                                  key={city?._id}
+                                  value={city?._id}
+                                  className="capitalize"
+                                >
+                                  {city.city}
+                                </SelectItem>
+                              ))}
+                              {cities.length === 0 && (
+                                <DataNotFound name="Cities" />
+                              )}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -334,6 +389,7 @@ const EditSubAdmin = () => {
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
+                              key={field.value}
                             >
                               <FormControl
                                 className={`bg-[#F9FAFB] border-[#D1D5DB] rounded-lg`}
