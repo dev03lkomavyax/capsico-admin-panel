@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DataNotFound from "../DataNotFound";
 import SingleReview from "./SingleReview";
+import Review from "../reviews/Review";
 
 const RecentReviews = () => {
   const [reveiwData, setReveiwData] = useState([]);
@@ -12,11 +13,7 @@ const RecentReviews = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getAllReviews = () => {
-    fetchData(
-      `/admin/get-reviews-by-restaurant?page=${1}&limit=${5}&dateFilter=${"all"}&sortBy=${"latest"}&restaurantId=${
-        params?.restaurantId
-      }&ratingType=restaurant`
-    );
+    fetchData(`/restaurant/reviews/${params?.restaurantId}`);
   };
 
   useEffect(() => {
@@ -26,7 +23,7 @@ const RecentReviews = () => {
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
       console.log("reviews res", res);
-      setReveiwData(res?.data?.reviews);
+      setReveiwData(res?.data?.data?.reviews);
     }
   }, [res]);
 
@@ -39,16 +36,21 @@ const RecentReviews = () => {
           Recent Reviews
         </p>
         <button
-          onClick={() => navigate("/admin/restaurant/reviews")}
+          onClick={() =>
+            navigate(`/admin/restaurant/${params?.restaurantId}/reviews`)
+          }
           className="h-10 border-[1px] border-[#1064FD] rounded-lg text-[#FFFFFF] text-sm font-medium font-inter px-4 bg-[#1064FD]"
         >
           See More
         </button>
       </div>
-      <div className="flex flex-col gap-6 max-h-96 overflow-y-auto [-ms-overflow-style: none
-      ]">
+      <div
+        className="flex flex-col gap-6 max-h-96 overflow-y-auto [-ms-overflow-style: none
+      ]"
+      >
         {reveiwData.map((review) => (
-          <SingleReview key={review?._id} review={review} />
+          // <SingleReview key={review?._id} review={review} />
+          <Review key={review?._id} review={review} />
         ))}
 
         {isLoading && <SingleReview.Skeleton />}
