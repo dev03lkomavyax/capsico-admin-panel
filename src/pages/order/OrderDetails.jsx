@@ -19,6 +19,7 @@ import OrderUpdateModal from "./OrderUpdateModal";
 import CancelOrderModal from "./CancelOrderModal";
 import SanitizationModal from "./SanitizationModal";
 import InvoiceUploadModal from "./InvoiceUploadModal";
+import OrderTimingTimeline from "./OrderTimeline";
 
 const libraries = ["places", "marker"];
 
@@ -41,7 +42,7 @@ const OrderDetails = () => {
   const [minute, setMinute] = useState(1);
   const socket = getSocket();
 
-  const { timing, scheduleAt } = orderDetailsData || {};
+  const { timing, scheduleAt, deliveryPartner } = orderDetailsData || {};
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -244,7 +245,7 @@ const OrderDetails = () => {
               </span>
             </button>
             <span className="text-sm text-[#5F5F5F] font-roboto">
-              Orders/Order Details
+              Order Details
             </span>
           </div>
           {isModalOpen && (
@@ -387,11 +388,11 @@ const OrderDetails = () => {
                   orderDetailsData?.status === "delivered"
                     ? "text-[#167316] bg-[#CEFFCA]"
                     : orderDetailsData?.status === "preparing" ||
-                      orderDetailsData?.status === "pending"
-                    ? "text-[#787A23] bg-[#F7FFCA]"
-                    : orderDetailsData?.status === "cancelled"
-                    ? "text-[#BF1010] bg-[#FFE7E7]"
-                    : "text-[#6223B5] bg-[#E1CAFF]"
+                        orderDetailsData?.status === "pending"
+                      ? "text-[#787A23] bg-[#F7FFCA]"
+                      : orderDetailsData?.status === "cancelled"
+                        ? "text-[#BF1010] bg-[#FFE7E7]"
+                        : "text-[#6223B5] bg-[#E1CAFF]"
                 } !h-10 capitalize w-auto px-3 text-sm hover:text-[#167316] hover:bg-[#CEFFCA]`}
               >
                 {orderDetailsData.status}
@@ -400,8 +401,8 @@ const OrderDetails = () => {
                 {orderDetailsData?.status === "assigned_to_partner"
                   ? "Delivery partner assigned but not accepted yet"
                   : orderDetailsData?.status === "DELIVERYPARTNER_ACCEPTED"
-                  ? "Order accepted by Delivery Partner"
-                  : ""}
+                    ? "Order accepted by Delivery Partner"
+                    : ""}
               </span>
             </div>
           </div>
@@ -468,59 +469,13 @@ const OrderDetails = () => {
             </div>
             <div className="flex flex-col mt-12">
               <h2 className="font-roboto text-sm mb-2">History</h2>
-              {/* <History
-                status={orderDetailsData?.status}
-                history={orderDetailsData?.statusHistory}
-                timing={orderDetailsData?.timing && orderDetailsData?.timing}
-              /> */}
-
-              {scheduleAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderScheduleAt: {format(new Date(scheduleAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {timing?.orderedAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderPlaced:{" "}
-                  {format(new Date(timing.orderedAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {timing?.confirmedAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderAccepted(Resturant):{" "}
-                  {format(new Date(timing.confirmedAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {/* {timing?.restaurantrejectedAt && (
-                          <p className="text-xs text-black font-semibold">
-                            OrderAccepted(Resturant):{" "}
-                            {format(new Date(timing.restaurantrejectedAt), "hh:mm:ss a")}
-                          </p>
-                        )} */}
-              {timing?.acceptedAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderAccepted(DeliveryBoy):{" "}
-                  {format(new Date(timing.acceptedAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {timing?.readyAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderPrepared:{" "}
-                  {format(new Date(timing.readyAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {timing?.pickedUpAt && (
-                <p className="text-xs text-black font-semibold whitespace-nowrap">
-                  OrderPickedUp:{" "}
-                  {format(new Date(timing.pickedUpAt), "hh:mm:ss a")}
-                </p>
-              )}
-              {timing?.deliveredAt && (
-                <p className="text-xs text-black font-semibold">
-                  OrderDelivered:{" "}
-                  {format(new Date(timing.deliveredAt), "hh:mm:ss a")}
-                </p>
-              )}
+              <OrderTimingTimeline
+                timing={{
+                  ...timing,
+                  scheduleAt,
+                  assignedAt: deliveryPartner?.assignedAt,
+                }}
+              />
             </div>
           </div>
           <div className="">
@@ -550,7 +505,7 @@ const OrderDetails = () => {
                 <Button
                   onClick={() =>
                     navigate(
-                      `/admin/restaurant/${orderDetailsData?.restaurantId?._id}/dashboard`
+                      `/admin/restaurant/${orderDetailsData?.restaurantId?._id}/dashboard`,
                     )
                   }
                   variant="ghost"
@@ -740,3 +695,71 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
+
+
+const TimeItem = ({ label, value, highlight = false }) => (
+  <p
+    className={`text-xs font-semibold whitespace-nowrap ${
+      highlight ? "text-muted-foreground" : "text-black"
+    }`}
+  >
+    {label}: {format(new Date(value), "hh:mm:ss a")}
+  </p>
+);
+
+const OrderTiming = ({ scheduleAt, timing }) => {
+  const timeline = [
+    {
+      label: "Order Scheduled At",
+      value: scheduleAt,
+    },
+    {
+      label: "Order Placed",
+      value: timing?.orderedAt,
+    },
+    {
+      label: "Order Accepted (Restaurant)",
+      value: timing?.confirmedAt,
+    },
+    {
+      label: "Order Accepted (Delivery Partner)",
+      value: timing?.deliveryAcceptedAt,
+      highlight: true,
+    },
+    {
+      label: "Order Rejected (Delivery Partner)",
+      value: timing?.deliveryRejectedAt,
+      highlight: true,
+    },
+    {
+      label: "Order Prepared",
+      value: timing?.readyAt,
+    },
+    {
+      label: "Order Picked Up",
+      value: timing?.pickedUpAt,
+    },
+    {
+      label: "Order Delivered",
+      value: timing?.deliveredAt,
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-1">
+      {timeline.map(
+        (item, index) =>
+          item.value && (
+            <TimeItem
+              key={index}
+              label={item.label}
+              value={item.value}
+              highlight={item.highlight}
+            />
+          )
+      )}
+    </div>
+  );
+};
+
+
