@@ -142,17 +142,19 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
                 typeof data?.createdAt === "number"
                   ? new Date(data?.createdAt)
                   : new Date(data?.createdAt),
-                "MMMM yyyy"
+                "MMMM yyyy",
               )
             : "N/A"}
         </TableCell>
 
         <TableCell className="text-[#1D1929] text-xs font-normal font-roboto">
-          {`${data?.location?.address || ""}${
-            data?.location?.city ? `, ${data?.location?.city}` : ""
-          }${data?.location?.state ? `, ${data?.location?.state}` : ""}${
-            data?.location?.pinCode ? `, ${data?.location?.pinCode}` : ""
-          }`}
+          <p className="w-40">
+            {`${data?.location?.address || ""}${
+              data?.location?.city ? `, ${data?.location?.city}` : ""
+            }${data?.location?.state ? `, ${data?.location?.state}` : ""}${
+              data?.location?.pinCode ? `, ${data?.location?.pinCode}` : ""
+            }`}
+          </p>
         </TableCell>
 
         {/* <TableCell className="text-[#000000] text-xs font-semibold font-inter">
@@ -211,8 +213,8 @@ const SingleRestaurantComp = ({ data, getAllRestaurant }) => {
                   ? `Closes at: ${timingDetail.closesAt}`
                   : ""
                 : timingDetail.opensAt
-                ? `Opens at: ${timingDetail.opensAt}`
-                : "")}
+                  ? `Opens at: ${timingDetail.opensAt}`
+                  : "")}
           </div>
         </TableCell>
 

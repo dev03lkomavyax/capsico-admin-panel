@@ -28,6 +28,7 @@ import SingleOrder from "./SingleOrder";
 import Spinner from "../Spinner";
 import DataNotFound from "../DataNotFound";
 import ReactPagination from "../pagination/ReactPagination";
+import { readCookie } from "@/utils/readCookie";
 
 const StatusList = () => {
     const [capsicoOrderData, setCapsicoOrderData] = useState([]);
@@ -40,6 +41,7 @@ const StatusList = () => {
     const [filterByDate, setFilterByDate] = useState("today");
 
     const { res, fetchData, isLoading } = useGetApiReq();
+    const userInfo = readCookie("userInfo")
 
     const getAllOrder = () => {
         const statusValue = params?.status;
@@ -56,7 +58,7 @@ const StatusList = () => {
         }
 
         fetchData(
-            `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${status}`
+            `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${status}&cityId=${userInfo.city}`
         );
     };
 

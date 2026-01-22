@@ -3,48 +3,11 @@ import Capsico from "@/components/order/Capsico";
 import Quickly from "@/components/order/Quickly";
 import { useState } from "react";
 
-const data = [
-  {
-    orderID: "1264903",
-    order: "TV 14 Inch Gede",
-    customer: "Vivek",
-    status: "Complete",
-    createdDate: `March ${(21, 2020)}`,
-    restaurantName: "Adiyaman Hotel",
-    price: "$19.09",
-  },
-  {
-    orderID: "1264903",
-    order: "TV 14 Inch Gede",
-    customer: "Piyush",
-    status: "Cancelled",
-    createdDate: `March ${(21, 2020)}`,
-    restaurantName: "Adiyaman Hotel",
-    price: "$19.09",
-  },
-  {
-    orderID: "1264903",
-    order: "TV 14 Inch Gede",
-    customer: "Aditya",
-    status: "Preparing",
-    createdDate: `March ${(21, 2020)}`,
-    restaurantName: "Adiyaman Hotel",
-    price: "$19.09",
-  },
-  {
-    orderID: "1264903",
-    order: "TV 14 Inch Gede",
-    customer: "Nakoyame Japan",
-    status: "New",
-    createdDate: `March ${(21, 2020)}`,
-    restaurantName: "Adiyaman Hotel",
-    price: "$19.09",
-  },
-];
+
 
 const Order = () => {
   const [selectTab, setSelectTab] = useState("capsico");
-  const [quicklyOrderData, setQuicklyOrderData] = useState(data);
+  const [quicklyOrderData, setQuicklyOrderData] = useState([]);
   const [capsicoOrderNo, setCapsicoOrderNo] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectValue, setselectValue] = useState("All");

@@ -845,6 +845,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -856,6 +857,7 @@ import toast from "react-hot-toast";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import VerifyPhoneOtpModal from "@/components/restaurant/VerifyPhoneOtpModal";
+import DataNotFound from "@/components/DataNotFound";
 
 const libraries = ["places", "marker"];
 
@@ -866,6 +868,7 @@ const EditProfile1 = ({
   getRestaurant,
 }) => {
   const navigate = useNavigate();
+  const [cities, setCities] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(EditProfileSchema1),
@@ -887,6 +890,7 @@ const EditProfile1 = ({
       deliveryTime: "",
       samePhoneNumber: false,
       receiveUpdate: false,
+      cityId:""
     },
   });
 
@@ -916,7 +920,7 @@ const EditProfile1 = ({
     setIsPhoneNumber2Verified(false);
   }, [phoneNumber2]);
 
-  const { basicInfo, location, partnerDetails, deliveryTime } =
+  const { basicInfo, location, partnerDetails, deliveryTime, assignedCityId } =
     restaurant || {};
 
   // FIXED: Uncommented and improved the reset function
@@ -929,6 +933,7 @@ const EditProfile1 = ({
         restaurantEmail: basicInfo?.email || "",
         addressLine: location?.addressLine || "",
         city: location?.city || "",
+        cityId: assignedCityId || "",
         state: location?.state || "",
         pinCode: location?.pinCode || "",
         latitude: location?.coordinates?.[1] || location?.latitude || "",
@@ -1023,7 +1028,7 @@ const EditProfile1 = ({
         lng: e.latLng.lng(),
       });
     },
-    [setValue]
+    [setValue],
   );
 
   console.log("markerPosition", markerPosition);
@@ -1042,6 +1047,31 @@ const EditProfile1 = ({
       });
     }
   };
+
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+      console.log(
+        "res?.data?.data?.subAdmin?.city",
+        res?.data?.data?.subAdmin?.city,
+      );
+    }
+  }, [fetchCitiesRes]);
 
   const { res, fetchData, isLoading } = usePostApiReq();
   const {
@@ -1089,6 +1119,7 @@ const EditProfile1 = ({
         idProof: "path_to_id_proof",
         sameAsRestaurantPhone: data.samePhoneNumber,
       },
+      cityId: data.cityId,
     };
 
     if (restaurant) {
@@ -1101,7 +1132,7 @@ const EditProfile1 = ({
         {
           reportCrash: true,
           screenName: "RESTAURANT_UPDATE",
-        }
+        },
       );
     } else {
       fetchData("/admin/restaurant-signup", apiData, {
@@ -1665,7 +1696,7 @@ const EditProfile1 = ({
                     )}
                   />
                 </div>
-                <div className="mt-5 grid grid-cols-2 w-[66%] gap-5">
+                <div className="mt-5 grid grid-cols-3 gap-5">
                   <FormField
                     control={control}
                     name="fullName"
@@ -1700,6 +1731,45 @@ const EditProfile1 = ({
                             className="placeholder:text-[#667085] placeholder:font-inter"
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name="cityId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className=" text-[#344054] font-inter">
+                          Select City
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            key={field.value}
+                          >
+                            <SelectTrigger disabled={isCitiesLoading}>
+                              <SelectValue placeholder="Select City" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {cities.map((city) => (
+                                  <SelectItem
+                                    key={city?._id}
+                                    value={city?._id}
+                                    className="capitalize"
+                                  >
+                                    {city.city}
+                                  </SelectItem>
+                                ))}
+                                {cities.length === 0 && (
+                                  <DataNotFound name="Cities" />
+                                )}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
