@@ -42,7 +42,8 @@ const OrderDetails = () => {
   const [minute, setMinute] = useState(1);
   const socket = getSocket();
 
-  const { timing, scheduleAt, deliveryPartner } = orderDetailsData || {};
+  const { timing, scheduleAt, deliveryPartner, cancelDetails } =
+    orderDetailsData || {};
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -229,6 +230,43 @@ const OrderDetails = () => {
       socket.off("delivery_confirmed");
     };
   }, []);
+
+   useEffect(() => {
+     const handleOrderUpdate = (response) => {
+       console.log("order update:", response);
+       const { order } = response;
+       getOrderDetails();
+     };
+
+     socket.on("order_update", handleOrderUpdate);
+     socket.on("order-ready", handleOrderUpdate);
+     socket.on("delivery-partner-assigned", handleOrderUpdate);
+     socket.on("delivery-partner-arrived", handleOrderUpdate);
+     socket.on("order-cancelled", handleOrderUpdate); // TODO: Test
+     socket.on("order-picked-up", handleOrderUpdate);
+     socket.on("accept-order", handleOrderUpdate);
+     socket.on("reached-delivery-location", handleOrderUpdate);
+     socket.on("order-delivered", handleOrderUpdate);
+     socket.on("customer-unavailable", handleOrderUpdate);
+     socket.on("items-verified", handleOrderUpdate);
+     socket.on("collection-started", handleOrderUpdate);
+     socket.on("partner-rejected-order", handleOrderUpdate);
+
+     return () => {
+       socket.off("order_update", handleOrderUpdate);
+       socket.off("order-ready", handleOrderUpdate);
+       socket.off("delivery-partner-assigned", handleOrderUpdate);
+       socket.off("delivery-partner-arrived", handleOrderUpdate);
+       socket.off("order-picked-up", handleOrderUpdate);
+       socket.off("accept-order", handleOrderUpdate);
+       socket.off("reached-delivery-location", handleOrderUpdate);
+       socket.off("order-delivered", handleOrderUpdate);
+       socket.off("customer-unavailable", handleOrderUpdate);
+       socket.off("items-verified", handleOrderUpdate);
+       socket.off("collection-started", handleOrderUpdate);
+       socket.off("partner-rejected-order", handleOrderUpdate);
+     };
+   }, []);
 
   return (
     <AdminWrapper>
@@ -474,6 +512,9 @@ const OrderDetails = () => {
                   ...timing,
                   scheduleAt,
                   assignedAt: deliveryPartner?.assignedAt,
+                  deliveryRejectedAt:
+                    cancelDetails?.cancelledBy === "delivery_partner" &&
+                    cancelDetails?.cancelledAt,
                 }}
               />
             </div>
