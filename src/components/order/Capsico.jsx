@@ -28,6 +28,7 @@ import Spinner from "../Spinner";
 import DataNotFound from "../DataNotFound";
 import OrderStatusCount from "./OrderStatusCount";
 import toast from "react-hot-toast";
+import { readCookie } from "@/utils/readCookie";
 
 // const Capsico = ({ setCapsicoOrderNo }) => {
 //   const socket = getSocket();
@@ -221,18 +222,46 @@ const Capsico = ({ setCapsicoOrderNo }) => {
   const [status, setStatus] = useState("all");
   const [totalPage, setTotalPage] = useState(1);
   const [selectOrderTab, setSelectOrderTab] = useState("allOrder");
+  const [cities, setCities] = useState([]);
+  const userInfo = readCookie("userInfo")
+  const [cityId, setCityId] = useState(userInfo?.city);
 
   const { res, fetchData, isLoading } = useGetApiReq();
+
+  const {
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
+
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+      console.log(
+        "res?.data?.data?.subAdmin?.city",
+        res?.data?.data?.subAdmin?.city,
+      );
+    }
+  }, [fetchCitiesRes]);
 
   const getAllOrder = () => {
     fetchData(
       `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
         status === "all" ? "" : status
-      }`,
+      }&cityId=${userInfo?.city}`,
       {
         reportCrash: true,
         screenName: "ORDER_GET",
-      }
+      },
     );
   };
 
@@ -297,7 +326,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
           restaurant: order.restaurantId,
           user: order.userId || order.customer,
         },
-        ...prev
+        ...prev,
       ]);
     };
 
@@ -341,12 +370,10 @@ const Capsico = ({ setCapsicoOrderNo }) => {
 
   useEffect(() => {
     getAllOrder();
-  }, [page, searchQuery, filterByDate, status]);
+  }, [page, searchQuery, filterByDate, status, cityId]);
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
-
-      
       setCapsicoOrderData(res?.data?.data || []);
       const { pagination } = res?.data || {};
       setTotalPage(pagination?.totalPages || 0);
@@ -377,6 +404,29 @@ const Capsico = ({ setCapsicoOrderNo }) => {
           />
         </div>
         <div className="flex items-center gap-4">
+          {/* <Select
+            onValueChange={(value) => setCityId(value)}
+            value={cityId}
+            key={cityId}
+          >
+            <SelectTrigger disabled={isCitiesLoading}>
+              <SelectValue placeholder="Select City" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {cities.map((city) => (
+                  <SelectItem
+                    key={city?._id}
+                    value={city?._id}
+                    className="capitalize"
+                  >
+                    {city.city}
+                  </SelectItem>
+                ))}
+                {cities.length === 0 && <DataNotFound name="Cities" />}
+              </SelectGroup>
+            </SelectContent>
+          </Select> */}
           <Select value={status} onValueChange={(value) => setStatus(value)}>
             <SelectTrigger className="h-10 w-44 text-[#1D1929] text-sm font-normal font-sans border-[#E9E9EA] border-[1px] rounded-lg">
               <SelectValue placeholder="Select" />

@@ -9,7 +9,7 @@ import { TableCell, TableRow } from "../ui/table";
 const SingleOrder = ({ data, getAllOrder }) => {
   const navigate = useNavigate();
 
-  const { timing, scheduleAt } = data;
+  const { timing, scheduleAt, cancelDetails } = data;
 
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 

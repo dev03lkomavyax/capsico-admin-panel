@@ -36,9 +36,10 @@ const Login = () => {
       password: data.password,
     });
   };
-
+  
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
+      console.log("login res", res);
       navigate("/admin/dashboard");
       localStorage.setItem("adminAccessToken", res?.data?.accessToken);
       localStorage.setItem("admin-status", true);

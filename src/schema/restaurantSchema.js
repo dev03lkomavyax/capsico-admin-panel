@@ -170,6 +170,9 @@ export const EditProfileSchema1 = z.object({
     .email({
       message: "Invalid email address",
     }),
+  cityId: z.string().min(1, {
+    message: "City Id is required",
+  }),
   // deliveryTime: z.string().optional(),
   // deliveryTime: z
   //   .enum(["10-20 min", "20-30 min", "30-40 min", "40-50 min"])

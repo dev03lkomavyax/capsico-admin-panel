@@ -31,6 +31,7 @@ import Spinner from "@/components/Spinner";
 import DataNotFound from "@/components/DataNotFound";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { readCookie } from "@/utils/readCookie";
 
 const DeliveryAgent = () => {
   const [deliveryAgentData, setDeliveryAgentData] = useState([]);
@@ -40,6 +41,7 @@ const DeliveryAgent = () => {
   const [status, setStatus] = useState("all");
   const [dateFilter, setDateFilter] = useState("today");
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo")
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -47,7 +49,7 @@ const DeliveryAgent = () => {
     fetchData(
       `/admin/get-all-deliveryPartners?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&status=${
         status === "all" ? "" : status
-      }`,
+      }&cityId=${userInfo.city}`,
       {
         reportCrash: true,
         screenName: "DELIVERY_EXECUTIVE_GET",

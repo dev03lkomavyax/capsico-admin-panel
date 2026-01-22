@@ -43,6 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import UpdateAddressModal from "./UpdateAddressModal";
+import DataNotFound from "@/components/DataNotFound";
 
 const DeliveryAgentProfileEdit = () => {
   const navigate = useNavigate();
@@ -123,8 +124,14 @@ const DeliveryAgentProfileEdit = () => {
   const { register, control, watch, setValue, getValues } = form;
 
   useEffect(() => {
-    const { documents, earnings, personalInfo, address, accountStatus } =
-      deliveryPartnerDetailsData || {};
+    const {
+      documents,
+      earnings,
+      personalInfo,
+      address,
+      accountStatus,
+      assignedCityId,
+    } = deliveryPartnerDetailsData || {};
 
     const { bankDetails } = earnings || {};
 
@@ -176,6 +183,7 @@ const DeliveryAgentProfileEdit = () => {
     setValue("IFSCcode", bankDetails?.ifscCode);
     setValue("upiId", bankDetails?.upiId);
     setValue("accountHolderName", bankDetails?.accountHolderName);
+    setValue("cityId", assignedCityId);
   }, [deliveryPartnerDetailsData]);
 
   console.log("getValues", getValues());
@@ -207,6 +215,29 @@ const DeliveryAgentProfileEdit = () => {
     drivingLicense,
     panCard,
   ]);
+
+   const [cities, setCities] = useState([]);
+
+  const {
+      res: fetchCitiesRes,
+      fetchData: fetchCities,
+      isLoading: isCitiesLoading,
+    } = useGetApiReq();
+  
+    const getCities = () => {
+      fetchCities("/availableCities/get-all");
+    };
+  
+    useEffect(() => {
+      getCities();
+    }, []);
+
+    useEffect(() => {
+      if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+        console.log("fetchCitiesRes", fetchCitiesRes);
+        setCities(fetchCitiesRes?.data?.cities || []);
+      }
+    }, [fetchCitiesRes]);
 
   const onSubmit = (data) => {
     console.log("data", data);
@@ -265,6 +296,7 @@ const DeliveryAgentProfileEdit = () => {
       formData.append("aadharFrontImage", data.aadharFront[0]);
     data.aadharBack && formData.append("aadharBackImage", data.aadharBack[0]);
     data.panCard && formData.append("panCardImage", data.panCard[0]);
+    data.cityId && formData.append("cityId", data.cityId);
 
     fetchData1(`/admin/update-profile/${deliveryAgentId}`, formData);
   };
@@ -457,7 +489,7 @@ const DeliveryAgentProfileEdit = () => {
                                           className={cn(
                                             "w-[240px] px-3 text-left font-normal",
                                             !field.value &&
-                                              "text-muted-foreground"
+                                              "text-muted-foreground",
                                           )}
                                         >
                                           {field.value ? (
@@ -491,7 +523,7 @@ const DeliveryAgentProfileEdit = () => {
                             {watch("dateOfBirth")
                               ? format(
                                   new Date(getValues("dateOfBirth")),
-                                  "yyyy/MM/dd"
+                                  "yyyy/MM/dd",
                                 )
                               : "N/A"}
                           </p>
@@ -555,11 +587,11 @@ const DeliveryAgentProfileEdit = () => {
                               Coordinates:{" "}
                               {getValues("address") &&
                                 getValues(
-                                  "address"
+                                  "address",
                                 )?.location?.coordinates?.[0].toFixed(4)}
                               ,{" "}
                               {getValues(
-                                "address"
+                                "address",
                               )?.location?.coordinates?.[1]?.toFixed(4)}
                             </div>
                           </div>
@@ -667,6 +699,46 @@ const DeliveryAgentProfileEdit = () => {
                           </span>
                         </p>
                       )}
+
+                      <FormField
+                        control={control}
+                        name="cityId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className=" text-[#344054] font-inter">
+                              Select City
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                key={field.value}
+                              >
+                                <SelectTrigger disabled={isCitiesLoading}>
+                                  <SelectValue placeholder="Select City" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    {cities.map((city) => (
+                                      <SelectItem
+                                        key={city?._id}
+                                        value={city?._id}
+                                        className="capitalize"
+                                      >
+                                        {city.city}
+                                      </SelectItem>
+                                    ))}
+                                    {cities.length === 0 && (
+                                      <DataNotFound name="Cities" />
+                                    )}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
                 </div>
@@ -849,7 +921,7 @@ const DeliveryAgentProfileEdit = () => {
                                 variant={"outline"}
                                 className={cn(
                                   "w-[240px] px-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
+                                  !field.value && "text-muted-foreground",
                                 )}
                               >
                                 {field.value ? (

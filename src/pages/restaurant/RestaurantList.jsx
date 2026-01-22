@@ -24,6 +24,7 @@ import {
 import { DEBOUNCE_DELAY } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { cn } from "@/lib/utils";
+import { readCookie } from "@/utils/readCookie";
 import { Plus, RefreshCcwIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
@@ -38,16 +39,15 @@ const RestaurantList = () => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("all");
   const [filterByDate, setFilterByDate] = useState("all");
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [isGstUpdateModalOpen, setIsGstUpdateModalOpen] = useState(false);
 
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo")
 
   const getAllRestaurant = useCallback(() => {
     fetchData(
       `/admin/get-restaurants?page=${page}&search=${searchQuery}&status=${
         status === "all" ? "" : status
-      }&&dateFilter=${filterByDate}`
+      }&dateFilter=${filterByDate}&cityId=${userInfo?.city}`,
     );
   }, [page, searchQuery, status, filterByDate]);
 
