@@ -22,6 +22,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
 import {
   BadgePercentIcon,
   Building2Icon,
@@ -45,7 +46,8 @@ const AdminDashBoard = () => {
   const [totlaIncome, setTotlaIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const navigate = useNavigate();
-  const [city, setCity] = useState("");
+  const userInfo = readCookie("userInfo");
+  const [city, setCity] = useState(userInfo.city || "");
 
   const handleReset = () => {
     setCity("");
@@ -71,6 +73,7 @@ const AdminDashBoard = () => {
     if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
       console.log("fetchCitiesRes", fetchCitiesRes);
       setCities(fetchCitiesRes?.data?.cities || []);
+      setCity(userInfo.city || "");
     }
   }, [fetchCitiesRes]);
 
@@ -145,8 +148,13 @@ const AdminDashBoard = () => {
             </p>
           </div>
           <div className="flex gap-5 items-center">
-            <Select onValueChange={setCity} value={city}>
-              <SelectTrigger className="w-40" disabled={isCitiesLoading}>
+            <Select
+              disabled={userInfo?.role === "subAdmin" || isCitiesLoading}
+              onValueChange={setCity}
+              value={city}
+              key={city}
+            >
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>
               <SelectContent>
@@ -365,7 +373,10 @@ const AdminDashBoard = () => {
                 </p>
                 <div className="w-3 h-3 rounded-full ml-2 bg-[#2AC055]"></div>
               </div>
-              <button onClick={()=> navigate("/admin/order")} className="flex gap-2 items-center">
+              <button
+                onClick={() => navigate("/admin/order")}
+                className="flex gap-2 items-center"
+              >
                 <span className="font-inter font-semibold text-[#738DE3]">
                   Manage orders
                 </span>

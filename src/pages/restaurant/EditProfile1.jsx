@@ -868,7 +868,6 @@ const EditProfile1 = ({
   getRestaurant,
 }) => {
   const navigate = useNavigate();
-  const [cities, setCities] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(EditProfileSchema1),
@@ -890,7 +889,6 @@ const EditProfile1 = ({
       deliveryTime: "",
       samePhoneNumber: false,
       receiveUpdate: false,
-      cityId:""
     },
   });
 
@@ -933,7 +931,6 @@ const EditProfile1 = ({
         restaurantEmail: basicInfo?.email || "",
         addressLine: location?.addressLine || "",
         city: location?.city || "",
-        cityId: assignedCityId || "",
         state: location?.state || "",
         pinCode: location?.pinCode || "",
         latitude: location?.coordinates?.[1] || location?.latitude || "",
@@ -1048,31 +1045,6 @@ const EditProfile1 = ({
     }
   };
 
-  const {
-    res: fetchCitiesRes,
-    fetchData: fetchCities,
-    isLoading: isCitiesLoading,
-  } = useGetApiReq();
-
-  const getCities = () => {
-    fetchCities("/availableCities/get-all");
-  };
-
-  useEffect(() => {
-    getCities();
-  }, []);
-
-  useEffect(() => {
-    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
-      console.log("fetchCitiesRes", fetchCitiesRes);
-      setCities(fetchCitiesRes?.data?.cities || []);
-      console.log(
-        "res?.data?.data?.subAdmin?.city",
-        res?.data?.data?.subAdmin?.city,
-      );
-    }
-  }, [fetchCitiesRes]);
-
   const { res, fetchData, isLoading } = usePostApiReq();
   const {
     res: verifyPhoneRes,
@@ -1119,7 +1091,6 @@ const EditProfile1 = ({
         idProof: "path_to_id_proof",
         sameAsRestaurantPhone: data.samePhoneNumber,
       },
-      cityId: data.cityId,
     };
 
     if (restaurant) {
@@ -1731,45 +1702,6 @@ const EditProfile1 = ({
                             className="placeholder:text-[#667085] placeholder:font-inter"
                             {...field}
                           />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name="cityId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className=" text-[#344054] font-inter">
-                          Select City
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            key={field.value}
-                          >
-                            <SelectTrigger disabled={isCitiesLoading}>
-                              <SelectValue placeholder="Select City" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                {cities.map((city) => (
-                                  <SelectItem
-                                    key={city?._id}
-                                    value={city?._id}
-                                    className="capitalize"
-                                  >
-                                    {city.city}
-                                  </SelectItem>
-                                ))}
-                                {cities.length === 0 && (
-                                  <DataNotFound name="Cities" />
-                                )}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

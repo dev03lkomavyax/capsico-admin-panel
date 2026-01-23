@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,13 +24,16 @@ const DeliveryCharges = () => {
   const [deliveryCharges, setDeliveryCharges] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
+  const userInfo = readCookie("userInfo");
 
   const handleAdd = () => {
     navigate("/admin/delivery-charges/add");
   };
 
   const getDeliveryCharges = () => {
-    fetchData(`/delivery-charges/get?page=${page}&limit=${LIMIT}`);
+    fetchData(
+      `/delivery-charges/get?page=${page}&limit=${LIMIT}&city=${userInfo.city || ""}`,
+    );
   };
 
   useEffect(() => {
@@ -50,7 +54,7 @@ const DeliveryCharges = () => {
       <section>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-[#000000] text-xl font-medium font-roboto">
-            Delivery Charges Citywise
+            Delivery Charges
           </h2>
           <Button onClick={handleAdd} variant="capsico" size="lg">
             <Plus className="h-4 w-4" />

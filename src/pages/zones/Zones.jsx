@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import DataNotFound from "@/components/DataNotFound";
+import ReactPagination from "@/components/pagination/ReactPagination";
+import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -7,33 +11,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import { FaPlus } from "react-icons/fa6";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import Zone from "@/components/zones/Zone";
-import Spinner from "@/components/Spinner";
-import DataNotFound from "@/components/DataNotFound";
-import ReactPagination from "@/components/pagination/ReactPagination";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
+import { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const Zones = () => {
+  const userInfo = readCookie("userInfo")
   const [zones, setZones] = useState([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [totalPage, setTotalPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
-  const [filterCity, setFilterCity] = useState("");
+  const [filterCity, setFilterCity] = useState(userInfo?.city || "");
   const [cities, setCities] = useState([]);
+
+  console.log("userInfo", userInfo);
+  
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const {
@@ -54,6 +58,7 @@ const Zones = () => {
     if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
       console.log("fetchCitiesRes", fetchCitiesRes);
       setCities(fetchCitiesRes?.data?.cities || []);
+      setFilterCity(userInfo?.city || "")
     }
   }, [fetchCitiesRes]);
 
@@ -85,7 +90,7 @@ const Zones = () => {
             Zones
           </h2>
           <div className="flex gap-5 items-center">
-            <Select onValueChange={(v) => setFilterCity(v)} value={filterCity}>
+            <Select disabled={userInfo?.role === "subAdmin"} onValueChange={(v) => setFilterCity(v)} value={filterCity}>
               <SelectTrigger disabled={isCitiesLoading}>
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>

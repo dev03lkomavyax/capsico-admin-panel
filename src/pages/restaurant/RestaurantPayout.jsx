@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import DatePicker from "@/components/DatePicker";
 import toast from "react-hot-toast";
+import { readCookie } from "@/utils/readCookie";
 
 const RestaurantPayout = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const RestaurantPayout = () => {
   // Optional (for Custom)
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const userInfo = readCookie("userInfo");
 
   const handleExort = () => {
     setIsModalOpen(true);
@@ -49,6 +51,7 @@ const RestaurantPayout = () => {
         startDate,
         endDate,
       }),
+      cityId: userInfo.city || "",
     });
 
     fetchData(

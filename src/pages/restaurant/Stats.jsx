@@ -1,5 +1,6 @@
 import useGetApiReq from "@/hooks/useGetApiReq";
 import { cn } from "@/lib/utils";
+import { readCookie } from "@/utils/readCookie";
 import React, { useEffect, useState } from "react";
 import { BiCheckShield } from "react-icons/bi";
 import { PiShoppingCartSimple } from "react-icons/pi";
@@ -10,12 +11,13 @@ const Stats = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [statsData, setStatsData] = useState("");
+  const userInfo = readCookie("userInfo")
 
   const { res, fetchData } = useGetApiReq();
 
   const getAllOrder = () => {
     fetchData(
-      `/admin/restaurant/dashboard-summary?restaurantId=${params?.restaurantId}`
+      `/admin/restaurant/dashboard-summary?restaurantId=${params?.restaurantId}&cityId=${userInfo?.city || ""}`,
     );
   };
 

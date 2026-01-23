@@ -24,6 +24,7 @@ import Spinner from "@/components/Spinner";
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import { ChevronLeftIcon } from "lucide-react";
 import ReactPagination from "@/components/pagination/ReactPagination";
+import { readCookie } from "@/utils/readCookie";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const RecentOrders = () => {
   const [capsicoOrderData, setCapsicoOrderData] = useState([]);
   const [status, setStatus] = useState("all");
   const params = useParams();
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
@@ -41,7 +43,7 @@ const RecentOrders = () => {
     fetchData(
       `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&restaurantId=${
         params?.restaurantId
-      }&status=${status === "all" ? "" : status}`
+      }&status=${status === "all" ? "" : status}&cityId=${userInfo?.city || ""}`,
     );
   };
 

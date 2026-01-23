@@ -13,11 +13,13 @@ import useGetApiReq from "@/hooks/useGetApiReq";
 import usePutApiReq from "@/hooks/usePutApiReq";
 import Spinner from "../Spinner";
 import toast from "react-hot-toast";
+import { readCookie } from "@/utils/readCookie";
 
 const DeliveryPartnerDialog = ({ open, setOpen, zoneId }) => {
   const [partners, setPartners] = useState([]);
   const [selected, setSelected] = useState([]); // array for multi-select
   const [deselected, setDeselected] = useState([]);
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const {
@@ -27,12 +29,11 @@ const DeliveryPartnerDialog = ({ open, setOpen, zoneId }) => {
   } = usePutApiReq();
 
   useEffect(() => {
-    fetchData(`/zones/get-partners`);
+    fetchData(`/zones/get-partners?cityId=${userInfo.city || ""}`);
   }, []);
 
   console.log("selected", selected);
   console.log("deselected", deselected);
-  
 
   useEffect(() => {
     if (res?.status === 200 || res?.status === 201) {
@@ -47,7 +48,6 @@ const DeliveryPartnerDialog = ({ open, setOpen, zoneId }) => {
       setPartners(data);
     }
   }, [res]);
-
 
   const handleToggle = (id, wasChecked) => {
     if (wasChecked) {
@@ -73,7 +73,6 @@ const DeliveryPartnerDialog = ({ open, setOpen, zoneId }) => {
       zoneId,
     });
   };
-
 
   useEffect(() => {
     if (submitRes?.status === 200 || submitRes?.status === 201) {

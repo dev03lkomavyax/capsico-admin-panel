@@ -58,7 +58,7 @@ const StatusList = () => {
         }
 
         fetchData(
-            `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${status}&cityId=${userInfo.city}`
+            `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${status}&cityId=${userInfo.city || ""}`
         );
     };
 

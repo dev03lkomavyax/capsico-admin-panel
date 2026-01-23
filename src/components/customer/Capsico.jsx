@@ -23,6 +23,7 @@ import {
   TableRow
 } from "../ui/table";
 import Customer from "./Customer";
+import { readCookie } from "@/utils/readCookie";
 
 const Capsico = ({ setCapsicoCustomers }) => {
   const [customerData, setCustomerData] = useState([]);
@@ -30,12 +31,13 @@ const Capsico = ({ setCapsicoCustomers }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [filterByDate, setFilterByDate] = useState("all");
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getAllCustomer = () => {
     fetchData(
-      `/admin/get-all-customers?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}`
+      `/admin/get-all-customers?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&cityId=${userInfo.city || ""}`,
     );
   };
 

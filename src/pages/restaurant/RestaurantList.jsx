@@ -47,7 +47,7 @@ const RestaurantList = () => {
     fetchData(
       `/admin/get-restaurants?page=${page}&search=${searchQuery}&status=${
         status === "all" ? "" : status
-      }&dateFilter=${filterByDate}&cityId=${userInfo?.city}`,
+      }&dateFilter=${filterByDate}&cityId=${userInfo?.city || ""}`,
     );
   }, [page, searchQuery, status, filterByDate]);
 

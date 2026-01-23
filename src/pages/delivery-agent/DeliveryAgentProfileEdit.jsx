@@ -1,11 +1,10 @@
 import call from "@/assets/call.png";
 import edit from "@/assets/edit.png";
-import avatar from "@/assets/Image-198.png";
 import location from "@/assets/location.png";
 import sms from "@/assets/sms.png";
-import { useEffect, useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate, useParams } from "react-router-dom";
+import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -15,25 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { DeliveryAgentProfileSchema } from "@/schema/DeliveryAgentProfileSchema";
-import { MdCancel } from "react-icons/md";
-import { updatePreview } from "@/utils/updatePreview";
-import { PiCameraPlus } from "react-icons/pi";
-import { format } from "date-fns";
-import { CalendarIcon, EditIcon, User } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import useGetApiReq from "@/hooks/useGetApiReq";
-import usePatchApiReq from "@/hooks/usePatchApiReq";
 import {
   Select,
   SelectContent,
@@ -42,8 +27,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import usePatchApiReq from "@/hooks/usePatchApiReq";
+import { cn } from "@/lib/utils";
+import { DeliveryAgentProfileSchema } from "@/schema/DeliveryAgentProfileSchema";
+import { updatePreview } from "@/utils/updatePreview";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon, EditIcon, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoIosArrowBack } from "react-icons/io";
+import { MdCancel } from "react-icons/md";
+import { PiCameraPlus } from "react-icons/pi";
+import { useNavigate, useParams } from "react-router-dom";
 import UpdateAddressModal from "./UpdateAddressModal";
-import DataNotFound from "@/components/DataNotFound";
 
 const DeliveryAgentProfileEdit = () => {
   const navigate = useNavigate();
@@ -141,11 +139,11 @@ const DeliveryAgentProfileEdit = () => {
     setValue(
       "userImagePreview",
       deliveryPartnerDetailsData?.personalInfo?.profileImage &&
-        `${deliveryPartnerDetailsData?.personalInfo?.profileImage}`
+        `${deliveryPartnerDetailsData?.personalInfo?.profileImage}`,
     );
     setValue(
       "dateOfBirth",
-      personalInfo?.dateOfBirth && new Date(personalInfo?.dateOfBirth)
+      personalInfo?.dateOfBirth && new Date(personalInfo?.dateOfBirth),
     );
     setValue("gender", personalInfo?.gender);
     setValue("address", address);
@@ -155,27 +153,27 @@ const DeliveryAgentProfileEdit = () => {
     setValue(
       "DLExpiry",
       documents?.drivingLicense?.expiryDate &&
-        new Date(documents?.drivingLicense?.expiryDate)
+        new Date(documents?.drivingLicense?.expiryDate),
     );
     setValue("panCardNumber", documents?.panCard?.number);
     setValue("accountNumber", bankDetails?.accountNumber);
     setValue(
       "aadharFrontPreview",
       documents?.aadharCard?.image?.front &&
-        `${documents?.aadharCard?.image?.front}`
+        `${documents?.aadharCard?.image?.front}`,
     );
     setValue(
       "aadharBackPreview",
       documents?.aadharCard?.image?.front &&
-        `${documents?.aadharCard?.image?.back}`
+        `${documents?.aadharCard?.image?.back}`,
     );
     setValue(
       "drivingLicenseImagePreview",
-      documents?.drivingLicense?.image && `${documents?.drivingLicense?.image}`
+      documents?.drivingLicense?.image && `${documents?.drivingLicense?.image}`,
     );
     setValue(
       "panCardPreview",
-      documents?.panCard?.image && `${documents?.panCard?.image}`
+      documents?.panCard?.image && `${documents?.panCard?.image}`,
     );
     setValue("bankName", bankDetails?.bankName);
     setValue("currentStatus", accountStatus?.currentStatus);
@@ -183,7 +181,6 @@ const DeliveryAgentProfileEdit = () => {
     setValue("IFSCcode", bankDetails?.ifscCode);
     setValue("upiId", bankDetails?.upiId);
     setValue("accountHolderName", bankDetails?.accountHolderName);
-    setValue("cityId", assignedCityId);
   }, [deliveryPartnerDetailsData]);
 
   console.log("getValues", getValues());
@@ -216,28 +213,28 @@ const DeliveryAgentProfileEdit = () => {
     panCard,
   ]);
 
-   const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState([]);
 
   const {
-      res: fetchCitiesRes,
-      fetchData: fetchCities,
-      isLoading: isCitiesLoading,
-    } = useGetApiReq();
-  
-    const getCities = () => {
-      fetchCities("/availableCities/get-all");
-    };
-  
-    useEffect(() => {
-      getCities();
-    }, []);
+    res: fetchCitiesRes,
+    fetchData: fetchCities,
+    isLoading: isCitiesLoading,
+  } = useGetApiReq();
 
-    useEffect(() => {
-      if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
-        console.log("fetchCitiesRes", fetchCitiesRes);
-        setCities(fetchCitiesRes?.data?.cities || []);
-      }
-    }, [fetchCitiesRes]);
+  const getCities = () => {
+    fetchCities("/availableCities/get-all");
+  };
+
+  useEffect(() => {
+    getCities();
+  }, []);
+
+  useEffect(() => {
+    if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      setCities(fetchCitiesRes?.data?.cities || []);
+    }
+  }, [fetchCitiesRes]);
 
   const onSubmit = (data) => {
     console.log("data", data);
@@ -296,7 +293,6 @@ const DeliveryAgentProfileEdit = () => {
       formData.append("aadharFrontImage", data.aadharFront[0]);
     data.aadharBack && formData.append("aadharBackImage", data.aadharBack[0]);
     data.panCard && formData.append("panCardImage", data.panCard[0]);
-    data.cityId && formData.append("cityId", data.cityId);
 
     fetchData1(`/admin/update-profile/${deliveryAgentId}`, formData);
   };
@@ -699,46 +695,6 @@ const DeliveryAgentProfileEdit = () => {
                           </span>
                         </p>
                       )}
-
-                      <FormField
-                        control={control}
-                        name="cityId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className=" text-[#344054] font-inter">
-                              Select City
-                            </FormLabel>
-                            <FormControl>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                                key={field.value}
-                              >
-                                <SelectTrigger disabled={isCitiesLoading}>
-                                  <SelectValue placeholder="Select City" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    {cities.map((city) => (
-                                      <SelectItem
-                                        key={city?._id}
-                                        value={city?._id}
-                                        className="capitalize"
-                                      >
-                                        {city.city}
-                                      </SelectItem>
-                                    ))}
-                                    {cities.length === 0 && (
-                                      <DataNotFound name="Cities" />
-                                    )}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                     </div>
                   </div>
                 </div>

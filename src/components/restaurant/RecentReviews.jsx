@@ -4,16 +4,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import DataNotFound from "../DataNotFound";
 import SingleReview from "./SingleReview";
 import Review from "../reviews/Review";
+import { readCookie } from "@/utils/readCookie";
 
 const RecentReviews = () => {
   const [reveiwData, setReveiwData] = useState([]);
   const params = useParams();
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getAllReviews = () => {
-    fetchData(`/restaurant/reviews/${params?.restaurantId}`);
+    fetchData(
+      `/restaurant/reviews/${params?.restaurantId}?cityId=${userInfo?.city || ""}`,
+    );
   };
 
   useEffect(() => {
