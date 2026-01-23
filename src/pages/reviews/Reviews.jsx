@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select"
 import { LIMIT } from "@/constants/constants"
 import useGetApiReq from "@/hooks/useGetApiReq"
+import { readCookie } from "@/utils/readCookie"
 import { useEffect, useState } from "react"
 import { BsSearch } from "react-icons/bs"
 
@@ -26,12 +27,13 @@ const Reviews = () => {
     const [reviews, setReviews] = useState([]);
     const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
+    const userInfo = readCookie("userInfo");
 
     const { res, fetchData, isLoading } = useGetApiReq();
     
       const getAllReviews = () => {
         fetchData(
-          `/admin/get-reviews?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&sortBy=${ratingSort}&ratingType=${status}`
+          `/admin/get-reviews?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${dateFilter}&sortBy=${ratingSort}&ratingType=${status}&cityId=${userInfo.city || ""}`,
         );
       };
     

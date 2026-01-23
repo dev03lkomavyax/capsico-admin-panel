@@ -16,6 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EarningTable from "./earning/EarningTable";
 import ExportDeliveryAgentPayout from "./earning/ExportDeliveryAgentPayout";
 import PayoutTable from "./PayoutTable";
+import { readCookie } from "@/utils/readCookie";
 
 const DeliveryAgentPayoutDetails = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const DeliveryAgentPayoutDetails = () => {
   const [earnings, setEarnings] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [range, setRange] = useState("Monthly");
-
+  const userInfo = readCookie("userInfo");
   // Optional (for Custom)
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -47,6 +48,7 @@ const DeliveryAgentPayoutDetails = () => {
         startDate,
         endDate,
       }),
+      cityId: userInfo.city || "",
     });
 
     fetchData(

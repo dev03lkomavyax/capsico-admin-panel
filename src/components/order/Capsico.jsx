@@ -257,7 +257,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
     fetchData(
       `/admin/get-all-orders?searchQuery=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&status=${
         status === "all" ? "" : status
-      }&cityId=${userInfo?.city}`,
+      }&cityId=${userInfo?.city || ""}`,
       {
         reportCrash: true,
         screenName: "ORDER_GET",

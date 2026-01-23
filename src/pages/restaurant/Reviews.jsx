@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
 import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { MdKeyboardArrowLeft } from "react-icons/md";
@@ -65,12 +66,15 @@ function Reviews() {
   const [ratingSort, setRatingSort] = useState("latest");
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const { restaurantId } = useParams();
 
   const getAllReviews = () => {
-    fetchData(`/restaurant/reviews/${restaurantId}`);
+    fetchData(
+      `/restaurant/reviews/${restaurantId}?cityId=${userInfo?.city || ""}`,
+    );
   };
 
   useEffect(() => {

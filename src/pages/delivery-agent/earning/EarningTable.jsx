@@ -21,6 +21,7 @@ import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { EarningRow } from "./EarningRow";
+import { readCookie } from "@/utils/readCookie";
 
 const EarningTable = () => {
   const params = useParams();
@@ -36,7 +37,7 @@ const EarningTable = () => {
   });
 
   console.log("filters", filters);
-
+ const userInfo = readCookie("userInfo");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [meta, setMeta] = useState(null);
@@ -50,6 +51,7 @@ const EarningTable = () => {
         limit: 10,
         sortBy: "createdAt",
         sortOrder: "desc",
+        cityId: userInfo.city || "",
       },
     });
   };

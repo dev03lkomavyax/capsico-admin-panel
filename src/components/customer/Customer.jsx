@@ -37,24 +37,28 @@ const Customer = ({ item, getAllCustomer }) => {
     <>
       <TableRow>
         <TableCell className="w-10">
-            <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
+          <Checkbox className="border-[1px] border-[#E9E9EA] bg-[#F7F8FA] w-6 h-6" />
         </TableCell>
         <TableCell className="text-[#1D1929] text-xs whitespace-nowrap font-normal font-sans">
           {item?.customUserId || "N/A"}
         </TableCell>
         <TableCell className="text-[#1D1929] capitalize text-xs font-bold font-sans">
-          {item?.name || "N/A"}
+          <p className="w-20">{item?.name || "N/A"}</p>
         </TableCell>
         <TableCell className="text-[#1D1929] capitalize text-xs font-bold font-sans">
           {item?.otp || "No OTP"}
         </TableCell>
         <TableCell className="text-[#1D1929] text-[10px] font-normal font-sans">
-          {item?.createdAt ? format(new Date(item.createdAt), "dd/MM/yyyy"):"N/A"}
-        </TableCell>
-        <TableCell className="text-[#1D1929] text-[12px] whitespace-nowrap font-normal font-roboto">
-          {item?.addresses?.[0]
-            ? `${item?.addresses?.[0]?.addressLine}, ${item?.addresses?.[0]?.city}, ${item?.addresses?.[0]?.state}, ${item?.addresses?.[0]?.pinCode}`
+          {item?.createdAt
+            ? format(new Date(item.createdAt), "dd/MM/yyyy")
             : "N/A"}
+        </TableCell>
+        <TableCell className="text-[#1D1929] text-[12px] font-normal font-roboto">
+          <p className="w-60">
+            {item?.addresses?.[0]
+              ? `${item?.addresses?.[0]?.addressLine}, ${item?.addresses?.[0]?.city}, ${item?.addresses?.[0]?.state}, ${item?.addresses?.[0]?.pinCode}`
+              : "N/A"}
+          </p>
         </TableCell>
         <TableCell className="text-[#667085] text-[10px] font-semibold whitespace-nowrap font-inter">
           {item?.totalSpent ? `Rs. ${item.totalSpent}` : "N/A"}

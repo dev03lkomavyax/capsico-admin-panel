@@ -6,20 +6,9 @@ import SalesChart2 from "@/components/restaurant/SalesChart2";
 import UpdateBannerModal from "@/components/restaurant/UpdateBannerModal";
 import UpdateLogoModal from "@/components/restaurant/UpdateLogoModal";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useState } from "react";
-import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 // import { useNavigate, useParams } from "react-router-dom";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import Stats from "./Stats";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,59 +17,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { MenuIcon } from "lucide-react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import Stats from "./Stats";
 import UpdateCustomCommissionModal from "./UpdateCustomCommissionModal";
-import UpdateRestaurantGSTModal from "./UpdateRestaurantGSTModal";
 import UpdateCustomRestaurantCommissionModal from "./UpdateCustomRestaurantCommissionModal";
-
-const data2 = [
-  {
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    sales: "2345",
-    amount: "121.00",
-    price: "Paypall",
-  },
-  {
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    sales: "2345",
-    amount: "121.00",
-    price: "Paypall",
-  },
-  {
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    sales: "2345",
-    amount: "121.00",
-    price: "Paypall",
-  },
-  {
-    product: {
-      image: "",
-      name: "ABCD name",
-    },
-    sales: "2345",
-    amount: "121.00",
-    price: "Paypall",
-  },
-];
+import UpdateRestaurantGSTModal from "./UpdateRestaurantGSTModal";
 
 const RestaurantDashborad = () => {
-  const [selectTab, setselectTab] = useState("All Time");
-  const [menuData, setMenuData] = useState(data2);
   const [isUpdateBannerModalOpen, setIsUpdateBannerModalOpen] = useState(false);
   const [isUpdateLogoModalOpen, setIsUpdateLogoModalOpen] = useState(false);
   const [isAddCommissionModalOpen, setIsAddCommissionModalOpen] =
@@ -91,9 +41,6 @@ const RestaurantDashborad = () => {
 
   const navigate = useNavigate();
   const params = useParams();
-
-  const location = useLocation(); //
-  const isViewMode = location.state?.mode === "view";
 
   return (
     <AdminWrapper>
@@ -163,7 +110,7 @@ const RestaurantDashborad = () => {
                     <DropdownMenuItem
                       onClick={() =>
                         navigate(
-                          `/admin/restaurant/${params?.restaurantId}/inventory`
+                          `/admin/restaurant/${params?.restaurantId}/inventory`,
                         )
                       }
                     >
@@ -174,7 +121,7 @@ const RestaurantDashborad = () => {
                     <DropdownMenuItem
                       onClick={() =>
                         navigate(
-                          `/admin/restaurant/${params?.restaurantId}/menu`
+                          `/admin/restaurant/${params?.restaurantId}/menu`,
                         )
                       }
                     >
@@ -257,7 +204,7 @@ const RestaurantDashborad = () => {
           <SalesChart2 />
         </div>
         <div className="flex flex-col gap-3">
-            <RecentReviews />
+          <RecentReviews />
         </div>
 
         {isUpdateGstModalOpen && (

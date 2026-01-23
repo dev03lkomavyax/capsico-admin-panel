@@ -17,9 +17,11 @@ import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PayoutBasicDetailsCard from "./PayoutBasicDetailsCard";
+import { readCookie } from "@/utils/readCookie";
 
 const DeliveryAgentDetails = () => {
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo");
 
   const [deliveryPartnerDetailsData, setDeliveryPartnerDetailsData] =
     useState("");
@@ -54,11 +56,11 @@ const DeliveryAgentDetails = () => {
 
   const getDeliveryHistory = () => {
     fetchData1(
-      `/admin/get-delivery-history/${deliveryAgentId}?page=${page}&limit=${LIMIT}`,
+      `/admin/get-delivery-history/${deliveryAgentId}?page=${page}&limit=${LIMIT}&cityId=${userInfo.city || ""}`,
       {
         reportCrash: true,
         screenName: "DELIVERY_EXECUTIVE_HISTORY_GET",
-      }
+      },
     );
   };
 

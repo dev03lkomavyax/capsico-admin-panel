@@ -35,8 +35,5 @@ export const DeliveryAgentProfileSchema = z.object({
   upiId: z.string().optional(),
   accountHolderName: z.string().optional(),
   panCardNumber: z.string().optional(),
-  cityId: z.string().min(1, {
-    message: "City Id is required",
-  }),
   //   maximumSecurityDeposit: z.string(),
 });

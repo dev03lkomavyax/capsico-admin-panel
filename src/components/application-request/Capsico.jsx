@@ -24,6 +24,7 @@ import SingleRestaurantReq from "./SingleRestaurantReq";
 import { LIMIT } from "@/constants/constants";
 import SingleRestaurantReqSkeleton from "./SingleRestaurantReqSkeleton";
 import DataNotFound from "../DataNotFound";
+import { readCookie } from "@/utils/readCookie";
 
 const Capsico = ({ setCapsicoReqNos }) => {
   const [restaurantRequests, setRestaurantRequests] = useState([]);
@@ -31,12 +32,13 @@ const Capsico = ({ setCapsicoReqNos }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [filterByDate, setFilterByDate] = useState("today");
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getRestaurantRequests = () => {
     fetchData(
-      `/admin/get-unapproved-restaurants?search=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}`
+      `/admin/get-unapproved-restaurants?search=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&cityId=${userInfo.city || ""}`,
     );
   };
 

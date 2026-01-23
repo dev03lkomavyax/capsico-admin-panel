@@ -78,7 +78,7 @@ export const AddSubAdminSchema = z.object({
 export const EditSubAdminSchema = z.object({
   position: z.string().min(1, "Position is required"),
   name: z.string().min(1, "Name is required"),
-  cityName: z.string().min(1, "CityName is required"),
+  // cityName: z.string().min(1, "CityName is required"),
   city: z.string().min(1, "City is required"),
   phoneNumber: z
     .string()

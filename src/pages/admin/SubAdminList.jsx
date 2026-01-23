@@ -1,4 +1,3 @@
-
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 import DataNotFound from "@/components/DataNotFound";
 import ReactPagination from "@/components/pagination/ReactPagination";
@@ -10,10 +9,11 @@ import {
   TableBody,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { LIMIT } from "@/constants/constants";
 import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,10 +23,13 @@ const SubAdminList = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo");
 
   // Fetch admin list
   const getAllSubadmins = () => {
-    fetchData(`/admin/get-all-subadmin?page=${page}&limit=${LIMIT}`);
+    fetchData(
+      `/admin/get-all-subadmin?page=${page}&limit=${LIMIT}&cityId=${userInfo.city || ""}`,
+    );
   };
 
   useEffect(() => {
@@ -76,21 +79,21 @@ const SubAdminList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subAdminList.length > 0 ? (
-                subAdminList.map((subadmin) => (
-                  <Subadmin
-                    key={subadmin._id}
-                    subadmin={subadmin}
-                    getAllSubadmins={getAllSubadmins}
-                  />
-                ))
-              ) : (
-                !isLoading && (
-                  <TableRow>
-                    <td colSpan={9}><DataNotFound name="Sub Admins" /></td>
-                  </TableRow>
-                )
-              )}
+              {subAdminList.length > 0
+                ? subAdminList.map((subadmin) => (
+                    <Subadmin
+                      key={subadmin._id}
+                      subadmin={subadmin}
+                      getAllSubadmins={getAllSubadmins}
+                    />
+                  ))
+                : !isLoading && (
+                    <TableRow>
+                      <td colSpan={9}>
+                        <DataNotFound name="Sub Admins" />
+                      </td>
+                    </TableRow>
+                  )}
             </TableBody>
           </Table>
           {isLoading && <Spinner />}
@@ -102,23 +105,6 @@ const SubAdminList = () => {
 };
 
 export default SubAdminList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
 // import DataNotFound from "@/components/DataNotFound";

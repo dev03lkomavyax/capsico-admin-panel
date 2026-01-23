@@ -6,6 +6,7 @@ import ReactPagination from "../pagination/ReactPagination";
 import { LIMIT } from "@/constants/constants";
 import Spinner from "../Spinner";
 import DataNotFound from "../DataNotFound";
+import { readCookie } from "@/utils/readCookie";
 
 const CustomerOrders = () => {
     const [customerOrders, setCustomerOrders] = useState([]);
@@ -13,9 +14,12 @@ const CustomerOrders = () => {
     const [page, setPage] = useState(1);
     const { customerId } = useParams();
     const { res, fetchData, isLoading } = useGetApiReq();
+    const userInfo = readCookie("userInfo");
 
     const getCustomerOrders = () => {
-        fetchData(`/admin/get-customer-orders/${customerId}?page=${page}&limit=${LIMIT}`);
+        fetchData(
+          `/admin/get-customer-orders/${customerId}?page=${page}&limit=${LIMIT}&cityId=${userInfo.city || ""}`,
+        );
     };
 
     useEffect(() => {

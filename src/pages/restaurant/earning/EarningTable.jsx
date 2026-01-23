@@ -21,9 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { readCookie } from "@/utils/readCookie";
 
 const EarningTable = () => {
   const navigate = useNavigate();
+  const userInfo = readCookie("userInfo");
   const params = useParams();
   const [data, setData] = useState([]);
 
@@ -44,13 +46,14 @@ const EarningTable = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const fetchLedger = async () => {
-    fetchData("/payout/earning-ledger", {
+    fetchData(`/payout/earning-ledger`, {
       params: {
         ...filters,
         page,
         limit: 10,
         sortBy: "createdAt",
         sortOrder: "desc",
+        cityId:userInfo.city || ""
       },
     });
   };

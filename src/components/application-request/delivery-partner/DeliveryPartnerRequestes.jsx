@@ -24,6 +24,7 @@ import DataNotFound from "@/components/DataNotFound";
 import ReactPagination from "@/components/pagination/ReactPagination";
 import DeliveryPartnerReq from "./DeliveryPartnerReq";
 import DeliveryReqSkeleton from "./DeliveryReqSkeleton";
+import { readCookie } from "@/utils/readCookie";
 
 const DeliveryPartnerRequestes = ({ setCapsicoReqNos = () => {} }) => {
   const [deliveryPartnerRequests, setDeliveryPartnerRequests] = useState([]);
@@ -31,12 +32,13 @@ const DeliveryPartnerRequestes = ({ setCapsicoReqNos = () => {} }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [filterByDate, setFilterByDate] = useState("today");
+  const userInfo = readCookie("userInfo");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getRestaurantRequests = () => {
     fetchData(
-      `/admin/get-unapproved-delivery-partner?search=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}`
+      `/admin/get-unapproved-delivery-partner?search=${searchQuery}&page=${page}&limit=${LIMIT}&dateFilter=${filterByDate}&cityId=${userInfo.city || ""}`,
     );
   };
 
@@ -137,7 +139,7 @@ const DeliveryPartnerRequestes = ({ setCapsicoReqNos = () => {} }) => {
         </Table>
 
         {deliveryPartnerRequests?.length === 0 && !isLoading && (
-          <DataNotFound name="Restaurant Requests" />
+          <DataNotFound name="Delivery Partner Requests" />
         )}
       </div>
 
