@@ -24,15 +24,19 @@ import {
 } from "@/components/ui/select";
 import DataNotFound from "@/components/DataNotFound";
 import { Button } from "@/components/ui/button";
+import { readCookie } from "@/utils/readCookie";
 
 const Metric = () => {
   const [statsData, setStatsData] = useState("");
   const [cities, setCities] = useState([]);
-  const [city, setCity] = useState("");
-  
-   const handleReset = () => {
-     setCity("");
-   };
+
+  const userInfo = readCookie("userInfo");
+
+  const [city, setCity] = useState(userInfo?.city || "");
+
+  const handleReset = () => {
+    setCity("");
+  };
 
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
@@ -64,7 +68,7 @@ const Metric = () => {
 
   useEffect(() => {
     fetchData(
-      `/admin/dashboard-summary?range=${range}&revenueGraphRange=${revenueGraphRange}&cityId=${city}`
+      `/admin/dashboard-summary?range=${range}&revenueGraphRange=${revenueGraphRange}&cityId=${city}`,
     );
   }, [revenueGraphRange, range, city]);
 
@@ -83,8 +87,12 @@ const Metric = () => {
             Metrics
           </h1>
           <div className="flex gap-5 items-center">
-            <Select onValueChange={setCity} value={city}>
-              <SelectTrigger className="w-40" disabled={isCitiesLoading}>
+            <Select
+              disabled={userInfo?.role === "subAdmin" || isCitiesLoading}
+              onValueChange={setCity}
+              value={city}
+            >
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>
               <SelectContent>

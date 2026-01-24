@@ -21,6 +21,7 @@ import {
   Cell,
 } from "recharts";
 import { fillMissingBuckets } from "./utils";
+import { readCookie } from "@/utils/readCookie";
 
 /* =======================
    CONSTANTS
@@ -90,6 +91,7 @@ const Graphs = () => {
     commission: "line",
     onTimeDelivery: "line",
   });
+  const userInfo = readCookie("userInfo");
 
   const toggleChart = (key) => {
     setChartType((prev) => ({
@@ -101,7 +103,9 @@ const Graphs = () => {
   const { res, fetchData, isLoading } = useGetApiReq();
 
   useEffect(() => {
-    fetchData(`/admin/dashboard-graphs?range=${range}`);
+    fetchData(
+      `/admin/dashboard-graphs?range=${range}&cityId=${userInfo.city || ""}`,
+    );
   }, [range]);
 
   useEffect(() => {
@@ -129,11 +133,11 @@ const Graphs = () => {
       onTimeDelivery: transformGraphData(
         graphs.onTimeDelivery,
         range,
-        "onTimePercentage"
+        "onTimePercentage",
       ),
       cityPerformance: graphs.cityPerformance || [],
     }),
-    [graphs, range]
+    [graphs, range],
   );
 
   /* =======================

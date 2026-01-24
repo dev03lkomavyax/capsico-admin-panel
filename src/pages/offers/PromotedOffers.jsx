@@ -1,5 +1,15 @@
 import AdminWrapper from "@/components/admin-wrapper/AdminWrapper";
-import React, { useEffect, useState } from "react";
+import DataNotFound from "@/components/DataNotFound";
+import PromotedOfferComp from "@/components/offers/PromotedOfferComp";
+import ReactPagination from "@/components/pagination/ReactPagination";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -7,22 +17,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import DataNotFound from "@/components/DataNotFound";
-import ReactPagination from "@/components/pagination/ReactPagination";
-import PromotedOfferComp from "@/components/offers/PromotedOfferComp";
-import useGetApiReq from "@/hooks/useGetApiReq";
 import { LIMIT } from "@/constants/constants";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import useGetApiReq from "@/hooks/useGetApiReq";
+import { readCookie } from "@/utils/readCookie";
 import { ChevronLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const PromotedOffers = () => {
   const [offers, setOffers] = useState([]);
@@ -30,7 +30,8 @@ const PromotedOffers = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [promotionCategory, setPromotionCategory] = useState("all");
   const [priorityLevel, setPriorityLevel] = useState("");
-  const [city, setCity] = useState("");
+  const userInfo = readCookie("userInfo");
+  const [city, setCity] = useState(userInfo.city || "");
   const [cities, setCities] = useState([]);
   const [sortBy, setSortBy] = useState("priorityLevel");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -150,7 +151,7 @@ const PromotedOffers = () => {
             <div>
               <label className="text-sm text-gray-600">City</label>
               <Select value={city} onValueChange={setCity}>
-                <SelectTrigger className="w-[100px]">
+                <SelectTrigger className="w-[150px]">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
@@ -158,7 +159,7 @@ const PromotedOffers = () => {
                   {cities.map((city) => (
                     <SelectItem
                       key={city?._id}
-                      value={city?.city}
+                      value={city?._id}
                       className="capitalize"
                     >
                       {city.city}

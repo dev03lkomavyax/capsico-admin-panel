@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { readCookie } from "@/utils/readCookie";
 
 const Tickets = () => {
   const [page, setPage] = useState(1);
@@ -33,6 +34,8 @@ const Tickets = () => {
   const [status, setStatus] = useState("all");
   const [ticketType, setTicketType] = useState("all");
 
+  const userInfo = readCookie("userInfo");
+
   const { res, fetchData, isLoading } = useGetApiReq();
 
   const getTickets = () => {
@@ -41,7 +44,7 @@ const Tickets = () => {
         priority === "all" ? "" : priority
       }&status=${status === "all" ? "" : status}&ticketType=${
         ticketType === "all" ? "" : ticketType
-      }`
+      }&cityId=${userInfo.city || ""}`,
     );
   };
 
@@ -75,11 +78,16 @@ const Tickets = () => {
           </h2>
           <div className="flex gap-3 items-center">
             <div>
-              <Button title="Refetch Tickets" onClick={getTickets} className="!size-10" size="icon">
+              <Button
+                title="Refetch Tickets"
+                onClick={getTickets}
+                className="!size-10"
+                size="icon"
+              >
                 <RefreshCcw
                   className={cn(
                     "size-5 transition-all",
-                    isLoading && "animate-spin"
+                    isLoading && "animate-spin",
                   )}
                 />
               </Button>

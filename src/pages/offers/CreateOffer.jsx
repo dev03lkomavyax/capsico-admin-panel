@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useGetApiReq from "@/hooks/useGetApiReq";
 import usePostApiReq from "@/hooks/usePostApiReq";
 import { offerSchema } from "@/schema/CreateCouponSchema";
+import { readCookie } from "@/utils/readCookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -82,6 +83,7 @@ const CreateOffer = () => {
 
   console.log("getValues", getValues());
 
+  const userInfo = readCookie("userInfo");
   const { res, fetchData, isLoading } = useGetApiReq();
   const {
     res: itemsRes,
@@ -111,7 +113,9 @@ const CreateOffer = () => {
   } = useGetApiReq();
 
   const getRestaurants = () => {
-    fetchRestaurants(`/admin/get-all-restaurants`);
+    fetchRestaurants(
+      `/admin/get-all-restaurants?cityId=${userInfo.city || ""}`,
+    );
   };
 
   useEffect(() => {
@@ -147,7 +151,7 @@ const CreateOffer = () => {
   }, [res]);
 
   const getCategory = () => {
-    categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`,);
+    categoryFetchData(`/admin/get-categories/${watch("restaurantId")}`);
   };
 
   useEffect(() => {
@@ -194,7 +198,7 @@ const CreateOffer = () => {
 
   const getItemsByRestaurant = () => {
     itemsByRestaurantFetchData(
-      `/admin/get-items-by-restaurantId/${watch("restaurantId")}`
+      `/admin/get-items-by-restaurantId/${watch("restaurantId")}`,
     );
   };
 
