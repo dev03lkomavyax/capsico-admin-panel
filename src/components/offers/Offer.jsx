@@ -43,7 +43,7 @@ const Offer = ({ offer, getOffers }) => {
     startDate,
     endDate,
     description,
-    offerId,
+    _id,
   } = offer;
 
   return (
@@ -176,7 +176,7 @@ const Offer = ({ offer, getOffers }) => {
         <PromoteOffer
           open={isPromoteOfferModalOpen}
           setOpen={setIsPromoteOfferModalOpen}
-          offerId={offerId}
+          offerId={_id}
         />
       )}
     </>

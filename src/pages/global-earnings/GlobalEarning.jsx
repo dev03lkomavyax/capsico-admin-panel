@@ -21,10 +21,12 @@ import useGetApiReq from "@/hooks/useGetApiReq";
 import { useEffect, useState } from "react";
 import { SingleEarning } from "./SingleEarning";
 import ReactPagination from "@/components/pagination/ReactPagination";
+import { readCookie } from "@/utils/readCookie";
 
 const GlobalEarning = () => {
   const [cities, setCities] = useState([]);
-  const [city, setCity] = useState("");
+  const userInfo = readCookie("userInfo");
+  const [city, setCity] = useState(userInfo?.city || "");
   const [earnings, setEarnings] = useState([]);
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
@@ -80,8 +82,12 @@ const GlobalEarning = () => {
             Earnings
           </h1>
           <div className="flex gap-5 items-center">
-            <Select onValueChange={setCity} value={city}>
-              <SelectTrigger className="w-40" disabled={isCitiesLoading}>
+            <Select
+              disabled={userInfo?.role === "subAdmin" || isCitiesLoading}
+              onValueChange={setCity}
+              value={city}
+            >
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>
               <SelectContent>

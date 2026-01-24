@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import DataNotFound from "@/components/DataNotFound";
+import { readCookie } from "@/utils/readCookie";
 
 const Spotlight = () => {
   const [isCreateSpotlightModalOpen, setIsCreateSpotlightModalOpen] =
@@ -38,13 +39,19 @@ const Spotlight = () => {
   const [cityName, setCityName] = useState("");
   const [restaurantId, setRestaurantId] = useState("");
   const [isActive, setIsActive] = useState("");
+  const userInfo = readCookie("userInfo");
+
+  console.log("userInfo", userInfo);
+  
 
   const { res, fetchData, isLoading } = useGetApiReq();
   const { res: fetchRestaurantsRes, fetchData: fetchRestaurants } =
     useGetApiReq();
 
   useEffect(() => {
-    fetchRestaurants(`/admin/get-all-restaurants`);
+    fetchRestaurants(
+      `/admin/get-all-restaurants?cityId=${userInfo.city || ""}`,
+    );
   }, []);
 
   useEffect(() => {
@@ -62,6 +69,7 @@ const Spotlight = () => {
     if (cityName) params.append("cityName", cityName);
     if (restaurantId) params.append("restaurantId", restaurantId);
     if (isActive) params.append("isActive", isActive);
+    if (userInfo?.city) params.append("cityId", userInfo.city || "");
 
     fetchData(`/spotlight/getAllSpotlights?${params.toString()}`);
   };

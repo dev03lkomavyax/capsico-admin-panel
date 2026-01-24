@@ -19,6 +19,7 @@ import {
   TableRow
 } from "../ui/table";
 import Offer from "./Offer";
+import { readCookie } from "@/utils/readCookie";
 
 const AllOffers = () => {
   const [offers, setOffers] = useState([]);
@@ -39,6 +40,7 @@ const AllOffers = () => {
   };
 
   const { res, fetchData, isLoading } = useGetApiReq();
+  const userInfo = readCookie("userInfo");
 
   const {
     res: fetchRestaurantsRes,
@@ -47,7 +49,7 @@ const AllOffers = () => {
   } = useGetApiReq();
 
   const getRestaurants = () => {
-    fetchRestaurants(`/admin/get-all-restaurants`);
+    fetchRestaurants(`/admin/get-all-restaurants?cityId=${userInfo.city || ""}`);
   };
 
   useEffect(() => {
