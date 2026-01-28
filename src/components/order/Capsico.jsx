@@ -224,7 +224,7 @@ const Capsico = ({ setCapsicoOrderNo }) => {
   const [selectOrderTab, setSelectOrderTab] = useState("allOrder");
   const [cities, setCities] = useState([]);
   const userInfo = readCookie("userInfo")
-  const [cityId, setCityId] = useState(userInfo?.city);
+  const [cityId, setCityId] = useState(userInfo?.city || "");
 
   const { res, fetchData, isLoading } = useGetApiReq();
 

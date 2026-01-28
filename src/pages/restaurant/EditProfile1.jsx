@@ -918,8 +918,14 @@ const EditProfile1 = ({
     setIsPhoneNumber2Verified(false);
   }, [phoneNumber2]);
 
-  const { basicInfo, location, partnerDetails, deliveryTime, assignedCityId } =
-    restaurant || {};
+  const {
+    basicInfo,
+    location,
+    partnerDetails,
+    deliveryTime,
+    assignedCityId,
+    foodPreparationTime,
+  } = restaurant || {};
 
   // FIXED: Uncommented and improved the reset function
   useEffect(() => {
@@ -944,6 +950,7 @@ const EditProfile1 = ({
         samePhoneNumber: false,
         receiveUpdate: false,
         deliveryTime: deliveryTime || "",
+        foodPreparationTime: foodPreparationTime || "",
       });
 
       // Set map center and marker position if coordinates exist
@@ -1073,6 +1080,7 @@ const EditProfile1 = ({
         longitude: data.longitude,
       },
       deliveryTime: data.deliveryTime,
+      foodPreparationTime: data.foodPreparationTime,
       address: {
         addressLine: data.addressLine,
         city: data.city,
@@ -1473,6 +1481,31 @@ const EditProfile1 = ({
 
                         <FormDescription className="text-xs text-muted-foreground">
                           Enter estimated delivery time range
+                        </FormDescription>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name="foodPreparationTime"
+                    render={({ field }) => (
+                      <FormItem className="mt-5 w-1/2">
+                        <FormLabel className="text-[#344054] font-inter">
+                          Food Preparation Time (minutes)
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            placeholder="e.g. 20-30 min"
+                            className="placeholder:text-[#667085]"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormDescription className="text-xs text-muted-foreground">
+                          Enter estimated food preparation time range
                         </FormDescription>
 
                         <FormMessage />
