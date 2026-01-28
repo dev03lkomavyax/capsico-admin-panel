@@ -178,6 +178,10 @@ export const EditProfileSchema1 = z.object({
     .string()
     .regex(/^\d{1,3}-\d{1,3}\smin$/, "Format must be like 20-30 min")
     .optional(),
+  foodPreparationTime: z
+    .string()
+    .regex(/^\d{1,3}-\d{1,3}\smin$/, "Format must be like 20-30 min")
+    .optional(),
 });
 
 export const EditProfileSchema2 = z.object({
