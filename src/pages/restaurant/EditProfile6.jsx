@@ -87,6 +87,8 @@ const EditProfile6 = ({ setPage, restaurant }) => {
 
   useEffect(() => {
     if (fetchCitiesRes?.status === 200 || fetchCitiesRes?.status === 201) {
+      console.log("fetchCitiesRes", fetchCitiesRes);
+      
       setCities(fetchCitiesRes?.data?.cities || []);
     }
   }, [fetchCitiesRes]);
